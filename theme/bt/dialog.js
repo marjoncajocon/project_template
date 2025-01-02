@@ -61,7 +61,6 @@ class Dialog2 extends div {
       "z-index": "5000",
       "width": "100%",
       "background-color": "rgba(0, 0, 0, 0.2)",
-      "width": "100%",
       "height": "100%",
       "position": "fixed",
       "top": "0",
