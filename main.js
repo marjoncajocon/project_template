@@ -1,10 +1,27 @@
 import { Window } from "./plugin/core/core.js";
+import { Alert, Confirm, DialogModal2 } from "./theme/bt/dialog.js";
 import { Button, Container, Divider, Label, Panel, TextBox } from "./theme/bt/mcontrol.js";
 
 const MyApp = new Window();
 
 let idx = 0;
 
+class dial extends DialogModal2 {
+    constructor() {
+        super("test", "plus-circle", "1024px");
+
+        const button = new Button("hellow this is a sample");
+
+        this.add(button);
+
+        button.addEventListener("click", async () => {
+            if (await Confirm("Are you sure to click?")) {
+                await Alert("This is a sample");
+            }
+        });
+
+    }
+}
 
 class TestPage extends Panel {
     constructor() {
@@ -13,7 +30,7 @@ class TestPage extends Panel {
         const username = new TextBox("Username", "text");
         const password = new TextBox("Password", "password");
         const submit = new Button("Sign In", "primary", "plus-circle");
-
+        const test = new Button("Test Widget", "primary", "plus-circle");
         super.add(new Container([
             
             new Label("Bootstrap Template").style({
@@ -24,7 +41,8 @@ class TestPage extends Panel {
             new Divider(),
             username,
             password,
-            submit
+            submit,
+            test
         ]).style({
             width: "500px",
             marginTop: "10%",
@@ -42,6 +60,13 @@ class TestPage extends Panel {
 
             console.log(payload);
 
+        });
+
+
+        test.addEventListener("click", async () => {
+            const modal = new dial();
+            const res = await modal.show();
+            console.log(res);
         });
     }
 
