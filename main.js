@@ -2,6 +2,13 @@ import { Window } from "./plugin/core/core.js";
 import { Alert, Confirm, DialogModal2 } from "./theme/bt/dialog.js";
 import { Button, Container, Divider, Label, Panel, TextBox } from "./theme/bt/mcontrol.js";
 
+
+import "./plugin/core/core.css";
+import "./theme/bt/bootstrap.min.css";
+import "./theme/bt/icon/css/all.css";
+import "./theme/bt/bootstrap.bundle.min.js";
+
+
 const MyApp = new Window();
 
 let idx = 0;
