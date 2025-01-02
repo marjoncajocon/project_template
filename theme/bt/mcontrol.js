@@ -1773,7 +1773,6 @@ class Select3 extends div {
       "border-radius": "0 0 5px 5px",
       "border": "1px solid #ddd",
       "padding": "10px",
-      "border-radius": "5px",
       "box-shadow": "-3px 6px 6px rgba(0, 0, 0, 0.4)"
     });
 
@@ -1934,7 +1933,7 @@ class Select3 extends div {
   addItem(key, value, obj = null) {
 
     if (obj != null) {
-      if (!obj instanceof Widget) {
+      if (!(obj instanceof Widget)) {
         throw new Error("obj must be a Widget");
       }
     }
