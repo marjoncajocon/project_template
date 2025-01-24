@@ -254,7 +254,7 @@ class TextField extends div {
     constructor(text = null, type = "text", placeholder = null) {
         super();
         this.label = new label();
-        this.tf = new input().class("w3-input");
+        this.tf = new input().class(["w3-input"]);
 
 
         if (text != null) {
@@ -272,6 +272,11 @@ class TextField extends div {
             this.tf
         ]);
 
+    }
+
+    size(size) {
+        this.tf.class(`w3-${Config.GetSize(size)}`);
+        return this;
     }
 
     labelColor(color = null) {

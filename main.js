@@ -48,7 +48,7 @@ class TestPage extends Container {
         list.add("Shad", null, "red");
         list.add(new Button("Testing2", "green"));
 
-        const input1 = new TextField("Password", "password", "Enter Password").border().labelColor("green").round();
+        const input1 = new TextField("Password", "password", "Enter Password").border().labelColor("green").round().size("small");
 
         cr.add([
             btn1,
