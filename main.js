@@ -24,7 +24,7 @@ import "./theme/W3css/w3.css";
 
 class Login extends Modal {
     constructor() {
-        super("Login Information", "500px", "orange");
+        super("Login Information", "400px", "orange");
 
         const card = new Card().style({
             padding: "10px"

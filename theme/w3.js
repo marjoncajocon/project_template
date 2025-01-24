@@ -1001,6 +1001,7 @@ class Modal extends div {
     hide(value = null) {
         this.resolvefn(value);
         super.hide();
+        this.delete();
     }
     
 }
