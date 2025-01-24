@@ -63,6 +63,13 @@ class Container extends div {
     }
 }
 
+class Content extends div {
+    constructor() {
+        super();
+        super.class(["w3-content", "w3-display-container"]);
+    }
+}
+
 class Panel extends div {
     constructor(color = null) {
         super();
@@ -99,6 +106,10 @@ class Button extends button {
         if (color != null) {
             super.class(`w3-${Config.GetColor(color)}`);
         }
+    }
+    size(size) {
+        super.class(`w3-${Config.GetSize(size)}`);
+        return this;
     }
     circle() {
         super.class("w3-circle");
@@ -893,9 +904,112 @@ class Pagination extends div {
     }
 }
 
+class ProgressBar extends div {
+    constructor() {
+        super();
+        super.class(["w3-light-grey", "w3-round"]).style({
+            height: "20px"
+        });
+
+        this.con = new div().class(["w3-container", "w3-round", "w3-blue"]).style({
+            width: "1%",
+            height: "100%"
+        });
+
+        super.add(this.con);
+    }
+
+    update(percent, value = null) {
+        this.con.style({
+            width: `${percent}%`
+        });
+
+        if (value != null) {
+            this.con.html(`${value}%`);
+        }
+    }
+}
+
+class Center extends div {
+    constructor() {
+        super();
+        super.class("w3-center");
+    }
+}
+
+class Modal extends div {
+    constructor(title = null, maxwidth = null, bgcolor = null) {
+        super();
+        super.class("w3-modal");
+        this.resolvefn = null;
+
+        this.content = new div().class(["w3-modal-content", "w3-card-4", "w3-animate-top"]);
+        
+        if (maxwidth != null) {
+            this.content.style({
+                maxWidth: maxwidth
+            })
+        }
+
+        
+
+        if (title != null) {
+            const header = new Card().add(new Label(title)).style({
+                padding: "15px"
+            });
+
+            const close = new Button("X").style({
+                float: "right"
+            }).size("tiny");
+            header.add(close);
+
+            if (bgcolor != null) {
+                header.class(`w3-${Config.GetColor(bgcolor)}`);
+            }
+            
+            this.content.add(new div().class(["w3-container"]));
+            this.content.add(header);
+            
+            close.addEventListener("click", () => {
+                this.hide();
+            });
+        }
+        super.add(this.content);
+
+
+    }
+
+    add(obj = null) {
+        if (obj instanceof Widget) {
+            this.content.add(obj);
+        } else {
+            throw new TypeError("obj must instance of Widget");
+        }
+    }
+
+    async show() {
+        super.show();
+        this.body.appendChild(super.control());
+        
+        const promise = new Promise((resolve, reject) => {
+            this.resolvefn = resolve;
+        });
+
+        return promise;
+    }
+
+    hide(value = null) {
+        this.resolvefn(value);
+        super.hide();
+    }
+    
+}
+
 export {
+    Center,
     Container,
     Panel,
+    Content,
     Card,
     Button,
     TextField,
@@ -917,5 +1031,7 @@ export {
     SideBar,
     Label,
     BasicTab,
-    Pagination
+    Pagination,
+    ProgressBar,
+    Modal
 };
