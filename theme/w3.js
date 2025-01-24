@@ -764,7 +764,7 @@ class SideBar extends div {
 }
 
 class BasicTab extends div {
-    constructor(bgColor = null) {
+    constructor(bgColor = null, size = null) {
         super();
 
         this.menu = new div();
@@ -773,6 +773,10 @@ class BasicTab extends div {
 
         if (bgColor != null) {
             this.menu.class(`w3-${Config.GetColor(bgColor)}`);
+        }
+
+        if (size != null) {
+            this.menu.class(`w3-${Config.GetSize(size)}`);
         }
 
         // <div class="w3-bar w3-black">
@@ -823,6 +827,72 @@ class BasicTab extends div {
     }
 }
 
+class Pagination extends div {
+    constructor(prev_fn = null, next_fn = null, size = null) {
+        super();
+        super.class(["w3-bar"]);
+
+        if (size != null) {
+            super.class(`w3-${Config.GetSize(size)}`);
+        }
+
+        const before = new a().attr({
+            href: "#",
+            class: "w3-bar-item w3-button"
+        }).html(`&laquo;`);
+
+        const forward = new a().attr({
+            href: "#",
+            class: "w3-bar-item w3-button"
+        }).html(`&raquo;`);
+
+        super.add(before);
+
+        this.between = new span();
+        super.add(this.between);
+
+        super.add(forward);
+
+        if (typeof(prev_fn) == "function") {
+            before.addEventListener("click", (e) => {
+                e.preventDefault();
+                prev_fn();
+            });
+        }
+
+        if (typeof(next_fn) == "function") {
+            forward.addEventListener("click", (e) => {
+                e.preventDefault();
+                next_fn();
+            });
+        }
+
+    }
+
+    border() {
+        super.class("w3-border");
+        return this;
+    }
+
+    add(num = null, fn = null) {
+        const link = new a().attr({
+            href: "#",
+            class: "w3-bar-item w3-button"
+        }).html(`${num}`);
+        
+        this.between.add(link);
+
+        if (typeof(fn) == "function") {
+            link.addEventListener("click", (e) => {
+                e.preventDefault();
+                fn();
+            });
+        }
+
+        return link;
+    }
+}
+
 export {
     Container,
     Panel,
@@ -846,5 +916,6 @@ export {
     Icon,
     SideBar,
     Label,
-    BasicTab
+    BasicTab,
+    Pagination
 };

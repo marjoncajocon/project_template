@@ -1,5 +1,5 @@
 import { div, Window } from "./plugin/core/core.js";
-import { Accordion, Badge, Bar, BasicTab, Button, Card, CheckBox, ComboBox, Container, DropDownHover, Grid, Icon, Label, List, Panel, Radio, SideBar, Table, Tag, Text, TextBox, TextField } from "./theme/w3.js";
+import { Accordion, Badge, Bar, BasicTab, Button, Card, CheckBox, ComboBox, Container, DropDownHover, Grid, Icon, Label, List, Pagination, Panel, Radio, SideBar, Table, Tag, Text, TextBox, TextField } from "./theme/w3.js";
 
 /** Start Mcontrol Theme This the the mcontrol gui  **/
 // import "./theme/bt/bootstrap.min.css";
@@ -124,6 +124,19 @@ class TestPage extends div {
             o.add(new Button("Setting information").block());
         }, true);
 
+        const pag = new Pagination(() => {
+            alert("previous");
+        }, () => {
+            alert("next");
+        }, "tiny");
+
+        pag.add(1, () => {
+            alert(1);
+        });
+        pag.add(2, () => {
+           alert(2); 
+        });
+
         cr.add([
             btn1,
             new Text("Hellow").left(),
@@ -146,7 +159,8 @@ class TestPage extends div {
             acc,
             iconbtn,
             box,
-            basic
+            basic,
+            pag
         ]);
 
         male.disabled();
