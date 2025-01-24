@@ -1,4 +1,4 @@
-import { button, div, img, input, label, li, span, table, td, th, tr, ul, Widget } from "../plugin/core/core.js";
+import { a, button, div, img, input, label, li, option, select, span, table, td, th, tr, ul, Widget } from "../plugin/core/core.js";
 const Config = {
     Colors: {
         "red": "red",
@@ -302,7 +302,15 @@ class TextField extends div {
         return this;
     }
 
+    disabled() {
+        this.tf.attr("disabled", "");
+        return this;
+    }
 
+    enabled() {
+        this.tf.removeAttr("disabled");
+        return this;
+    }
 }
 
 class Radio extends span {
@@ -325,6 +333,10 @@ class Radio extends span {
         }
 
     }
+    enabled() {
+        this.tf.removeAttr("disabled");
+        return this;
+    }
 
     setValue(bool) {
         this.tf.control.checked = bool;
@@ -334,6 +346,11 @@ class Radio extends span {
     getValue() {
 
         return this.tf.control.checked;
+    }
+
+    disabled() {
+        this.tf.attr("disabled", "");
+        return this;
     }
 }
 
@@ -357,6 +374,8 @@ class CheckBox extends span {
 
     }
 
+    
+
     setValue(bool) {
         this.tf.control.checked = bool;
         return this;
@@ -366,8 +385,245 @@ class CheckBox extends span {
 
         return this.tf.control.checked;
     }
+
+    enabled() {
+        this.tf.removeAttr("disabled");
+        return this;
+    }
+
+    disabled() {
+        this.tf.attr("disabled", "");
+        return this;
+    }
 }
 
+
+
+class ComboBox extends select {
+    constructor() {
+        super();
+        super.class("w3-select");
+
+
+    }
+
+    add(key, value) {
+        const opt = new option();
+        opt.attr({
+            value: key
+        });
+        opt.html(value);
+        super.add(opt);
+        return opt;
+    }
+
+    enabled() {
+        this.removeAttr("disabled");
+        return this;
+    }
+    
+    disabled() {
+        this.attr("disabled", "");
+        return this;
+    }
+
+    border() {
+        super.class("w3-border");
+        return this;
+    }
+}
+
+
+class Badge extends span {
+    constructor(text = null, color = null, size = null) {
+        super();
+        super.class("w3-badge");
+
+        if (size != null) {
+            super.class(`w3-${Config.GetSize(size)}`);
+        }
+
+        if (color != null) {
+            super.class(`w3-${Config.GetColor(color)}`);
+        }
+
+        if (text != null) {
+            super.html(text);
+        }
+    }
+
+    textColor(color) {
+        super.class(`w3-text-${Config.GetColor(color)}`);
+        return this;
+    }
+}
+
+class Tag extends span {
+    constructor(text = null, color = null, size = null) {
+        super();
+        super.class("w3-tags");
+
+        if (size != null) {
+            super.class(`w3-${Config.GetSize(size)}`);
+        }
+
+        if (color != null) {
+            super.class(`w3-${Config.GetColor(color)}`);
+        }
+
+        if (text != null) {
+            super.html(text);
+        }
+    }
+
+    textColor(color) {
+        super.class(`w3-text-${Config.GetColor(color)}`);
+        return this;
+    }
+    border() {
+        super.class("w3-border");
+        return this;
+    }
+}
+
+class Grid extends div {
+    constructor() {
+        super();
+        super.class("w3-row");
+    }
+
+    add(obj, sizes = []) {
+        const cell = new div().class("w3-col");
+
+        for (const item of sizes) {
+            cell.class(item);
+        }
+
+        if (obj instanceof Widget) {
+            cell.add(obj);
+        } else {
+            cell.html(obj);
+        }
+
+        super.add(cell);
+        return cell;
+    }
+
+    padding() {
+        super.class("w3-row-padding");
+        return this;
+    }
+
+    section() {
+        super.class("w3-section");
+        return this;
+    }
+}
+
+class Bar extends div {
+    constructor(color = null, size = null, mobile = false) {
+        super();
+        super.class("w3-bar");
+
+        if (color != null) {
+            super.class(`w3-${Config.GetColor(color)}`);
+        }
+
+        if (size != null) {
+            super.class(`w3-${Config.GetSize(size)}`);
+        }
+        
+
+        this.mobile = mobile;
+        
+    }
+
+    add(text = null, hovercolor = null, evt = null, hoverableBGColor = null, hoverText = null) {
+        const item = new div().class("w3-bar-item");
+        if (text instanceof Widget) {
+            item.add(text);
+        }
+        else {
+            item.html(text);
+        }
+
+        if (hovercolor != null) {
+            item.class(`w3-hover-${Config.GetColor(hovercolor)}`);
+        }
+
+        if (evt != null && typeof(evt) == "function") {
+            item.addEventListener("click", evt);
+        }
+
+        if (this.mobile) {
+            item.class("w3-mobile");
+        }
+
+        if (hoverableBGColor != null) {
+            item.class(`w3-hover-${Config.GetColor(hoverableBGColor)}`);
+        }
+
+        if (hoverText != null) {
+            item.class(`w3-hover-${Config.GetColor(hoverText)}`);
+        }
+
+        super.add(item);
+        return item;
+    }
+}
+
+class DropDownHover extends div {
+    constructor(title = null) {
+        super();
+        super.class("w3-dropdown-hover");
+        const btn = new Button(title);
+
+        super.add(btn);
+        this.drop_content = new div().class(["w3-dropdown-content", "w3-bar-block", "w3-card-4"]);
+
+        super.add(this.drop_content);
+    }
+
+    add(title = null, fn = null) {
+        const a1 = new a().class(["w3-bar-item", "w3-button"]);
+
+        if (title instanceof Widget) {
+            a1.add(title);
+        } else {
+            a1.html(title);
+            if (typeof(fn) == "function") {
+                a1.addEventListener("click", fn);
+            }
+        }
+        
+        this.drop_content.add(a1);
+        return a1;
+    }
+}
+
+class Accordion extends span {
+    constructor(title = null, content = null) {
+        super();
+        const btn = new Button(title).button().block().class("w3-left-align");
+        const div = new Container().class("w3-hide");
+        
+        if (content instanceof Widget) {
+            div.add(content);
+        } else {
+            div.html(content);
+        }
+        
+        super.add([btn, div]);
+
+        btn.addEventListener("click", () => {
+            if (div.hasClass("w3-show")) {
+                div.removeClass("w3-show");
+            } else {
+                div.addClass("w3-show");
+            }
+        });
+    }
+}
 
 export {
     Container,
@@ -380,5 +636,12 @@ export {
     List,
     Image,
     Radio,
-    CheckBox
+    CheckBox,
+    ComboBox,
+    Badge,
+    Tag,
+    Grid,
+    Bar,
+    DropDownHover,
+    Accordion
 };

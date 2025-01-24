@@ -1,5 +1,5 @@
 import { div, Window } from "./plugin/core/core.js";
-import { Button, Card, CheckBox, Container, List, Panel, Radio, Table, Text, TextField } from "./theme/w3.js";
+import { Accordion, Badge, Bar, Button, Card, CheckBox, ComboBox, Container, DropDownHover, Grid, List, Panel, Radio, Table, Tag, Text, TextField } from "./theme/w3.js";
 
 /** Start Mcontrol Theme This the the mcontrol gui  **/
 // import "./theme/bt/bootstrap.min.css";
@@ -24,6 +24,9 @@ import "./theme/W3css/w3.css";
 class TestPage extends Container {
     constructor() {
         super();
+        super.style({
+            marginBottom: "50vh"
+        });
 
         const pan = new Panel("blue").html("Testing panel");
         const cr = new Card();
@@ -49,6 +52,7 @@ class TestPage extends Container {
         list.add(new Button("Testing2", "green"));
 
         const input1 = new TextField("Password", "password", "Enter Password").border().labelColor("green").round().size("small");
+        input1.disabled();
 
         const male = new Radio("Male", "gender");
         const female = new Radio("Female", "gender");
@@ -58,6 +62,56 @@ class TestPage extends Container {
         const check1 = new CheckBox("Select 1");
 
         const check2 = new CheckBox("Select2");
+
+        const cb = new ComboBox().border();
+
+        cb.add("", "All Document");
+        cb.add("f", "Female");
+        cb.add("m", "Male");
+
+        cb.disabled();
+        setTimeout(() => {
+            cb.enabled();
+        }, 3000);
+
+
+        const card1 = new Card();
+        card1.add(new Button("test", "green").block());
+
+        const card2 = new Card();
+        card2.add(new Button("test2", "red").block());
+
+        const grid = new Grid();
+
+        grid.add(card1, ["m3"]);
+        grid.add(card2, ["m6"]);
+
+        const grid2 = new Grid();
+
+        grid2.add(new Card().add(new Button("test", "red").block()), ["m3"]);
+        grid2.add(new Card().add(new Button("test2", "orange").block()), ["m2"]);
+
+        const bar = new Bar("red", null, true);
+        bar.add("hellow", null, () => {
+            alert("hellow");
+        }, "orange");
+        bar.add("test2", null, () => {
+            alert("test");
+        }, "blue");
+
+        const drop2 = new DropDownHover("Menu2");
+        drop2.add("Item1");
+        drop2.add("Item2", () => {
+            alert("item2");
+        });
+        drop2.add("Item3");
+
+        const drop = new DropDownHover("Menu");
+        drop.add("Test");
+        drop.add("Test2");
+        drop.add("test3");
+
+        const acc = new Accordion("Test Accordion", "this is a content sample");
 
         cr.add([
             btn1,
@@ -70,10 +124,21 @@ class TestPage extends Container {
             female,
             check1,
             check2,
-            gender
+            gender,
+            cb,
+            new Badge(12).textColor("red"),
+            new Tag("Hellow", "red", "xxlarge").border(),
+            grid,
+            grid2,
+            bar,
+            drop,
+            acc
         ]);
 
+        male.disabled();
+
         check1.setValue(true);
+        check1.disabled();
 
         gender.addEventListener("click", () => {
             console.log(check1.getValue());
