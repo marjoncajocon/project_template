@@ -1,4 +1,4 @@
-import { a, button, div, img, input, label, li, option, select, span, table, td, th, tr, ul, Widget } from "../plugin/core/core.js";
+import { a, button, div, h3, i, img, input, label, li, option, select, span, table, td, textarea, th, tr, ul, Widget } from "../plugin/core/core.js";
 const Config = {
     Colors: {
         "red": "red",
@@ -86,10 +86,13 @@ class Card extends div {
 }
 
 class Button extends button {
-    constructor(text = null, color = null, icon = null) {
+    constructor(text = null, color = null) {
         super();
         super.class(["w3-btn"]);
-        if (text != null) {
+        if (text instanceof Widget) {
+            super.add(text);
+        }
+        else {
             super.html(text);
         }
 
@@ -258,7 +261,79 @@ class TextField extends div {
 
 
         if (text != null) {
-            this.label.html(text);
+            if (text instanceof Widget) {
+                this.label.add(text);
+            } else {
+                this.label.html(text);
+            }
+            super.add(this.label);
+        }
+
+        this.tf.attr("type", type);
+
+        if (placeholder != null) {
+            this.tf.attr("placeholder", placeholder);
+        }
+
+        super.add([
+            this.tf
+        ]);
+
+    }
+
+    size(size) {
+        this.tf.class(`w3-${Config.GetSize(size)}`);
+        return this;
+    }
+
+    labelColor(color = null) {
+        this.label.class(`w3-text-${Config.GetColor(color)}`);
+        return this;
+    }
+    round() {
+        this.tf.class("w3-round");
+        return this;
+    }
+
+    border() {
+        this.tf.class("w3-border");
+        return this;
+    }
+
+    getValue() {
+        return this.tf.value();
+    }
+
+    setValue(value) {
+        this.tf.value(value);
+        return this;
+    }
+
+    disabled() {
+        this.tf.attr("disabled", "");
+        return this;
+    }
+
+    enabled() {
+        this.tf.removeAttr("disabled");
+        return this;
+    }
+}
+
+
+class TextBox extends div {
+    constructor(text = null, type = "text", placeholder = null) {
+        super();
+        this.label = new label();
+        this.tf = new textarea().class(["w3-input"]);
+
+
+        if (text != null) {
+            if (text instanceof Widget) {
+                this.label.add(text);
+            } else {
+                this.label.html(text);
+            }
             super.add(this.label);
         }
 
@@ -625,12 +700,136 @@ class Accordion extends span {
     }
 }
 
+class Icon extends i {
+    constructor(ico = null) {
+        super();
+
+        if (ico != null) {
+            super.class(["fa", `fa-${ico}`]);
+        }
+    }
+}
+class Label extends label {
+    constructor(title = null) {
+        super();
+
+        if (title instanceof Widget) {
+            super.add(title);
+        } 
+        else if(title instanceof Array) {
+           for (const item of title) {
+                if (item instanceof Widget) {
+                    super.add(item);
+                } else {
+                    super.add(new Label(item));
+                }
+           } 
+        } 
+        else {
+            super.text(title);
+        }
+    }
+}
+
+class SideBar extends div {
+    constructor(title = null) {
+        super();
+        super.class(["w3-sidebar", "w3-light-grey", "w3-bar-block"]);
+        if (title instanceof Widget) {
+            super.add(title);
+        } else {
+            super.add(new h3().html(title));
+        }
+    }
+
+    add(title = null, fn = null) {
+        if (title instanceof Widget) {
+            super.add(title);
+            return title;
+        } else {
+            const a1 = new a().attr({
+                href: "#",
+                class: "w3-bar-item w3-button"
+            });
+            a1.html(title);
+
+            if (typeof(fn) == "function") {
+                a1.addEventListener("click", fn);
+            }
+            super.add(a1);
+            return a1;
+        }
+        
+    }
+}
+
+class BasicTab extends div {
+    constructor(bgColor = null) {
+        super();
+
+        this.menu = new div();
+
+        this.menu.class(["w3-bar"]);
+
+        if (bgColor != null) {
+            this.menu.class(`w3-${Config.GetColor(bgColor)}`);
+        }
+
+        // <div class="w3-bar w3-black">
+        //     <button class="w3-bar-item w3-button" onclick="openCity('London')">London</button>
+        //     <button class="w3-bar-item w3-button" onclick="openCity('Paris')">Paris</button>
+        //     <button class="w3-bar-item w3-button" onclick="openCity('Tokyo')">Tokyo</button>
+        // </div>
+        this.content = new div().class(["w3-container", "w3-display-container"]);
+
+        super.add([
+            this.menu,
+            this.content
+        ]);
+
+        this.list = [];
+    }
+    clearActive() {
+        for (const item of this.list) {
+            item.removeClass("w3-sand");
+        }
+    }
+    add(title = null, fn = null, active = false) {
+        if (title instanceof Widget) {
+
+        } else {
+            const btn = new Button(title).button().class(["w3-bar-item"]);
+            this.menu.add(btn);
+
+            if (active) {
+                btn.class("w3-sand");
+                this.content.clear();
+                fn(this.content);
+            }
+
+            this.list.push(btn);
+
+            if (typeof(fn) == "function") {
+                btn.addEventListener("click", () => {
+
+                    this.clearActive();
+                    btn.class("w3-sand");
+                    this.content.clear();
+                    fn(this.content);
+
+                });
+            }
+        }
+    }
+}
+
 export {
     Container,
     Panel,
     Card,
     Button,
     TextField,
+    TextBox,
     Text,
     Table,
     List,
@@ -643,5 +842,9 @@ export {
     Grid,
     Bar,
     DropDownHover,
-    Accordion
+    Accordion,
+    Icon,
+    SideBar,
+    Label,
+    BasicTab
 };

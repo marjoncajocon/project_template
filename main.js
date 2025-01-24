@@ -1,5 +1,5 @@
 import { div, Window } from "./plugin/core/core.js";
-import { Accordion, Badge, Bar, Button, Card, CheckBox, ComboBox, Container, DropDownHover, Grid, List, Panel, Radio, Table, Tag, Text, TextField } from "./theme/w3.js";
+import { Accordion, Badge, Bar, BasicTab, Button, Card, CheckBox, ComboBox, Container, DropDownHover, Grid, Icon, Label, List, Panel, Radio, SideBar, Table, Tag, Text, TextBox, TextField } from "./theme/w3.js";
 
 /** Start Mcontrol Theme This the the mcontrol gui  **/
 // import "./theme/bt/bootstrap.min.css";
@@ -17,11 +17,12 @@ import { Accordion, Badge, Bar, Button, Card, CheckBox, ComboBox, Container, Dro
 
 
 /* W3css Theme */
+import "./theme/icon/css/all.css";
 import "./theme/W3css/w3.css";
 /* End W3css */
 
 // testing w3css
-class TestPage extends Container {
+class TestPage extends div {
     constructor() {
         super();
         super.style({
@@ -92,12 +93,10 @@ class TestPage extends Container {
         grid2.add(new Card().add(new Button("test2", "orange").block()), ["m2"]);
 
         const bar = new Bar("red", null, true);
-        bar.add("hellow", null, () => {
-            alert("hellow");
-        }, "orange");
-        bar.add("test2", null, () => {
-            alert("test");
-        }, "blue");
+        bar.add(new Icon("user"));
+        bar.add(new Icon("cog"), "green", () => {
+            alert("settings");
+        });
 
         const drop2 = new DropDownHover("Menu2");
         drop2.add("Item1");
@@ -112,6 +111,18 @@ class TestPage extends Container {
         drop.add("test3");
 
         const acc = new Accordion("Test Accordion", "this is a content sample");
+
+        const iconbtn = new Button(new Label([new Icon("user").style({ marginRight: "5px" }), "Hellow"]), "red");
+
+        const box = new TextBox("Enter your information", null, "Hellow").border();
+
+        const basic = new BasicTab("teal");
+        basic.add("User", (o) => {
+            o.add(new Button("User Information").block());
+        });
+        basic.add("Setting", (o) => {
+            o.add(new Button("Setting information").block());
+        }, true);
 
         cr.add([
             btn1,
@@ -132,7 +143,10 @@ class TestPage extends Container {
             grid2,
             bar,
             drop,
-            acc
+            acc,
+            iconbtn,
+            box,
+            basic
         ]);
 
         male.disabled();
