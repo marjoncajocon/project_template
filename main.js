@@ -1,5 +1,5 @@
 import { div, Window } from "./plugin/core/core.js";
-import { Button, Card, Container, List, Panel, Table, Text, TextField } from "./theme/w3.js";
+import { Button, Card, CheckBox, Container, List, Panel, Radio, Table, Text, TextField } from "./theme/w3.js";
 
 /** Start Mcontrol Theme This the the mcontrol gui  **/
 // import "./theme/bt/bootstrap.min.css";
@@ -50,14 +50,35 @@ class TestPage extends Container {
 
         const input1 = new TextField("Password", "password", "Enter Password").border().labelColor("green").round().size("small");
 
+        const male = new Radio("Male", "gender");
+        const female = new Radio("Female", "gender");
+
+        const gender = new Button("hellow", "red");
+
+        const check1 = new CheckBox("Select 1");
+
+        const check2 = new CheckBox("Select2");
+
         cr.add([
             btn1,
             new Text("Hellow").left(),
             new Text("Hope").right(),
             table1,
             list,
-            input1
+            input1,
+            male,
+            female,
+            check1,
+            check2,
+            gender
         ]);
+
+        check1.setValue(true);
+
+        gender.addEventListener("click", () => {
+            console.log(check1.getValue());
+            console.log(check2.getValue());
+        });
 
         super.add([pan, cr]);
     }

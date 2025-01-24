@@ -1,4 +1,4 @@
-import { button, div, img, input, label, li, table, td, th, tr, ul, Widget } from "../plugin/core/core.js";
+import { button, div, img, input, label, li, span, table, td, th, tr, ul, Widget } from "../plugin/core/core.js";
 const Config = {
     Colors: {
         "red": "red",
@@ -305,6 +305,69 @@ class TextField extends div {
 
 }
 
+class Radio extends span {
+    constructor(text = null, name = null) {
+        super();
+        
+        this.tf = new input().attr({
+            type: "radio",
+            class: "w3-radio",
+            name: name
+        });
+
+        this.label = new label();
+
+        super.add(this.tf);
+
+        if (text != null) {
+            this.label.html(text);
+            super.add(this.label);
+        }
+
+    }
+
+    setValue(bool) {
+        this.tf.control.checked = bool;
+        return this;
+    }
+
+    getValue() {
+
+        return this.tf.control.checked;
+    }
+}
+
+class CheckBox extends span {
+    constructor(text = null) {
+        super();
+        
+        this.tf = new input().attr({
+            type: "checkbox",
+            class: "w3-radio"
+        });
+
+        this.label = new label();
+
+        super.add(this.tf);
+
+        if (text != null) {
+            this.label.html(text);
+            super.add(this.label);
+        }
+
+    }
+
+    setValue(bool) {
+        this.tf.control.checked = bool;
+        return this;
+    }
+
+    getValue() {
+
+        return this.tf.control.checked;
+    }
+}
+
 
 export {
     Container,
@@ -315,5 +378,7 @@ export {
     Text,
     Table,
     List,
-    Image
+    Image,
+    Radio,
+    CheckBox
 };
