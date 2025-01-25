@@ -92,19 +92,36 @@ const Config = {
         "xxlarge": "w3-xxlarge",
         "xxxlarge": "w3-xxxlarge"
     },
-
+    Direction: {
+        "topleft": "topleft",
+        "topright": "topright",
+        "bottomleft": "bottomleft",
+        "bottomright": "bottomright",
+        "left": "left",
+        "right": "right",
+        "middle": "middle",
+        "topmiddle": "topmiddle",
+        "bottommiddle": "bottommiddle"
+    }
+    ,
+    GetDirection: function(dir) {
+        if (typeof(this.Direction[dir]) != "undefined") {
+            return dir;
+        }
+        throw new TypeError("wrong direction!");
+    },
     GetSize: function(size) {
         if (typeof(this.Sizes[size]) != "undefined") {
             return size;
         }
-        throw new TypeError("wrong sized!")
+        throw new TypeError("wrong sized!");
     },
 
     GetColor: function (color) {
         if (typeof(this.Colors[color]) != "undefined") {
             return color;
         }
-        throw new TypeError("wrong color!")
+        throw new TypeError("wrong color!");
     }
 };
 
@@ -190,6 +207,24 @@ class Button extends button {
 }
 
 class Text extends div {
+    constructor(text = null) {
+        super();
+        if (text != null) {
+            super.text(text);
+        }
+    }
+
+    left() {
+        super.class("w3-left-align");
+        return this;
+    }
+    right() {
+        super.class("w3-right-align");
+        return this;
+    }
+}
+
+class Html extends div {
     constructor(text = null) {
         super();
         if (text != null) {
@@ -1060,6 +1095,72 @@ class Modal extends div {
     
 }
 
+class Code extends div {
+    constructor(lang = null) {
+        super();
+        super.class("w3-code");
+
+        if (lang != null) {
+            super.class(`${lang}High`);
+        }
+    }
+
+    write(code = null) {
+        super.text(code);
+        return this;
+    }
+}
+
+class Display extends div {
+    constructor(pos = "middle") {
+        super();
+        super.class(`w3-display-${Config.GetDirection(pos)}`);
+    }
+}
+
+
+class Row extends div {
+    constructor(obj = null) {
+        super();
+        
+        if (obj instanceof Widget) {
+            obj.style({ display: "inline-block" });
+            super.add(obj);
+            
+        } else if (obj instanceof Array) {
+            for (const item of obj) {
+                if (item instanceof Widget) {
+                    item.style({ display: "inline-block" });
+                    super.add(item);
+                }
+            }
+        }
+  
+    }
+}
+
+
+class Column extends div {
+    constructor(obj = null) {
+        super();
+        
+        if (obj instanceof Widget) {
+            obj.style({ display: "block" });
+            super.add(obj);
+            
+        } else if (obj instanceof Array) {
+            for (const item of obj) {
+                if (item instanceof Widget) {
+                    item.style({ display: "block" });
+                    super.add(item);
+                }
+            }
+        }
+  
+    }
+}
+
+
 export {
     Center,
     Container,
@@ -1088,5 +1189,10 @@ export {
     BasicTab,
     Pagination,
     ProgressBar,
-    Modal
+    Modal,
+    Code,
+    Display,
+    Html,
+    Row,
+    Column
 };

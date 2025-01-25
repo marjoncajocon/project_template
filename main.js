@@ -1,5 +1,5 @@
 import { div, Window } from "./plugin/core/core.js";
-import { Accordion, Badge, Bar, BasicTab, Button, Card, CheckBox, ComboBox, Container, DropDownHover, Grid, Icon, Label, List, Modal, Pagination, Panel, ProgressBar, Radio, SideBar, Table, Tag, Text, TextBox, TextField } from "./theme/w3.js";
+import { Accordion, Badge, Bar, BasicTab, Button, Card, CheckBox, Code, Column, ComboBox, Container, Display, DropDownHover, Grid, Icon, Label, List, Modal, Pagination, Panel, ProgressBar, Radio, Row, SideBar, Table, Tag, Text, TextBox, TextField } from "./theme/w3.js";
 
 /** Start Mcontrol Theme This the the mcontrol gui  **/
 // import "./theme/bt/bootstrap.min.css";
@@ -44,6 +44,9 @@ class Login extends Modal {
 
         super.add(card);
         
+        submit.addEventListener("click", () => {
+            super.hide("you are handsome");
+        });
     }
 }
 
@@ -57,8 +60,36 @@ class TestPage extends div {
 
         const btn = new Button("Open Modal", "red");
 
+        const code = new Code("html");
+        code.write(`
+            
+        `);
         
-        super.add(btn);
+
+        const tab = new BasicTab("win8-pink");
+        tab.add("Profile", (o) => {
+            o.add(new Button("Profile"));
+        });
+        tab.add("Contact", (o) => {
+            o.add(new Button("Contact"));
+        });
+        tab.add("Setting", (o) => {
+            o.add(new Button("Setting"));
+        }, true);
+
+
+        super.add([
+            tab,
+            new Row([
+                new Button("hellow"), new Button("test", "red"), new Icon("user"),
+                new Label("hellow world"), new Column([
+                    new Button("test1", "blue"),
+                    new Button("test2", "green"),
+                    new Button("test3", "lime")
+                ])
+            ]),
+            code
+        ]);
 
         
 
