@@ -24,7 +24,7 @@ import "./theme/W3css/w3.css";
 
 class Login extends Modal {
     constructor() {
-        super("Login Information", "400px", "orange");
+        super("Login Information", "400px", "win8-blue");
 
         const card = new Card().style({
             padding: "10px"
@@ -32,7 +32,7 @@ class Login extends Modal {
         
         const username = new TextField("Usrename", "text", "Enter Username").border();
         const password = new TextField("Password", "password", "Enter Password").border();
-        const submit = new Button("Sign In", "blue").style({
+        const submit = new Button("Sign In", "ios-dark-blue").style({
             marginTop: "10px"
         });
 
