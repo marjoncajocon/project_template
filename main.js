@@ -1,5 +1,5 @@
 import { div, Window } from "./plugin/core/core.js";
-import { Accordion, Badge, Bar, BasicTab, Button, Card, CheckBox, Code, Column, ComboBox, Container, Display, DropDownHover, Grid, Icon, Label, List, Modal, Pagination, Panel, Photo, Photo2d, Picture, ProgressBar, Radio, Row, SideBar, Table, Tag, Text, TextBox, TextField } from "./theme/w3.js";
+import { Accordion, Badge, Bar, BasicTab, Box, Button, Card, CheckBox, Code, Column, ComboBox, Container, Display, DropDownHover, Grid, Icon, Label, List, Modal, Pagination, Panel, Photo, Photo2d, Picture, ProgressBar, Radio, Row, SideBar, Table, Tag, Text, TextBox, TextField } from "./theme/w3.js";
 
 /** Start Mcontrol Theme This the the mcontrol gui  **/
 // import "./theme/bt/bootstrap.min.css";
@@ -24,7 +24,9 @@ import "./theme/W3css/w3.css";
 
 class Login extends Modal {
     constructor() {
-        super("Login Information", "400px", "win8-blue");
+        super(
+            new Row([ new Icon("user"), new Box(5), new Text("User Information") ])
+            , "400px", "win8-blue");
 
         const card = new Card().style({
             padding: "10px"
@@ -34,9 +36,11 @@ class Login extends Modal {
         
         const username = new TextField("Usrename", "text", "Enter Username").border();
         const password = new TextField("Password", "password", "Enter Password").border();
-        const submit = new Button("Sign In", "ios-dark-blue").style({
+        const submit = new Button(
+            new Row([new Icon("sign-in"), new Box(5), new Text("Sigin")])
+            , "ios-dark-blue").style({
             marginTop: "10px"
-        });
+        }).ripple();
 
         card.add([
             file,
@@ -50,6 +54,9 @@ class Login extends Modal {
         submit.addEventListener("click", () => {
             super.hide("you are handsome");
         });
+    }
+    dispose() {
+        console.log("login closed");
     }
 }
 
@@ -89,16 +96,16 @@ class TestPage extends div {
         test1.add("3", "test3");
 
         const menu = new DropDownHover("Testing");
-        menu.add(new Row([new Icon("save"), new Text("Save")]));
+        menu.add(new Row([new Icon("save"), new Box(5), new Text("Save")]));
         menu.add("open");
         menu.add("open folder");
         
-        tab.add(menu);
 
 
         super.add([
             tab,
             btn,
+            menu,
             test1,
             new Row([
                 new Button("hellow"), new Button("test", "red"), new Icon("user"),

@@ -1052,11 +1052,14 @@ class Modal extends div {
 
         if (title != null) {
             const header = new Card().add(new Label(title)).style({
-                padding: "15px"
+                padding: "15px",
+                position: "relative"
             });
 
             const close = new Button("X").style({
-                float: "right"
+                position: "absolute",
+                top: "10px",
+                right: "10px"
             }).size("tiny");
             header.add(close);
 
@@ -1235,6 +1238,29 @@ class Photo2d extends img {
     }
 }
 
+class Box extends div{
+    constructor(width = null, height = null) {
+        super();
+        super.style({
+            display: "inline-block",
+            width: "1px",
+            height: "1px"
+        });
+
+        if (width != null) {
+            super.style({
+                width: typeof(width) == "number" ? `${width}px` : width
+            });
+        }
+
+        if (height != null) {
+            super.style({
+                width: typeof(height) == "number" ? `${height}px` : height
+            });
+        }
+        
+    }
+}
 
 export {
     Center,
@@ -1269,5 +1295,6 @@ export {
     Display,
     Html,
     Row,
-    Column
+    Column,
+    Box
 };
