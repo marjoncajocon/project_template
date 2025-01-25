@@ -1,88 +1,78 @@
-import { Window } from "./plugin/core/core.js";
-import { Alert, Confirm, DialogModal2 } from "./theme/bt/dialog.js";
-import { Button, Container, Divider, Label, Panel, TextBox } from "./theme/bt/mcontrol.js";
+import { div, Window } from "./plugin/core/core.js";
+import { Accordion, Badge, Bar, BasicTab, Button, Card, CheckBox, ComboBox, Container, DropDownHover, Grid, Icon, Label, List, Modal, Pagination, Panel, ProgressBar, Radio, SideBar, Table, Tag, Text, TextBox, TextField } from "./theme/w3.js";
+
+/** Start Mcontrol Theme This the the mcontrol gui  **/
+// import "./theme/bt/bootstrap.min.css";
+// import "./theme/bt/icon/css/all.css";
+// import "./theme/bt/bootstrap.bundle.min.js";
+/** End MControl Theme End of the mcontrol gui **/ 
+
+/** Start for the Foundation Theme **/
+// import $ from "./theme/foundation/js/vendor/jquery.js";
+// import "./theme/foundation/css/foundation.css";
+// import "./theme/foundation/js/vendor/foundation.js";
+// import { Button, Grid, HDropDown, Panel, SubMenu, TextField } from "./theme/foundation.js"; // import example
+// $(document).foundation();
+/** End of the Foundation Theme **/ 
 
 
-import "./plugin/core/core.css";
-import "./theme/bt/bootstrap.min.css";
-import "./theme/bt/icon/css/all.css";
-import "./theme/bt/bootstrap.bundle.min.js";
+/* W3css Theme */
+import "./theme/icon/css/all.css";
+import "./theme/W3css/w3.css";
+/* End W3css */
 
 
-const MyApp = new Window();
-
-let idx = 0;
-
-class dial extends DialogModal2 {
+class Login extends Modal {
     constructor() {
-        super("test", "plus-circle", "1024px");
+        super("Login Information", "400px", "orange");
 
-        const button = new Button("hellow this is a sample");
-
-        this.add(button);
-
-        button.addEventListener("click", async () => {
-            if (await Confirm("Are you sure to click?")) {
-                await Alert("This is a sample");
-            }
+        const card = new Card().style({
+            padding: "10px"
+        });
+        
+        const username = new TextField("Usrename", "text", "Enter Username").border();
+        const password = new TextField("Password", "password", "Enter Password").border();
+        const submit = new Button("Sign In", "blue").style({
+            marginTop: "10px"
         });
 
+        card.add([
+            username,
+            password,
+            submit
+        ]);
+
+        super.add(card);
+        
     }
 }
 
-class TestPage extends Panel {
+// testing w3css
+class TestPage extends div {
     constructor() {
         super();
-        
-        const username = new TextBox("Username", "text");
-        const password = new TextBox("Password", "password");
-        const submit = new Button("Sign In", "primary", "plus-circle");
-        const test = new Button("Test Widget", "primary", "plus-circle");
-        super.add(new Container([
-            
-            new Label("Bootstrap Template").style({
-                fontWeight: "bold",
-                fontSize: "15pt",
-                color: "rgba(0, 0, 0, 0.6)"
-            }),
-            new Divider(),
-            username,
-            password,
-            submit,
-            test
-        ]).style({
-            width: "500px",
-            marginTop: "10%",
-            backgroundColor: "rgba(0, 0, 0, 0.1)",
-            padding: "20px",
-            borderRadius: "10px"
-        }));
-
-        submit.addEventListener("click", () => {
-            
-            const payload = {
-                username: username.getValue(),
-                password: password.getValue()
-            };
-
-            console.log(payload);
-
+        super.style({
+            marginBottom: "50vh"
         });
 
+        const btn = new Button("Open Modal", "red");
 
-        test.addEventListener("click", async () => {
-            const modal = new dial();
-            const res = await modal.show();
+        
+        super.add(btn);
+
+        
+
+        btn.addEventListener("click", async () => {
+
+            const login = new Login();
+            const res = await login.show();
             console.log(res);
         });
     }
-
-    dispose() {
-        // clean up the TestPage
-        console.log(`clean up ${++idx}`);
-    }
 }
+/// end testing foundation
 
+const MyApp = new Window();
 MyApp.navigate(new TestPage());
 MyApp.run();
 
