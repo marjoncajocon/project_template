@@ -1,5 +1,5 @@
 import { div, Window } from "./plugin/core/core.js";
-import { Accordion, Badge, Bar, BasicTab, Button, Card, CheckBox, Code, Column, ComboBox, Container, Display, DropDownHover, Grid, Icon, Label, List, Modal, Pagination, Panel, ProgressBar, Radio, Row, SideBar, Table, Tag, Text, TextBox, TextField } from "./theme/w3.js";
+import { Accordion, Badge, Bar, BasicTab, Button, Card, CheckBox, Code, Column, ComboBox, Container, Display, DropDownHover, Grid, Icon, Label, List, Modal, Pagination, Panel, Photo, Photo2d, Picture, ProgressBar, Radio, Row, SideBar, Table, Tag, Text, TextBox, TextField } from "./theme/w3.js";
 
 /** Start Mcontrol Theme This the the mcontrol gui  **/
 // import "./theme/bt/bootstrap.min.css";
@@ -29,6 +29,8 @@ class Login extends Modal {
         const card = new Card().style({
             padding: "10px"
         });
+
+        const file = new TextField("File", "file").border();
         
         const username = new TextField("Usrename", "text", "Enter Username").border();
         const password = new TextField("Password", "password", "Enter Password").border();
@@ -37,6 +39,7 @@ class Login extends Modal {
         });
 
         card.add([
+            file,
             username,
             password,
             submit
@@ -66,7 +69,9 @@ class TestPage extends div {
         `);
         
 
-        const tab = new BasicTab("win8-pink");
+        const tab = new BasicTab("blue");
+        tab.add("HRMS Portal");
+
         tab.add("Profile", (o) => {
             o.add(new Button("Profile"));
         });
@@ -77,9 +82,24 @@ class TestPage extends div {
             o.add(new Button("Setting"));
         }, true);
 
+        
+        const test1 = new ComboBox();
+        test1.add("1", "hellow");
+        test1.add("2", "test2");
+        test1.add("3", "test3");
+
+        const menu = new DropDownHover("Testing");
+        menu.add(new Row([new Icon("save"), new Text("Save")]));
+        menu.add("open");
+        menu.add("open folder");
+        
+        tab.add(menu);
+
 
         super.add([
             tab,
+            btn,
+            test1,
             new Row([
                 new Button("hellow"), new Button("test", "red"), new Icon("user"),
                 new Label("hellow world"), new Column([
@@ -88,7 +108,9 @@ class TestPage extends div {
                     new Button("test3", "lime")
                 ])
             ]),
-            code
+            code,
+            new Photo2d().path("https://cubanvr.com/wp-content/uploads/2023/07/ai-image-generators.webp")
+            .hoverOpacity().hoverGrayScale().hoverSepia()
         ]);
 
         

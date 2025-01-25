@@ -346,12 +346,7 @@ class List extends ul {
     }
 }
 
-class Image extends img {
-    constructor(path = null) {
-        super();
-        super.class("w3-image");
-    }
-}
+
 
 class TextField extends div {
     constructor(text = null, type = "text", placeholder = null) {
@@ -606,6 +601,15 @@ class ComboBox extends select {
         super.class("w3-border");
         return this;
     }
+
+    setValue(value) {
+        super.value(value);
+        return this;
+    }
+
+    getValue() {
+        return super.value();
+    }
 }
 
 
@@ -764,6 +768,10 @@ class DropDownHover extends div {
 
         if (title instanceof Widget) {
             a1.add(title);
+            
+            if (typeof(fn) == "function") {
+                a1.addEventListener("click", fn);
+            }
         } else {
             a1.html(title);
             if (typeof(fn) == "function") {
@@ -1161,6 +1169,73 @@ class Column extends div {
 }
 
 
+class Photo2d extends img {
+    constructor() {
+        super();
+        super.class("w3-image");
+    }
+
+    path(src) {
+        super.attr({
+            "src": src
+        });
+
+        return this;
+    }
+
+    base64() {
+        return this;
+    }
+
+    sepia() {
+        super.class("w3-sepia");
+        return this;
+    }
+    sepiaMin() {
+        super.class("w3-sepia-min");
+        return this;
+    }
+    sepiaMax() {
+        super.class("w3-sepia-max");
+        return this;
+    }
+
+    hoverOpacity() {
+        super.class("w3-hover-opacity");
+        return this;
+    }
+    hoverGrayScale() {
+        super.class("w3-hover-grayscale");
+        return this;
+    }
+
+    hoverSepia() {
+        super.class("w3-hover-sepia");
+        return this;
+    }
+
+    round() {
+        super.class("w3-round");
+        return this;
+    }
+
+    circle() {
+        super.class("w3-circle");
+        return this;
+    }
+
+    border() {
+        super.class("w3-border");
+        return this;
+    }
+
+    padding() {
+        super.class("w3-padding");
+        return this;
+    }
+}
+
+
 export {
     Center,
     Container,
@@ -1173,7 +1248,7 @@ export {
     Text,
     Table,
     List,
-    Image,
+    Photo2d,
     Radio,
     CheckBox,
     ComboBox,
