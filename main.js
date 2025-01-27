@@ -1,5 +1,5 @@
 import { div, Window } from "./plugin/core/core.js";
-import { Accordion, Badge, Bar, BasicTab, Button, Card, CheckBox, ComboBox, Container, DropDownHover, Grid, Icon, Label, List, Modal, Pagination, Panel, ProgressBar, Radio, SideBar, Table, Tag, Text, TextBox, TextField } from "./theme/w3.js";
+import { Accordion, Badge, Bar, BasicTab, Box, Button, Canvas, Card, CheckBox, Code, Column, ComboBox, Container, Display, DropDownHover, Grid, Icon, Label, List, Modal, Pagination, Panel, Photo, Photo2d, Picture, ProgressBar, Radio, Row, SideBar, Table, Tag, Text, TextBox, TextField } from "./theme/w3.js";
 
 /** Start Mcontrol Theme This the the mcontrol gui  **/
 // import "./theme/bt/bootstrap.min.css";
@@ -24,19 +24,26 @@ import "./theme/W3css/w3.css";
 
 class Login extends Modal {
     constructor() {
-        super("Login Information", "400px", "orange");
+        super(
+            new Row([ new Icon("user"), new Box(5), new Text("User Information") ])
+            , "400px", "win8-blue");
 
         const card = new Card().style({
             padding: "10px"
         });
+
+        const file = new TextField("File", "file").border();
         
         const username = new TextField("Usrename", "text", "Enter Username").border();
         const password = new TextField("Password", "password", "Enter Password").border();
-        const submit = new Button("Sign In", "blue").style({
+        const submit = new Button(
+            new Row([new Icon("sign-in"), new Box(5), new Text("Sigin")])
+            , "ios-dark-blue").style({
             marginTop: "10px"
-        });
+        }).ripple();
 
         card.add([
+            file,
             username,
             password,
             submit
@@ -44,6 +51,12 @@ class Login extends Modal {
 
         super.add(card);
         
+        submit.addEventListener("click", () => {
+            super.hide("you are handsome");
+        });
+    }
+    dispose() {
+        console.log("login closed");
     }
 }
 
@@ -55,19 +68,41 @@ class TestPage extends div {
             marginBottom: "50vh"
         });
 
-        const btn = new Button("Open Modal", "red");
+        const bar  = new Bar("green");
+        
+        bar.add("About");
+        bar.add("Contact");
+        bar.add("Testing");
+        bar.add("About");
+        bar.add("Contact");
+        bar.add("Testing");
+        bar.add("About");
+        bar.add("Contact");
+        bar.add("Testing");
+        bar.add("About");
+        bar.add("Contact");
+        bar.add("Testing");
+
+
+
+        const tf = new TextBox("Testing", "hellow", true).border().error("Invalid Username");
+
+        const check = new CheckBox("Testing");
+        const radio = new Radio("Male", "gender");
+
+        setTimeout(() => {
+            tf.error();
+        }, 2000);
+        super.add([
+            bar,
+            tf,
+            check,
+            radio
+        ]);
 
         
-        super.add(btn);
 
         
-
-        btn.addEventListener("click", async () => {
-
-            const login = new Login();
-            const res = await login.show();
-            console.log(res);
-        });
     }
 }
 /// end testing foundation

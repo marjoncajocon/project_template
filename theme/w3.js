@@ -1,6 +1,7 @@
-import { a, button, div, h3, i, img, input, label, li, option, select, span, table, td, textarea, th, tr, ul, Widget } from "../plugin/core/core.js";
+import { a, button, canvas, div, h3, i, img, input, label, li, option, select, span, table, td, textarea, th, tr, ul, Widget } from "../plugin/core/core.js";
 const Config = {
     Colors: {
+        "black": "black",
         "red": "red",
         "pink": "pink",
         "purple": "purple",
@@ -28,7 +29,61 @@ const Config = {
         "pale-red": "pale-red",
         "pale-yellow": "pale-yellow",
         "pale-green": "pale-green",
-        "pale-blue": "pale-blue"
+        "pale-blue": "pale-blue",
+        "flat-turquoise": "flat-turquoise",
+        "flat-emerald": "flat-emerald",
+        "ios-dark-blue": "ios-dark-blue",
+        "flat-peter-river": "flat-peter-river",
+        "flat-amethyst": "flat-amethyst",
+        "flat-wet-asphalt": "flat-wet-asphalt",
+        "flat-green-sea": "flat-green-sea",
+        "flat-nephritis": "flat-nephritis",
+        "flat-belize-hole": "flat-belize-hole",
+        "flat-wisteria": "flat-wisteria",
+        "flat-midnight-blue": "flat-midnight-blue",
+        "flat-sun-flower": "flat-sun-flower",
+        "flat-carrot": "flat-carrot",
+        "flat-alizarin": "flat-alizarin",
+        "flat-clouds": "flat-clouds",
+        "flat-concrete": "flat-concrete",
+        "flat-orange": "flat-orange",
+        "flat-pumpkin": "flat-pumpkin",
+        "flat-pomegranate": "flat-pomegranate",
+        "flat-silver": "flat-silver",
+        "flat-asbestos": "flat-asbestos",
+        "ios-deep-blue": "ios-deep-blue",
+        "ios-blue": "ios-blue",
+        "ios-light-blue": "ios-light-blue",
+        "ios-green": "ios-green",
+        "ios-pink": "ios-pink",
+        "ios-red": "ios-red",
+        "ios-orange": "ios-orange",
+        "ios-yellow": "ios-yellow",
+        "ios-grey": "ios-grey",
+        "ios-light-grey": "ios-light-grey",
+        "ios-background": "ios-background",
+        "win8-lime": "win8-lime",
+        "win8-green": "win8-green",
+        "win8-emerald": "win8-emerald",
+        "win8-teal": "win8-teal",
+        "win8-cyan": "win8-cyan",
+        "win8-blue": "win8-blue",
+        "win8-cobalt": "win8-cobalt",
+        "win8-indigo": "win8-indigo",
+        "win8-violet": "win8-violet",
+        "win8-pink": "win8-pink",
+        "win8-magenta": "win8-magenta",
+        "win8-crimson": "win8-crimson",
+        "win8-red": "win8-red",
+        "win8-orange": "win8-orange",
+        "win8-amber": "win8-amber",
+        "win8-yellow": "win8-yellow",
+        "win8-brown": "win8-brown",
+        "win8-olive": "win8-olive",
+        "win8-steel": "win8-steel",
+        "win8-mauve": "win8-mauve",
+        "win8-taupe": "win8-taupe",
+        "win8-sienna": "win8-sienna"
     },
     Sizes: {
         "tiny": "w3-tiny",
@@ -38,19 +93,36 @@ const Config = {
         "xxlarge": "w3-xxlarge",
         "xxxlarge": "w3-xxxlarge"
     },
-
+    Direction: {
+        "topleft": "topleft",
+        "topright": "topright",
+        "bottomleft": "bottomleft",
+        "bottomright": "bottomright",
+        "left": "left",
+        "right": "right",
+        "middle": "middle",
+        "topmiddle": "topmiddle",
+        "bottommiddle": "bottommiddle"
+    }
+    ,
+    GetDirection: function(dir) {
+        if (typeof(this.Direction[dir]) != "undefined") {
+            return dir;
+        }
+        throw new TypeError("wrong direction!");
+    },
     GetSize: function(size) {
         if (typeof(this.Sizes[size]) != "undefined") {
             return size;
         }
-        throw new TypeError("wrong sized!")
+        throw new TypeError("wrong sized!");
     },
 
     GetColor: function (color) {
         if (typeof(this.Colors[color]) != "undefined") {
             return color;
         }
-        throw new TypeError("wrong color!")
+        throw new TypeError("wrong color!");
     }
 };
 
@@ -136,6 +208,24 @@ class Button extends button {
 }
 
 class Text extends div {
+    constructor(text = null) {
+        super();
+        if (text != null) {
+            super.text(text);
+        }
+    }
+
+    left() {
+        super.class("w3-left-align");
+        return this;
+    }
+    right() {
+        super.class("w3-right-align");
+        return this;
+    }
+}
+
+class Html extends div {
     constructor(text = null) {
         super();
         if (text != null) {
@@ -257,18 +347,14 @@ class List extends ul {
     }
 }
 
-class Image extends img {
-    constructor(path = null) {
-        super();
-        super.class("w3-image");
-    }
-}
+
 
 class TextField extends div {
-    constructor(text = null, type = "text", placeholder = null) {
+    constructor(text = null, type = "text", placeholder = null, error = false) {
         super();
         this.label = new label();
         this.tf = new input().class(["w3-input"]);
+        this.error_label = new label();
 
 
         if (text != null) {
@@ -290,6 +376,24 @@ class TextField extends div {
             this.tf
         ]);
 
+        if (error) {
+            super.add(this.error_label);
+        }
+
+    }
+    
+    error(err = null) {
+
+        if (err != null) {
+            this.tf.class(`w3-border-${Config.GetColor("red")}`);
+            this.error_label.class(`w3-text-${Config.GetColor("red")}`);
+            this.error_label.html(err);
+        } else {
+            this.tf.removeClass(`w3-border-${Config.GetColor("red")}`);
+            this.error_label.removeClass(`w3-text-${Config.GetColor("red")}`);
+            this.error_label.html("");
+        }
+        return this;
     }
 
     size(size) {
@@ -333,11 +437,11 @@ class TextField extends div {
 
 
 class TextBox extends div {
-    constructor(text = null, type = "text", placeholder = null) {
+    constructor(text = null, placeholder = null, error = false) {
         super();
         this.label = new label();
         this.tf = new textarea().class(["w3-input"]);
-
+        this.error_label = new label();
 
         if (text != null) {
             if (text instanceof Widget) {
@@ -348,7 +452,6 @@ class TextBox extends div {
             super.add(this.label);
         }
 
-        this.tf.attr("type", type);
 
         if (placeholder != null) {
             this.tf.attr("placeholder", placeholder);
@@ -358,7 +461,26 @@ class TextBox extends div {
             this.tf
         ]);
 
+        if (error) {
+            super.add(this.error_label);
+        }
+
     }
+
+    error(err = null) {
+
+        if (err != null) {
+            this.tf.class(`w3-border-${Config.GetColor("red")}`);
+            this.error_label.class(`w3-text-${Config.GetColor("red")}`);
+            this.error_label.html(err);
+        } else {
+            this.tf.removeClass(`w3-border-${Config.GetColor("red")}`);
+            this.error_label.removeClass(`w3-text-${Config.GetColor("red")}`);
+            this.error_label.html("");
+        }
+        return this;
+    }
+
 
     size(size) {
         this.tf.class(`w3-${Config.GetSize(size)}`);
@@ -517,6 +639,15 @@ class ComboBox extends select {
         super.class("w3-border");
         return this;
     }
+
+    setValue(value) {
+        super.value(value);
+        return this;
+    }
+
+    getValue() {
+        return super.value();
+    }
 }
 
 
@@ -607,9 +738,14 @@ class Grid extends div {
 }
 
 class Bar extends div {
-    constructor(color = null, size = null, mobile = false) {
+    constructor(color = null, size = null) {
         super();
         super.class("w3-bar");
+        super.style({
+            "overflow-x": "auto",
+            "white-space": "nowrap"
+        })
+        
 
         if (color != null) {
             super.class(`w3-${Config.GetColor(color)}`);
@@ -619,12 +755,15 @@ class Bar extends div {
             super.class(`w3-${Config.GetSize(size)}`);
         }
         
-
-        this.mobile = mobile;
         
     }
 
-    add(text = null, hovercolor = null, evt = null, hoverableBGColor = null, hoverText = null) {
+    block() {
+        super.class("w3-bar-block");
+        return this;
+    }
+
+    add(text = null, isRight = false, hovercolor = null, evt = null, hoverableBGColor = null, hoverText = null) {
         const item = new div().class("w3-bar-item");
         if (text instanceof Widget) {
             item.add(text);
@@ -653,6 +792,10 @@ class Bar extends div {
             item.class(`w3-hover-${Config.GetColor(hoverText)}`);
         }
 
+        if (isRight) {
+            item.class("w3-right");
+        }
+
         super.add(item);
         return item;
     }
@@ -675,6 +818,10 @@ class DropDownHover extends div {
 
         if (title instanceof Widget) {
             a1.add(title);
+            
+            if (typeof(fn) == "function") {
+                a1.addEventListener("click", fn);
+            }
         } else {
             a1.html(title);
             if (typeof(fn) == "function") {
@@ -955,11 +1102,14 @@ class Modal extends div {
 
         if (title != null) {
             const header = new Card().add(new Label(title)).style({
-                padding: "15px"
+                padding: "15px",
+                position: "relative"
             });
 
             const close = new Button("X").style({
-                float: "right"
+                position: "absolute",
+                top: "10px",
+                right: "10px"
             }).size("tiny");
             header.add(close);
 
@@ -1006,6 +1156,181 @@ class Modal extends div {
     
 }
 
+class Code extends div {
+    constructor(lang = null) {
+        super();
+        super.class("w3-code");
+
+        if (lang != null) {
+            super.class(`${lang}High`);
+        }
+    }
+
+    write(code = null) {
+        super.text(code);
+        return this;
+    }
+}
+
+class Display extends div {
+    constructor(pos = "middle") {
+        super();
+        super.class(`w3-display-${Config.GetDirection(pos)}`);
+    }
+}
+
+
+class Row extends div {
+    constructor(obj = null) {
+        super();
+        
+        if (obj instanceof Widget) {
+            obj.style({ display: "inline-block" });
+            super.add(obj);
+            
+        } else if (obj instanceof Array) {
+            for (const item of obj) {
+                if (item instanceof Widget) {
+                    item.style({ display: "inline-block" });
+                    super.add(item);
+                }
+            }
+        }
+  
+    }
+}
+
+
+class Column extends div {
+    constructor(obj = null) {
+        super();
+        
+        if (obj instanceof Widget) {
+            obj.style({ display: "block" });
+            super.add(obj);
+            
+        } else if (obj instanceof Array) {
+            for (const item of obj) {
+                if (item instanceof Widget) {
+                    item.style({ display: "block" });
+                    super.add(item);
+                }
+            }
+        }
+  
+    }
+}
+
+
+class Photo2d extends img {
+    constructor() {
+        super();
+        super.class("w3-image");
+    }
+
+    path(src) {
+        super.attr({
+            "src": src
+        });
+
+        return this;
+    }
+
+    base64() {
+        return this;
+    }
+
+    sepia() {
+        super.class("w3-sepia");
+        return this;
+    }
+    sepiaMin() {
+        super.class("w3-sepia-min");
+        return this;
+    }
+    sepiaMax() {
+        super.class("w3-sepia-max");
+        return this;
+    }
+
+    hoverOpacity() {
+        super.class("w3-hover-opacity");
+        return this;
+    }
+    hoverGrayScale() {
+        super.class("w3-hover-grayscale");
+        return this;
+    }
+
+    hoverSepia() {
+        super.class("w3-hover-sepia");
+        return this;
+    }
+
+    round() {
+        super.class("w3-round");
+        return this;
+    }
+
+    circle() {
+        super.class("w3-circle");
+        return this;
+    }
+
+    border() {
+        super.class("w3-border");
+        return this;
+    }
+
+    padding() {
+        super.class("w3-padding");
+        return this;
+    }
+}
+
+class Box extends div{
+    constructor(width = null, height = null) {
+        super();
+        super.style({
+            display: "inline-block",
+            width: "1px",
+            height: "1px"
+        });
+
+        if (width != null) {
+            super.style({
+                width: typeof(width) == "number" ? `${width}px` : width
+            });
+        }
+
+        if (height != null) {
+            super.style({
+                width: typeof(height) == "number" ? `${height}px` : height
+            });
+        }
+        
+    }
+}
+
+class Canvas extends canvas {
+    constructor(width = null, height = null) {
+        super();
+        this.ctx = this.control.getContext("2d");
+
+        if (width != null) {
+            super.attr({
+                width: width
+            });
+        }
+
+        if (height != null) {
+            super.attr({
+                height: height
+            });
+        }
+    }
+}
+
 export {
     Center,
     Container,
@@ -1018,7 +1343,7 @@ export {
     Text,
     Table,
     List,
-    Image,
+    Photo2d,
     Radio,
     CheckBox,
     ComboBox,
@@ -1034,5 +1359,12 @@ export {
     BasicTab,
     Pagination,
     ProgressBar,
-    Modal
+    Modal,
+    Code,
+    Display,
+    Html,
+    Row,
+    Column,
+    Box,
+    Canvas
 };
