@@ -1,6 +1,7 @@
-import { a, button, div, h3, i, img, input, label, li, option, select, span, table, td, textarea, th, tr, ul, Widget } from "../plugin/core/core.js";
+import { a, button, canvas, div, h3, i, img, input, label, li, option, select, span, table, td, textarea, th, tr, ul, Widget } from "../plugin/core/core.js";
 const Config = {
     Colors: {
+        "black": "black",
         "red": "red",
         "pink": "pink",
         "purple": "purple",
@@ -349,10 +350,11 @@ class List extends ul {
 
 
 class TextField extends div {
-    constructor(text = null, type = "text", placeholder = null) {
+    constructor(text = null, type = "text", placeholder = null, error = false) {
         super();
         this.label = new label();
         this.tf = new input().class(["w3-input"]);
+        this.error_label = new label();
 
 
         if (text != null) {
@@ -374,6 +376,24 @@ class TextField extends div {
             this.tf
         ]);
 
+        if (error) {
+            super.add(this.error_label);
+        }
+
+    }
+    
+    error(err = null) {
+
+        if (err != null) {
+            this.tf.class(`w3-border-${Config.GetColor("red")}`);
+            this.error_label.class(`w3-text-${Config.GetColor("red")}`);
+            this.error_label.html(err);
+        } else {
+            this.tf.removeClass(`w3-border-${Config.GetColor("red")}`);
+            this.error_label.removeClass(`w3-text-${Config.GetColor("red")}`);
+            this.error_label.html("");
+        }
+        return this;
     }
 
     size(size) {
@@ -417,11 +437,11 @@ class TextField extends div {
 
 
 class TextBox extends div {
-    constructor(text = null, type = "text", placeholder = null) {
+    constructor(text = null, placeholder = null, error = false) {
         super();
         this.label = new label();
         this.tf = new textarea().class(["w3-input"]);
-
+        this.error_label = new label();
 
         if (text != null) {
             if (text instanceof Widget) {
@@ -432,7 +452,6 @@ class TextBox extends div {
             super.add(this.label);
         }
 
-        this.tf.attr("type", type);
 
         if (placeholder != null) {
             this.tf.attr("placeholder", placeholder);
@@ -442,7 +461,26 @@ class TextBox extends div {
             this.tf
         ]);
 
+        if (error) {
+            super.add(this.error_label);
+        }
+
     }
+
+    error(err = null) {
+
+        if (err != null) {
+            this.tf.class(`w3-border-${Config.GetColor("red")}`);
+            this.error_label.class(`w3-text-${Config.GetColor("red")}`);
+            this.error_label.html(err);
+        } else {
+            this.tf.removeClass(`w3-border-${Config.GetColor("red")}`);
+            this.error_label.removeClass(`w3-text-${Config.GetColor("red")}`);
+            this.error_label.html("");
+        }
+        return this;
+    }
+
 
     size(size) {
         this.tf.class(`w3-${Config.GetSize(size)}`);
@@ -700,9 +738,14 @@ class Grid extends div {
 }
 
 class Bar extends div {
-    constructor(color = null, size = null, mobile = false) {
+    constructor(color = null, size = null) {
         super();
         super.class("w3-bar");
+        super.style({
+            "overflow-x": "auto",
+            "white-space": "nowrap"
+        })
+        
 
         if (color != null) {
             super.class(`w3-${Config.GetColor(color)}`);
@@ -712,12 +755,15 @@ class Bar extends div {
             super.class(`w3-${Config.GetSize(size)}`);
         }
         
-
-        this.mobile = mobile;
         
     }
 
-    add(text = null, hovercolor = null, evt = null, hoverableBGColor = null, hoverText = null) {
+    block() {
+        super.class("w3-bar-block");
+        return this;
+    }
+
+    add(text = null, isRight = false, hovercolor = null, evt = null, hoverableBGColor = null, hoverText = null) {
         const item = new div().class("w3-bar-item");
         if (text instanceof Widget) {
             item.add(text);
@@ -744,6 +790,10 @@ class Bar extends div {
 
         if (hoverText != null) {
             item.class(`w3-hover-${Config.GetColor(hoverText)}`);
+        }
+
+        if (isRight) {
+            item.class("w3-right");
         }
 
         super.add(item);
@@ -1262,6 +1312,25 @@ class Box extends div{
     }
 }
 
+class Canvas extends canvas {
+    constructor(width = null, height = null) {
+        super();
+        this.ctx = this.control.getContext("2d");
+
+        if (width != null) {
+            super.attr({
+                width: width
+            });
+        }
+
+        if (height != null) {
+            super.attr({
+                height: height
+            });
+        }
+    }
+}
+
 export {
     Center,
     Container,
@@ -1296,5 +1365,6 @@ export {
     Html,
     Row,
     Column,
-    Box
+    Box,
+    Canvas
 };

@@ -1,5 +1,5 @@
 import { div, Window } from "./plugin/core/core.js";
-import { Accordion, Badge, Bar, BasicTab, Box, Button, Card, CheckBox, Code, Column, ComboBox, Container, Display, DropDownHover, Grid, Icon, Label, List, Modal, Pagination, Panel, Photo, Photo2d, Picture, ProgressBar, Radio, Row, SideBar, Table, Tag, Text, TextBox, TextField } from "./theme/w3.js";
+import { Accordion, Badge, Bar, BasicTab, Box, Button, Canvas, Card, CheckBox, Code, Column, ComboBox, Container, Display, DropDownHover, Grid, Icon, Label, List, Modal, Pagination, Panel, Photo, Photo2d, Picture, ProgressBar, Radio, Row, SideBar, Table, Tag, Text, TextBox, TextField } from "./theme/w3.js";
 
 /** Start Mcontrol Theme This the the mcontrol gui  **/
 // import "./theme/bt/bootstrap.min.css";
@@ -68,66 +68,41 @@ class TestPage extends div {
             marginBottom: "50vh"
         });
 
-        const btn = new Button("Open Modal", "red");
-
-        const code = new Code("html");
-        code.write(`
-            
-        `);
+        const bar  = new Bar("green");
         
-
-        const tab = new BasicTab("blue");
-        tab.add("HRMS Portal");
-
-        tab.add("Profile", (o) => {
-            o.add(new Button("Profile"));
-        });
-        tab.add("Contact", (o) => {
-            o.add(new Button("Contact"));
-        });
-        tab.add("Setting", (o) => {
-            o.add(new Button("Setting"));
-        }, true);
-
-        
-        const test1 = new ComboBox();
-        test1.add("1", "hellow");
-        test1.add("2", "test2");
-        test1.add("3", "test3");
-
-        const menu = new DropDownHover("Testing");
-        menu.add(new Row([new Icon("save"), new Box(5), new Text("Save")]));
-        menu.add("open");
-        menu.add("open folder");
-        
+        bar.add("About");
+        bar.add("Contact");
+        bar.add("Testing");
+        bar.add("About");
+        bar.add("Contact");
+        bar.add("Testing");
+        bar.add("About");
+        bar.add("Contact");
+        bar.add("Testing");
+        bar.add("About");
+        bar.add("Contact");
+        bar.add("Testing");
 
 
+
+        const tf = new TextBox("Testing", "hellow", true).border().error("Invalid Username");
+
+        const check = new CheckBox("Testing");
+        const radio = new Radio("Male", "gender");
+
+        setTimeout(() => {
+            tf.error();
+        }, 2000);
         super.add([
-            tab,
-            btn,
-            menu,
-            test1,
-            new Row([
-                new Button("hellow"), new Button("test", "red"), new Icon("user"),
-                new Label("hellow world"), new Column([
-                    new Button("test1", "blue"),
-                    new Button("test2", "green"),
-                    new Button("test3", "lime")
-                ])
-            ]),
-            code,
-            new Photo2d().path("https://cubanvr.com/wp-content/uploads/2023/07/ai-image-generators.webp")
-            .hoverOpacity().hoverGrayScale().hoverSepia()
+            bar,
+            tf,
+            check,
+            radio
         ]);
 
         
 
-        btn.addEventListener("click", async () => {
-
-            const login = new Login();
-            const res = await login.show();
-            console.log(res);
-        });
+        
     }
 }
 /// end testing foundation
