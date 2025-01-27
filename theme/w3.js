@@ -208,11 +208,20 @@ class Button extends button {
 }
 
 class Text extends div {
-    constructor(text = null) {
+    constructor(text = null, color = null) {
         super();
         if (text != null) {
             super.text(text);
         }
+
+        if (color != null) {
+            super.class(`w3-text-${Config.GetColor(color)}`);
+        }
+    }
+
+    setTextColor(color) {
+        super.class(`w3-text-${Config.GetColor(color)}`);
+        return this;
     }
 
     left() {
