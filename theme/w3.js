@@ -869,12 +869,21 @@ class Accordion extends span {
 }
 
 class Icon extends i {
-    constructor(ico = null) {
+    constructor(ico = null, color = null) {
         super();
 
         if (ico != null) {
             super.class(["fa", `fa-${ico}`]);
         }
+
+        if (color != null) {
+            super.class(`w3-text-${Config.GetColor(color)}`);
+        }
+    }
+
+    setColor(color) {
+        super.class(`w3-text-${Config.GetColor(color)}`);
+        return this;
     }
 }
 class Label extends label {
