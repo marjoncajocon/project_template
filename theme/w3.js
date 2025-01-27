@@ -248,8 +248,9 @@ class Table extends table {
     constructor(header = [], size = null) {
         super();
 
+        super.class("w3-table");
         if (size != null) {
-            super.class(["w3-table", `w3-${Config.GetSize(size)}`]);
+            super.class([`w3-${Config.GetSize(size)}`]);
         }
 
         const tr1 = new tr();
@@ -942,7 +943,7 @@ class BasicTab extends div {
         //     <button class="w3-bar-item w3-button" onclick="openCity('Paris')">Paris</button>
         //     <button class="w3-bar-item w3-button" onclick="openCity('Tokyo')">Tokyo</button>
         // </div>
-        this.content = new div().class(["w3-container", "w3-display-container"]);
+        this.content = new div();
 
         super.add([
             this.menu,
