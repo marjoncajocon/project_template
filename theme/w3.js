@@ -1,3 +1,4 @@
+import MyApp from "../main.js";
 import { a, button, canvas, div, h3, i, img, input, label, li, option, select, span, table, td, textarea, th, tr, ul, Widget } from "../plugin/core/core.js";
 const Config = {
     Colors: {
@@ -1158,8 +1159,8 @@ class Modal extends div {
 
     async show() {
         super.show();
-        this.body.appendChild(super.control());
-        
+        //this.body.appendChild(super.control());
+        MyApp.add(this);
         const promise = new Promise((resolve, reject) => {
             this.resolvefn = resolve;
         });
