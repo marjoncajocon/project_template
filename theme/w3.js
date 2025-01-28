@@ -271,6 +271,8 @@ class Table extends table {
         }
 
         super.add(tr1);
+
+        this.rows = [];
     }
 
     add(items = []) {
@@ -287,7 +289,19 @@ class Table extends table {
         }
 
         super.add(tr1);
+
+        this.rows.push(tr1);
+
         return tr1;
+    }
+
+    clearBody() {
+        for (const item of this.rows) {
+            item.delete();
+        }        
+        
+        this.rows = [];
+        return this;
     }
 
     striped() {
