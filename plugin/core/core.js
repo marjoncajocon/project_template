@@ -488,6 +488,219 @@ class Widget {
       return this.names[new Date(date_str).getDay()];
     }
   }
+
+
+  
+
+  class IDB {
+    constructor(db = null, tbl = null, version = 1) {
+
+      const dbName = db == null ? "db" : db;
+      const table = tbl == null ? "table": tbl;
+      const dbVersion = version; // Versioning is required for schema updates.
+
+      const request = indexedDB.open(dbName, dbVersion);
+
+      request.onupgradeneeded = function (event) {
+        const db = event.target.result;
+        // Create an object store named 'users' with 'id' as the keyPath
+        if (!db.objectStoreNames.contains(table)) {
+          db.createObjectStore(table, { keyPath: "id" });
+        }
+      };
+
+      request.onsuccess = function (event) {
+        const db = event.target.result;
+      };
+
+      request.onerror = function (event) {
+        console.error("Error opening database:", event.target.errorCode);
+      };
+
+      this.dbname = dbName;
+      this.version = dbVersion;
+      this.table = table;
+    }
+
+    async add(data_obj) {
+      const request = indexedDB.open(this.dbname, this.version);
+
+      const promise = new Promise((resolve, reject) => {
+        request.onsuccess = (event) => { // Use an arrow function here
+          const db = event.target.result;
+          const transaction = db.transaction(this.table, "readwrite");
+          const objectStore = transaction.objectStore(this.table);
+          
+          const request = objectStore.add(data_obj);
+          
+          request.onsuccess = () => { // Use an arrow function here
+            // Fixed to use data_obj instead of user
+            resolve(true);
+          };
+      
+          request.onerror = (event) => { // Use an arrow function here
+            resolve(null);
+          };
+        };
+      });
+      return promise;
+    }
+
+    async update(id, data_obj) {
+      const request = indexedDB.open(this.dbname, this.version);
+      const promise = new Promise((resolve, reject) => {
+        request.onsuccess = (event) => {
+          const db = event.target.result;
+          const transaction = db.transaction(this.table, "readwrite");
+          const objectStore = transaction.objectStore(this.table);
+
+          const getrequest = objectStore.get(id);
+
+          getrequest.onsuccess = (event) => {
+            const old_data = event.target.result;
+            const updateRequest = objectStore.put({ ...old_data, ...data_obj });
+
+            updateRequest.onsuccess = () => {
+              resolve(true);
+            };
+
+            updateRequest.onerror = (event) => {
+              resolve(null);
+            };
+          };
+
+          getrequest.onerror = (event) => {
+            resolve(null);
+          };
+        };
+
+        request.onerror = (event) => {
+          resolve(null);
+        };
+      });
+      return promise;
+    }
+
+    async get(id) {
+      const request = indexedDB.open(this.dbname, this.version);
+
+      const promise = new Promise((resolve, reject) => {
+
+        request.onsuccess = (event) => {
+          const db = event.target.result;
+          const transaction = db.transaction(this.table, "readonly");
+          const objectStore = transaction.objectStore(this.table);
+
+          const getrequest = objectStore.get(id);
+
+          getrequest.onsuccess = (event) => {
+            const data = event.target.result;
+            resolve(data);
+          };
+
+          getrequest.onerror = (event) => {
+            resolve(null);
+          };
+        };
+
+        request.onerror = (event) => {
+          resolve(null);
+        };
+      });
+
+      return promise;
+    }
+
+    async getAll() {
+      const request = indexedDB.open(this.dbname, this.version);
+      
+      const promise = new Promise((resolve, reject) => {
+
+        request.onsuccess = (event) => {
+          const db = event.target.result;
+          const transaction = db.transaction(this.table, "readonly");
+          const objectStore = transaction.objectStore(this.table);
+      
+          const getAllRequest = objectStore.getAll();
+      
+          getAllRequest.onsuccess = (event) => {
+            const data = event.target.result;
+            resolve(data);
+          };
+      
+          getAllRequest.onerror = (event) => {
+            resolve(null);
+          };
+        };
+      
+        request.onerror = (event) => {
+          resolve(null);
+        };
+
+      });
+
+      return promise;
+
+    }
+
+    async delete(id) {
+      const request = indexedDB.open(this.dbname, this.version);
+      const promise = new Promise((resolve, reject) => {
+        request.onsuccess = (event) => {
+            const db = event.target.result;
+            const transaction = db.transaction(this.table, "readwrite");
+            const objectStore = transaction.objectStore(this.table);
+
+            const deleteRequest = objectStore.delete(id);
+
+            deleteRequest.onsuccess = () => {
+                resolve(true);
+            };
+
+            deleteRequest.onerror = (event) => {
+                resolve(null);
+            };
+        };
+
+        request.onerror = (event) => {
+            resolve(null);
+        };
+      });
+    return promise;
+  }
+
+  async deleteAll() {
+    const request = indexedDB.open(this.dbname, this.version);
+
+    const promise = new Promise((resolve, reject) => {
+
+      request.onsuccess = (event) => {
+          const db = event.target.result;
+          const transaction = db.transaction(this.table, "readwrite");
+          const objectStore = transaction.objectStore(this.table);
+
+          const clearRequest = objectStore.clear();
+
+          clearRequest.onsuccess = () => {
+              resolve(true);
+          };
+
+          clearRequest.onerror = (event) => {
+            resolve(null);
+          };
+      };
+
+      request.onerror = (event) => {
+          resolve(null);
+      };
+    });
+    return promise;
+  }
+
+  
+}
+
+
   export { DateCore }
   export { Widget };
   export {
@@ -503,5 +716,6 @@ class Widget {
   };
   export {
     Window,
-    Http
+    Http,
+    IDB
   };

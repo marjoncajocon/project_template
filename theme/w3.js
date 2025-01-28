@@ -208,11 +208,20 @@ class Button extends button {
 }
 
 class Text extends div {
-    constructor(text = null) {
+    constructor(text = null, color = null) {
         super();
         if (text != null) {
             super.text(text);
         }
+
+        if (color != null) {
+            super.class(`w3-text-${Config.GetColor(color)}`);
+        }
+    }
+
+    setTextColor(color) {
+        super.class(`w3-text-${Config.GetColor(color)}`);
+        return this;
     }
 
     left() {
@@ -248,8 +257,9 @@ class Table extends table {
     constructor(header = [], size = null) {
         super();
 
+        super.class("w3-table");
         if (size != null) {
-            super.class(["w3-table", `w3-${Config.GetSize(size)}`]);
+            super.class([`w3-${Config.GetSize(size)}`]);
         }
 
         const tr1 = new tr();
@@ -859,12 +869,21 @@ class Accordion extends span {
 }
 
 class Icon extends i {
-    constructor(ico = null) {
+    constructor(ico = null, color = null) {
         super();
 
         if (ico != null) {
             super.class(["fa", `fa-${ico}`]);
         }
+
+        if (color != null) {
+            super.class(`w3-text-${Config.GetColor(color)}`);
+        }
+    }
+
+    setColor(color) {
+        super.class(`w3-text-${Config.GetColor(color)}`);
+        return this;
     }
 }
 class Label extends label {
@@ -942,7 +961,7 @@ class BasicTab extends div {
         //     <button class="w3-bar-item w3-button" onclick="openCity('Paris')">Paris</button>
         //     <button class="w3-bar-item w3-button" onclick="openCity('Tokyo')">Tokyo</button>
         // </div>
-        this.content = new div().class(["w3-container", "w3-display-container"]);
+        this.content = new div();
 
         super.add([
             this.menu,
@@ -1331,6 +1350,58 @@ class Canvas extends canvas {
     }
 }
 
+class TextFieldFilter extends div {
+    constructor(text = null, type = "text", placeholder = null, error = false) {
+        super();
+        this.input = new TextField(text, type, placeholder, error);
+
+        this.list = new List().border().hide();
+
+        super.add([
+            this.input, this.list
+        ]);
+
+
+        let time = null;
+        this.input.tf.addEventListener("focusin", () => {
+            clearTimeout(time);
+            this.list.show();
+        });
+
+        
+        this.input.tf.addEventListener("focusout", () => {
+            time = setTimeout(() => {
+                this.list.hide();
+            }, 1000);
+        });
+
+        this.list.addEventListener("mouseover", () => {
+            clearTimeout(time);
+            this.list.show();
+        });
+
+        this.list.addEventListener("mouseout", () => {
+            time = setTimeout(() => {
+                this.list.hide();
+            }, 1000);
+        });
+
+    }
+    init(arr_list_of_key_value = null) {
+        
+        for (const item of arr_list_of_key_value) {
+            this.list.add(item.value);
+        }
+    
+        return this;
+    }
+    border() {
+        this.input.tf.class("w3-border");
+        return this;
+    }
+    
+}
+
 export {
     Center,
     Container,
@@ -1366,5 +1437,6 @@ export {
     Row,
     Column,
     Box,
-    Canvas
+    Canvas,
+    TextFieldFilter
 };
