@@ -1129,7 +1129,7 @@ class Center extends div {
 class Modal extends div {
     constructor(title = null, maxwidth = null, bgcolor = null, animate = "top") {
         super();
-        super.class("w3-modal");
+        super.class("w3-modal").style({ zIndex: "1000" });
         this.resolvefn = null;
 
         this.content = new div().class(["w3-modal-content", "w3-card-4"]);
