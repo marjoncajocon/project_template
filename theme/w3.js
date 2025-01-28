@@ -1172,6 +1172,9 @@ class Modal extends div {
         this.resolvefn(value);
         super.hide();
         this.delete();
+        if (typeof (this.dispose) == "function") {
+            this.dispose(); // dispose for the modal
+        }
     }
     
 }
