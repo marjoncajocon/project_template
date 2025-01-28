@@ -253,6 +253,14 @@ class Html extends div {
     }
 }
 
+class TableResponsive extends div {
+    constructor(obj) {
+        super();
+        super.class("w3-responsive");
+        
+        super.add(obj);
+    }
+}
 
 class Table extends table {
     constructor(header = [], size = null) {
@@ -271,6 +279,8 @@ class Table extends table {
         }
 
         super.add(tr1);
+
+        this.rows = [];
     }
 
     add(items = []) {
@@ -287,7 +297,19 @@ class Table extends table {
         }
 
         super.add(tr1);
+
+        this.rows.push(tr1);
+
         return tr1;
+    }
+
+    clearBody() {
+        for (const item of this.rows) {
+            item.delete();
+        }        
+
+        this.rows = [];
+        return this;
     }
 
     striped() {
@@ -1107,7 +1129,7 @@ class Center extends div {
 class Modal extends div {
     constructor(title = null, maxwidth = null, bgcolor = null, animate = "top") {
         super();
-        super.class("w3-modal");
+        super.class("w3-modal").style({ zIndex: "1000" });
         this.resolvefn = null;
 
         this.content = new div().class(["w3-modal-content", "w3-card-4"]);
@@ -1477,6 +1499,7 @@ export {
     TextBox,
     Text,
     Table,
+    TableResponsive,
     List,
     Photo2d,
     Radio,
