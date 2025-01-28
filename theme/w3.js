@@ -1,3 +1,4 @@
+import MyApp from "../main.js";
 import { a, button, canvas, div, h3, i, img, input, label, li, option, select, span, table, td, textarea, th, tr, ul, Widget } from "../plugin/core/core.js";
 const Config = {
     Colors: {
@@ -1104,13 +1105,16 @@ class Center extends div {
 }
 
 class Modal extends div {
-    constructor(title = null, maxwidth = null, bgcolor = null) {
+    constructor(title = null, maxwidth = null, bgcolor = null, animate = "top") {
         super();
         super.class("w3-modal");
         this.resolvefn = null;
 
-        this.content = new div().class(["w3-modal-content", "w3-card-4", "w3-animate-top"]);
-        
+        this.content = new div().class(["w3-modal-content", "w3-card-4"]);
+
+        if (animate != null) {
+            this.content.class(`w3-animate-${animate}`);
+        }
         if (maxwidth != null) {
             this.content.style({
                 maxWidth: maxwidth
@@ -1158,8 +1162,8 @@ class Modal extends div {
 
     async show() {
         super.show();
-        this.body.appendChild(super.control());
-        
+        //this.body.appendChild(super.control());
+        MyApp.add(this);
         const promise = new Promise((resolve, reject) => {
             this.resolvefn = resolve;
         });
@@ -1171,6 +1175,9 @@ class Modal extends div {
         this.resolvefn(value);
         super.hide();
         this.delete();
+        if (typeof (this.dispose) == "function") {
+            this.dispose(); // dispose for the modal
+        }
     }
     
 }
@@ -1402,6 +1409,63 @@ class TextFieldFilter extends div {
     
 }
 
+
+class Alert1 extends Modal {
+    constructor(msg, color = "sand") {
+        super(new Row([new Icon("message"), new Box(10), new Text("Alert")]), "480px", color);
+        
+        const ok = new Button(new Row([ new Icon("check"), new Box(5), new Text("OK") ]), "blue").size("small").style({ borderRadius: "10px" });
+
+        super.add(new Panel().style({
+            padding: "0px 20px 20px 20px"
+        }).add(new Column([
+            new Html(`<p>${msg}</p>`).style({fontSize: "13pt"}),
+            new Row([
+                ok, new Box(10)
+            ])
+        ])));
+
+        ok.addEventListener("click", async () => {
+            super.hide(true);
+        });
+
+    }
+}
+
+class Confirm1 extends Modal {
+    constructor(msg, color) {
+        super(new Row([new Icon("question-circle"), new Box(10), new Text("Confirmation")]), "480px", color, "bottom");
+        
+        const ok = new Button(new Row([ new Icon("check"), new Box(5), new Text("OK") ]), "blue").size("small").style({ borderRadius: "5px" });
+        const cancel = new Button(new Row([ new Icon("close"), new Box(5), new Text("CANCEL") ]), "red").size("small").style({ borderRadius: "5px" });
+        
+        super.add(new Panel().style({
+            padding: "0px 20px 20px 20px"
+        }).add(new Column([
+            new Html(`<p>${msg}</p>`).style({fontSize: "13pt"}),
+            new Row([
+                ok, new Box(5), cancel
+            ])
+        ])));
+
+        ok.addEventListener("click", async () => {
+            super.hide(true);
+        });
+
+        cancel.addEventListener("click", () => {
+            super.hide(false);
+        });
+    }
+}
+
+const Alert = async (msg = "Alert", color = "sand") => {
+    return new Alert1(msg, color).show();
+}
+
+const Confirm = async (msg = "Confirm", color = "red") => {
+    return new Confirm1(msg, color).show();
+};
+
 export {
     Center,
     Container,
@@ -1440,3 +1504,5 @@ export {
     Canvas,
     TextFieldFilter
 };
+
+export {Alert, Confirm};
