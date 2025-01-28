@@ -253,6 +253,14 @@ class Html extends div {
     }
 }
 
+class TableResponsive extends div {
+    constructor(obj) {
+        super();
+        super.class("w3-responsive");
+        
+        super.add(obj);
+    }
+}
 
 class Table extends table {
     constructor(header = [], size = null) {
@@ -299,7 +307,7 @@ class Table extends table {
         for (const item of this.rows) {
             item.delete();
         }        
-        
+
         this.rows = [];
         return this;
     }
@@ -1491,6 +1499,7 @@ export {
     TextBox,
     Text,
     Table,
+    TableResponsive,
     List,
     Photo2d,
     Radio,
