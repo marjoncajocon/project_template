@@ -1350,6 +1350,58 @@ class Canvas extends canvas {
     }
 }
 
+class TextFieldFilter extends div {
+    constructor(text = null, type = "text", placeholder = null, error = false) {
+        super();
+        this.input = new TextField(text, type, placeholder, error);
+
+        this.list = new List().border().hide();
+
+        super.add([
+            this.input, this.list
+        ]);
+
+
+        let time = null;
+        this.input.tf.addEventListener("focusin", () => {
+            clearTimeout(time);
+            this.list.show();
+        });
+
+        
+        this.input.tf.addEventListener("focusout", () => {
+            time = setTimeout(() => {
+                this.list.hide();
+            }, 1000);
+        });
+
+        this.list.addEventListener("mouseover", () => {
+            clearTimeout(time);
+            this.list.show();
+        });
+
+        this.list.addEventListener("mouseout", () => {
+            time = setTimeout(() => {
+                this.list.hide();
+            }, 1000);
+        });
+
+    }
+    init(arr_list_of_key_value = null) {
+        
+        for (const item of arr_list_of_key_value) {
+            this.list.add(item.value);
+        }
+    
+        return this;
+    }
+    border() {
+        this.input.tf.class("w3-border");
+        return this;
+    }
+    
+}
+
 export {
     Center,
     Container,
@@ -1385,5 +1437,6 @@ export {
     Row,
     Column,
     Box,
-    Canvas
+    Canvas,
+    TextFieldFilter
 };
