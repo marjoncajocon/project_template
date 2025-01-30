@@ -1149,7 +1149,8 @@ class Modal extends div {
         }
         if (maxwidth != null) {
             this.content.style({
-                maxWidth: maxwidth
+                width: maxwidth,
+                maxWidth: "98%"
             })
         }
 
