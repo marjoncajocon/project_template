@@ -283,10 +283,12 @@ class Table extends table {
         this.rows = [];
     }
 
-    add(items = []) {
+    add(items = [], arr = []) {
         const tr1 = new tr();
 
-        for (const item of items) {
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+
             const td1=  new td();
             if (item instanceof Widget) {
                 td1.add(item);
@@ -294,6 +296,14 @@ class Table extends table {
                 td1.html(item);
             }
             tr1.add(td1);
+
+            if (arr) {
+                if (typeof(arr[i]) != "undefined") {
+                    if (typeof(arr[i]["style"]) != "undefined") {
+                        td1.style(arr[i]["style"]);
+                    }
+                }
+            }
         }
 
         super.add(tr1);
