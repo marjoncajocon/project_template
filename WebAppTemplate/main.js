@@ -107,6 +107,7 @@ class TestPage extends div {
 }
 /// end testing foundation
 
+import './main.css'; // this is required
 const MyApp = new Window();
 MyApp.navigate(new TestPage());
 MyApp.run();
