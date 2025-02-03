@@ -215,9 +215,11 @@ class Button extends button {
     }
     showLoader() {
         this.loader.show();
+        super.attr({ disabled: "" });
         super.style({ position: "relative" });
     }
     hideLoader() {
+        super.removeAttr("disabled");
         this.loader.hide();
         super.style({ position: '' });    
     }
