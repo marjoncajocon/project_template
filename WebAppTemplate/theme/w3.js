@@ -179,6 +179,14 @@ class Button extends button {
         if (color != null) {
             super.class(`w3-${Config.GetColor(color)}`);
         }
+
+        this.loader = new div().class("loader").style({
+            position: "absolute",
+            top: '5px',
+            left: '5px'
+        }).hide();
+
+        super.add(this.loader);
     }
     size(size) {
         super.class(`w3-${Config.GetSize(size)}`);
@@ -204,6 +212,14 @@ class Button extends button {
     border() {
         super.class("w3-border");
         return this;
+    }
+    showLoader() {
+        this.loader.show();
+        super.style({ position: "relative" });
+    }
+    hideLoader() {
+        this.loader.hide();
+        super.style({ position: '' });    
     }
     
 }
