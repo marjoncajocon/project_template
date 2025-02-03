@@ -1515,6 +1515,35 @@ const Confirm = async (msg = "Confirm", color = "red") => {
     return new Confirm1(msg, color).show();
 };
 
+
+class Loader extends div {
+    constructor(w = null, h = null) {
+        super();
+
+        if (w != null) {
+            super.style({ 
+                width: `${w}px`
+            });
+        }
+
+        if (h != null) {
+            super.style({ 
+                width: `${h}px`
+            });
+        }
+
+        super.class("loader");
+    }
+    
+    show() {
+        super.show();
+    }
+
+    hide() {
+        super.delete();
+    }
+}
+
 export {
     Center,
     Container,
@@ -1552,7 +1581,8 @@ export {
     Column,
     Box,
     Canvas,
-    TextFieldFilter
+    TextFieldFilter,
+    Loader
 };
 
 export {Alert, Confirm};
