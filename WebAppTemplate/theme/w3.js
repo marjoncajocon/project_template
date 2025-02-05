@@ -1465,7 +1465,7 @@ class Alert1 extends Modal {
     constructor(msg, color = "sand") {
         super(new Row([new Icon("message"), new Box(10), new Text("Alert")]), "480px", color);
         
-        const ok = new Button(new Row([ new Icon("check"), new Box(5), new Text("OK") ]), "blue").size("small").style({ borderRadius: "10px" });
+        const ok = new Button(new Row([ new Icon("check"), new Box(5), new Text("OK") ]), "blue").size("small").style({ borderRadius: "20px" });
 
         super.add(new Panel().style({
             padding: "0px 20px 20px 20px"
@@ -1487,8 +1487,8 @@ class Confirm1 extends Modal {
     constructor(msg, color) {
         super(new Row([new Icon("question-circle"), new Box(10), new Text("Confirmation")]), "480px", color, "bottom");
         
-        const ok = new Button(new Row([ new Icon("check"), new Box(5), new Text("OK") ]), "blue").size("small").style({ borderRadius: "5px" });
-        const cancel = new Button(new Row([ new Icon("close"), new Box(5), new Text("CANCEL") ]), "red").size("small").style({ borderRadius: "5px" });
+        const ok = new Button(new Row([ new Icon("check"), new Box(5), new Text("OK") ]), "blue").size("small").style({ borderRadius: "20px" });
+        const cancel = new Button(new Row([ new Icon("close"), new Box(5), new Text("CANCEL") ]), "red").size("small").style({ borderRadius: "20px" });
         
         super.add(new Panel().style({
             padding: "0px 20px 20px 20px"
