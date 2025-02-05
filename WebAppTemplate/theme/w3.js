@@ -696,6 +696,11 @@ class ComboBox extends select {
         return this;
     }
 
+    size(size) {
+        this.class(`w3-${Config.GetSize(size)}`);
+        return this;
+    }
+
     border() {
         super.class("w3-border");
         return this;
