@@ -102,6 +102,8 @@ const Config = {
         "left": "left",
         "right": "right",
         "middle": "middle",
+        "top": "top",
+        "bottom": "bottom",
         "topmiddle": "topmiddle",
         "bottommiddle": "bottommiddle"
     }
@@ -1340,18 +1342,20 @@ class Display extends div {
 
 
 class Row extends div {
-    constructor(obj = null) {
+    constructor(obj = null, direction = null) {
         super();
         
+
         if (obj instanceof Widget) {
-            obj.style({ display: "inline-block" });
-            super.add(obj);
+            //obj.style({ display: "inline-block" });
+            super.add(new div().class(["w3-cell", direction == null ?  "w3-cell-top" : `w3-cell-${Config.GetDirection(direction)}`]).add(obj));
             
         } else if (obj instanceof Array) {
             for (const item of obj) {
                 if (item instanceof Widget) {
-                    item.style({ display: "inline-block" });
-                    super.add(item);
+                    //item.style({ display: "inline-block" });
+                    //item.class("w3-cell");
+                    super.add(new div().class(["w3-cell", direction == null ?  "w3-cell-top" : `w3-cell-${Config.GetDirection(direction)}`]).add(item));
                 }
             }
         }
@@ -1365,14 +1369,15 @@ class Column extends div {
         super();
         
         if (obj instanceof Widget) {
-            obj.style({ display: "block" });
-            super.add(obj);
+            //obj.style({ display: "inline-block" });
+            super.add(new div().class("w3-row").add(obj));
             
         } else if (obj instanceof Array) {
             for (const item of obj) {
                 if (item instanceof Widget) {
-                    item.style({ display: "block" });
-                    super.add(item);
+                    //item.style({ display: "inline-block" });
+                    //item.class("w3-cell");
+                    super.add(new div().class("w3-row").add(item));
                 }
             }
         }
@@ -1450,8 +1455,9 @@ class Photo2d extends img {
 class Box extends div{
     constructor(width = null, height = null) {
         super();
+        super.class("w3-cell");
         super.style({
-            display: "inline-block",
+            // display: "inline-block",
             width: "1px",
             height: "1px"
         });
