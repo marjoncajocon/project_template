@@ -1142,7 +1142,7 @@ class Pagination extends div {
         return this;
     }
 
-    add(num = null, active = null, style = null) {
+    add(num = null, active = null, change = null, style = null) {
 
         active = active == null ? false: active;
 
@@ -1189,7 +1189,9 @@ class Pagination extends div {
             link.addClass(this.active_color);
 
             if (typeof(this.change_fn) == "function") {
-                this.change_fn(num);
+                if (change == null || change) {
+                    this.change_fn(num);
+                }
             }
 
             this.current_page = num;
