@@ -781,7 +781,11 @@ class Grid extends div {
         const cell = new div().class("w3-col");
 
         for (const item of sizes) {
-            cell.class(item);
+            if (item == "rest") {
+                cell.class("w3-rest");
+            } else {
+                cell.class(item);
+            }
         }
 
         if (obj instanceof Widget) {
