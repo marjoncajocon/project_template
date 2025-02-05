@@ -1100,6 +1100,8 @@ class Pagination extends div {
         }
 
         const changeDir = (step) => {
+            if (this.links.length == 0) return; // if no data no process 
+            
             this.current_page += step;
             
             // checking the minumum 
