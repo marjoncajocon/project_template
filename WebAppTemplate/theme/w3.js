@@ -1061,7 +1061,7 @@ class BasicTab extends div {
 }
 
 class Pagination extends div {
-    constructor(prev_fn = null, next_fn = null, size = null) {
+    constructor(change_fn = null, active_color = null, size = null) {
         super();
         super.class(["w3-bar"]);
 
@@ -1086,19 +1086,54 @@ class Pagination extends div {
 
         super.add(forward);
 
-        if (typeof(prev_fn) == "function") {
-            before.addEventListener("click", (e) => {
-                e.preventDefault();
-                prev_fn();
-            });
+        this.change_fn = change_fn;
+
+        this.links = [];
+
+        this.current_page = 1;
+        
+        if (active_color != null) {
+            this.active_color = `w3-${Config.GetColor(active_color)}`;
+        } else {
+            // default color is green
+            this.active_color = `w3-${Config.GetColor("green")}`;
         }
 
-        if (typeof(next_fn) == "function") {
-            forward.addEventListener("click", (e) => {
-                e.preventDefault();
-                next_fn();
-            });
-        }
+        const changeDir = (step) => {
+            this.current_page += step;
+            
+            // checking the minumum 
+            if (this.current_page <= 1) {
+                this.current_page = 1;
+            }
+
+            // checking the maximum
+
+            if (this.current_page > this.links[this.links.length - 1].num) {
+                this.current_page = this.links[this.links.length - 1].num;
+            }
+
+            for (const item of this.links) {
+                item.link.removeClass(this.active_color);    
+            }
+
+
+            this.links[this.current_page - 1].link.addClass(this.active_color);
+            
+            if (typeof(this.change_fn) == "function") {
+                this.change_fn(this.links[this.current_page - 1].num);
+            }
+            
+        };
+
+        forward.addEventListener("click", () => {
+            changeDir(1);
+        });
+
+        before.addEventListener("click", () => {
+            changeDir(-1);
+        });
+
 
     }
 
@@ -1107,19 +1142,57 @@ class Pagination extends div {
         return this;
     }
 
-    add(num = null, fn = null) {
+    add(num = null, active = null, style = null) {
+
+        active = active == null ? false: active;
+
+        if (num != null) {
+            if (typeof(num) != "number") throw new TypeError("add in pagination must be a number!");
+        }
+
         const link = new a().attr({
             href: "#",
             class: "w3-bar-item w3-button"
         }).html(`${num}`);
+
+        if (style != null) {
+            link.style(style);
+        }
         
         this.between.add(link);
 
-        if (typeof(fn) == "function") {
-            link.addEventListener("click", (e) => {
-                e.preventDefault();
-                fn();
-            });
+        this.links.push({
+            num: num,
+            link: link
+        });
+
+        link.addEventListener("click", () => {
+
+            for (const item of this.links) {
+                item.link.removeClass(this.active_color);    
+            }
+
+            link.addClass(this.active_color);
+            if (typeof(this.change_fn) == "function") {
+                this.change_fn(num);
+            }
+            this.current_page = num;
+
+        });
+
+        if (active) {
+
+            for (const item of this.links) {
+                item.link.removeClass(this.active_color);    
+            }
+
+            link.addClass(this.active_color);
+
+            if (typeof(this.change_fn) == "function") {
+                this.change_fn(num);
+            }
+
+            this.current_page = num;
         }
 
         return link;
