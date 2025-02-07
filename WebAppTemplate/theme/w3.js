@@ -1210,13 +1210,13 @@ class Pagination extends div {
 }
 
 class ProgressBar extends div {
-    constructor() {
+    constructor(color = null) {
         super();
         super.class(["w3-light-grey", "w3-round"]).style({
             height: "20px"
         });
 
-        this.con = new div().class(["w3-container", "w3-round", "w3-blue"]).style({
+        this.con = new div().class(["w3-container", "w3-round", `w3-${color == null ? "blue" : Config.GetColor(color)}`]).style({
             width: "1%",
             height: "100%"
         });
