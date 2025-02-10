@@ -188,7 +188,15 @@ class Button extends button {
             left: '5px'
         }).hide();
 
-        super.add(this.loader);
+        this.loader_txt = new Text().style({
+            position: "absolute",
+            top: '5px',
+            left: '40px',
+            color: "white",
+            fontWeight: "bold"
+        });
+
+        super.add([this.loader, this.loader_txt]);
     }
     size(size) {
         super.class(`w3-${Config.GetSize(size)}`);
@@ -215,6 +223,11 @@ class Button extends button {
         super.class("w3-border");
         return this;
     }
+
+    loaderText(txt) {
+        this.loader_txt.text(txt);
+    }
+
     showLoader() {
         this.loader.show();
         super.attr({ disabled: "" });
