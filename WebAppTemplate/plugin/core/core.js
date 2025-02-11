@@ -389,10 +389,12 @@ class Widget {
     constructor(param) {   
       let { method = 'GET', url = '', body = null, header = {} } = param;
       this.xml = new XMLHttpRequest();
-      this.xml.open(method, url);
+      this.xml.open(method, url, true);
       if (typeof(header) == 'object') {
         if(body instanceof FormData) {
           // this is a file
+          //header["Content-Type"] = "multipart/form-data";
+          delete header["Content-Type"];
         }
         else if (typeof(body) === "object") {
           header["Content-Type"] = "application/json";
@@ -434,7 +436,7 @@ class Widget {
         this.xml.upload.addEventListener('progress', (e) => {
           fn(e);
         });
-      }
+      }      
     }
   }
   
