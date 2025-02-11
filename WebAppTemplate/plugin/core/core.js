@@ -404,9 +404,10 @@ class Widget {
           this.xml.setRequestHeader(key, header[key]);
         }
       }
-      this.xml.send(body);
+      this.body = body;
     }
     async load() {
+      this.xml.send(this.body);
       const promise = new Promise((resolve, reject) => {
         this.xml.addEventListener('load', function() {
           resolve(this.response);
