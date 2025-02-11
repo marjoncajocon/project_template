@@ -385,6 +385,32 @@ class Widget {
       this.show();
     }
   }
+  
+
+
+  
+
+  class FileManager {
+    
+    s2ab(s) {
+      var buf = new ArrayBuffer(s.length);
+      var view = new Uint8Array(buf);
+      for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+      return buf;
+    }
+
+    getBlob({ base64 = null, type = "application/pdf" }) {
+      
+      if (base64 != null) {
+        const blob = new Blob([this.s2ab(atob(base64))], {
+          type: type
+        });
+
+        return blob;
+      }
+    }
+  }
+
   class Http {
     constructor(param) {   
       let { method = 'GET', url = '', body = null, header = {} } = param;
@@ -720,5 +746,6 @@ class Widget {
   export {
     Window,
     Http,
-    IDB
+    IDB,
+    FileManager
   };
