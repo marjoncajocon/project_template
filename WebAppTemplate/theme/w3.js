@@ -428,6 +428,11 @@ class List extends ul {
 class TextField extends div {
     constructor(text = null, type = "text", placeholder = null, error = false) {
         super();
+
+        super.style({
+            position: "relative"
+        });
+
         this.label = new label();
         this.tf = new input().class(["w3-input"]);
         this.error_label = new label();
@@ -468,6 +473,46 @@ class TextField extends div {
             this.tf.removeClass(`w3-border-${Config.GetColor("red")}`);
             this.error_label.removeClass(`w3-text-${Config.GetColor("red")}`);
             this.error_label.html("");
+        }
+        return this;
+    }
+
+    setIconPrefix({ icon = null, size = 20, color = null}) {
+        if (icon != null) {
+            const ico = new Icon(icon, color).style({
+                position: "absolute",
+                bottom: "10px",
+                left: "5px",
+                fontSize: `${size}px`,
+                width: `${size}px`,
+                height: `${size}px`
+            });
+
+            this.tf.style({
+                paddingLeft: `${size + (size / 2)}px`
+            });
+            
+            super.add(ico);
+        }
+        return this;
+    }
+
+    setIconSuffix({ icon = null, size = 20, color = null}) {
+        if (icon != null) {
+            const ico = new Icon(icon, color).style({
+                position: "absolute",
+                bottom: "10px",
+                right: "5px",
+                fontSize: `${size}px`,
+                width: `${size}px`,
+                height: `${size}px`
+            });
+
+            this.tf.style({
+                paddingRight: `${size + (size / 2)}px`
+            });
+            
+            super.add(ico);
         }
         return this;
     }
