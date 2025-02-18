@@ -1413,6 +1413,19 @@ class Photo2d extends img {
         super.attr({
             "src": src
         });
+        
+
+        super.style({
+            "-webkit-filter": "blur(8px)",
+            "filter": "blur(8px)"
+        })
+        
+        super.addEventListener("load", () => {
+            super.style({
+                "-webkit-filter": "",
+                "filter": ""
+            })
+        });
 
         return this;
     }
