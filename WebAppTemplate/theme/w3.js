@@ -1067,7 +1067,9 @@ class BasicTab extends div {
         this.menu = new div().style({
             width: "100%",
             borderTopRightRadius: "10px",
-            borderTopLeftRadius: "10px"
+            borderTopLeftRadius: "10px",
+            border: "1px solid #e3e3e3",
+            borderBottom: "none"
         });
 
         this.borderRadius = borderRadius;
@@ -1103,6 +1105,7 @@ class BasicTab extends div {
     clearActive() {
         for (const item of this.list) {
             item.removeClass("w3-tab-active");
+            item.removeAttr("disabled");
         }
     }
     add({title = null, fn = null, active = false, color = "white"}) {
@@ -1122,6 +1125,7 @@ class BasicTab extends div {
 
             if (active) {
                 btn.class("w3-tab-active");
+                btn.attr({"disabled": ""});
                 this.content.clear();
                 fn(this.content);
             }
@@ -1133,6 +1137,7 @@ class BasicTab extends div {
 
                     this.clearActive();
                     btn.class("w3-tab-active");
+                    btn.attr({"disabled": ""});
                     this.content.clear();
                     fn(this.content);
 
