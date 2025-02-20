@@ -453,4 +453,14 @@ input:checked + .slider:before {
   border-top-left-radius: 10px;
 }
 
+.curved-table {
+  border-spacing: 0;
+  border-radius: 20px;
+  overflow: hidden; /* ensures the corners are cut */
+}
+
+.curved-table tr:hover {
+  background-color: #ddd; /* Highlighting row on hover */
+}
+
 /* End Custom Css */
