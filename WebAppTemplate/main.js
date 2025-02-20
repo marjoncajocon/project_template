@@ -1,5 +1,5 @@
 import { div, Window } from "./plugin/core/core.js";
-import { Accordion, Badge, Bar, BasicTab, Box, Button, Canvas, Card, CheckBox, Code, Column, ComboBox, Container, Display, DropDownHover, Grid, Icon, Label, List, Modal, Pagination, Panel, Photo, Photo2d, Picture, ProgressBar, Radio, Row, SideBar, Table, Tag, Text, TextBox, TextField } from "./theme/w3.js";
+import { Accordion, Badge, Bar, BasicTab, Box, Button, Canvas, Card, CheckBox, Code, Column, ComboBox, Container, Display, DropDownHover, Grid, Icon, Label, List, Modal, Pagination, Panel, Photo, Photo2d, Picture, ProgressBar, Radio, Row, SideBar, Switch, Table, Tag, Text, TextBox, TextField } from "./theme/w3.js";
 
 /** Start Mcontrol Theme This the the mcontrol gui  **/
 // import "./theme/bt/bootstrap.min.css";
@@ -90,6 +90,12 @@ class TestPage extends div {
         const check = new CheckBox("Testing");
         const radio = new Radio("Male", "gender");
 
+        const ss = new Switch({});
+
+        ss.setValue(true);
+
+        console.log(ss.getValue());
+
         setTimeout(() => {
             tf.error();
         }, 2000);
@@ -97,7 +103,9 @@ class TestPage extends div {
             bar,
             tf,
             check,
-            radio
+            radio,
+            new Panel(),
+            ss
         ]);
 
         

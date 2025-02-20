@@ -1709,6 +1709,56 @@ class Loader extends div {
     }
 }
 
+/// my custom Widget
+class Switch extends label {
+    constructor({check = false, size = 30, round = false}) {
+        super();
+        super.class("switch");
+
+        this.tf = new input();
+        this.tf.attr({ "type": "checkbox" });
+
+        const slider = new span().class("slider");
+
+        if (round) {
+            slider.class("round");
+        }
+
+        this.tf.control.checked = check;
+
+        super.add([
+            this.tf,
+            slider
+        ]);
+    }
+
+    setValue(check = true) {
+        this.tf.control.checked = check;
+        return this;
+    }
+
+    getValue() {
+        return this.tf.control.checked;
+    }
+
+    disabled() {
+        this.tf.attr("disabled", "");
+        return this;
+    }
+
+    enabled() {
+        this.tf.removeAttr("disabled");
+        return this;
+    }
+
+
+}
+
+export {    
+    Switch
+};
+// end my custom widget
+
 export {
     Center,
     Container,
