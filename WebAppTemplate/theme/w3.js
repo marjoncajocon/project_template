@@ -1114,7 +1114,7 @@ class BasicTab extends div {
         } else {
             const btn = new button().html(title).style({
                 backgroundColor: "rgba(0, 0, 0, 0)",
-                border: "none",
+                border: "1px solid rgba(0, 0, 0, 0)",
                 cursor: "pointer",
                 padding: "10px",
                 height: "100%"
