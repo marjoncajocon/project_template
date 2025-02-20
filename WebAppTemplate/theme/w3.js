@@ -1067,7 +1067,9 @@ class BasicTab extends div {
         this.menu = new div().style({
             width: "100%",
             borderTopRightRadius: "10px",
-            borderTopLeftRadius: "10px"
+            borderTopLeftRadius: "10px",
+            border: "1px solid #e3e3e3",
+            borderBottom: "none"
         });
 
         this.borderRadius = borderRadius;
