@@ -296,20 +296,24 @@ class TableResponsive extends div {
 }
 
 class Table extends table {
-    constructor(header = [], size = null) {
+    constructor(header = [], size = null, color = "light-gray") {
         super();
 
         super.class("w3-table");
+        super.class("curved-table");
         if (size != null) {
             super.class([`w3-${Config.GetSize(size)}`]);
         }
 
-        const tr1 = new tr();
+        const tr1 = new tr().class(`w3-${Config.GetColor(color)}`);;
 
-        for (const item of header) {
+        const header_len = header.length;
+        for (let i = 0; i < header_len; i++) {
+            const item = header[i];
             const td1 = new th().html(item);
             tr1.add(td1);
         }
+
 
         super.add(tr1);
 
@@ -1346,7 +1350,7 @@ class Modal extends div {
         super.class("w3-modal").style({ zIndex: "1000" });
         this.resolvefn = null;
 
-        this.content = new div().class(["w3-modal-content", "w3-card-4"]);
+        this.content = new div().class(["w3-modal-content", "w3-card-4"]).style({ borderRadius: "10px" });
 
         if (animate != null) {
             this.content.class(`w3-animate-${animate}`);
@@ -1363,7 +1367,9 @@ class Modal extends div {
         if (title != null) {
             const header = new Card().add(new Label(title)).style({
                 padding: "15px",
-                position: "relative"
+                position: "relative",
+                borderTopRightRadius: "10px",
+                borderTopLeftRadius: "10px"
             });
 
             const close = new Button("X").style({
