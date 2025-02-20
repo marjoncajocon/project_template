@@ -1061,12 +1061,22 @@ class SideBar extends div {
 }
 
 class BasicTab extends div {
-    constructor(bgColor = null, size = null) {
+    constructor({bgColor = null, size = null, borderRadius = 0 }) {
         super();
 
-        this.menu = new div();
+        this.menu = new div().style({
+            width: "100%",
+            borderTopRightRadius: "10px",
+            borderTopLeftRadius: "10px"
+        });
 
-        this.menu.class(["w3-bar"]);
+        this.borderRadius = borderRadius;
+
+        if (borderRadius > 0) {
+            this.menu.style({
+                borderRadius: `${borderRadius}px`
+            })
+        }
 
         if (bgColor != null) {
             this.menu.class(`w3-${Config.GetColor(bgColor)}`);
@@ -1092,18 +1102,26 @@ class BasicTab extends div {
     }
     clearActive() {
         for (const item of this.list) {
-            item.removeClass("w3-sand");
+            item.removeClass("w3-tab-active");
         }
     }
-    add(title = null, fn = null, active = false) {
+    add({title = null, fn = null, active = false, color = "white"}) {
         if (title instanceof Widget) {
 
         } else {
-            const btn = new Button(title).button().class(["w3-bar-item"]);
+            const btn = new button().html(title).style({
+                backgroundColor: "rgba(0, 0, 0, 0)",
+                border: "none",
+                cursor: "pointer",
+                padding: "10px",
+                height: "100%"
+            });
+
+
             this.menu.add(btn);
 
             if (active) {
-                btn.class("w3-sand");
+                btn.class("w3-tab-active");
                 this.content.clear();
                 fn(this.content);
             }
@@ -1114,13 +1132,30 @@ class BasicTab extends div {
                 btn.addEventListener("click", () => {
 
                     this.clearActive();
-                    btn.class("w3-sand");
+                    btn.class("w3-tab-active");
                     this.content.clear();
                     fn(this.content);
 
                 });
             }
         }
+    }
+}
+
+class TabBody extends div {
+    constructor() {
+        super();
+        super.style({
+            border: "1px solid #e3e3e3",
+            borderTop: "none"
+        });
+    }
+    round() {
+        super.style({
+            borderBottomRightRadius: "10px",
+            borderBottomLeftRadius: "10px"
+        });
+        return this;
     }
 }
 
@@ -1760,6 +1795,7 @@ export {
 // end my custom widget
 
 export {
+    TabBody,
     Center,
     Container,
     Panel,
