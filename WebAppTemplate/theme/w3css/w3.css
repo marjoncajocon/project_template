@@ -446,9 +446,9 @@ input:checked + .slider:before {
 .w3-tab-active {
   background-color: white !important;
   color: rgb(48, 47, 47) !important;
-  border-left: 1px solid #e3e3e3 !important;
+  /* border-left: 1px solid #e3e3e3 !important;
   border-top: 1px solid #e3e3e3 !important;
-  border-right: 1px solid #e3e3e3 !important;
+  border-right: 1px solid #e3e3e3 !important; */
   border-top-right-radius: 10px;
   border-top-left-radius: 10px;
 }
