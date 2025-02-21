@@ -453,6 +453,11 @@ input:checked + .slider:before {
   border-top-left-radius: 10px;
 }
 
+.w3-rtab-active {
+  background-color: rgba(0, 0, 0, 0.2);
+  color: white;
+}
+
 .curved-table {
   border-spacing: 0;
   border-radius: 20px;
