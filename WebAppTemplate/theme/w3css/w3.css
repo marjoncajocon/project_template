@@ -459,8 +459,7 @@ input:checked + .slider:before {
 }
 
 .w3-rtab-active {
-  background-color: rgba(255, 255, 255, 1);
-  color: black;
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .curved-table {
