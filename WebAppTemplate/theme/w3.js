@@ -472,7 +472,62 @@ class TextField extends div {
         if (error) {
             super.add(this.error_label);
         }
+        
+        this.search = new Card().hide();
 
+        super.add(this.search);
+
+    }
+
+    filter({ data = [], network = false }) {
+        
+        this.search.style({
+            width: "100%",
+            height: "100px",
+            overflowY: "auto",
+            position: "absolute",
+            left: "0px",
+            top: "63px",
+            backgroundColor: "white",
+            zIndex: "2"
+        });
+
+        if (!network) {
+            this.tf.addEventListener("keyup", () => {
+                this.search.clear();
+
+                let has_found = false;
+                for (const item of data) {
+
+                    if (this.tf.getValue() != "" & item.value.toLowerCase().indexOf(this.tf.getValue().toLowerCase()) > -1) {
+                        has_found = true;
+                        
+                        const btn = new Button().style({
+                            width: "100%",
+                            textAlign: "left",
+                            paddingLeft: "5px"
+                        }).text(item.value).size("tiny");
+
+                        this.search.add(    
+                            btn
+                        );
+
+                        btn.addEventListener("click", () => {
+                            this.tf.setValue(item.value);
+                            this.search.hide();
+                        });
+                    }
+                }
+
+                if (has_found) {
+                    this.search.show();
+                } else {
+                    this.search.hide();
+                }
+            });
+        }
+
+        return this;
     }
     
     error(err = null) {
@@ -1233,19 +1288,25 @@ class BasicTab extends div {
     clearActive() {
         for (const item of this.list) {
             item.removeClass("w3-tab-active");
-            item.removeAttr("disabled");
+            //item.removeAttr("disabled");
         }
     }
     add({title = null, fn = null, active = false, color = null}) {
         if (title instanceof Widget) {
 
         } else {
-            const btn = new button().html(title).style({
-                backgroundColor: "rgba(0, 0, 0, 0)",
-                border: "1px solid rgba(0, 0, 0, 0)",
-                cursor: "pointer",
-                padding: "10px",
-                height: "100%"
+            // const btn = new button().html(title).style({
+            //     backgroundColor: "rgba(0, 0, 0, 0)",
+            //     border: "1px solid rgba(0, 0, 0, 0)",
+            //     cursor: "pointer",
+            //     padding: "10px",
+            //     height: "100%"
+            // });
+
+            const btn = new button().class(["w3-bar-item", "w3-button", "tablink"]).html(title).style({
+                borderTopLeftRadius: "10px",
+                borderTopRightRadius: "10px",
+                border: "1px solid rgba(0, 0, 0, 0)"
             });
 
 
@@ -1253,7 +1314,7 @@ class BasicTab extends div {
 
             if (active) {
                 btn.class("w3-tab-active");
-                btn.attr({"disabled": ""});
+                //btn.attr({"disabled": ""});
                 this.content.clear();
                 fn(this.content);
             }
@@ -1265,7 +1326,7 @@ class BasicTab extends div {
 
                     this.clearActive();
                     btn.class("w3-tab-active");
-                    btn.attr({"disabled": ""});
+                    //btn.attr({"disabled": ""});
                     this.content.clear();
                     fn(this.content);
 
