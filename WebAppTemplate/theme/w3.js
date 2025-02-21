@@ -1074,8 +1074,9 @@ class SideBar extends div {
 
 
 class LeftTab extends div {
-    constructor({ bgColor = null, size = null}) {
+    constructor({ bgColor = null, size = null, round = false, roundContent = false}) {
         super();
+        this.round = round;
         this.lists = [];
 
         this.grid = new Grid();
@@ -1091,7 +1092,14 @@ class LeftTab extends div {
         this.content = new div().style({ width: "100%" }).class("w3-card");
         
         this.grid.add(this.side_bar, ["s12", "m3", "l2"]);
-        this.grid.add(this.content, ["s12", "m9", "l10"]);
+        this.grid.add(new Row().add(this.content).style({ paddingLeft: "2px" }), ["s12", "m9", "l10"]);
+
+
+        if (roundContent) {
+            this.content.style({
+                borderRadius: "10px"
+            });
+        }
 
 
         super.add([
@@ -1100,7 +1108,39 @@ class LeftTab extends div {
 
     }
 
-    
+    checkRound() {
+        if (this.round) {
+
+
+            /// clearRadius:
+            for (const btn of this.lists) {
+                btn.style({
+                    borderTopRightRadius: "",
+                    borderTopLeftRadius: "",
+                    borderBottomRightRadius: "",
+                    borderBottomLeftRadius: ""
+                });
+            }
+
+            /// 
+
+
+            this.side_bar.style({
+                borderRadius: "10px"
+            });
+
+            this.lists[0].style({
+                borderTopRightRadius: "10px",
+                borderTopLeftRadius: "10px"
+            });
+
+            this.lists[this.lists.length - 1].style({
+                borderBottomRightRadius: "10px",
+                borderBottomLeftRadius: "10px"
+            })
+            
+        }
+    }
 
     addActive(cur_btn) {
         for (const btn of this.lists) {
@@ -1141,6 +1181,8 @@ class LeftTab extends div {
         }
 
         this.lists.push(btn);
+
+        this.checkRound();
 
         return this;
     }
