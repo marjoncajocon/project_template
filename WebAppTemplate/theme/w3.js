@@ -1,5 +1,5 @@
 import MyApp from "../main.js";
-import { a, button, canvas, div, h3, i, img, input, label, li, option, select, span, table, td, textarea, th, tr, ul, Widget } from "../plugin/core/core.js";
+import { a, button, canvas, div, h3, hr, i, img, input, label, li, option, select, span, table, td, textarea, th, tr, ul, Widget } from "../plugin/core/core.js";
 const Config = {
     Colors: {
         "black": "black",
@@ -198,6 +198,14 @@ class Button extends button {
 
         super.add([this.loader, this.loader_txt]);
     }
+
+    round() {
+        super.style({
+            borderRadius: "20px"
+        });
+        return this;
+    }
+
     size(size) {
         super.class(`w3-${Config.GetSize(size)}`);
         return this;
@@ -1064,6 +1072,80 @@ class SideBar extends div {
     }
 }
 
+
+class LeftTab extends div {
+    constructor({ bgColor = null, size = null}) {
+        super();
+        this.lists = [];
+
+        this.grid = new Grid();
+
+        this.side_bar = new div().class([ "w3-card" ]);
+
+
+        if (bgColor != null) {
+            this.side_bar.class(`w3-${Config.GetColor(bgColor)}`);
+        }
+
+
+        this.content = new div().style({ width: "100%" }).class("w3-card");
+        
+        this.grid.add(this.side_bar, ["s12", "m3", "l2"]);
+        this.grid.add(this.content, ["s12", "m9", "l10"]);
+
+
+        super.add([
+            this.grid
+        ]);
+
+    }
+
+    
+
+    addActive(cur_btn) {
+        for (const btn of this.lists) {
+            btn.removeClass("w3-rtab-active");
+        }
+
+        cur_btn.addClass("w3-rtab-active");
+    }
+
+    add({title = null, fn = null, active = false, color = null}) {
+
+        const btn = new button().style({
+            width: "100%",
+            textAlign: "left",
+            paddingLeft: "10px",
+            fontSize: "8pt"
+        }).class([ "w3-bar-item", "w3-button", "tablink" ]);
+
+        if (title instanceof Widget) {
+            btn.add(title);
+        } else {
+            btn.html(title);
+        }
+
+        this.side_bar.add(btn);
+
+        if (typeof(fn) == "function") {
+            btn.addEventListener("click", () => {
+                this.addActive(btn);
+                this.content.clear();
+                fn(this.content);
+            });
+        }
+
+        if (active) {
+            this.addActive(btn);
+            fn(this.content);
+        }
+
+        this.lists.push(btn);
+
+        return this;
+    }
+}
+
 class BasicTab extends div {
     constructor({bgColor = null, size = null, borderRadius = 0 }) {
         super();
@@ -1112,7 +1194,7 @@ class BasicTab extends div {
             item.removeAttr("disabled");
         }
     }
-    add({title = null, fn = null, active = false, color = "white"}) {
+    add({title = null, fn = null, active = false, color = null}) {
         if (title instanceof Widget) {
 
         } else {
@@ -1156,7 +1238,8 @@ class TabBody extends div {
         super();
         super.style({
             border: "1px solid #e3e3e3",
-            borderTop: "none"
+            borderTop: "none",
+            position: "relative"
         });
     }
     round() {
@@ -1800,12 +1883,34 @@ class Switch extends label {
 
 }
 
+class Divider extends hr {
+    constructor() {
+        super();
+    }
+    dotted() {
+        super.style({
+            borderStyle: "dotted"
+        });
+
+        return this;
+    }
+
+    dashed() {
+        super.style({
+            borderStyle: "dashed"
+        });
+
+        return this;
+    }
+}
+
 export {    
     Switch
 };
 // end my custom widget
 
 export {
+    Divider,
     TabBody,
     Center,
     Container,
@@ -1832,6 +1937,7 @@ export {
     Icon,
     SideBar,
     Label,
+    LeftTab,
     BasicTab,
     Pagination,
     ProgressBar,
