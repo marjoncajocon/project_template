@@ -529,7 +529,15 @@ class TextField extends div {
 
             let time_out = null;
             this.tf.addEventListener("keyup", () => {
+
+                if (this.tf.getValue().trim() == "") {
+                    this.search.clear();
+                    this.search.hide();
+                    return;
+                }
+
                 clearTimeout(time_out);
+
 
                 time_out = setTimeout(async () => {
 
@@ -547,6 +555,7 @@ class TextField extends div {
                                 search: this.tf.getValue()
                             }
                         });
+                        this.search.clear();
     
     
                         const res = JSON.parse(await http.load());
