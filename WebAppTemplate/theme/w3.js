@@ -1,5 +1,5 @@
 import MyApp from "../main.js";
-import { a, button, canvas, div, h3, hr, i, img, input, label, li, option, select, span, table, td, textarea, th, tr, ul, Widget } from "../plugin/core/core.js";
+import { a, button, canvas, div, h3, hr, Http, i, img, input, label, li, option, select, span, table, td, textarea, th, tr, ul, Widget } from "../plugin/core/core.js";
 const Config = {
     Colors: {
         "black": "black",
@@ -479,7 +479,7 @@ class TextField extends div {
 
     }
 
-    filter({ data = [], network = false }) {
+    filter({ data = [], network = false, url = "/", token_key = "X-Auth", token_value = "" }) {
         
         this.search.style({
             width: "100%",
@@ -525,6 +525,65 @@ class TextField extends div {
                     this.search.hide();
                 }
             });
+        } else {
+
+            let time_out = null;
+            this.tf.addEventListener("keyup", () => {
+                clearTimeout(time_out);
+
+                time_out = setTimeout(async () => {
+
+                    try {
+                        const header = {};
+                        header["Content-Type"] = "application/json";
+                        header[token_key] = token_value; 
+                        
+                        this.search.show();                    
+                        const http = new Http({
+                            url: `${url}`,
+                            method: "POST",
+                            header: header,
+                            body: {
+                                search: this.tf.getValue()
+                            }
+                        });
+    
+    
+                        const res = JSON.parse(await http.load());
+                        console.log(res);
+    
+                        // plotting the result
+                        for (const item of res) {
+                            const btn = new Button().style({
+                                width: "100%",
+                                textAlign: "left",
+                                paddingLeft: "5px"
+                            }).text(item.value).size("tiny");
+    
+                            this.search.add(    
+                                btn
+                            );
+    
+                            btn.addEventListener("click", () => {
+                                this.tf.setValue(item.value);
+                                this.search.hide();
+                            });
+                        }
+                        // show the search result
+                        if (res.length > 0) {
+                            this.search.show();
+                        } else {
+                            this.search.hide();
+                        }
+    
+    
+                    } catch(er) {
+                        alert(er);
+                    }
+
+                }, 200);
+            });
+            
         }
 
         return this;
