@@ -462,14 +462,27 @@ input:checked + .slider:before {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.curved-table {
-  border-spacing: 0;
-  border-radius: 20px;
-  overflow: hidden; /* ensures the corners are cut */
+
+.c-table table {
+  border-collapse: collapse;
+  width: 100%;
 }
 
-.curved-table tr:hover {
-  background-color: #ddd; /* Highlighting row on hover */
+.c-table th, .c-table td {
+  text-align: left;
+  padding: 1px;
 }
+
+.c-table-border th, .c-table-border td {
+  border: 1px solid #ddd;
+}
+
+.c-table-hover tr:hover {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+  cursor: pointer;
+}
+
+.c-table-striped tr:nth-child(even){background-color: #f2f2f2}
+
 
 /* End Custom Css */

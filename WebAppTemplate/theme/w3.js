@@ -167,6 +167,44 @@ class Card extends div {
     }
 }
 
+class ButtonGroup extends div {
+    constructor(btn = null) {
+        super();
+        super.class("w3-bar");
+
+        this.lists = [];
+
+        if (btn instanceof Widget) {
+            btn.class("w3-bar-item");
+            super.add(btn);
+            this.lists.push(btn);
+        } else if (btn instanceof Array) {
+            for (const item of btn) {
+                item.class("w3-bar-item");
+                super.add(item);
+
+                this.lists.push(item);
+            }
+        }
+    }
+
+    round() {
+        if (this.lists.length > 0) {
+            this.lists[0].style({  
+                borderTopLeftRadius: "20px",
+                borderBottomLeftRadius: "20px"
+            }); /// first button;
+            
+            this.lists[this.lists.length - 1].style({  
+                borderTopRightRadius: "20px",
+                borderBottomRightRadius: "20px"
+            })
+        }
+
+        return this;
+    }
+}
+
 class Button extends button {
     constructor(text = null, color = null) {
         super();
@@ -304,21 +342,32 @@ class TableResponsive extends div {
 }
 
 class Table extends table {
-    constructor(header = [], size = null, color = "light-gray") {
+    constructor(header = [], size = null, color = null, header_height = null) {
         super();
 
-        super.class("w3-table");
-        super.class("curved-table");
+        super.class(["c-table", "w3-table-all"]);
+
         if (size != null) {
             super.class([`w3-${Config.GetSize(size)}`]);
+        } else {
+            super.class([`w3-${Config.GetSize("small")}`]);
         }
 
-        const tr1 = new tr().class(`w3-${Config.GetColor(color)}`);;
+        const tr1 = new tr();;
 
         const header_len = header.length;
         for (let i = 0; i < header_len; i++) {
             const item = header[i];
             const td1 = new th().html(item);
+            if (color != null) {
+                td1.class(`w3-${Config.GetColor(color)}`);
+            }
+
+            if (header_height != null) {
+                td1.style({ height: `${header_height}px`});
+            } else {
+                td1.style({ height: `0px`});
+            }
             tr1.add(td1);
         }
 
@@ -328,13 +377,18 @@ class Table extends table {
         this.rows = [];
     }
 
-    add(items = [], arr = []) {
+    add(items = [], arr = [], padding = 0) {
         const tr1 = new tr();
 
         for (let i = 0; i < items.length; i++) {
             const item = items[i];
 
             const td1=  new td();
+
+            if (padding != 0) {
+                td1.style({ padding: `${padding}px` });
+            }
+
             if (item instanceof Widget) {
                 td1.add(item);
             } else {
@@ -368,11 +422,11 @@ class Table extends table {
     }
 
     striped() {
-        super.class("w3-striped");
+        super.class("c-table-striped");
         return this;
     }
     border() {
-        super.class("w3-border");
+        super.class("c-table-border");
         return this;
     }
     all() {
@@ -384,7 +438,7 @@ class Table extends table {
         return this;
     }
     hover() {
-        super.class("w3-hoverable");
+        super.class("c-table-hover");       
         return this;
     }
 }
@@ -2121,7 +2175,8 @@ export {
     Box,
     Canvas,
     TextFieldFilter,
-    Loader
+    Loader,
+    ButtonGroup
 };
 
 export {Alert, Confirm};
