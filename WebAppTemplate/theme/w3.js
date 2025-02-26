@@ -1294,8 +1294,16 @@ class LeftTab extends div {
         this.content = new div().style({ width: "100%" }).class("w3-card");
         
         this.grid.add(this.side_bar, ["s12", "m3", "l2"]);
-        this.grid.add(new Row().add(this.content).style({ paddingLeft: "2px" }), ["s12", "m9", "l10"]);
 
+        const main_row = new Row().add(this.content).style({ paddingLeft: "5px" });
+        this.grid.add(main_row, ["s12", "m9", "l10"]);
+
+        if (window.innerWidth <= 600) {
+            main_row.style({
+                paddingTop: "10px",
+                paddingLeft: ""
+            });
+        }
 
         if (roundContent) {
             this.content.style({
