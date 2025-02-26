@@ -1488,7 +1488,7 @@ class TabBody extends div {
     constructor() {
         super();
         super.style({
-            border: "1px solid #e3e3e3",
+            border: "2px solid #e3e3e3",
             borderTop: "none",
             position: "relative"
         });
