@@ -366,7 +366,8 @@ class Table extends table {
             if (header_height != null) {
                 td1.style({ height: `${header_height}px`});
             } else {
-                td1.style({ height: `0px`});
+                td1.style({ height: `0px`, padding: "0px" });
+                
             }
             tr1.add(td1);
         }
