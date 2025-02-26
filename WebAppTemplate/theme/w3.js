@@ -333,16 +333,28 @@ class Html extends div {
 }
 
 class TableResponsive extends div {
-    constructor(obj) {
+    constructor(obj, height = 0, padding = 0) {
         super();
         super.class("w3-responsive");
         
         super.add(obj);
+
+        if (height != 0) {
+            super.style({
+                height: `${height}px`,
+                overflowY: "auto",
+                position: "relative"
+            });
+        }
+
+        if (padding != 0) {
+            super.style({ padding: `${padding}px` });
+        }
     }
 }
 
 class Table extends table {
-    constructor(header = [], size = null, color = null, header_height = null) {
+    constructor(header = [], size = null, color = null, header_height = null, sticky = false) {
         super();
 
         super.class(["c-table", "w3-table-all"]);
@@ -370,8 +382,20 @@ class Table extends table {
                 
             }
             tr1.add(td1);
+
+            if (sticky) {
+                td1.style({
+                    position: "sticky",
+                    top: "0px",
+                    zIndex: "100",
+                    backgroundColor: "white",
+                    color: "black",
+                    border: "1px solid #ddd"
+                });
+            }
         }
 
+        
 
         super.add(tr1);
 
