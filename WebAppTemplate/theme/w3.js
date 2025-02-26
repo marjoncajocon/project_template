@@ -2163,6 +2163,19 @@ class Divider extends hr {
     }
 }
 
+class Padding extends div {
+    constructor(obj, padding = 0) {
+        super();
+        super.add(obj);
+
+        if (padding != 0) {
+            super.style({
+                padding: `${padding}px`
+            });
+        }
+    }
+}
+
 export {    
     Switch
 };
@@ -2210,7 +2223,8 @@ export {
     Canvas,
     TextFieldFilter,
     Loader,
-    ButtonGroup
+    ButtonGroup,
+    Padding
 };
 
 export {Alert, Confirm};
