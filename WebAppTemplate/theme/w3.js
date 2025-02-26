@@ -1427,13 +1427,15 @@ class BasicTab extends div {
             // });
 
             const btn = new button().class(["w3-bar-item", "w3-button", "tablink"]).html(title).style({
-                borderTopLeftRadius: "10px",
-                borderTopRightRadius: "10px",
+                borderTopLeftRadius: "8px",
+                borderTopRightRadius: "8px",
                 border: "1px solid rgba(0, 0, 0, 0)"
             });
 
 
             this.menu.add(btn);
+
+            this.list.push(btn);
 
             if (active) {
                 btn.class("w3-tab-active");
@@ -1442,8 +1444,7 @@ class BasicTab extends div {
                 fn(this.content);
             }
 
-            this.list.push(btn);
-
+            
             if (typeof(fn) == "function") {
                 btn.addEventListener("click", () => {
 
