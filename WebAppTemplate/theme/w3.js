@@ -574,7 +574,7 @@ class TextField extends div {
         if (!network) {
             this.tf.addEventListener("keyup", () => {
                 this.search.clear();
-
+                
                 let has_found = false;
                 for (const item of data) {
 
@@ -666,7 +666,8 @@ class TextField extends div {
     
     
                     } catch(er) {
-                        alert(er);
+                        console.log(er);
+                        this.search.hide();
                     }
 
                 }, 200);
