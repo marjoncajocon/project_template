@@ -1045,9 +1045,13 @@ class Tag extends span {
 }
 
 class Grid extends div {
-    constructor() {
+    constructor(is_padding = false) {
         super();
         super.class("w3-row");
+
+        if (is_padding) {
+            super.class(["w3-row-padding", "w3-stretch"]);
+        }
     }
 
     add(obj, sizes = []) {
