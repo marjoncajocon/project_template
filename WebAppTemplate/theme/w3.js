@@ -574,7 +574,7 @@ class TextField extends div {
         if (!network) {
             this.tf.addEventListener("keyup", () => {
                 this.search.clear();
-
+                
                 let has_found = false;
                 for (const item of data) {
 
@@ -666,7 +666,8 @@ class TextField extends div {
     
     
                     } catch(er) {
-                        alert(er);
+                        console.log(er);
+                        this.search.hide();
                     }
 
                 }, 200);
@@ -1044,9 +1045,13 @@ class Tag extends span {
 }
 
 class Grid extends div {
-    constructor() {
+    constructor(is_padding = false) {
         super();
         super.class("w3-row");
+
+        if (is_padding) {
+            super.class(["w3-row-padding", "w3-stretch"]);
+        }
     }
 
     add(obj, sizes = []) {
@@ -2163,6 +2168,19 @@ class Divider extends hr {
     }
 }
 
+class Padding extends div {
+    constructor(obj, padding = 0) {
+        super();
+        super.add(obj);
+
+        if (padding != 0) {
+            super.style({
+                padding: `${padding}px`
+            });
+        }
+    }
+}
+
 export {    
     Switch
 };
@@ -2210,7 +2228,8 @@ export {
     Canvas,
     TextFieldFilter,
     Loader,
-    ButtonGroup
+    ButtonGroup,
+    Padding
 };
 
 export {Alert, Confirm};
