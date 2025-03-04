@@ -1881,6 +1881,13 @@ class Photo2d extends img {
         return this;
     }
 
+    default() {
+        super.style({
+            objectFit: "cover"
+        });
+        return this;
+    }
+
     base64() {
         return this;
     }
