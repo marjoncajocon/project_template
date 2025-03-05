@@ -486,3 +486,15 @@ input:checked + .slider:before {
 
 
 /* End Custom Css */
+
+
+/* Load fonts */
+@font-face {
+  font-family: Roboto;
+  src: url(roboto-slab.ttf);
+}
+
+* {
+  font-family: Roboto;
+}
+/* End fonts */ 
