@@ -81,7 +81,7 @@ export const MyInputComponent = defineComponent({
 
 
       <Home v-if="isHome" />
-      <Login name="noel" v-else="isHome" />
+      <Login name="Marjon Cajocon" v-else="isHome" />
 
 
       <input type="checkbox" v-model="isHome" />
