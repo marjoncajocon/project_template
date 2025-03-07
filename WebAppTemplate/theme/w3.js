@@ -297,6 +297,16 @@ class Text extends div {
         if (color != null) {
             super.class(`w3-text-${Config.GetColor(color)}`);
         }
+        
+        
+    }
+
+    textColor() {
+        super.style({
+            color: "rgb(54, 54, 54)",
+            fontSize: "10pt" 
+        });
+        return this;
     }
 
     setTextColor(color) {
@@ -533,7 +543,10 @@ class TextField extends div {
             if (text instanceof Widget) {
                 this.label.add(text);
             } else {
-                this.label.html(text);
+                this.label.html(text).style({
+                    color: "rgb(54, 54, 54)",
+                    fontSize: "10pt"
+                });
             }
             super.add(this.label);
         }
@@ -1865,6 +1878,13 @@ class Photo2d extends img {
             })
         });
 
+        return this;
+    }
+
+    default() {
+        super.style({
+            objectFit: "cover"
+        });
         return this;
     }
 
