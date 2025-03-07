@@ -1,3 +1,4 @@
+import { Panel } from "../plugin/theme.js";
 import { defineComponent, onBeforeUnmount, onMounted, ref } from "../vue.js";
 
 const Login = defineComponent({
@@ -16,6 +17,9 @@ const Login = defineComponent({
     });
 
   },
+  components: {
+    Panel
+  },
   data() {
     return {
       username: "",
@@ -28,25 +32,12 @@ const Login = defineComponent({
     setCount() {
       this.count++;
     }
-  }
-  ,
+  },
+
   template: `
-    <div>
-      <h2>{{ name }}</h2>
-      <br />
-      {{ count }}
-      <br />
-      <input type="text" v-model="username"  placeholder="username" /><br />
-      <input type="password" v-model="password"  placeholder="password" /> <br />
-
-      <template v-for="item of data">
-        <button @mouseover="setCount">
-          {{ item }}
-        </button>
-      </template>
-
-{{ username }} - {{ password }}
-    </div>
+    <Panel title="Login Form" logo="">
+      hellwo this is a slot
+    </Panel>
   `
 });
 
@@ -73,12 +64,6 @@ export const MyInputComponent = defineComponent({
     Home
   },
   template: `
-    <b>
-      Header
-      <hr>
-
-
-
 
       <Home v-if="isHome" />
       <Login name="Marjon Cajocon" v-else="isHome" />
@@ -86,11 +71,5 @@ export const MyInputComponent = defineComponent({
 
       <input type="checkbox" v-model="isHome" />
       
-
-
-     <hr/>
-      Footer
-
-    </b>
   `
 });

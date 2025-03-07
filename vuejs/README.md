@@ -20,3 +20,8 @@ esbuild main.js --bundle --minify --outfile=build/main.min.js --loader:.jfif=fil
 #builder 
 
 esbuild main.js --bundle --minify --outfile=build/main.min.js --drop:console --loader:.jfif=file --loader:.eof=file --loader:.woff=file --loader:.svg=file --loader:.ttf=file --loader:.woff2=file --loader:.eot=file --loader:.jpeg=file --asset-names=res/[name] --target=es2015
+
+
+
+
+https://code.divshot.com/themestrap/
