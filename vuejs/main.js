@@ -24,7 +24,9 @@ createApp({
         <br />
         <input type="text" v-model="count">
 
+        <Teleport to="body">
         <MyInputComponent />
+        </Teleport>
     </b>
   `
 }).mount('#app')
