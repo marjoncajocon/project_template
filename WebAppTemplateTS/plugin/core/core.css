@@ -1,0 +1,53 @@
+.core-dialog {
+    z-index: 5000;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+  
+    display: flex; /* Magic starts here, turning your container into a flex container */
+    justify-content: center; /* This centers the child horizontally */
+    align-items: center;
+  }
+  
+  .core-dialog-sq {
+    width: 480px;
+    min-height: 50px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
+    margin-top: 100px;
+    margin-bottom: 100px;;
+    max-height: 98%;
+    overflow-y: auto;
+    /* margin: auto;
+    margin-top: 15%; */
+  }
+  
+  @media (max-width: 480px) {
+    .core-dialog-sq {
+      width: 90%;
+    }
+  }
+  
+  
+  @keyframes a-fade{
+    from {
+      opacity: 0;
+    } to {
+      opacity: 1;
+    }
+  }
+  .c-fade {
+    animation: a-fade 0.3s ease-in;
+  }
+  
+  .c-btn1 {
+    width: 80px;
+    height: 30px;
+    border: none;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
+  }
