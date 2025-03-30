@@ -108,21 +108,21 @@ const Config = {
         "bottommiddle": "bottommiddle"
     }
     ,
-    GetDirection: function(dir) {
-        if (typeof(this.Direction[dir]) != "undefined") {
+    GetDirection: function (dir) {
+        if (typeof (this.Direction[dir]) != "undefined") {
             return dir;
         }
         throw new TypeError("wrong direction!");
     },
-    GetSize: function(size) {
-        if (typeof(this.Sizes[size]) != "undefined") {
+    GetSize: function (size) {
+        if (typeof (this.Sizes[size]) != "undefined") {
             return size;
         }
         throw new TypeError("wrong sized!");
     },
 
     GetColor: function (color) {
-        if (typeof(this.Colors[color]) != "undefined") {
+        if (typeof (this.Colors[color]) != "undefined") {
             return color;
         }
         throw new TypeError("wrong color!");
@@ -134,7 +134,7 @@ class Container extends div {
     constructor() {
         super();
         super.class(["w3-container"]);
-        
+
     }
 }
 
@@ -149,8 +149,8 @@ class Panel extends div {
     constructor(color = null) {
         super();
         super.class(["w3-panel"]);
-        
-        if (color != null) {   
+
+        if (color != null) {
             super.class(`w3-${Config.GetColor(color)}`);
         }
     }
@@ -190,12 +190,12 @@ class ButtonGroup extends div {
 
     round() {
         if (this.lists.length > 0) {
-            this.lists[0].style({  
+            this.lists[0].style({
                 borderTopLeftRadius: "20px",
                 borderBottomLeftRadius: "20px"
             }); /// first button;
-            
-            this.lists[this.lists.length - 1].style({  
+
+            this.lists[this.lists.length - 1].style({
                 borderTopRightRadius: "20px",
                 borderBottomRightRadius: "20px"
             })
@@ -282,9 +282,9 @@ class Button extends button {
     hideLoader() {
         super.removeAttr("disabled");
         this.loader.hide();
-        super.style({ position: '' });    
+        super.style({ position: '' });
     }
-    
+
 }
 
 class Text extends div {
@@ -297,14 +297,14 @@ class Text extends div {
         if (color != null) {
             super.class(`w3-text-${Config.GetColor(color)}`);
         }
-        
-        
+
+
     }
 
     textColor() {
         super.style({
             color: "rgb(54, 54, 54)",
-            fontSize: "10pt" 
+            fontSize: "10pt"
         });
         return this;
     }
@@ -346,7 +346,7 @@ class TableResponsive extends div {
     constructor(obj, height = 0, padding = 0) {
         super();
         super.class("w3-responsive");
-        
+
         super.add(obj);
 
         if (height != 0) {
@@ -386,10 +386,10 @@ class Table extends table {
             }
 
             if (header_height != null) {
-                td1.style({ height: `${header_height}px`});
+                td1.style({ height: `${header_height}px` });
             } else {
                 td1.style({ height: `0px`, padding: "0px" });
-                
+
             }
             tr1.add(td1);
 
@@ -405,7 +405,7 @@ class Table extends table {
             }
         }
 
-        
+
 
         super.add(tr1);
 
@@ -418,7 +418,7 @@ class Table extends table {
         for (let i = 0; i < items.length; i++) {
             const item = items[i];
 
-            const td1=  new td();
+            const td1 = new td();
 
             if (padding != 0) {
                 td1.style({ padding: `${padding}px` });
@@ -432,8 +432,8 @@ class Table extends table {
             tr1.add(td1);
 
             if (arr) {
-                if (typeof(arr[i]) != "undefined") {
-                    if (typeof(arr[i]["style"]) != "undefined") {
+                if (typeof (arr[i]) != "undefined") {
+                    if (typeof (arr[i]["style"]) != "undefined") {
                         td1.style(arr[i]["style"]);
                     }
                 }
@@ -450,7 +450,7 @@ class Table extends table {
     clearBody() {
         for (const item of this.rows) {
             item.delete();
-        }        
+        }
 
         this.rows = [];
         return this;
@@ -473,7 +473,7 @@ class Table extends table {
         return this;
     }
     hover() {
-        super.class("c-table-hover");       
+        super.class("c-table-hover");
         return this;
     }
 }
@@ -494,7 +494,7 @@ class List extends ul {
         if (color != null) {
             li1.class(`w3-${Config.GetColor(color)}`);
         }
-        
+
         if (item instanceof Widget) {
             li1.add(item);
         } else {
@@ -504,7 +504,7 @@ class List extends ul {
         if (hover_color != null) {
             li1.class(`w3-hover-${Config.GetColor(hover_color)}`);
         }
-        
+
         super.add(li1);
 
         return li1;
@@ -564,7 +564,7 @@ class TextField extends div {
         if (error) {
             super.add(this.error_label);
         }
-        
+
         this.search = new Card().hide();
 
         super.add(this.search);
@@ -572,7 +572,7 @@ class TextField extends div {
     }
 
     filter({ data = [], network = false, url = "/", token_key = "X-Auth", token_value = "" }) {
-        
+
         this.search.style({
             width: "100%",
             height: "100px",
@@ -587,25 +587,25 @@ class TextField extends div {
         if (!network) {
             this.tf.addEventListener("keyup", () => {
                 this.search.clear();
-                
+
                 let has_found = false;
                 for (const item of data) {
 
                     if (this.tf.getValue() != "" & item.value.toLowerCase().indexOf(this.tf.getValue().toLowerCase()) > -1) {
                         has_found = true;
-                        
+
                         const btn = new Button().style({
                             width: "100%",
                             textAlign: "left",
                             paddingLeft: "5px"
                         }).text(item.value).size("tiny");
 
-                        this.search.add(    
+                        this.search.add(
                             btn
                         );
 
                         btn.addEventListener("click", () => {
-                            this.tf.setValue(item.value);
+                            this.tf.setValue(item.key);
                             this.search.hide();
                         });
                     }
@@ -636,9 +636,9 @@ class TextField extends div {
                     try {
                         const header = {};
                         header["Content-Type"] = "application/json";
-                        header[token_key] = token_value; 
-                        
-                        this.search.show();                    
+                        header[token_key] = token_value;
+
+                        this.search.show();
                         const http = new Http({
                             url: `${url}`,
                             method: "POST",
@@ -648,11 +648,11 @@ class TextField extends div {
                             }
                         });
                         this.search.clear();
-    
-    
+
+
                         const res = JSON.parse(await http.load());
                         console.log(res);
-    
+
                         // plotting the result
                         for (const item of res) {
                             const btn = new Button().style({
@@ -660,11 +660,11 @@ class TextField extends div {
                                 textAlign: "left",
                                 paddingLeft: "5px"
                             }).text(item.value).size("tiny");
-    
-                            this.search.add(    
+
+                            this.search.add(
                                 btn
                             );
-    
+
                             btn.addEventListener("click", () => {
                                 this.tf.setValue(item.value);
                                 this.search.hide();
@@ -676,21 +676,21 @@ class TextField extends div {
                         } else {
                             this.search.hide();
                         }
-    
-    
-                    } catch(er) {
+
+
+                    } catch (er) {
                         console.log(er);
                         this.search.hide();
                     }
 
                 }, 200);
             });
-            
+
         }
 
         return this;
     }
-    
+
     error(err = null) {
 
         if (err != null) {
@@ -705,7 +705,7 @@ class TextField extends div {
         return this;
     }
 
-    setIconPrefix({ icon = null, size = 20, color = null}) {
+    setIconPrefix({ icon = null, size = 20, color = null }) {
         if (icon != null) {
             const ico = new Icon(icon, color).style({
                 position: "absolute",
@@ -719,13 +719,13 @@ class TextField extends div {
             this.tf.style({
                 paddingLeft: `${size + (size / 2)}px`
             });
-            
+
             super.add(ico);
         }
         return this;
     }
 
-    setIconSuffix({ icon = null, size = 20, color = null}) {
+    setIconSuffix({ icon = null, size = 20, color = null }) {
         if (icon != null) {
             const ico = new Icon(icon, color).style({
                 position: "absolute",
@@ -739,7 +739,7 @@ class TextField extends div {
             this.tf.style({
                 paddingRight: `${size + (size / 2)}px`
             });
-            
+
             super.add(ico);
         }
         return this;
@@ -873,7 +873,7 @@ class TextBox extends div {
 class Radio extends span {
     constructor(text = null, name = null) {
         super();
-        
+
         this.tf = new input().attr({
             type: "radio",
             class: "w3-radio",
@@ -914,7 +914,7 @@ class Radio extends span {
 class CheckBox extends span {
     constructor(text = null) {
         super();
-        
+
         this.tf = new input().attr({
             type: "checkbox",
             class: "w3-radio"
@@ -931,7 +931,7 @@ class CheckBox extends span {
 
     }
 
-    
+
 
     setValue(bool) {
         this.tf.control.checked = bool;
@@ -978,7 +978,7 @@ class ComboBox extends select {
         this.removeAttr("disabled");
         return this;
     }
-    
+
     disabled() {
         this.attr("disabled", "");
         return this;
@@ -1107,7 +1107,7 @@ class Bar extends div {
             "overflow-x": "auto",
             "white-space": "nowrap"
         })
-        
+
 
         if (color != null) {
             super.class(`w3-${Config.GetColor(color)}`);
@@ -1116,8 +1116,8 @@ class Bar extends div {
         if (size != null) {
             super.class(`w3-${Config.GetSize(size)}`);
         }
-        
-        
+
+
     }
 
     block() {
@@ -1138,7 +1138,7 @@ class Bar extends div {
             item.class(`w3-hover-${Config.GetColor(hovercolor)}`);
         }
 
-        if (evt != null && typeof(evt) == "function") {
+        if (evt != null && typeof (evt) == "function") {
             item.addEventListener("click", evt);
         }
 
@@ -1180,17 +1180,17 @@ class DropDownHover extends div {
 
         if (title instanceof Widget) {
             a1.add(title);
-            
-            if (typeof(fn) == "function") {
+
+            if (typeof (fn) == "function") {
                 a1.addEventListener("click", fn);
             }
         } else {
             a1.html(title);
-            if (typeof(fn) == "function") {
+            if (typeof (fn) == "function") {
                 a1.addEventListener("click", fn);
             }
         }
-        
+
         this.drop_content.add(a1);
         return a1;
     }
@@ -1201,13 +1201,13 @@ class Accordion extends span {
         super();
         const btn = new Button(title).button().block().class("w3-left-align");
         const div = new Container().class("w3-hide");
-        
+
         if (content instanceof Widget) {
             div.add(content);
         } else {
             div.html(content);
         }
-        
+
         super.add([btn, div]);
 
         btn.addEventListener("click", () => {
@@ -1244,16 +1244,16 @@ class Label extends label {
 
         if (title instanceof Widget) {
             super.add(title);
-        } 
-        else if(title instanceof Array) {
-           for (const item of title) {
+        }
+        else if (title instanceof Array) {
+            for (const item of title) {
                 if (item instanceof Widget) {
                     super.add(item);
                 } else {
                     super.add(new Label(item));
                 }
-           } 
-        } 
+            }
+        }
         else {
             super.text(title);
         }
@@ -1282,26 +1282,26 @@ class SideBar extends div {
             });
             a1.html(title);
 
-            if (typeof(fn) == "function") {
+            if (typeof (fn) == "function") {
                 a1.addEventListener("click", fn);
             }
             super.add(a1);
             return a1;
         }
-        
+
     }
 }
 
 
 class LeftTab extends div {
-    constructor({ bgColor = null, size = null, round = false, roundContent = false}) {
+    constructor({ bgColor = null, size = null, round = false, roundContent = false }) {
         super();
         this.round = round;
         this.lists = [];
 
         this.grid = new Grid();
 
-        this.side_bar = new div().class([ "w3-card" ]);
+        this.side_bar = new div().class(["w3-card"]);
 
 
         if (bgColor != null) {
@@ -1310,7 +1310,7 @@ class LeftTab extends div {
 
 
         this.content = new div().style({ width: "100%" }).class("w3-card");
-        
+
         this.grid.add(this.side_bar, ["s12", "m3", "l2"]);
 
         const main_row = new Row().add(this.content).style({ paddingLeft: "5px" });
@@ -1366,7 +1366,7 @@ class LeftTab extends div {
                 borderBottomRightRadius: "10px",
                 borderBottomLeftRadius: "10px"
             })
-            
+
         }
     }
 
@@ -1378,14 +1378,14 @@ class LeftTab extends div {
         cur_btn.addClass("w3-rtab-active");
     }
 
-    add({title = null, fn = null, active = false, color = null}) {
+    add({ title = null, fn = null, active = false, color = null }) {
 
         const btn = new button().style({
             width: "100%",
             textAlign: "left",
             paddingLeft: "10px",
             fontSize: "8pt"
-        }).class([ "w3-bar-item", "w3-button", "tablink" ]);
+        }).class(["w3-bar-item", "w3-button", "tablink"]);
 
         if (title instanceof Widget) {
             btn.add(title);
@@ -1395,7 +1395,7 @@ class LeftTab extends div {
 
         this.side_bar.add(btn);
 
-        if (typeof(fn) == "function") {
+        if (typeof (fn) == "function") {
             btn.addEventListener("click", () => {
                 this.addActive(btn);
                 this.content.clear();
@@ -1417,7 +1417,7 @@ class LeftTab extends div {
 }
 
 class BasicTab extends div {
-    constructor({bgColor = null, size = null, borderRadius = 0 }) {
+    constructor({ bgColor = null, size = null, borderRadius = 0 }) {
         super();
 
         this.menu = new div().style({
@@ -1464,7 +1464,7 @@ class BasicTab extends div {
             //item.removeAttr("disabled");
         }
     }
-    add({title = null, fn = null, active = false, color = null}) {
+    add({ title = null, fn = null, active = false, color = null }) {
         if (title instanceof Widget) {
 
         } else {
@@ -1494,8 +1494,8 @@ class BasicTab extends div {
                 fn(this.content);
             }
 
-            
-            if (typeof(fn) == "function") {
+
+            if (typeof (fn) == "function") {
                 btn.addEventListener("click", () => {
 
                     this.clearActive();
@@ -1559,7 +1559,7 @@ class Pagination extends div {
         this.links = [];
 
         this.current_page = 1;
-        
+
         if (active_color != null) {
             this.active_color = `w3-${Config.GetColor(active_color)}`;
         } else {
@@ -1569,9 +1569,9 @@ class Pagination extends div {
 
         const changeDir = (step) => {
             if (this.links.length == 0) return; // if no data no process 
-            
+
             this.current_page += step;
-            
+
             // checking the minumum 
             if (this.current_page <= 1) {
                 this.current_page = 1;
@@ -1584,16 +1584,16 @@ class Pagination extends div {
             }
 
             for (const item of this.links) {
-                item.link.removeClass(this.active_color);    
+                item.link.removeClass(this.active_color);
             }
 
 
             this.links[this.current_page - 1].link.addClass(this.active_color);
-            
-            if (typeof(this.change_fn) == "function") {
+
+            if (typeof (this.change_fn) == "function") {
                 this.change_fn(this.links[this.current_page - 1].num);
             }
-            
+
         };
 
         forward.addEventListener("click", () => {
@@ -1614,10 +1614,10 @@ class Pagination extends div {
 
     add(num = null, active = null, change = null, style = null) {
 
-        active = active == null ? false: active;
+        active = active == null ? false : active;
 
         if (num != null) {
-            if (typeof(num) != "number") throw new TypeError("add in pagination must be a number!");
+            if (typeof (num) != "number") throw new TypeError("add in pagination must be a number!");
         }
 
         const link = new a().attr({
@@ -1628,7 +1628,7 @@ class Pagination extends div {
         if (style != null) {
             link.style(style);
         }
-        
+
         this.between.add(link);
 
         this.links.push({
@@ -1639,11 +1639,11 @@ class Pagination extends div {
         link.addEventListener("click", () => {
 
             for (const item of this.links) {
-                item.link.removeClass(this.active_color);    
+                item.link.removeClass(this.active_color);
             }
 
             link.addClass(this.active_color);
-            if (typeof(this.change_fn) == "function") {
+            if (typeof (this.change_fn) == "function") {
                 this.change_fn(num);
             }
             this.current_page = num;
@@ -1653,12 +1653,12 @@ class Pagination extends div {
         if (active) {
 
             for (const item of this.links) {
-                item.link.removeClass(this.active_color);    
+                item.link.removeClass(this.active_color);
             }
 
             link.addClass(this.active_color);
 
-            if (typeof(this.change_fn) == "function") {
+            if (typeof (this.change_fn) == "function") {
                 if (change == null || change) {
                     this.change_fn(num);
                 }
@@ -1722,7 +1722,7 @@ class Modal extends div {
             })
         }
 
-        
+
 
         if (title != null) {
             const header = new Card().add(new Label(title)).style({
@@ -1742,10 +1742,10 @@ class Modal extends div {
             if (bgcolor != null) {
                 header.class(`w3-${Config.GetColor(bgcolor)}`);
             }
-            
+
             this.content.add(new div().class(["w3-container"]));
             this.content.add(header);
-            
+
             close.addEventListener("click", () => {
                 this.hide();
             });
@@ -1782,7 +1782,7 @@ class Modal extends div {
             this.dispose(); // dispose for the modal
         }
     }
-    
+
 }
 
 class Code extends div {
@@ -1812,22 +1812,22 @@ class Display extends div {
 class Row extends div {
     constructor(obj = null, direction = null) {
         super();
-        
+
 
         if (obj instanceof Widget) {
             //obj.style({ display: "inline-block" });
-            super.add(new div().class(["w3-cell", direction == null ?  "w3-cell-top" : `w3-cell-${Config.GetDirection(direction)}`]).add(obj));
-            
+            super.add(new div().class(["w3-cell", direction == null ? "w3-cell-top" : `w3-cell-${Config.GetDirection(direction)}`]).add(obj));
+
         } else if (obj instanceof Array) {
             for (const item of obj) {
                 if (item instanceof Widget) {
                     //item.style({ display: "inline-block" });
                     //item.class("w3-cell");
-                    super.add(new div().class(["w3-cell", direction == null ?  "w3-cell-top" : `w3-cell-${Config.GetDirection(direction)}`]).add(item));
+                    super.add(new div().class(["w3-cell", direction == null ? "w3-cell-top" : `w3-cell-${Config.GetDirection(direction)}`]).add(item));
                 }
             }
         }
-  
+
     }
 }
 
@@ -1835,11 +1835,11 @@ class Row extends div {
 class Column extends div {
     constructor(obj = null) {
         super();
-        
+
         if (obj instanceof Widget) {
             //obj.style({ display: "inline-block" });
             super.add(new div().class("w3-row").add(obj));
-            
+
         } else if (obj instanceof Array) {
             for (const item of obj) {
                 if (item instanceof Widget) {
@@ -1849,7 +1849,7 @@ class Column extends div {
                 }
             }
         }
-  
+
     }
 }
 
@@ -1864,13 +1864,13 @@ class Photo2d extends img {
         super.attr({
             "src": src
         });
-        
+
 
         super.style({
             "-webkit-filter": "blur(8px)",
             "filter": "blur(8px)"
         })
-        
+
         super.addEventListener("load", () => {
             super.style({
                 "-webkit-filter": "",
@@ -1940,7 +1940,7 @@ class Photo2d extends img {
     }
 }
 
-class Box extends div{
+class Box extends div {
     constructor(width = null, height = null) {
         super();
         super.class("w3-cell");
@@ -1952,16 +1952,16 @@ class Box extends div{
 
         if (width != null) {
             super.style({
-                width: typeof(width) == "number" ? `${width}px` : width
+                width: typeof (width) == "number" ? `${width}px` : width
             });
         }
 
         if (height != null) {
             super.style({
-                width: typeof(height) == "number" ? `${height}px` : height
+                width: typeof (height) == "number" ? `${height}px` : height
             });
         }
-        
+
     }
 }
 
@@ -2002,7 +2002,7 @@ class TextFieldFilter extends div {
             this.list.show();
         });
 
-        
+
         this.input.tf.addEventListener("focusout", () => {
             time = setTimeout(() => {
                 this.list.hide();
@@ -2022,31 +2022,31 @@ class TextFieldFilter extends div {
 
     }
     init(arr_list_of_key_value = null) {
-        
+
         for (const item of arr_list_of_key_value) {
             this.list.add(item.value);
         }
-    
+
         return this;
     }
     border() {
         this.input.tf.class("w3-border");
         return this;
     }
-    
+
 }
 
 
 class Alert1 extends Modal {
     constructor(msg, color = "sand") {
         super(new Row([new Icon("message"), new Box(10), new Text("Alert")]), "480px", color);
-        
-        const ok = new Button(new Row([ new Icon("check"), new Box(5), new Text("OK") ]), "blue").size("small").style({ borderRadius: "20px" });
+
+        const ok = new Button(new Row([new Icon("check"), new Box(5), new Text("OK")]), "blue").size("small").style({ borderRadius: "20px" });
 
         super.add(new Panel().style({
             padding: "0px 20px 20px 20px"
         }).add(new Column([
-            new Html(`<p>${msg}</p>`).style({fontSize: "13pt"}),
+            new Html(`<p>${msg}</p>`).style({ fontSize: "13pt" }),
             new Row([
                 ok, new Box(10)
             ])
@@ -2062,14 +2062,14 @@ class Alert1 extends Modal {
 class Confirm1 extends Modal {
     constructor(msg, color) {
         super(new Row([new Icon("question-circle"), new Box(10), new Text("Confirmation")]), "480px", color, "bottom");
-        
-        const ok = new Button(new Row([ new Icon("check"), new Box(5), new Text("OK") ]), "blue").size("small").style({ borderRadius: "20px" });
-        const cancel = new Button(new Row([ new Icon("close"), new Box(5), new Text("CANCEL") ]), "red").size("small").style({ borderRadius: "20px" });
-        
+
+        const ok = new Button(new Row([new Icon("check"), new Box(5), new Text("OK")]), "blue").size("small").style({ borderRadius: "20px" });
+        const cancel = new Button(new Row([new Icon("close"), new Box(5), new Text("CANCEL")]), "red").size("small").style({ borderRadius: "20px" });
+
         super.add(new Panel().style({
             padding: "0px 20px 20px 20px"
         }).add(new Column([
-            new Html(`<p>${msg}</p>`).style({fontSize: "13pt"}),
+            new Html(`<p>${msg}</p>`).style({ fontSize: "13pt" }),
             new Row([
                 ok, new Box(5), cancel
             ])
@@ -2099,20 +2099,20 @@ class Loader extends div {
         super();
 
         if (w != null) {
-            super.style({ 
+            super.style({
                 width: `${w}px`
             });
         }
 
         if (h != null) {
-            super.style({ 
+            super.style({
                 width: `${h}px`
             });
         }
 
         super.class("loader");
     }
-    
+
     show() {
         super.show();
     }
@@ -2124,7 +2124,7 @@ class Loader extends div {
 
 /// my custom Widget
 class Switch extends label {
-    constructor({check = false, size = 30, round = false}) {
+    constructor({ check = false, size = 30, round = false }) {
         super();
         super.class("switch");
 
@@ -2201,7 +2201,7 @@ class Padding extends div {
     }
 }
 
-export {    
+export {
     Switch
 };
 // end my custom widget
@@ -2252,4 +2252,4 @@ export {
     Padding
 };
 
-export {Alert, Confirm};
+export { Alert, Confirm };
