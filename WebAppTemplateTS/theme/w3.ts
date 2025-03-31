@@ -1,142 +1,296 @@
 import MyApp from "../main.js";
 import { a, button, canvas, div, h3, hr, Http, i, img, input, label, li, option, select, span, table, td, textarea, th, tr, ul, Widget } from "../plugin/core/core.ts";
 
+// Continue the Enum for Font Awesome Icons
+enum Icons {
+    // Solid style (fas)
+    Plus = "plus", // fa-plus
+    Save = "save", // fa-save
+    Trash = "trash", // fa-trash
+    Edit = "edit", // fa-edit
+    Cog = "cog", // fa-cog
+    Home = "home", // fa-home
+    Search = "search", // fa-search
+    User = "user", // fa-user
+    Users = "users", // fa-users
+    Envelope = "envelope", // fa-envelope
+    Bell = "bell", // fa-bell
+    Calendar = "calendar", // fa-calendar
+    Clock = "clock", // fa-clock
+    Star = "star", // fa-star
+    Heart = "heart", // fa-heart
+    ThumbsUp = "thumbs-up", // fa-thumbs-up
+    Check = "check", // fa-check
+    Times = "times", // fa-times
+    Lock = "lock", // fa-lock
+    Unlock = "unlock", // fa-unlock
+    Eye = "eye", // fa-eye
+    EyeSlash = "eye-slash", // fa-eye-slash
+    Download = "download", // fa-download
+    Upload = "upload", // fa-upload
+    Print = "print", // fa-print
+    Camera = "camera", // fa-camera
+    Music = "music", // fa-music
+    Video = "video", // fa-video
+    Image = "image", // fa-image
+    File = "file", // fa-file
+    Folder = "folder", // fa-folder
+    Book = "book", // fa-book
+    Bars = "bars", // fa-bars
+    EllipsisH = "ellipsis-h", // fa-ellipsis-h
+    ShoppingCart = "shopping-cart", // fa-shopping-cart
+    CreditCard = "credit-card", // fa-credit-card
+    Globe = "globe", // fa-globe
+    Wifi = "wifi", // fa-wifi
+    BatteryFull = "battery-full", // fa-battery-full
+    Database = "database", // fa-database
+    Server = "server", // fa-server
+    Laptop = "laptop", // fa-laptop
+    Mobile = "mobile", // fa-mobile
+    Tablet = "tablet", // fa-tablet
+    Desktop = "desktop", // fa-desktop
+    Gamepad = "gamepad", // fa-gamepad
+    Keyboard = "keyboard", // fa-keyboard
+    Mouse = "mouse", // fa-mouse
 
-const Config:{
-    Colors: {[index: string]: string},
-    Sizes: {[index: string]: string},
-    Direction: {[index: string]: string},
-    GetDirection: Function,
-    GetSize: Function,
-    GetColor: Function
-} = {
-    Colors: {
-        "black": "black",
-        "red": "red",
-        "pink": "pink",
-        "purple": "purple",
-        "deep-purple": "deep-purple",
-        "indigo": "indigo",
-        "blue": "blue",
-        "light-blue": "light-blue",
-        "cyan": "cyan",
-        "aqua": "aqua",
-        "teal": "teal",
-        "green": "green",
-        "light-green": "light-green",
-        "lime": "lime",
-        "sand": "sand",
-        "khaki": "khaki",
-        "yellow": "yellow",
-        "amber": "amber",
-        "orange": "orange",
-        "deep-orange": "deep-orange",
-        "blue-gray": "blue-gray",
-        "brown": "brown",
-        "light-gray": "light-gray",
-        "gray": "gray",
-        "dark-gray": "dark-gray",
-        "pale-red": "pale-red",
-        "pale-yellow": "pale-yellow",
-        "pale-green": "pale-green",
-        "pale-blue": "pale-blue",
-        "flat-turquoise": "flat-turquoise",
-        "flat-emerald": "flat-emerald",
-        "ios-dark-blue": "ios-dark-blue",
-        "flat-peter-river": "flat-peter-river",
-        "flat-amethyst": "flat-amethyst",
-        "flat-wet-asphalt": "flat-wet-asphalt",
-        "flat-green-sea": "flat-green-sea",
-        "flat-nephritis": "flat-nephritis",
-        "flat-belize-hole": "flat-belize-hole",
-        "flat-wisteria": "flat-wisteria",
-        "flat-midnight-blue": "flat-midnight-blue",
-        "flat-sun-flower": "flat-sun-flower",
-        "flat-carrot": "flat-carrot",
-        "flat-alizarin": "flat-alizarin",
-        "flat-clouds": "flat-clouds",
-        "flat-concrete": "flat-concrete",
-        "flat-orange": "flat-orange",
-        "flat-pumpkin": "flat-pumpkin",
-        "flat-pomegranate": "flat-pomegranate",
-        "flat-silver": "flat-silver",
-        "flat-asbestos": "flat-asbestos",
-        "ios-deep-blue": "ios-deep-blue",
-        "ios-blue": "ios-blue",
-        "ios-light-blue": "ios-light-blue",
-        "ios-green": "ios-green",
-        "ios-pink": "ios-pink",
-        "ios-red": "ios-red",
-        "ios-orange": "ios-orange",
-        "ios-yellow": "ios-yellow",
-        "ios-grey": "ios-grey",
-        "ios-light-grey": "ios-light-grey",
-        "ios-background": "ios-background",
-        "win8-lime": "win8-lime",
-        "win8-green": "win8-green",
-        "win8-emerald": "win8-emerald",
-        "win8-teal": "win8-teal",
-        "win8-cyan": "win8-cyan",
-        "win8-blue": "win8-blue",
-        "win8-cobalt": "win8-cobalt",
-        "win8-indigo": "win8-indigo",
-        "win8-violet": "win8-violet",
-        "win8-pink": "win8-pink",
-        "win8-magenta": "win8-magenta",
-        "win8-crimson": "win8-crimson",
-        "win8-red": "win8-red",
-        "win8-orange": "win8-orange",
-        "win8-amber": "win8-amber",
-        "win8-yellow": "win8-yellow",
-        "win8-brown": "win8-brown",
-        "win8-olive": "win8-olive",
-        "win8-steel": "win8-steel",
-        "win8-mauve": "win8-mauve",
-        "win8-taupe": "win8-taupe",
-        "win8-sienna": "win8-sienna"
-    },
-    Sizes: {
-        "tiny": "w3-tiny",
-        "small": "w3-small",
-        "large": "w3-large",
-        "xlarge": "w3-xlarge",
-        "xxlarge": "w3-xxlarge",
-        "xxxlarge": "w3-xxxlarge"
-    },
-    Direction: {
-        "topleft": "topleft",
-        "topright": "topright",
-        "bottomleft": "bottomleft",
-        "bottomright": "bottomright",
-        "left": "left",
-        "right": "right",
-        "middle": "middle",
-        "top": "top",
-        "bottom": "bottom",
-        "topmiddle": "topmiddle",
-        "bottommiddle": "bottommiddle"
-    }
-    ,
-    GetDirection: function (dir: string):  string|TypeErrorConstructor{
-        if (typeof (this.Direction[dir]) != "undefined") {
-            return dir;
-        }
-        throw new TypeError("wrong direction!");
-    },
-    GetSize: function (size: string): string|TypeErrorConstructor {
-        if (typeof (this.Sizes[size]) != "undefined") {
-            return size;
-        }
-        throw new TypeError("wrong sized!");
-    },
+    // Brands (fab)
+    Facebook = "facebook-f", // fa-facebook-f
+    Twitter = "twitter", // fa-twitter
+    Instagram = "instagram", // fa-instagram
+    Github = "github", // fa-github
+    Google = "google", // fa-google
+    Apple = "apple", // fa-apple
+    Windows = "windows", // fa-windows
+    Android = "android", // fa-android
+    Linkedin = "linkedin-in", // fa-linkedin-in
+    Youtube = "youtube", // fa-youtube
+    Spotify = "spotify", // fa-spotify
+    Paypal = "paypal", // fa-paypal
+    Bitcoin = "bitcoin", // fa-bitcoin
 
-    GetColor: function (color: string): string|TypeErrorConstructor {
-        if (typeof (this.Colors[color]) != "undefined") {
-            return color;
-        }
-        throw new TypeError("wrong color!");
-    }
+    // Regular style (far)
+    StarRegular = "star", // fa-star (regular)
+    HeartRegular = "heart", // fa-heart (regular)
+    BellRegular = "bell", // fa-bell (regular)
+    CalendarRegular = "calendar", // fa-calendar (regular)
+    FileRegular = "file", // fa-file (regular)
+
+    Message = "message", // fa-message
+    // Light style (fal) - if using Font Awesome Pro
+    // PlusLight = "plus", // fa-plus (light)
+    QuestionCircle = "question-circle",
+    // Duotone style (fad) - if using Font Awesome Pro
+    // PlusDuotone = "plus", // fa-plus (duotone)
+
+    // Additional icons
+    Shield = "shield", // fa-shield
+    Certificate = "certificate", // fa-certificate
+    Play = "play", // fa-play
+    Stop = "stop", // fa-stop
+    FileAlt = "file-alt", // fa-file-alt
+    Share = "share", // fa-share
+    Phone = "phone", // fa-phone
+    TrashAlt = "trash-alt", // fa-trash-alt
+    Cloud = "cloud", // fa-cloud
+    Sun = "sun", // fa-sun
+    Moon = "moon", // fa-moon
+    Lightbulb = "lightbulb", // fa-lightbulb
+    Flag = "flag", // fa-flag
+    Bolt = "bolt", // fa-bolt
+    InfoCircle = "info-circle", // fa-info-circle
+    SearchPlus = "search-plus", // fa-search-plus
+    SearchMinus = "search-minus", // fa-search-minus
+    Sync = "sync", // fa-sync
+    ArrowLeft = "arrow-left", // fa-arrow-left
+    ArrowRight = "arrow-right", // fa-arrow-right
+    ArrowUp = "arrow-up", // fa-arrow-up
+    ArrowDown = "arrow-down",
+    Close = "close" // fa-arrow-down
+}
+
+// Note: Make sure to continue adding additional icons as per your requirement.
+
+
+enum Color {
+    Black = "black",
+    Red = "red",
+    Pink = "pink",
+    Purple = "purple",
+    DeepPurple = "deep-purple",
+    Indigo = "indigo",
+    Blue = "blue",
+    LightBlue = "light-blue",
+    Cyan = "cyan",
+    Aqua = "aqua",
+    Teal = "teal",
+    Green = "green",
+    LightGreen = "light-green",
+    Lime = "lime",
+    Sand = "sand",
+    Khaki = "khaki",
+    Yellow = "yellow",
+    Amber = "amber",
+    Orange = "orange",
+    DeepOrange = "deep-orange",
+    BlueGray = "blue-gray",
+    Brown = "brown",
+    LightGray = "light-gray",
+    Gray = "gray",
+    DarkGray = "dark-gray",
+    PaleRed = "pale-red",
+    PaleYellow = "pale-yellow",
+    PaleGreen = "pale-green",
+    PaleBlue = "pale-blue",
+    FlatTurquoise = "flat-turquoise",
+    FlatEmerald = "flat-emerald",
+    IOSDarkBlue = "ios-dark-blue",
+    FlatPeterRiver = "flat-peter-river",
+    FlatAmethyst = "flat-amethyst",
+    FlatWetAsphalt = "flat-wet-asphalt",
+    FlatGreenSea = "flat-green-sea",
+    FlatNephritis = "flat-nephritis",
+    FlatBelizeHole = "flat-belize-hole",
+    FlatWisteria = "flat-wisteria",
+    FlatMidnightBlue = "flat-midnight-blue",
+    FlatSunFlower = "flat-sun-flower",
+    FlatCarrot = "flat-carrot",
+    FlatAlizarin = "flat-alizarin",
+    FlatClouds = "flat-clouds",
+    FlatConcrete = "flat-concrete",
+    FlatOrange = "flat-orange",
+    FlatPumpkin = "flat-pumpkin",
+    FlatPomegranate = "flat-pomegranate",
+    FlatSilver = "flat-silver",
+    FlatAsbestos = "flat-asbestos",
+    IOSDeepBlue = "ios-deep-blue",
+    IOSBlue = "ios-blue",
+    IOSLightBlue = "ios-light-blue",
+    IOSGreen = "ios-green",
+    IOSPink = "ios-pink",
+    IOSRed = "ios-red",
+    IOSOrange = "ios-orange",
+    IOSYellow = "ios-yellow",
+    IOSGrey = "ios-grey",
+    IOSLightGrey = "ios-light-grey",
+    IOSBackground = "ios-background",
+    Win8Lime = "win8-lime",
+    Win8Green = "win8-green",
+    Win8Emerald = "win8-emerald",
+    Win8Teal = "win8-teal",
+    Win8Cyan = "win8-cyan",
+    Win8Blue = "win8-blue",
+    Win8Cobalt = "win8-cobalt",
+    Win8Indigo = "win8-indigo",
+    Win8Violet = "win8-violet",
+    Win8Pink = "win8-pink",
+    Win8Magenta = "win8-magenta",
+    Win8Crimson = "win8-crimson",
+    Win8Red = "win8-red",
+    Win8Orange = "win8-orange",
+    Win8Amber = "win8-amber",
+    Win8Yellow = "win8-yellow",
+    Win8Brown = "win8-brown",
+    Win8Olive = "win8-olive",
+    Win8Steel = "win8-steel",
+    Win8Mauve = "win8-mauve",
+    Win8Taupe = "win8-taupe",
+    Win8Sienna = "win8-sienna"
 };
+
+enum Size {
+    Tiny = "w3-tiny",
+    Small = "w3-small",
+    Large = "w3-large",
+    XLarge = "w3-xlarge",
+    XXLarge = "w3-xxlarge",
+    XXXLarge = "w3-xxxlarge"
+}
+
+enum Direction {
+    TopLeft = "topleft",
+    TopRight = "topright",
+    BottomLeft = "bottomleft",
+    BottomRight = "bottomright",
+    Left = "left",
+    Right = "right",
+    Middle = "middle",
+    Top = "top",
+    Bottom = "bottom",
+    TopMiddle = "topmiddle",
+    BottomMiddle = "bottommiddle"
+}
+
+
+enum GridSize {
+    Small1 = "s1",
+    Small2 = "s2",
+    Small3 = "s3",
+    Small4 = "s4",
+    Small5 = "s5",
+    Small6 = "s6",
+    Small7 = "s7",
+    Small8 = "s8",
+    Small9 = "s9",
+    Small10 = "s10",
+    Small11 = "s11",
+    Small12 = "s12",
+
+    Medium1 = "m1",
+    Medium2 = "m2",
+    Medium3 = "m3",
+    Medium4 = "m4",
+    Medium5 = "m5",
+    Medium6 = "m6",
+    Medium7 = "m7",
+    Medium8 = "m8",
+    Medium9 = "m9",
+    Medium10 = "m10",
+    Medium11 = "m11",
+    Medium12 = "m12",
+
+    Large1 = "l1",
+    Large2 = "l2",
+    Large3 = "l3",
+    Large4 = "l4",
+    Large5 = "l5",
+    Large6 = "l6",
+    Large7 = "l7",
+    Large8 = "l8",
+    Large9 = "l9",
+    Large10 = "l10",
+    Large11 = "l11",
+    Large12 = "l12",
+
+    ExtraLarge1 = "xl1",
+    ExtraLarge2 = "xl2",
+    ExtraLarge3 = "xl3",
+    ExtraLarge4 = "xl4",
+    ExtraLarge5 = "xl5",
+    ExtraLarge6 = "xl6",
+    ExtraLarge7 = "xl7",
+    ExtraLarge8 = "xl8",
+    ExtraLarge9 = "xl9",
+    ExtraLarge10 = "xl10",
+    ExtraLarge11 = "xl11",
+    ExtraLarge12 = "xl12",
+    Rest = "rest"
+}
+
+enum InputType {
+    Text = "text",
+    Number = "number",
+    CheckBox = "check",
+    Radio = "radio",
+    Date = "date",
+    Email = "email",
+    Password = "password",
+    Select = "select",
+    File = "file",
+    Color = "color",
+    Tel = "tel",
+    Url = "url",
+}
+
 
 
 class Container extends div {
@@ -155,31 +309,31 @@ class Content extends div {
 }
 
 class Panel extends div {
-    constructor(color = null) {
+    constructor(color: Color | null = null) {
         super();
         super.class(["w3-panel"]);
 
         if (color != null) {
-            super.class(`w3-${Config.GetColor(color)}`);
+            super.class(`w3-${color}`);
         }
     }
 }
 
 class Card extends div {
-    constructor(color = null) {
+    constructor(color: Color | null = null) {
         super();
         super.class(["w3-card"]);
 
         if (color != null) {
-            super.class(`w3-${Config.GetColor(color)}`);
+            super.class(`w3-${color}`);
         }
     }
 }
 
 class ButtonGroup extends div {
     lists: Widget[];
-    
-    constructor(btn:Widget|null|Widget[]) {
+
+    constructor(btn: Widget | null | Widget[]) {
         super();
         super.class("w3-bar");
 
@@ -221,7 +375,7 @@ class Button extends button {
     loader: Widget;
     loader_txt: Widget;
 
-    constructor(text: string|null|Widget = null, color: string|null = null) {
+    constructor(text: string | null | Widget = null, color: Color | null = null) {
         super();
         super.class(["w3-btn"]);
         if (text instanceof Widget) {
@@ -232,7 +386,7 @@ class Button extends button {
         }
 
         if (color != null) {
-            super.class(`w3-${Config.GetColor(color)}`);
+            super.class(`w3-${color}`);
         }
 
         this.loader = new div().class("loader").style({
@@ -259,8 +413,9 @@ class Button extends button {
         return this;
     }
 
-    public size(size: string): Widget {
-        super.class(`w3-${Config.GetSize(size)}`);
+    public size(size: Size): Widget {
+        super.class(`w3-${size}`);
+
         return this;
     }
     public circle(): Widget {
@@ -303,14 +458,14 @@ class Button extends button {
 }
 
 class Text extends div {
-    constructor(text: string|null = null, color: string|null = null) {
+    constructor(text: string | null = null, color: Color | null = null) {
         super();
         if (text != null) {
             super.text(text);
         }
 
         if (color != null) {
-            super.class(`w3-text-${Config.GetColor(color)}`);
+            super.class(`w3-text-${color}`);
         }
 
 
@@ -324,8 +479,8 @@ class Text extends div {
         return this;
     }
 
-    public setTextColor(color: string): Widget {
-        super.class(`w3-text-${Config.GetColor(color)}`);
+    public setTextColor(color: Color): Widget {
+        super.class(`w3-text-${color}`);
         return this;
     }
 
@@ -340,7 +495,7 @@ class Text extends div {
 }
 
 class Html extends div {
-    constructor(text: string|null = null) {
+    constructor(text: string | null = null) {
         super();
         if (text != null) {
             super.html(text);
@@ -358,7 +513,7 @@ class Html extends div {
 }
 
 class TableResponsive extends div {
-    constructor(obj: Widget|Widget[], height:number = 0, padding: number = 0) {
+    constructor(obj: Widget | Widget[], height: number = 0, padding: number = 0) {
         super();
         super.class("w3-responsive");
 
@@ -382,15 +537,15 @@ class TableResponsive extends div {
 
 class Table extends table {
     rows: Widget[];
-    constructor(header:string[] = [], size: string|null = null, color: string|null = null, header_height: number|null = null, sticky: boolean = false) {
+    constructor(header: string[] = [], size: Size | null = null, color: Color | null = null, header_height: number | null = null, sticky: boolean = false) {
         super();
 
         super.class(["c-table", "w3-table-all"]);
 
         if (size != null) {
-            super.class([`w3-${Config.GetSize(size)}`]);
+            super.class([`w3-${size}`]);
         } else {
-            super.class([`w3-${Config.GetSize("small")}`]);
+            super.class([`w3-${Size.Small}`]);
         }
 
         const tr1 = new tr();;
@@ -401,32 +556,32 @@ class Table extends table {
             const td1 = new th().html(item);
             if (color != null) {
                 if (td1 instanceof Widget) {
-                    td1.class(`w3-${Config.GetColor(color)}`);
+                    td1.class(`w3-${color}`);
                 }
             }
 
             if (header_height != null) {
                 if (td1 instanceof Widget)
-                td1.style({ height: `${header_height}px` });
+                    td1.style({ height: `${header_height}px` });
             } else {
                 if (td1 instanceof Widget)
-                td1.style({ height: `0px`, padding: "0px" });
+                    td1.style({ height: `0px`, padding: "0px" });
 
             }
 
             if (td1 instanceof Widget)
-            tr1.add(td1);
+                tr1.add(td1);
 
             if (sticky) {
                 if (td1 instanceof Widget)
-                td1.style({
-                    position: "sticky",
-                    top: "0px",
-                    zIndex: "100",
-                    backgroundColor: "white",
-                    color: "black",
-                    border: "1px solid #ddd"
-                });
+                    td1.style({
+                        position: "sticky",
+                        top: "0px",
+                        zIndex: "100",
+                        backgroundColor: "white",
+                        color: "black",
+                        border: "1px solid #ddd"
+                    });
             }
         }
 
@@ -437,7 +592,7 @@ class Table extends table {
         this.rows = [];
     }
 
-    public add(items: Widget|Widget[]|string[] = [], arr: {[index:number]: string}[] = [], padding = 0): Widget {
+    public add(items: Widget | Widget[] | string[] | any[] = [], arr: { [index: number]: string }[] = [], padding = 0): Widget {
 
         const tr1 = new tr();
         if (items instanceof Array) {
@@ -474,7 +629,7 @@ class Table extends table {
         return tr1;
 
     }
-   
+
     public clearBody(): Widget {
         for (const item of this.rows) {
             item.delete();
@@ -508,29 +663,29 @@ class Table extends table {
 
 
 class List extends ul {
-    constructor(size: string|null = null) {
+    constructor(size: Size | null = null) {
         super();
         super.class("w3-ul");
         if (size != null) {
-            super.class(`w3-${Config.GetSize(size)}`);
+            super.class(`w3-${size}`);
         }
     }
 
-    public add(widget: Widget|Widget[]|string|null = null, color: string|null = null, hover_color: string|null = null): Widget {
+    public add(widget: Widget | Widget[] | string | null = null, color: Color | null = null, hover_color: Color | null = null): Widget {
         const li1 = new li();
 
         if (color != null) {
-            li1.class(`w3-${Config.GetColor(color)}`);
+            li1.class(`w3-${color}`);
         }
 
         if (widget instanceof Widget) {
             li1.add(widget);
-        } else if (typeof(widget) == "string") {
+        } else if (typeof (widget) == "string") {
             li1.html(widget);
         }
 
         if (hover_color != null) {
-            li1.class(`w3-hover-${Config.GetColor(hover_color)}`);
+            li1.class(`w3-hover-${hover_color}`);
         }
 
         super.add(li1);
@@ -555,7 +710,14 @@ class List extends ul {
 
 
 class TextField extends div {
-    constructor(text = null, type = "text", placeholder = null, error = false) {
+
+    label: label;
+    tf: input;
+    error_label: label;
+    search: Widget;
+
+
+    public constructor(text: string | null | Widget = null, type: string = "text", placeholder: null | string = null, error: boolean = false) {
         super();
 
         super.style({
@@ -571,10 +733,14 @@ class TextField extends div {
             if (text instanceof Widget) {
                 this.label.add(text);
             } else {
-                this.label.html(text).style({
+
+                this.label.html(text);
+
+                this.label.style({
                     color: "rgb(54, 54, 54)",
                     fontSize: "10pt"
                 });
+
             }
             super.add(this.label);
         }
@@ -599,7 +765,16 @@ class TextField extends div {
 
     }
 
-    filter({ data = [], network = false, url = "/", token_key = "X-Auth", token_value = "" }) {
+    public filter(param: { data: { key: string, value: string }[], network: boolean, url: string, token_key: string, token_value: string }): void {
+
+        const {
+            data = [],
+            network = false,
+            url = "/",
+            token_key = "X-Auth",
+            token_value = ""
+        } = param;
+
 
         this.search.style({
             width: "100%",
@@ -619,14 +794,20 @@ class TextField extends div {
                 let has_found = false;
                 for (const item of data) {
 
-                    if (this.tf.getValue() != "" & item.value.toLowerCase().indexOf(this.tf.getValue().toLowerCase()) > -1) {
+                    if (this.tf.getValue() != "" && item.value.toLowerCase().indexOf(this.tf.getValue().toLowerCase()) > -1) {
                         has_found = true;
 
                         const btn = new Button().style({
                             width: "100%",
                             textAlign: "left",
                             paddingLeft: "5px"
-                        }).text(item.value).size("tiny");
+                        });
+
+                        btn.text(item.value);
+
+                        if (btn instanceof Button) {
+                            btn.size(Size.Small);
+                        }
 
                         this.search.add(
                             btn
@@ -647,7 +828,7 @@ class TextField extends div {
             });
         } else {
 
-            let time_out = null;
+            let time_out: null | number | undefined = null;
             this.tf.addEventListener("keyup", () => {
 
                 if (this.tf.getValue().trim() == "") {
@@ -656,7 +837,8 @@ class TextField extends div {
                     return;
                 }
 
-                clearTimeout(time_out);
+                if (typeof (time_out) === "number")
+                    clearTimeout(time_out);
 
 
                 time_out = setTimeout(async () => {
@@ -678,16 +860,22 @@ class TextField extends div {
                         this.search.clear();
 
 
-                        const res = JSON.parse(await http.load());
+                        const res = JSON.parse(await http.load<string>());
                         console.log(res);
 
                         // plotting the result
                         for (const item of res) {
-                            const btn = new Button().style({
+                            const btn = new Button();
+
+                            btn.style({
                                 width: "100%",
                                 textAlign: "left",
                                 paddingLeft: "5px"
-                            }).text(item.value).size("tiny");
+                            });
+
+                            btn.text(item.value);
+
+                            btn.size(Size.Small);
 
                             this.search.add(
                                 btn
@@ -716,24 +904,25 @@ class TextField extends div {
 
         }
 
-        return this;
+
     }
 
-    error(err = null) {
+    public error(err: string | null = null): void {
 
         if (err != null) {
-            this.tf.class(`w3-border-${Config.GetColor("red")}`);
-            this.error_label.class(`w3-text-${Config.GetColor("red")}`);
+            this.tf.class(`w3-border-${Color.Red}`);
+            this.error_label.class(`w3-text-${Color.Red}`);
             this.error_label.html(err);
         } else {
-            this.tf.removeClass(`w3-border-${Config.GetColor("red")}`);
-            this.error_label.removeClass(`w3-text-${Config.GetColor("red")}`);
+            this.tf.removeClass(`w3-border-${Color.Red}`);
+            this.error_label.removeClass(`w3-text-${Color.Red}`);
             this.error_label.html("");
         }
-        return this;
     }
 
-    setIconPrefix({ icon = null, size = 20, color = null }) {
+    public setIconPrefix(param: { icon: Icons | null, size: number, color: Color | null }): void {
+
+        const { icon = null, size = 20, color = null } = param;
         if (icon != null) {
             const ico = new Icon(icon, color).style({
                 position: "absolute",
@@ -750,10 +939,11 @@ class TextField extends div {
 
             super.add(ico);
         }
-        return this;
+
     }
 
-    setIconSuffix({ icon = null, size = 20, color = null }) {
+    public setIconSuffix(param: { icon: Icons | null, size: number, color: Color | null }) {
+        const { icon = null, size = 20, color = null } = param;
         if (icon != null) {
             const ico = new Icon(icon, color).style({
                 position: "absolute",
@@ -773,40 +963,40 @@ class TextField extends div {
         return this;
     }
 
-    size(size) {
-        this.tf.class(`w3-${Config.GetSize(size)}`);
+    public size(size: Size) {
+        this.tf.class(`w3-${size}`);
         return this;
     }
 
-    labelColor(color = null) {
-        this.label.class(`w3-text-${Config.GetColor(color)}`);
+    public labelColor(color: Color | null = null) {
+        this.label.class(`w3-text-${color}`);
         return this;
     }
-    round() {
+    public round() {
         this.tf.class("w3-round");
         return this;
     }
 
-    border() {
+    public border() {
         this.tf.class("w3-border");
         return this;
     }
 
-    getValue() {
+    public getText() {
         return this.tf.value();
     }
 
-    setValue(value) {
+    public setText(value) {
         this.tf.value(value);
         return this;
     }
 
-    disabled() {
+    public disabled() {
         this.tf.attr("disabled", "");
         return this;
     }
 
-    enabled() {
+    public enabled() {
         this.tf.removeAttr("disabled");
         return this;
     }
@@ -814,7 +1004,11 @@ class TextField extends div {
 
 
 class TextBox extends div {
-    constructor(text = null, placeholder = null, error = false) {
+    label: label;
+    tf: textarea;
+    error_label: label;
+
+    constructor(text: string | Widget | null = null, placeholder: string | null = null, error: boolean = false) {
         super();
         this.label = new label();
         this.tf = new textarea().class(["w3-input"]);
@@ -844,62 +1038,65 @@ class TextBox extends div {
 
     }
 
-    error(err = null) {
+    public error(err: null | string = null) {
 
         if (err != null) {
-            this.tf.class(`w3-border-${Config.GetColor("red")}`);
-            this.error_label.class(`w3-text-${Config.GetColor("red")}`);
+            this.tf.class(`w3-border-${Color.Red}`);
+            this.error_label.class(`w3-text-${Color.Red}`);
             this.error_label.html(err);
         } else {
-            this.tf.removeClass(`w3-border-${Config.GetColor("red")}`);
-            this.error_label.removeClass(`w3-text-${Config.GetColor("red")}`);
+            this.tf.removeClass(`w3-border-${Color.Red}`);
+            this.error_label.removeClass(`w3-text-${Color.Red}`);
             this.error_label.html("");
         }
         return this;
     }
 
 
-    size(size) {
-        this.tf.class(`w3-${Config.GetSize(size)}`);
+    public size(size: Size) {
+        this.tf.class(`w3-${size}`);
         return this;
     }
 
-    labelColor(color = null) {
-        this.label.class(`w3-text-${Config.GetColor(color)}`);
+    public labelColor(color: Color | null = null) {
+        this.label.class(`w3-text-${color}`);
         return this;
     }
-    round() {
+    public round() {
         this.tf.class("w3-round");
         return this;
     }
 
-    border() {
+    public border() {
         this.tf.class("w3-border");
         return this;
     }
 
-    getValue() {
+    public getText() {
         return this.tf.value();
     }
 
-    setValue(value) {
+    public setText(value: string | null) {
         this.tf.value(value);
         return this;
     }
 
-    disabled() {
+    public disabled() {
         this.tf.attr("disabled", "");
         return this;
     }
 
-    enabled() {
+    public enabled() {
         this.tf.removeAttr("disabled");
         return this;
     }
 }
 
 class Radio extends span {
-    constructor(text = null, name = null) {
+    tf: input;
+    label: label;
+
+    constructor(text: string | null = null, name: string | null = null) {
         super();
 
         this.tf = new input().attr({
@@ -918,29 +1115,38 @@ class Radio extends span {
         }
 
     }
-    enabled() {
+    public enabled() {
         this.tf.removeAttr("disabled");
         return this;
     }
 
-    setValue(bool) {
-        this.tf.control.checked = bool;
+    public setText(bool: boolean) {
+        if (this.tf.control instanceof HTMLInputElement) {
+            this.tf.control.checked = bool;
+        }
         return this;
     }
 
-    getValue() {
+    public getText(): boolean {
 
-        return this.tf.control.checked;
+        if (this.tf.control instanceof HTMLInputElement) {
+            return this.tf.control.checked;
+        }
+
+        return false;
     }
 
-    disabled() {
+    public disabled() {
         this.tf.attr("disabled", "");
         return this;
     }
 }
 
 class CheckBox extends span {
-    constructor(text = null) {
+    label: input;
+    tf: input;
+
+    constructor(text: string | null = null) {
         super();
 
         this.tf = new input().attr({
@@ -961,22 +1167,27 @@ class CheckBox extends span {
 
 
 
-    setValue(bool) {
-        this.tf.control.checked = bool;
+    public setText(bool: boolean) {
+        if (this.tf.control instanceof HTMLInputElement) {
+            this.tf.control.checked = bool;
+        }
+
         return this;
     }
 
-    getValue() {
-
-        return this.tf.control.checked;
+    public getText(): boolean {
+        if (this.tf.control instanceof HTMLInputElement) {
+            return this.tf.control.checked;
+        }
+        return false;
     }
 
-    enabled() {
+    public enabled() {
         this.tf.removeAttr("disabled");
         return this;
     }
 
-    disabled() {
+    public disabled() {
         this.tf.attr("disabled", "");
         return this;
     }
@@ -992,7 +1203,7 @@ class ComboBox extends select {
 
     }
 
-    add(key, value) {
+    public set(key: string, value: string): option {
         const opt = new option();
         opt.attr({
             value: key
@@ -1002,48 +1213,48 @@ class ComboBox extends select {
         return opt;
     }
 
-    enabled() {
+    public enabled() {
         this.removeAttr("disabled");
         return this;
     }
 
-    disabled() {
+    public disabled() {
         this.attr("disabled", "");
         return this;
     }
 
-    size(size) {
-        this.class(`w3-${Config.GetSize(size)}`);
+    public size(size: Size) {
+        this.class(`w3-${size}`);
         return this;
     }
 
-    border() {
+    public border() {
         super.class("w3-border");
         return this;
     }
 
-    setValue(value) {
+    public setText(value: string) {
         super.value(value);
         return this;
     }
 
-    getValue() {
+    public getText() {
         return super.value();
     }
 }
 
 
 class Badge extends span {
-    constructor(text = null, color = null, size = null) {
+    constructor(text: string | null = null, color: Color | null = null, size: Size | null = null) {
         super();
         super.class("w3-badge");
 
         if (size != null) {
-            super.class(`w3-${Config.GetSize(size)}`);
+            super.class(`w3-${size}`);
         }
 
         if (color != null) {
-            super.class(`w3-${Config.GetColor(color)}`);
+            super.class(`w3-${color}`);
         }
 
         if (text != null) {
@@ -1051,23 +1262,23 @@ class Badge extends span {
         }
     }
 
-    textColor(color) {
-        super.class(`w3-text-${Config.GetColor(color)}`);
+    public textColor(color: Color) {
+        super.class(`w3-text-${color}`);
         return this;
     }
 }
 
 class Tag extends span {
-    constructor(text = null, color = null, size = null) {
+    constructor(text: string | null = null, color: Color | null = null, size: Size | null = null) {
         super();
         super.class("w3-tags");
 
         if (size != null) {
-            super.class(`w3-${Config.GetSize(size)}`);
+            super.class(`w3-${size}`);
         }
 
         if (color != null) {
-            super.class(`w3-${Config.GetColor(color)}`);
+            super.class(`w3-${color}`);
         }
 
         if (text != null) {
@@ -1075,18 +1286,18 @@ class Tag extends span {
         }
     }
 
-    textColor(color) {
-        super.class(`w3-text-${Config.GetColor(color)}`);
+    public textColor(color: Color) {
+        super.class(`w3-text-${color}`);
         return this;
     }
-    border() {
+    public border() {
         super.class("w3-border");
         return this;
     }
 }
 
 class Grid extends div {
-    constructor(is_padding = false) {
+    constructor(is_padding: boolean = false) {
         super();
         super.class("w3-row");
 
@@ -1095,12 +1306,12 @@ class Grid extends div {
         }
     }
 
-    add(obj, sizes = []) {
+    public set(obj: Widget | string, sizes: GridSize[] = []) {
         const cell = new div().class("w3-col");
 
         for (const item of sizes) {
-            if (item == "rest") {
-                cell.class("w3-rest");
+            if (item == GridSize.Rest) {
+                cell.class(`w3-${GridSize.Rest}`);
             } else {
                 cell.class(item);
             }
@@ -1116,19 +1327,19 @@ class Grid extends div {
         return cell;
     }
 
-    padding() {
+    public padding() {
         super.class("w3-row-padding");
         return this;
     }
 
-    section() {
+    public section() {
         super.class("w3-section");
         return this;
     }
 }
 
 class Bar extends div {
-    constructor(color = null, size = null) {
+    constructor(color: Color | null = null, size: Size | null = null) {
         super();
         super.class("w3-bar");
         super.style({
@@ -1138,22 +1349,22 @@ class Bar extends div {
 
 
         if (color != null) {
-            super.class(`w3-${Config.GetColor(color)}`);
+            super.class(`w3-${color}`);
         }
 
         if (size != null) {
-            super.class(`w3-${Config.GetSize(size)}`);
+            super.class(`w3-${size}`);
         }
 
 
     }
 
-    block() {
+    public block() {
         super.class("w3-bar-block");
         return this;
     }
 
-    add(text = null, isRight = false, hovercolor = null, evt = null, hoverableBGColor = null, hoverText = null) {
+    public set(text: string | null | Widget = null, isRight: boolean = false, hovercolor: Color | null = null, evt: EventListenerOrEventListenerObject | null = null, hoverableBGColor: Color | null = null, hoverText: Color | null = null) {
         const item = new div().class("w3-bar-item");
         if (text instanceof Widget) {
             item.add(text);
@@ -1163,23 +1374,21 @@ class Bar extends div {
         }
 
         if (hovercolor != null) {
-            item.class(`w3-hover-${Config.GetColor(hovercolor)}`);
+            item.class(`w3-hover-${hovercolor}`);
         }
 
-        if (evt != null && typeof (evt) == "function") {
+        if (evt != null) {
             item.addEventListener("click", evt);
         }
 
-        if (this.mobile) {
-            item.class("w3-mobile");
-        }
+
 
         if (hoverableBGColor != null) {
-            item.class(`w3-hover-${Config.GetColor(hoverableBGColor)}`);
+            item.class(`w3-hover-${hoverableBGColor}`);
         }
 
         if (hoverText != null) {
-            item.class(`w3-hover-${Config.GetColor(hoverText)}`);
+            item.class(`w3-hover-${hoverText}`);
         }
 
         if (isRight) {
@@ -1192,7 +1401,9 @@ class Bar extends div {
 }
 
 class DropDownHover extends div {
-    constructor(title = null) {
+    drop_content: div;
+
+    constructor(title: string | null = null) {
         super();
         super.class("w3-dropdown-hover");
         const btn = new Button(title);
@@ -1203,7 +1414,7 @@ class DropDownHover extends div {
         super.add(this.drop_content);
     }
 
-    add(title = null, fn = null) {
+    public set(title: string | Widget | null = null, fn: null | EventListenerOrEventListenerObject = null) {
         const a1 = new a().class(["w3-bar-item", "w3-button"]);
 
         if (title instanceof Widget) {
@@ -1225,9 +1436,13 @@ class DropDownHover extends div {
 }
 
 class Accordion extends span {
-    constructor(title = null, content = null) {
+    constructor(title: string | null = null, content: Widget | null = null) {
         super();
-        const btn = new Button(title).button().block().class("w3-left-align");
+        const btn = new Button(title);
+        btn.button()
+        btn.block()
+        btn.class("w3-left-align");
+
         const div = new Container().class("w3-hide");
 
         if (content instanceof Widget) {
@@ -1249,7 +1464,7 @@ class Accordion extends span {
 }
 
 class Icon extends i {
-    constructor(ico = null, color = null) {
+    constructor(ico: Icons | null = null, color: Color | null = null) {
         super();
 
         if (ico != null) {
@@ -1257,17 +1472,17 @@ class Icon extends i {
         }
 
         if (color != null) {
-            super.class(`w3-text-${Config.GetColor(color)}`);
+            super.class(`w3-text-color}`);
         }
     }
 
     setColor(color) {
-        super.class(`w3-text-${Config.GetColor(color)}`);
+        super.class(`w3-text-${color}`);
         return this;
     }
 }
 class Label extends label {
-    constructor(title = null) {
+    constructor(title: string | Widget | Widget[] | null = null) {
         super();
 
         if (title instanceof Widget) {
@@ -1289,17 +1504,20 @@ class Label extends label {
 }
 
 class SideBar extends div {
-    constructor(title = null) {
+    constructor(title: string | Widget | null = null) {
         super();
         super.class(["w3-sidebar", "w3-light-grey", "w3-bar-block"]);
         if (title instanceof Widget) {
             super.add(title);
         } else {
-            super.add(new h3().html(title));
+            const hh = new h3();
+
+            hh.html(title);
+            super.add(hh);
         }
     }
 
-    add(title = null, fn = null) {
+    public set(title: Widget | string | null = null, fn: null | EventListenerOrEventListenerObject = null) {
         if (title instanceof Widget) {
             super.add(title);
             return title;
@@ -1322,7 +1540,16 @@ class SideBar extends div {
 
 
 class LeftTab extends div {
-    constructor({ bgColor = null, size = null, round = false, roundContent = false }) {
+    round: boolean;
+    lists: Widget[];
+    grid: Grid;
+    side_bar: div;
+    content: div;
+
+    constructor(param: { bgColor?: Color | null, size?: Size | null, round?: boolean, roundContent?: boolean }) {
+
+        const { bgColor = null, size = null, round = false, roundContent = false } = param;
+
         super();
         this.round = round;
         this.lists = [];
@@ -1333,16 +1560,16 @@ class LeftTab extends div {
 
 
         if (bgColor != null) {
-            this.side_bar.class(`w3-${Config.GetColor(bgColor)}`);
+            this.side_bar.class(`w3-${bgColor}`);
         }
 
 
         this.content = new div().style({ width: "100%" }).class("w3-card");
 
-        this.grid.add(this.side_bar, ["s12", "m3", "l2"]);
+        this.grid.set(this.side_bar, [GridSize.Small12, GridSize.Medium3, GridSize.Large12]);
 
         const main_row = new Row().add(this.content).style({ paddingLeft: "5px" });
-        this.grid.add(main_row, ["s12", "m9", "l10"]);
+        this.grid.set(main_row, [GridSize.Small12, GridSize.Medium9, GridSize.Large10]);
 
         if (window.innerWidth <= 600) {
             main_row.style({
@@ -1364,7 +1591,7 @@ class LeftTab extends div {
 
     }
 
-    checkRound() {
+    public checkRound() {
         if (this.round) {
 
 
@@ -1398,7 +1625,7 @@ class LeftTab extends div {
         }
     }
 
-    addActive(cur_btn) {
+    public addActive(cur_btn) {
         for (const btn of this.lists) {
             btn.removeClass("w3-rtab-active");
         }
@@ -1406,8 +1633,8 @@ class LeftTab extends div {
         cur_btn.addClass("w3-rtab-active");
     }
 
-    add({ title = null, fn = null, active = false, color = null }) {
-
+    public set(param: { title: string | null | Widget, fn: Function | null, active?: boolean, color?: Color | null }) {
+        const { title = null, fn = null, active = false, color = null } = param;
         const btn = new button().style({
             width: "100%",
             textAlign: "left",
@@ -1433,7 +1660,8 @@ class LeftTab extends div {
 
         if (active) {
             this.addActive(btn);
-            fn(this.content);
+            if (typeof (fn) == "function")
+                fn(this.content);
         }
 
         this.lists.push(btn);
@@ -1445,7 +1673,14 @@ class LeftTab extends div {
 }
 
 class BasicTab extends div {
-    constructor({ bgColor = null, size = null, borderRadius = 0 }) {
+    menu: div;
+    borderRadius: number;
+    content: div;
+    list: Widget[];
+
+    constructor(param: { bgColor?: Color | null, size?: Size | null, borderRadius?: number }) {
+
+        const { bgColor = null, size = null, borderRadius = 0 } = param;
         super();
 
         this.menu = new div().style({
@@ -1465,11 +1700,11 @@ class BasicTab extends div {
         }
 
         if (bgColor != null) {
-            this.menu.class(`w3-${Config.GetColor(bgColor)}`);
+            this.menu.class(`w3-${bgColor}`);
         }
 
         if (size != null) {
-            this.menu.class(`w3-${Config.GetSize(size)}`);
+            this.menu.class(`w3-${size}`);
         }
 
         // <div class="w3-bar w3-black">
@@ -1486,13 +1721,14 @@ class BasicTab extends div {
 
         this.list = [];
     }
-    clearActive() {
+    public clearActive() {
         for (const item of this.list) {
             item.removeClass("w3-tab-active");
             //item.removeAttr("disabled");
         }
     }
-    add({ title = null, fn = null, active = false, color = null }) {
+    public set(param: { title: string | Widget | null, fn: Function | null, active?: boolean, color?: Color | null }) {
+        const { title = null, fn = null, active = false, color = null } = param;
         if (title instanceof Widget) {
 
         } else {
@@ -1504,7 +1740,9 @@ class BasicTab extends div {
             //     height: "100%"
             // });
 
-            const btn = new button().class(["w3-bar-item", "w3-button", "tablink"]).html(title).style({
+            const btn = new button().class(["w3-bar-item", "w3-button", "tablink"]);
+            btn.html(title);
+            btn.style({
                 borderTopLeftRadius: "8px",
                 borderTopRightRadius: "8px",
                 border: "1px solid rgba(0, 0, 0, 0)"
@@ -1519,7 +1757,8 @@ class BasicTab extends div {
                 btn.class("w3-tab-active");
                 //btn.attr({"disabled": ""});
                 this.content.clear();
-                fn(this.content);
+                if (typeof (fn) == "function")
+                    fn(this.content);
             }
 
 
@@ -1547,7 +1786,7 @@ class TabBody extends div {
             position: "relative"
         });
     }
-    round() {
+    public round() {
         super.style({
             borderBottomRightRadius: "10px",
             borderBottomLeftRadius: "10px"
@@ -1557,20 +1796,27 @@ class TabBody extends div {
 }
 
 class Pagination extends div {
-    constructor(change_fn = null, active_color = null, size = null) {
+    between: span;
+    change_fn: Function | null;
+    links: { num: number, link: a }[];
+    current_page: number;
+    active_color: string;
+    constructor(change_fn: Function | null = null, active_color: Color | null = null, size: Size | null = null) {
         super();
         super.class(["w3-bar"]);
 
         if (size != null) {
-            super.class(`w3-${Config.GetSize(size)}`);
+            super.class(`w3-${size}`);
         }
 
-        const before = new a().attr({
+        const before = new a();
+        before.attr({
             href: "#",
             class: "w3-bar-item w3-button"
         }).html(`&laquo;`);
 
-        const forward = new a().attr({
+        const forward = new a();
+        forward.attr({
             href: "#",
             class: "w3-bar-item w3-button"
         }).html(`&raquo;`);
@@ -1589,10 +1835,10 @@ class Pagination extends div {
         this.current_page = 1;
 
         if (active_color != null) {
-            this.active_color = `w3-${Config.GetColor(active_color)}`;
+            this.active_color = `w3-${active_color}`;
         } else {
             // default color is green
-            this.active_color = `w3-${Config.GetColor("green")}`;
+            this.active_color = `w3-${Color.Green}`;
         }
 
         const changeDir = (step) => {
@@ -1635,12 +1881,12 @@ class Pagination extends div {
 
     }
 
-    border() {
+    public border() {
         super.class("w3-border");
         return this;
     }
 
-    add(num = null, active = null, change = null, style = null) {
+    public set(num: number | null = null, active: boolean | null = null, change: Function | null = null, style: { [index: string]: string } | null = null) {
 
         active = active == null ? false : active;
 
@@ -1648,10 +1894,12 @@ class Pagination extends div {
             if (typeof (num) != "number") throw new TypeError("add in pagination must be a number!");
         }
 
-        const link = new a().attr({
+        const link = new a();
+
+        link.attr({
             href: "#",
             class: "w3-bar-item w3-button"
-        }).html(`${num}`);
+        }).html(`${num} `);
 
         if (style != null) {
             link.style(style);
@@ -1659,10 +1907,11 @@ class Pagination extends div {
 
         this.between.add(link);
 
-        this.links.push({
-            num: num,
-            link: link
-        });
+        if (typeof (num) == "number")
+            this.links.push({
+                num: num,
+                link: link
+            });
 
         link.addEventListener("click", () => {
 
@@ -1674,7 +1923,8 @@ class Pagination extends div {
             if (typeof (this.change_fn) == "function") {
                 this.change_fn(num);
             }
-            this.current_page = num;
+            if (typeof (num) == "number")
+                this.current_page = num;
 
         });
 
@@ -1691,8 +1941,8 @@ class Pagination extends div {
                     this.change_fn(num);
                 }
             }
-
-            this.current_page = num;
+            if (typeof (num) == "number")
+                this.current_page = num;
         }
 
         return link;
@@ -1700,13 +1950,14 @@ class Pagination extends div {
 }
 
 class ProgressBar extends div {
-    constructor(color = null) {
+    con: div;
+    constructor(color: Color | null = null) {
         super();
         super.class(["w3-light-grey", "w3-round"]).style({
             height: "20px"
         });
 
-        this.con = new div().class(["w3-container", "w3-round", `w3-${color == null ? "blue" : Config.GetColor(color)}`]).style({
+        this.con = new div().class(["w3-container", "w3-round", `w3-${color == null ? Color.Blue : color}`]).style({
             width: "1%",
             height: "100%"
         });
@@ -1714,13 +1965,13 @@ class ProgressBar extends div {
         super.add(this.con);
     }
 
-    update(percent, value = null) {
+    public update(percent: number, value: number | string | null = null) {
         this.con.style({
-            width: `${percent}%`
+            width: `${percent}% `
         });
 
         if (value != null) {
-            this.con.html(`${value}%`);
+            this.con.html(`${value}% `);
         }
     }
 }
@@ -1733,10 +1984,12 @@ class Center extends div {
 }
 
 class Modal extends div {
-    constructor(title = null, maxwidth = null, bgcolor = null, animate = "top") {
+    resolvefn: ((value: unknown) => void) | null = null;;
+    content: div;
+
+    constructor(title: null | string | Widget = null, maxwidth: string | null = null, bgcolor: Color | null = null, animate: Direction = Direction.Top) {
         super();
         super.class("w3-modal").style({ zIndex: "1000" });
-        this.resolvefn = null;
 
         this.content = new div().class(["w3-modal-content", "w3-card-4"]).style({ borderRadius: "10px" });
 
@@ -1760,22 +2013,26 @@ class Modal extends div {
                 borderTopLeftRadius: "10px"
             });
 
-            const close = new Button("X").style({
+            const close = new Button("X");
+            close.style({
                 position: "absolute",
                 top: "10px",
                 right: "10px"
-            }).size("tiny");
+            });
+
+            close.size(Size.Tiny);
+
             header.add(close);
 
             if (bgcolor != null) {
-                header.class(`w3-${Config.GetColor(bgcolor)}`);
+                header.class(`w3-${bgcolor}`);
             }
 
             this.content.add(new div().class(["w3-container"]));
             this.content.add(header);
 
             close.addEventListener("click", () => {
-                this.hide();
+                this.close();
             });
         }
         super.add(this.content);
@@ -1783,7 +2040,7 @@ class Modal extends div {
 
     }
 
-    add(obj = null) {
+    public set(obj: null | Widget = null) {
         if (obj instanceof Widget) {
             this.content.add(obj);
         } else {
@@ -1791,7 +2048,7 @@ class Modal extends div {
         }
     }
 
-    async show() {
+    public async open() {
         super.show();
         //this.body.appendChild(super.control());
         MyApp.add(this);
@@ -1802,8 +2059,10 @@ class Modal extends div {
         return promise;
     }
 
-    hide(value = null) {
-        this.resolvefn(value);
+    public close(value: string | null | boolean = null) {
+        if (this.resolvefn) {
+            this.resolvefn(value);
+        }
         super.hide();
         this.delete();
         if (typeof (this.dispose) == "function") {
@@ -1814,44 +2073,44 @@ class Modal extends div {
 }
 
 class Code extends div {
-    constructor(lang = null) {
+    constructor(lang: string | null = null) {
         super();
         super.class("w3-code");
 
         if (lang != null) {
-            super.class(`${lang}High`);
+            super.class(`${lang} High`);
         }
     }
 
-    write(code = null) {
+    public write(code: string | null = null) {
         super.text(code);
         return this;
     }
 }
 
 class Display extends div {
-    constructor(pos = "middle") {
+    constructor(pos: Direction = Direction.Middle) {
         super();
-        super.class(`w3-display-${Config.GetDirection(pos)}`);
+        super.class(`w3-display-${pos}`);
     }
 }
 
 
 class Row extends div {
-    constructor(obj = null, direction = null) {
+    constructor(obj: Widget | Widget[] | null = null, direction: Direction | null = null) {
         super();
 
 
         if (obj instanceof Widget) {
             //obj.style({ display: "inline-block" });
-            super.add(new div().class(["w3-cell", direction == null ? "w3-cell-top" : `w3-cell-${Config.GetDirection(direction)}`]).add(obj));
+            super.add(new div().class(["w3-cell", direction == null ? "w3-cell-top" : `w3-cell-${direction}`]).add(obj));
 
         } else if (obj instanceof Array) {
             for (const item of obj) {
                 if (item instanceof Widget) {
                     //item.style({ display: "inline-block" });
                     //item.class("w3-cell");
-                    super.add(new div().class(["w3-cell", direction == null ? "w3-cell-top" : `w3-cell-${Config.GetDirection(direction)}`]).add(item));
+                    super.add(new div().class(["w3-cell", direction == null ? "w3-cell-top" : `w3-cell-${direction}`]).add(item));
                 }
             }
         }
@@ -1861,7 +2120,7 @@ class Row extends div {
 
 
 class Column extends div {
-    constructor(obj = null) {
+    constructor(obj: Widget | null | Widget[] = null) {
         super();
 
         if (obj instanceof Widget) {
@@ -1888,7 +2147,7 @@ class Photo2d extends img {
         super.class("w3-image");
     }
 
-    path(src) {
+    public path(src: string) {
         super.attr({
             "src": src
         });
@@ -1909,67 +2168,67 @@ class Photo2d extends img {
         return this;
     }
 
-    default() {
+    public default() {
         super.style({
             objectFit: "cover"
         });
         return this;
     }
 
-    base64() {
+    public base64() {
         return this;
     }
 
-    sepia() {
+    public sepia() {
         super.class("w3-sepia");
         return this;
     }
-    sepiaMin() {
+    public sepiaMin() {
         super.class("w3-sepia-min");
         return this;
     }
-    sepiaMax() {
+    public sepiaMax() {
         super.class("w3-sepia-max");
         return this;
     }
 
-    hoverOpacity() {
+    public hoverOpacity() {
         super.class("w3-hover-opacity");
         return this;
     }
-    hoverGrayScale() {
+    public hoverGrayScale() {
         super.class("w3-hover-grayscale");
         return this;
     }
 
-    hoverSepia() {
+    public hoverSepia() {
         super.class("w3-hover-sepia");
         return this;
     }
 
-    round() {
+    public round() {
         super.class("w3-round");
         return this;
     }
 
-    circle() {
+    public circle() {
         super.class("w3-circle");
         return this;
     }
 
-    border() {
+    public border() {
         super.class("w3-border");
         return this;
     }
 
-    padding() {
+    public padding() {
         super.class("w3-padding");
         return this;
     }
 }
 
 class Box extends div {
-    constructor(width = null, height = null) {
+    constructor(width: number | string | null = null, height: number | string | null = null) {
         super();
         super.class("w3-cell");
         super.style({
@@ -1980,13 +2239,13 @@ class Box extends div {
 
         if (width != null) {
             super.style({
-                width: typeof (width) == "number" ? `${width}px` : width
+                width: typeof (width) == "number" ? `${width} px` : width
             });
         }
 
         if (height != null) {
             super.style({
-                width: typeof (height) == "number" ? `${height}px` : height
+                width: typeof (height) == "number" ? `${height} px` : height
             });
         }
 
@@ -1994,9 +2253,13 @@ class Box extends div {
 }
 
 class Canvas extends canvas {
-    constructor(width = null, height = null) {
+    ctx: CanvasRenderingContext2D | null;
+    constructor(width: string | null = null, height: string | null = null) {
         super();
-        this.ctx = this.control.getContext("2d");
+
+        if (this.control instanceof HTMLCanvasElement) {
+            this.ctx = this.control.getContext("2d");
+        }
 
         if (width != null) {
             super.attr({
@@ -2013,20 +2276,27 @@ class Canvas extends canvas {
 }
 
 class TextFieldFilter extends div {
-    constructor(text = null, type = "text", placeholder = null, error = false) {
+    input: TextField;
+    list: List;
+
+    constructor(text: string | null = null, type: InputType = InputType.Text, placeholder: string | null = null, error: boolean = false) {
         super();
         this.input = new TextField(text, type, placeholder, error);
 
-        this.list = new List().border().hide();
+        this.list = new List();
+        this.list.border()
+        this.list.hide();
 
         super.add([
             this.input, this.list
         ]);
 
 
-        let time = null;
+        let time: number | null = null;
         this.input.tf.addEventListener("focusin", () => {
-            clearTimeout(time);
+            if (time != null)
+                clearTimeout(time);
+
             this.list.show();
         });
 
@@ -2038,7 +2308,8 @@ class TextFieldFilter extends div {
         });
 
         this.list.addEventListener("mouseover", () => {
-            clearTimeout(time);
+            if (time != null)
+                clearTimeout(time);
             this.list.show();
         });
 
@@ -2049,15 +2320,16 @@ class TextFieldFilter extends div {
         });
 
     }
-    init(arr_list_of_key_value = null) {
+    public init(items: { key: string, value: string }[] | null = null) {
 
-        for (const item of arr_list_of_key_value) {
-            this.list.add(item.value);
-        }
+        if (items != null)
+            for (const item of items) {
+                this.list.add(item.value);
+            }
 
         return this;
     }
-    border() {
+    public border() {
         this.input.tf.class("w3-border");
         return this;
     }
@@ -2066,35 +2338,35 @@ class TextFieldFilter extends div {
 
 
 class Alert1 extends Modal {
-    constructor(msg, color = "sand") {
-        super(new Row([new Icon("message"), new Box(10), new Text("Alert")]), "480px", color);
+    constructor(msg: string, color: Color = Color.Sand) {
+        super(new Row([new Icon(Icons.Message), new Box(10), new Text("Alert")]), "480px", color);
 
-        const ok = new Button(new Row([new Icon("check"), new Box(5), new Text("OK")]), "blue").size("small").style({ borderRadius: "20px" });
+        const ok = new Button(new Row([new Icon(Icons.Check), new Box(5), new Text("OK")]), Color.Blue).size(Size.Small).style({ borderRadius: "20px" });
 
-        super.add(new Panel().style({
+        super.set(new Panel().style({
             padding: "0px 20px 20px 20px"
         }).add(new Column([
-            new Html(`<p>${msg}</p>`).style({ fontSize: "13pt" }),
+            new Html(`<p> ${msg} </p>`).style({ fontSize: "13pt" }),
             new Row([
                 ok, new Box(10)
             ])
         ])));
 
         ok.addEventListener("click", async () => {
-            super.hide(true);
+            super.close(true);
         });
 
     }
 }
 
 class Confirm1 extends Modal {
-    constructor(msg, color) {
-        super(new Row([new Icon("question-circle"), new Box(10), new Text("Confirmation")]), "480px", color, "bottom");
+    constructor(msg: string, color: Color) {
+        super(new Row([new Icon(Icons.QuestionCircle), new Box(10), new Text("Confirmation")]), "480px", color, Direction.Bottom);
 
-        const ok = new Button(new Row([new Icon("check"), new Box(5), new Text("OK")]), "blue").size("small").style({ borderRadius: "20px" });
-        const cancel = new Button(new Row([new Icon("close"), new Box(5), new Text("CANCEL")]), "red").size("small").style({ borderRadius: "20px" });
+        const ok = new Button(new Row([new Icon(Icons.Check), new Box(5), new Text("OK")]), Color.Blue).size(Size.Small).style({ borderRadius: "20px" });
+        const cancel = new Button(new Row([new Icon(Icons.Close), new Box(5), new Text("CANCEL")]), Color.Red).size(Size.Small).style({ borderRadius: "20px" });
 
-        super.add(new Panel().style({
+        super.set(new Panel().style({
             padding: "0px 20px 20px 20px"
         }).add(new Column([
             new Html(`<p>${msg}</p>`).style({ fontSize: "13pt" }),
@@ -2104,21 +2376,21 @@ class Confirm1 extends Modal {
         ])));
 
         ok.addEventListener("click", async () => {
-            super.hide(true);
+            super.close(true);
         });
 
         cancel.addEventListener("click", () => {
-            super.hide(false);
+            super.close(false);
         });
     }
 }
 
-const Alert = async (msg = "Alert", color = "sand") => {
-    return new Alert1(msg, color).show();
+const Alert = async (msg: string = "Alert", color: Color = Color.Sand) => {
+    return new Alert1(msg, color).open();
 }
 
-const Confirm = async (msg = "Confirm", color = "red") => {
-    return new Confirm1(msg, color).show();
+const Confirm = async (msg: string = "Confirm", color: Color = Color.Red) => {
+    return new Confirm1(msg, color).open();
 };
 
 
@@ -2141,18 +2413,21 @@ class Loader extends div {
         super.class("loader");
     }
 
-    show() {
+    open() {
         super.show();
     }
 
-    hide() {
+    close() {
         super.delete();
     }
 }
 
 /// my custom Widget
 class Switch extends label {
-    constructor({ check = false, size = 30, round = false }) {
+    tf: input;
+
+    constructor(param: { check?: boolean, size?: number, round?: boolean }) {
+        const { check = false, size = 30, round = false } = param;
         super();
         super.class("switch");
 
@@ -2164,8 +2439,8 @@ class Switch extends label {
         if (round) {
             slider.class("round");
         }
-
-        this.tf.control.checked = check;
+        if (this.tf.control instanceof HTMLInputElement)
+            this.tf.control.checked = check;
 
         super.add([
             this.tf,
@@ -2173,21 +2448,25 @@ class Switch extends label {
         ]);
     }
 
-    setValue(check = true) {
-        this.tf.control.checked = check;
+    public setText(check: boolean = true) {
+        if (this.tf.control instanceof HTMLInputElement)
+            this.tf.control.checked = check;
+
         return this;
     }
 
-    getValue() {
-        return this.tf.control.checked;
+    public getText(): boolean {
+        if (this.tf.control instanceof HTMLInputElement)
+            return this.tf.control.checked;
+        return false;
     }
 
-    disabled() {
+    public disabled() {
         this.tf.attr("disabled", "");
         return this;
     }
 
-    enabled() {
+    public enabled() {
         this.tf.removeAttr("disabled");
         return this;
     }
@@ -2199,7 +2478,7 @@ class Divider extends hr {
     constructor() {
         super();
     }
-    dotted() {
+    public dotted() {
         super.style({
             borderStyle: "dotted"
         });
@@ -2207,7 +2486,7 @@ class Divider extends hr {
         return this;
     }
 
-    dashed() {
+    public dashed() {
         super.style({
             borderStyle: "dashed"
         });
@@ -2228,6 +2507,10 @@ class Padding extends div {
         }
     }
 }
+
+/* enum export */
+
+export { Icons, Color, Size, Direction, GridSize, InputType };
 
 export {
     Switch
@@ -2262,7 +2545,7 @@ export {
     Icon,
     SideBar,
     Label,
-    LeftTab,
+    LeftTab, // not working yet
     BasicTab,
     Pagination,
     ProgressBar,
