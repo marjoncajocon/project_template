@@ -1,8 +1,32 @@
 import { button, Widget, Window } from "./plugin/core/core.ts";
-import { Accordion, Alert, BasicTab, Button, Card, CheckBox, Color, Confirm, Divider, DropDownHover, Icon, Icons, LeftTab, Pagination, ProgressBar, SideBar, Size, Switch, Table, TextField } from "./theme/w3.ts";
+import { Accordion, Alert, BasicTab, Box, Button, Card, CheckBox, Color, Confirm, Direction, Divider, DropDownHover, Icon, Icons, LeftTab, Modal, Padding, Pagination, ProgressBar, Radio, Row, SideBar, Size, Switch, Table, Text, TextField } from "./theme/w3.ts";
 
 import "./theme/w3css/w3.css";
 import "./theme/icon/css/all.css";
+
+
+class TestModal extends Modal {
+  constructor() {
+    super('Test Modal', '480px', Color.Amber, Direction.Top);
+
+    const username = new TextField('username', 'text', 'Enter Username').border();
+    username.setIconPrefix({icon: Icons.User});
+
+    const password = new TextField('password', 'password', 'Enter Password').border();
+    password.setIconPrefix({icon: Icons.Lock, color: Color.MetroBlue});
+
+    const signin = new Button(new Row([new Icon(Icons.Unlock),new Box(5), new Text('Sign In')]), Color.IOSPink)
+    signin.size(Size.Tiny);
+    signin.round();
+
+    super.set(new Padding([
+      username,
+      password,
+      new Divider(),
+      signin
+    ], 20));
+  }
+}
 
 class TestPage extends Card {
   constructor() {
@@ -91,8 +115,25 @@ class TestPage extends Card {
     });
 
 
+    const openmodal = new Button('Open Modal', Color.FlatAsbestos);
+
+    openmodal.addEventListener('click', async () => {
+
+      const modal = new TestModal();
+
+      const res = await modal.open();
+      console.log(res);
+
+    });
+
     const progress = new ProgressBar(Color.Aqua);
     progress.update(10, 10);
+
+
+    const male = new Radio('Male', 'gender');
+    const female = new Radio('Female', 'gender');
+
+    const ss = new Switch({round: true});
     super.add([
       tf,
       btn,
@@ -109,7 +150,11 @@ class TestPage extends Card {
       left,
       new Divider(),
       page,
-      progress
+      progress,
+      openmodal,
+      male, 
+      female,
+      ss
     ]);
 
 
