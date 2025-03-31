@@ -1,5 +1,5 @@
-import { button, Widget, Window } from "./plugin/core/core.ts";
-import { Accordion, Alert, BasicTab, Box, Button, Card, CheckBox, Color, Confirm, Direction, Divider, DropDownHover, Icon, Icons, LeftTab, Modal, Padding, Pagination, ProgressBar, Radio, Row, SideBar, Size, Switch, Table, Text, TextField } from "./theme/w3.ts";
+import { button, Widget, Window } from "./plugin/core/core.mts";
+import { Accordion, Alert, BasicTab, Box, Button, Card, CheckBox, Color, Confirm, Direction, Divider, DropDownHover, Icon, Icons, LeftTab, Modal, Padding, Pagination, ProgressBar, Radio, Row, SideBar, Size, Switch, Table, Text, TextField } from "./theme/w3.mts";
 
 import "./theme/w3css/w3.css";
 import "./theme/icon/css/all.css";
@@ -132,6 +132,7 @@ class TestPage extends Card {
 
     const male = new Radio('Male', 'gender');
     const female = new Radio('Female', 'gender');
+    const other = new Radio('Other', 'gender');
 
     const ss = new Switch({round: true});
     super.add([
@@ -154,6 +155,7 @@ class TestPage extends Card {
       openmodal,
       male, 
       female,
+      other,
       ss
     ]);
 
