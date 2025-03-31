@@ -1,5 +1,5 @@
 import { button, Widget, Window } from "./plugin/core/core.ts";
-import { Accordion, Alert, BasicTab, Button, Card, CheckBox, Color, Confirm, Direction, Divider, DropDownHover, Icon, Icons, LeftTab, Modal, Padding, Pagination, ProgressBar, SideBar, Size, Switch, Table, TextField } from "./theme/w3.ts";
+import { Accordion, Alert, BasicTab, Box, Button, Card, CheckBox, Color, Confirm, Direction, Divider, DropDownHover, Icon, Icons, LeftTab, Modal, Padding, Pagination, ProgressBar, Radio, Row, SideBar, Size, Switch, Table, Text, TextField } from "./theme/w3.ts";
 
 import "./theme/w3css/w3.css";
 import "./theme/icon/css/all.css";
@@ -9,13 +9,16 @@ class TestModal extends Modal {
   constructor() {
     super('Test Modal', '480px', Color.Amber, Direction.Top);
 
-    const username = new TextField('username', 'text').border();
+    const username = new TextField('username', 'text', 'Enter Username').border();
     username.setIconPrefix({icon: Icons.User});
 
-    const password = new TextField('password', 'password').border();
-    password.setIconPrefix({icon: Icons.Lock, color: Color.DeepOrange});
+    const password = new TextField('password', 'password', 'Enter Password').border();
+    password.setIconPrefix({icon: Icons.Lock, color: Color.MetroBlue});
 
-    const signin = new Button('SignIn', Color.Win8Cobalt).size(Size.Tiny);
+    const signin = new Button(new Row([new Icon(Icons.Unlock),new Box(5), new Text('Sign In')]), Color.IOSPink)
+    signin.size(Size.Tiny);
+    signin.round();
+
     super.set(new Padding([
       username,
       password,
@@ -125,6 +128,12 @@ class TestPage extends Card {
 
     const progress = new ProgressBar(Color.Aqua);
     progress.update(10, 10);
+
+
+    const male = new Radio('Male', 'gender');
+    const female = new Radio('Female', 'gender');
+
+    const ss = new Switch({round: true});
     super.add([
       tf,
       btn,
@@ -142,7 +151,10 @@ class TestPage extends Card {
       new Divider(),
       page,
       progress,
-      openmodal
+      openmodal,
+      male, 
+      female,
+      ss
     ]);
 
 

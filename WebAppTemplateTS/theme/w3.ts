@@ -194,7 +194,24 @@ enum Color {
     Win8Steel = "win8-steel",
     Win8Mauve = "win8-mauve",
     Win8Taupe = "win8-taupe",
-    Win8Sienna = "win8-sienna"
+    Win8Sienna = "win8-sienna",
+    MetroLightGreen = "metro-light-green",
+    MetroGreen = "metro-green",
+    MetroDarkGreen = "metro-dark-green",
+    MetroMagenta = "metro-magenta",
+    MetroLightPurple = "metro-light-purple",
+    MetroPurple = "metro-purple",
+    MetroDarkPurple = "metro-dark-purple",
+    MetroDarken = "metro-darken",
+    MetroTeal = "metro-teal",
+    MetroLightBlue = "metro-light-blue",
+    MetroBlue = "metro-blue",
+    MetroDarkBlue = "metro-dark-blue",
+    MetroYellow = "metro-yellow",
+    MetroOrange = "metro-orange",
+    MetroDarkOrange = "metro-dark-orange",
+    MetroRed = "metro-red",
+    MetroDarkRed = "metro-dark-red"
 };
 
 enum Size {
