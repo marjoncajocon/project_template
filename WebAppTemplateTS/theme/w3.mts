@@ -1,5 +1,5 @@
-import MyApp from "../main.js";
-import { a, button, canvas, div, h3, hr, Http, i, img, input, label, li, option, select, span, table, td, textarea, th, tr, ul, Widget } from "../plugin/core/core.ts";
+import MyApp from "../main.mjs";
+import { a, button, canvas, div, h3, hr, Http, i, img, input, label, li, option, select, span, table, td, textarea, th, tr, ul, Widget } from "../plugin/core/core.mts";
 
 // Continue the Enum for Font Awesome Icons
 enum Icons {
