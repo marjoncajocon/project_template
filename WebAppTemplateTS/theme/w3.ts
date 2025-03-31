@@ -198,12 +198,12 @@ enum Color {
 };
 
 enum Size {
-    Tiny = "w3-tiny",
-    Small = "w3-small",
-    Large = "w3-large",
-    XLarge = "w3-xlarge",
-    XXLarge = "w3-xxlarge",
-    XXXLarge = "w3-xxxlarge"
+    Tiny = "tiny",
+    Small = "small",
+    Large = "large",
+    XLarge = "xlarge",
+    XXLarge = "xxlarge",
+    XXXLarge = "xxxlarge"
 }
 
 enum Direction {
@@ -920,7 +920,7 @@ class TextField extends div {
         }
     }
 
-    public setIconPrefix(param: { icon: Icons | null, size: number, color: Color | null }): void {
+    public setIconPrefix(param: { icon: Icons | null, size?: number, color?: Color | null }): void {
 
         const { icon = null, size = 20, color = null } = param;
         if (icon != null) {
@@ -942,7 +942,7 @@ class TextField extends div {
 
     }
 
-    public setIconSuffix(param: { icon: Icons | null, size: number, color: Color | null }) {
+    public setIconSuffix(param: { icon: Icons | null, size?: number, color?: Color | null }) {
         const { icon = null, size = 20, color = null } = param;
         if (icon != null) {
             const ico = new Icon(icon, color).style({
@@ -1472,7 +1472,7 @@ class Icon extends i {
         }
 
         if (color != null) {
-            super.class(`w3-text-color}`);
+            super.class(`w3-text-${color}`);
         }
     }
 
@@ -2040,9 +2040,14 @@ class Modal extends div {
 
     }
 
-    public set(obj: null | Widget = null) {
+    public set(obj: null | Widget | Widget[] = null) {
         if (obj instanceof Widget) {
             this.content.add(obj);
+        } else if(obj instanceof Array) {
+            for (const item of obj) {
+                this.content.add(item);
+            }
+        
         } else {
             throw new TypeError("obj must instance of Widget");
         }

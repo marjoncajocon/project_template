@@ -1,8 +1,29 @@
 import { button, Widget, Window } from "./plugin/core/core.ts";
-import { Accordion, Alert, BasicTab, Button, Card, CheckBox, Color, Confirm, Divider, DropDownHover, Icon, Icons, LeftTab, Pagination, ProgressBar, SideBar, Size, Switch, Table, TextField } from "./theme/w3.ts";
+import { Accordion, Alert, BasicTab, Button, Card, CheckBox, Color, Confirm, Direction, Divider, DropDownHover, Icon, Icons, LeftTab, Modal, Padding, Pagination, ProgressBar, SideBar, Size, Switch, Table, TextField } from "./theme/w3.ts";
 
 import "./theme/w3css/w3.css";
 import "./theme/icon/css/all.css";
+
+
+class TestModal extends Modal {
+  constructor() {
+    super('Test Modal', '480px', Color.Amber, Direction.Top);
+
+    const username = new TextField('username', 'text').border();
+    username.setIconPrefix({icon: Icons.User});
+
+    const password = new TextField('password', 'password').border();
+    password.setIconPrefix({icon: Icons.Lock, color: Color.DeepOrange});
+
+    const signin = new Button('SignIn', Color.Win8Cobalt).size(Size.Tiny);
+    super.set(new Padding([
+      username,
+      password,
+      new Divider(),
+      signin
+    ], 20));
+  }
+}
 
 class TestPage extends Card {
   constructor() {
@@ -91,6 +112,17 @@ class TestPage extends Card {
     });
 
 
+    const openmodal = new Button('Open Modal', Color.FlatAsbestos);
+
+    openmodal.addEventListener('click', async () => {
+
+      const modal = new TestModal();
+
+      const res = await modal.open();
+      console.log(res);
+
+    });
+
     const progress = new ProgressBar(Color.Aqua);
     progress.update(10, 10);
     super.add([
@@ -109,7 +141,8 @@ class TestPage extends Card {
       left,
       new Divider(),
       page,
-      progress
+      progress,
+      openmodal
     ]);
 
 
