@@ -552,5 +552,4 @@ input:checked + .slider:before {
 
 body {
   min-width: 430px;
-  min-height: 300px;
 }
