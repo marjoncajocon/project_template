@@ -54,17 +54,7 @@ class TestScaffold extends div{
           color: Color.Brown
         }
       },
-      body: new div().add(new Column([ 
-        new Button('hellow', Color.White),
-        new Button('hellow', Color.White),
-        new Button('hellow', Color.White),
-        new Button('hellow', Color.White),
-        new Button('hellow', Color.White),
-        new Button('hellow', Color.White),
-        new Button('hellow', Color.White),
-        new Button('hellow', Color.White),
-        new Button('hellow', Color.White)
-      ])),
+      body: new DashBoard(),
     });
 
 

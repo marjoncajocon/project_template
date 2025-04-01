@@ -549,7 +549,3 @@ input:checked + .slider:before {
   font-family: Roboto;
 }
 /* End fonts */ 
-
-body {
-  min-width: 430px;
-}

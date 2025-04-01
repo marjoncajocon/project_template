@@ -2651,7 +2651,7 @@ class Tile extends div{
 
 class WindowApp extends div {
     private content: Widget;
-
+    private backdrop: BackDrop;
     constructor(option: {
         appBar?: {
             title?: string|Widget,
@@ -2678,6 +2678,8 @@ class WindowApp extends div {
             left: '0',
             overflowY: 'auto'
         });
+
+        this.backdrop = new BackDrop();
 
         /* Drawing the AppBar */
 
@@ -2743,7 +2745,7 @@ class WindowApp extends div {
             /* Drawing a drawer*/
 
             if (option.appBar.drawer != undefined) {
-                const backdrop = new BackDrop();
+                
 
                 const drawer = new div();   
                 drawer.addEventListener('click', (e)  => {
@@ -2790,11 +2792,11 @@ class WindowApp extends div {
                     drawer.class(`w3-${Color.White}`);
                 }
 
-                backdrop.add(drawer);
+                this.backdrop.add(drawer);
 
                 drawer_bar.addEventListener('click', () => {
                     console.log('Drawer clicked!');
-                    backdrop.open();
+                    this.backdrop.open();
                 });
 
                 /* Draw ITEM */
@@ -2817,7 +2819,7 @@ class WindowApp extends div {
                         header_item.add(item.style({marginBottom: '1px', borderRadius: '5px'}));
 
                         item.addEventListener('click', () => {
-                            backdrop.close();
+                            this.backdrop.close();
                         });
                     }
 
@@ -2841,6 +2843,10 @@ class WindowApp extends div {
     public updateBody(body: Widget) {
         this.content.clear();
         this.content.add(body);
+    }
+
+    public dispose(): void {
+        this.backdrop.delete(); // ensuring that the backdrop is removed
     }
 }
 
