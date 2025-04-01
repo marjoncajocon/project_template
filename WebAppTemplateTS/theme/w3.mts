@@ -2543,9 +2543,157 @@ class Padding extends div {
     }
 }
 
+
+class BackDrop extends div {
+    constructor() {
+        super();
+        super.style({
+            position: 'fixed',
+            top: '0px',
+            left: '0px',
+            backgroundColor: 'rgba(0, 0, 0, 0.2)',
+            zIndex: '1000',
+            height: '100%',
+            width: '100%'
+        });
+        this.hide();
+        this.body.appendChild(this.control);
+
+        this.addEventListener('click', (e) => {
+            this.close();
+        });
+    }
+
+    public open() {
+
+        
+        this.show();
+    }
+
+    public close() {
+        this.hide();
+    }
+
+    public dispose(): void {
+        this.delete(); 
+    }
+}
+
+
+class Scaffold extends div {
+    constructor(option: {
+        appBar?: {
+            title?: string|Widget,
+            action?: Widget,
+            height?: number,
+            color?: Color,
+            drawer?: Widget
+        }, 
+        body?: Widget
+    }) {
+        super();
+
+        /* Drawing the AppBar */
+
+        if (option.appBar != undefined) {
+
+            const drawer_bar = new button();
+            drawer_bar.html(`<i class="fa fa-bars"></i>`);
+            drawer_bar.style({
+                width: '40px',
+                height: '40px',
+                // marginTop: '7px',
+                marginLeft: '5px',
+                cursor: 'pointer',
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                border: 'none',
+                borderRadius: '50%'
+            });
+
+
+
+            const bar = new div();
+            
+            bar.style({ 
+                width: '100%',
+                height: option.appBar.height != undefined ? `${option.appBar.height}px`  : '56px',
+                zIndex: '100',
+                top: '0px',
+                position: 'fixed'
+            });
+
+            bar.class(`w3-${option.appBar.color != undefined ? option.appBar.color : Color.Blue}`);
+            
+            /* Drawing the title */
+        
+            const left = new Row([
+                option.appBar.drawer != undefined ? drawer_bar : new Text(''),
+                option.appBar.title != undefined && typeof(option.appBar.title) == 'string' ? new Text(option.appBar.title).style({
+                    fontWeight: 'bold',
+                    fontSize: '15pt',
+                    marginTop: '5px',
+                    marginLeft: '5px'
+                }) : new Text('')
+            ]);
+            left.style({ marginTop: '8px' });
+
+            bar.add(left);
+
+            /* Drawing the Action */
+
+            if (option.appBar.action != undefined) {
+                /* Drawing the right action */
+                const action = new div().style({
+                    position: 'absolute',
+                    right: '2px',
+                    top: '0px'
+                });
+
+                action.add(option.appBar.action);
+                bar.add(action);
+            }
+
+            /* Drawing a drawer*/
+
+            if (option.appBar.drawer != undefined) {
+                const backdrop = new BackDrop();
+
+                const drawer = new div();   
+                drawer.addEventListener('click', (e)  => {
+                    e.stopPropagation();
+                });
+                drawer.style({
+                    width: '240px',
+                    height: '100%',
+                    backgroundColor: 'white',
+                    position: 'absolute',
+                    top: '0px',
+                    left: '0px'
+                });
+
+                backdrop.add(drawer);
+
+                drawer_bar.addEventListener('click', () => {
+                    console.log('Drawer clicked!');
+                    backdrop.show();
+                });
+            }
+
+
+            super.add(bar);
+        }
+
+
+    }
+}
+
 /* enum export */
 
 export { Icons, Color, Size, Direction, GridSize, InputType };
+
+/* custom */
+export {Scaffold, BackDrop};
+
 
 export {
     Switch
