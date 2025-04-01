@@ -135,6 +135,8 @@ class TestPage extends Card {
     const other = new Radio('Other', 'gender');
 
     const ss = new Switch({round: true});
+
+    const nbtn = new Button('Test danger button', Color.Success);
     super.add([
       tf,
       btn,
@@ -156,7 +158,8 @@ class TestPage extends Card {
       male, 
       female,
       other,
-      ss
+      ss,
+      nbtn
     ]);
 
 
