@@ -1,8 +1,15 @@
 import MyApp from "../main.mjs";
-import { a, button, canvas, div, h3, hr, Http, i, img, input, label, li, option, select, span, table, td, textarea, th, tr, ul, Widget } from "../plugin/core/core.mts";
+import { a, button, canvas, div, h3, header, hr, Http, i, img, input, label, li, option, select, span, table, td, textarea, th, tr, ul, Widget } from "../plugin/core/core.mts";
+
+
+enum FlexDirection {
+    Default = 'row',
+    Reverse = 'row-reverse'
+}
 
 // Continue the Enum for Font Awesome Icons
 enum Icons {
+    Dashboard = 'dashboard',
     // Solid style (fas)
     Plus = "plus", // fa-plus
     Save = "save", // fa-save
@@ -112,6 +119,7 @@ enum Icons {
 
 
 enum Color {
+    White = 'white',
     Black = "black",
     Red = "red",
     Pink = "pink",
@@ -125,6 +133,19 @@ enum Color {
     Teal = "teal",
     Green = "green",
     LightGreen = "light-green",
+    Aspalth = 'asphalt',
+    crimson = 'crimson',
+    Cobalt = 'cobalt',
+    Emeral = 'emerald',
+    Olive = 'Olive',
+    Paper = 'paper',
+    Sienna ='sienna',
+    Taupe = 'taupe',
+    Danger = 'danger',
+    Note = 'note',
+    Info = 'info',
+    Warning = 'warning',
+    Success = 'success',
     Lime = "lime",
     Sand = "sand",
     Khaki = "khaki",
@@ -2119,20 +2140,44 @@ class Display extends div {
 
 
 class Row extends div {
-    constructor(obj: Widget | Widget[] | null = null, direction: Direction | null = null) {
+    constructor(obj: Widget | Widget[] | null = null, direction: FlexDirection|null = null) {
         super();
+        super.style({
+            display: 'flex'
+        });
 
+        if (direction != null) {
+            super.style({
+                FlexDirection: direction
+            });
+        }
+
+        /*
+            flex-start: Align items to the start.
+            flex-end: Align items to the end.
+            center: Center items.
+            space-between: Equal space between items.
+            space-around: Equal space around items.
+            space-evenly: Equal space between and around items.
+        */
+
+        const item_style = {
+            // flexGrow: '1'
+        };
 
         if (obj instanceof Widget) {
             //obj.style({ display: "inline-block" });
-            super.add(new div().class(["w3-cell", direction == null ? "w3-cell-top" : `w3-cell-${direction}`]).add(obj));
+            //super.add(new div().class(["w3-cell", direction == null ? "w3-cell-top" : `w3-cell-${direction}`]).add(obj));
+
+            super.add(new div().style(item_style).add(obj));
 
         } else if (obj instanceof Array) {
             for (const item of obj) {
                 if (item instanceof Widget) {
                     //item.style({ display: "inline-block" });
                     //item.class("w3-cell");
-                    super.add(new div().class(["w3-cell", direction == null ? "w3-cell-top" : `w3-cell-${direction}`]).add(item));
+                    //super.add(new div().class(["w3-cell", direction == null ? "w3-cell-top" : `w3-cell-${direction}`]).add(item));
+                    super.add(new div().style(item_style).add(item));
                 }
             }
         }
@@ -2530,9 +2575,288 @@ class Padding extends div {
     }
 }
 
+
+class BackDrop extends div {
+    constructor() {
+        super();
+        super.style({
+            position: 'fixed',
+            top: '0px',
+            left: '0px',
+            backgroundColor: 'rgba(0, 0, 0, 0.1)',
+            zIndex: '1000',
+            height: '100%',
+            width: '100%'
+        });
+        this.hide();
+        this.body.appendChild(this.control);
+
+        this.addEventListener('click', (e) => {
+            this.close();
+        });
+    }
+
+    public open() {
+
+        
+        this.show();
+    }
+
+    public close() {
+        this.hide();
+    }
+}
+
+
+class Tile extends div{
+    constructor(option: {
+        title?: string,
+        icon?: Icons,
+        color?: Color
+    }) {
+        super();
+
+        super.style({
+            width: '100%',
+            height: '40px',
+            paddingLeft: '15px',
+            paddingTop: '6px',
+            fontSize: '13pt',
+            color: 'inherit',
+            backgroundColor: 'rgba(0, 0, 0, 0.2)',
+            cursor: 'pointer'
+        });
+
+        super.addEventListener('mouseover', () => {
+            super.style({
+                backgroundColor: 'rgba(0, 0, 0, 0.1)'
+            });
+        });
+
+        super.addEventListener('mouseout', () => {
+            super.style({
+                backgroundColor: 'rgba(0, 0, 0, 0.2)'
+            });
+        });
+
+        super.add(new Row([
+            option.icon != undefined ? new Icon(option.icon).style({ width: '30px' }) : new Text(''),
+            option.title != undefined ? new Text(option.title) : new Text('')
+        ]));
+    
+
+    }
+}
+
+
+class WindowApp extends div {
+    private content: Widget;
+    private backdrop: BackDrop;
+    constructor(option: {
+        appBar?: {
+            title?: string|Widget,
+            action?: Widget,
+            height?: number,
+            color?: Color,
+            drawer?: {
+                header?: {
+                    icon?: Icons,
+                    title?: Widget|string
+                },
+                item?: Tile[],
+                color?: Color
+            }
+        }, 
+        body?: Widget
+    }) {
+        super();
+        this.content = new div().style({
+            width: '100%',
+            height: 'calc(100% - 56px)',
+            position: 'fixed',
+            top: '56px',
+            left: '0',
+            overflowY: 'auto'
+        });
+
+        this.backdrop = new BackDrop();
+
+        /* Drawing the AppBar */
+
+        if (option.appBar != undefined) {
+
+            const drawer_bar = new button();
+            drawer_bar.html(`<i class="fa fa-bars"></i>`);
+            drawer_bar.style({
+                width: '40px',
+                height: '40px',
+                // marginTop: '7px',
+                marginLeft: '5px',
+                cursor: 'pointer',
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                border: 'none',
+                borderRadius: '50%',
+                color: 'inherit'
+            });
+
+
+
+            const bar = new div();
+            
+            bar.style({ 
+                width: '100%',
+                height: option.appBar.height != undefined ? `${option.appBar.height}px`  : '56px',
+                zIndex: '100',
+                top: '0px',
+                position: 'fixed'
+            });
+
+            bar.class(`w3-${option.appBar.color != undefined ? option.appBar.color : Color.Blue}`);
+            
+            /* Drawing the title */
+        
+            const left = new Row([
+                option.appBar.drawer != undefined ? drawer_bar : new Text(''),
+                option.appBar.title != undefined && typeof(option.appBar.title) == 'string' ? new Text(option.appBar.title).style({
+                    fontWeight: 'bold',
+                    fontSize: '15pt',
+                    marginTop: '5px',
+                    marginLeft: '5px'
+                }) : new Text('')
+            ]);
+            left.style({ marginTop: '8px' });
+
+            bar.add(left);
+
+            /* Drawing the Action */
+
+            if (option.appBar.action != undefined) {
+                /* Drawing the right action */
+                const action = new div().style({
+                    position: 'absolute',
+                    right: '2px',
+                    top: '0px'
+                });
+
+                action.add(option.appBar.action);
+                bar.add(action);
+            }
+
+            /* Drawing a drawer*/
+
+            if (option.appBar.drawer != undefined) {
+                
+
+                const drawer = new div();   
+                drawer.addEventListener('click', (e)  => {
+                    e.stopPropagation();
+                });
+                drawer.style({
+                    width: '240px',
+                    height: '100%',
+                    position: 'absolute',
+                    top: '0px',
+                    left: '0px'
+                });
+
+                /* Drawer Header */
+                if (option.appBar.drawer.header != undefined) {
+                    drawer.class(`w3-animate-${Direction.Left}`);
+                    const header = new div();
+                    header.style({
+                        height: '56px',
+                        width: '100%',
+                        borderBottom: '1px solid rgba(0, 0, 0, 0.3)'
+                    });
+
+                    const left2 = new Row([
+                        // option.appBar.drawer != undefined ? drawer_bar : new Text(''),
+                        option.appBar.title != undefined && typeof(option.appBar.drawer.header.title) == 'string' ? new Text(option.appBar.drawer.header.title).style({
+                            fontWeight: 'bold',
+                            fontSize: '15pt',
+                            marginTop: '10px',
+                            marginLeft: '10px'
+                        }) : option.appBar.drawer.header.title instanceof Widget ? option.appBar.drawer.header.title : new Text('')
+                    ]);
+                    //left2.style({ marginTop: '8px' });
+                    header.add(left2);
+
+                    drawer.add(header);
+                }
+                /* end Drawer Header */ 
+
+                if (option.appBar.drawer.color != undefined) {
+                    drawer.class(`w3-${option.appBar.drawer.color}`);
+                } else {
+                    // default color
+                    drawer.class(`w3-${Color.White}`);
+                }
+
+                this.backdrop.add(drawer);
+
+                drawer_bar.addEventListener('click', () => {
+                    console.log('Drawer clicked!');
+                    this.backdrop.open();
+                });
+
+                /* Draw ITEM */
+
+                if (option.appBar.drawer.item != undefined) {
+                    // draw the item here
+                    const header_item = new div();
+                    header_item.style({
+                        height: 'calc(100% - 57px)',
+                        width: '100%',
+                        overflowY: 'auto',
+                        paddingLeft: '10px',
+                        paddingRight: '10px',
+                        paddingTop: '10px',
+                        paddingBottom: '10px'
+                    });
+
+
+                    for (const item of option.appBar.drawer.item) {
+                        header_item.add(item.style({marginBottom: '1px', borderRadius: '5px'}));
+
+                        item.addEventListener('click', () => {
+                            this.backdrop.close();
+                        });
+                    }
+
+                    drawer.add(header_item);
+                }
+            }
+
+
+            super.add(bar);
+        }
+
+        /* Body of the WindowApp */
+
+        if (option.body != undefined) {
+            this.updateBody(option.body);
+        }
+
+        super.add(this.content);
+    }
+
+    public updateBody(body: Widget) {
+        this.content.clear();
+        this.content.add(body);
+    }
+
+    public dispose(): void {
+        this.backdrop.delete(); // ensuring that the backdrop is removed
+    }
+}
+
 /* enum export */
 
-export { Icons, Color, Size, Direction, GridSize, InputType };
+export { Icons, Color, Size, Direction, GridSize, InputType, FlexDirection };
+
+/* custom */
+export {WindowApp, BackDrop};
+
 
 export {
     Switch
@@ -2582,7 +2906,8 @@ export {
     TextFieldFilter,
     Loader,
     ButtonGroup,
-    Padding
+    Padding,
+    Tile
 };
 
 export { Alert, Confirm };

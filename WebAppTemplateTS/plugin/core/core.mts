@@ -38,9 +38,11 @@ class Widget {
       item.removeEvents();
       item.clear();
       item.control.remove();
-      item.widgets = [];
+      //item.widgets = [];
+      this.widgets.length = 0;
     }
-    this.widgets = []; // clearing up the widgets after the clear to avoid loading
+    //this.widgets = []; // clearing up the widgets after the clear to avoid loading
+    this.widgets.length = 0;
     return this;
   }
 
@@ -272,12 +274,13 @@ class Widget {
     return this;
   }
 
-  public removeEvents(): Widget {
+  private removeEvents(): Widget {
     for (const item of this.events_list) {
       console.log(`Clean up: ${item[0]} - ${item[1]}`);
       this.control.removeEventListener(item[0], item[1]);
     }
-    this.events_list = [];
+    //this.events_list = [];
+    this.events_list.length = 0;
     return this;
   }
 
