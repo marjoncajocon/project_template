@@ -2605,10 +2605,6 @@ class BackDrop extends div {
     public close() {
         this.hide();
     }
-
-    public dispose(): void {
-        this.delete(); 
-    }
 }
 
 
@@ -2798,7 +2794,7 @@ class WindowApp extends div {
 
                 drawer_bar.addEventListener('click', () => {
                     console.log('Drawer clicked!');
-                    backdrop.show();
+                    backdrop.open();
                 });
 
                 /* Draw ITEM */
@@ -2819,6 +2815,10 @@ class WindowApp extends div {
 
                     for (const item of option.appBar.drawer.item) {
                         header_item.add(item.style({marginBottom: '1px', borderRadius: '5px'}));
+
+                        item.addEventListener('click', () => {
+                            backdrop.close();
+                        });
                     }
 
                     drawer.add(header_item);
