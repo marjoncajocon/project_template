@@ -1,5 +1,5 @@
 import { div } from "../plugin/core/core.mts";
-import { Button, Color, Icon, Icons, Row, WindowApp, Tile, Column, Grid, GridSize } from "../theme/w3.mts";
+import { Button, Color, Icon, Icons, Row, WindowApp, Tile, Column, Grid, GridSize, BasicTab, Padding, BreadCrumb } from "../theme/w3.mts";
 
 class DashBoard extends div {
   constructor() {
@@ -19,15 +19,36 @@ class Profile extends div {
   constructor() {
     super();
 
-    const grid = new Grid();
+    const tab = new BasicTab({
+      bgColor: Color.Yellow
+    });
 
-    grid.set(new Button('Left', Color.Red), [ GridSize.Medium6 ]);
+    tab.set({
+      title: 'Home',
+      fn: () => {
 
-    grid.set(new Button('Right', Color.Blue), [ GridSize.Medium6 ]);
+      },
+      active: true
+    });
+
+    tab.set({
+      title: 'Profile',
+      fn: () => {
+        
+      }
+    });
+    tab.set({
+      title: 'About',
+      fn: () => {
+        
+      }
+    });
 
 
 
-    super.add(grid);
+    super.add(new Padding(new div().add([
+      new BreadCrumb({ color: Color.Blue, round: false}).set(['Home', 'Profile', 'about'])
+    ]), 2));
 
 
   }

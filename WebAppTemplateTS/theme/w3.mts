@@ -2850,6 +2850,33 @@ class WindowApp extends div {
     }
 }
 
+
+class BreadCrumb extends ul {
+    constructor(option: { color?: Color, round?: boolean }) {
+        super();
+        super.class('bread');
+
+        const {color, round} = option;
+        if (color != undefined) {
+            super.class(`w3-${color}`);    
+        }
+
+        if (round != undefined && round) {
+            super.style({ borderRadius: '20px' });
+        }
+    }
+
+    public set(texts: string[]) {
+        super.clear(); /*  Clear */
+        for (const txt of texts) {
+            const item = new li().html(txt);
+            if (item instanceof Widget) 
+                super.add(item);
+        }
+        return this;
+    }
+}
+
 /* enum export */
 
 export { Icons, Color, Size, Direction, GridSize, InputType, FlexDirection };
@@ -2864,6 +2891,7 @@ export {
 // end my custom widget
 
 export {
+    BreadCrumb,
     Divider,
     TabBody,
     Center,
