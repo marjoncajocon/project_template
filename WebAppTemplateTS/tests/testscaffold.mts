@@ -1,5 +1,5 @@
 import { div } from "../plugin/core/core.mts";
-import { Button, Color, Icon, Icons, Row, WindowApp, Tile, Column, Grid, GridSize, BasicTab, Padding, BreadCrumb } from "../theme/w3.mts";
+import { Button, Color, Icon, Icons, Row, WindowApp, Tile, Column, Grid, GridSize, BasicTab, Padding, BreadCrumb, ListView, Display } from "../theme/w3.mts";
 
 class DashBoard extends div {
   constructor() {
@@ -46,8 +46,28 @@ class Profile extends div {
 
 
 
+    const side = new ListView({});
+
+    side.addItem(new div().style({ 
+      width: '1000px',
+      height: '80px',
+      backgroundColor: 'blue',
+      marginRight: '50px',
+      display: 'inline-block'
+    }));
+
+    side.addItem(new div().style({ 
+      width: '1000px',
+      height: '80px',
+      backgroundColor: 'blue',
+      display: 'inline-block'
+    }));
+
+
+    
     super.add(new Padding(new div().add([
-      new BreadCrumb({ color: Color.Blue, round: false}).set(['Home', 'Profile', 'about'])
+      new BreadCrumb({ color: Color.IOSGreen, round: false}).set(['Home', 'Profile', 'about']),
+      side
     ]), 2));
 
 

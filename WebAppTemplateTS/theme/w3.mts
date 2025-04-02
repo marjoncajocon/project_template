@@ -2877,6 +2877,87 @@ class BreadCrumb extends ul {
     }
 }
 
+
+class ListView extends div {
+    content: Widget;
+    is_mt_down: boolean;
+    point_start: number;
+    constructor({  }) {
+        super();
+        super.style({
+            width: '100%',
+            height: '100px',
+            position: 'relative',
+            backgroundColor: 'orange',
+            overflowY: 'hidden',
+            overflowX: 'hidden'
+        });
+
+        this.content = new div().style({
+            height: '100%',
+            minHeight: '100%'
+        });
+
+        super.add(this.content);
+
+        /*  */
+        this.content.addEventListener('mousedown', this.mt_down);
+        this.content.addEventListener('mouseup', this.mt_up);
+        this.content.addEventListener('mousemove', this.mt_move);
+        this.content.addEventListener('mouseleave', this.mt_leave);
+        
+        this.is_mt_down = false;
+
+        this.point_start = 0.0;
+
+
+
+    }
+
+    private mt_down(e: any) {
+        // initial the pont_start here
+        const {layerX, layerY} = e;
+        console.log(layerX, layerY);
+
+        this.is_mt_down = true;
+    }
+
+    private mt_up(e: any) {
+        this.is_mt_down = false;
+    }
+
+    private mt_leave() {
+        this.is_mt_down = false;
+    }
+
+    private mt_move(e: any) {
+        if (!this.is_mt_down) return;
+
+        console.log(e);
+
+    }
+
+    public addItem(item: Widget) {
+        this.content.add(item);
+
+        this.update(item);
+        return this;
+    }
+
+    private update(item: Widget) {
+        /// update if there is a chnages in the file    
+        
+        setTimeout(() => {
+            const w = this.content.control.clientWidth + item.control.clientWidth;
+            
+            this.content.style({
+                width: `${w}px`
+            });
+        }, 200);
+
+    }
+}
+
 /* enum export */
 
 export { Icons, Color, Size, Direction, GridSize, InputType, FlexDirection };
@@ -2891,6 +2972,7 @@ export {
 // end my custom widget
 
 export {
+    ListView,
     BreadCrumb,
     Divider,
     TabBody,
