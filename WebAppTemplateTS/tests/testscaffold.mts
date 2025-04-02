@@ -1,5 +1,5 @@
 import { div } from "../plugin/core/core.mts";
-import { Button, Color, Icon, Icons, Row, WindowApp, Tile, Column } from "../theme/w3.mts";
+import { Button, Color, Icon, Icons, Row, WindowApp, Tile, Column, Grid, GridSize } from "../theme/w3.mts";
 
 class DashBoard extends div {
   constructor() {
@@ -19,7 +19,17 @@ class Profile extends div {
   constructor() {
     super();
 
-    super.add(new Button('Profile'));
+    const grid = new Grid();
+
+    grid.set(new Button('Left', Color.Red), [ GridSize.Medium6 ]);
+
+    grid.set(new Button('Right', Color.Blue), [ GridSize.Medium6 ]);
+
+
+
+    super.add(grid);
+
+
   }
 
   public dispose(): void {
