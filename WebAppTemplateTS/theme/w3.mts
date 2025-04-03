@@ -2910,11 +2910,11 @@ class ListView extends div {
 
         this.point_start = 0.0;
 
-
+        
 
     }
 
-    private mt_down(e: any) {
+    private mt_down = (e: any) => {
         // initial the pont_start here
         const {layerX, layerY} = e;
         console.log(layerX, layerY);
@@ -2922,18 +2922,25 @@ class ListView extends div {
         this.is_mt_down = true;
     }
 
-    private mt_up(e: any) {
+    private mt_up =(e: any) => {
         this.is_mt_down = false;
     }
 
-    private mt_leave() {
+    private mt_leave = () => {
         this.is_mt_down = false;
     }
 
-    private mt_move(e: any) {
+    private mt_move = (e: any) => {
         if (!this.is_mt_down) return;
-
-        console.log(e);
+        const {layerX, layerY} = e;
+        this.point_start = layerX;
+        console.log(this.point_start);
+        //this.content.control.style.marginLeft += 10;
+        this.content.style({
+            marginLeft: `${this.point_start}px`
+        });
+        //console.log(layerX, layerY);
+       // console.log(this.content.control.scrollLeft);
 
     }
 
