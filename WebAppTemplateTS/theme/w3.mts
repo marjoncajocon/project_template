@@ -2987,10 +2987,10 @@ class Dialog extends div {
         super.style({
             width: `${width}px`,
             height: `${height}px`,
-            position: 'absolute',
+            position: 'fixed',
             left: `calc((100% / 2) - (${width}px / 2))`,
-            top: `calc((100% / 2) + (${height}px / 2))`,
-            zIndex: '20',
+            top: `15%`,
+            zIndex: '1000',
             boxShadow: '0 0 3px rgba(0, 0, 0, 0.2)',
             border: '1px solid white'
         });
@@ -3123,13 +3123,13 @@ class Dialog extends div {
 
     private priority() {
         super.style({
-            zIndex: '21'
+            zIndex: '1001'
         });
     }
 
     private removePriority() {
         super.style({
-            zIndex: '20'
+            zIndex: '1000'
         });
     }
 
