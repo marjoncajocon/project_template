@@ -2972,6 +2972,7 @@ class Dialog extends div {
     mouse_pos: {x: number, y: number};
     dialog_pos: {x: number, y: number};
     content: div;
+    hdr: div;
 
     constructor(option: { width: number, height: number, bgColor?: Color, round?:boolean, header?: { color?: Color, icon?: Icons, title?: string } }) {
         super();
@@ -2983,7 +2984,7 @@ class Dialog extends div {
             height: `${height}px`,
             position: 'absolute',
             left: '10%',
-            top: '10px',
+            top: '100px',
             zIndex: '20',
             boxShadow: '0 0 3px rgba(0, 0, 0, 0.2)'
         });
@@ -2994,7 +2995,7 @@ class Dialog extends div {
         }
 
 
-        const hdr = new div().style({
+        this.hdr = new div().style({
             width: '100%',
             height: '50px',
             position: 'relative',
@@ -3003,7 +3004,7 @@ class Dialog extends div {
         });
 
         if (option.round != undefined && option.round) {
-            hdr.style({
+            this.hdr.style({
                 borderTopRightRadius: '10px',
                 borderTopLeftRadius: '10px'
             });
@@ -3014,19 +3015,41 @@ class Dialog extends div {
         }
 
         if (header != undefined && header.color != undefined) {
-            hdr.class(`w3-${header.color}`);
+            this.hdr.class(`w3-${header.color}`);
         } else {
             // default
-            hdr.class(`w3-${Color.Blue}`);
+            this.hdr.class(`w3-${Color.Blue}`);
         }
 
         if (header != undefined) {
-            hdr.add(new Row([ 
+            this.hdr.add(new Row([ 
                 header.icon != undefined ? new Icon(header.icon).style({ width: '20px' }) : new Text(''),
                 header.title != undefined ? new Text(header.title): new Text('') 
             
             ]).style({ paddingTop: '13px' }));
         }
+
+
+        /*  close btn */
+        const btn = new button();
+        btn.style({
+            position: 'absolute',
+            right: '10px',
+            top: '10px',
+            backgroundColor: 'rgba(255, 0, 0, 0.5)',
+            border: 'none',
+            color: 'inherit',
+            borderRadius: '5px',
+            cursor: 'pointer'
+        });
+        btn.html(`<i class="fa fa-close">`);
+
+        btn.addEventListener('click', () => {
+            this.close();
+        });
+
+        this.hdr.add(btn);
+
 
         this.mouse_pos = {x: 0, y: 0};
         this.dialog_pos = {x: 0, y: 0};
@@ -3034,17 +3057,17 @@ class Dialog extends div {
 
 
         // for mouse events
-        hdr.addEventListener('mousedown', this.m_down);
-        hdr.addEventListener('mouseup', this.m_up);
-        hdr.addEventListener('mouseleave', this.m_leave);
-        hdr.addEventListener('mousemove', this.m_move);
+        this.hdr.addEventListener('mousedown', this.m_down);
+        this.hdr.addEventListener('mouseup', this.m_up);
+        this.hdr.addEventListener('mouseleave', this.m_leave);
+        this.hdr.addEventListener('mousemove', this.m_move);
 
 
         // Touch events
-        hdr.addEventListener('touchstart', this.t_down);
-        hdr.addEventListener('touchend', this.t_up);
-        hdr.addEventListener('touchcancel', this.t_leave);
-        hdr.addEventListener('touchmove', this.t_move);
+        this.hdr.addEventListener('touchstart', this.t_down);
+        this.hdr.addEventListener('touchend', this.t_up);
+        this.hdr.addEventListener('touchcancel', this.t_leave);
+        this.hdr.addEventListener('touchmove', this.t_move);
 
 
 
@@ -3052,11 +3075,18 @@ class Dialog extends div {
 
         this.content = new div();
 
-        super.add(hdr);        
+        super.add(this.hdr);        
         super.add(this.content);
     }
 
+    public async open() {
+        this.body.appendChild(this.control);
+    }
 
+    public close() {
+        this.delete();
+    }
+    
     public removeItem() {
         this.content.clear();
         return this;
@@ -3068,7 +3098,19 @@ class Dialog extends div {
         return this;
     }
 
-    public m_down = (e: any) => {
+    private priority() {
+        super.style({
+            zIndex: '21'
+        });
+    }
+
+    private removePriority() {
+        super.style({
+            zIndex: '20'
+        });
+    }
+
+    private m_down = (e: any) => {
         //console.log(e.clientY);
         //console.log(e);
     
@@ -3076,17 +3118,21 @@ class Dialog extends div {
         this.mouse_pos.y = e.clientY;
         
         this.is_mouse_down = true;
+
+        this.priority();
     }
 
-    public m_up = (e: any) => {
+    private m_up = (e: any) => {
         this.is_mouse_down = false;
+        this.removePriority();
     }
 
-    public m_leave = (e: any) => {
+    private m_leave = (e: any) => {
         this.is_mouse_down = false;
+        this.removePriority();
     }
 
-    public m_move = (e: any) => {
+    private m_move = (e: any) => {
         if (this.is_mouse_down) {
             this.dialog_pos.x = this.mouse_pos.x - e.clientX;
             this.dialog_pos.y = this.mouse_pos.y - e.clientY;
@@ -3112,9 +3158,10 @@ class Dialog extends div {
 
 
 
-    public t_down = (e: any) => {
+    private t_down = (e: any) => {
         //console.log(e.clientY);
         //console.log(e);
+        this.priority();
         
     
         this.mouse_pos.x = e.touches[0].clientX;
@@ -3123,15 +3170,17 @@ class Dialog extends div {
         this.is_mouse_down = true;
     }
 
-    public t_up = (e: any) => {
+    private t_up = (e: any) => {
         this.is_mouse_down = false;
+        this.removePriority();
     }
 
-    public t_leave = (e: any) => {
+    private t_leave = (e: any) => {
         this.is_mouse_down = false;
+        this.removePriority();
     }
 
-    public t_move = (e: any) => {
+    private t_move = (e: any) => {
         if (this.is_mouse_down) {
             this.dialog_pos.x = this.mouse_pos.x - e.touches[0].clientX;
             this.dialog_pos.y = this.mouse_pos.y - e.touches[0].clientY;
@@ -3157,13 +3206,7 @@ class Dialog extends div {
 
 
 
-    public open() {
-
-    }
-
-    public close() {
-
-    }
+    
 }
 
 /* enum export */

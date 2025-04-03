@@ -29,20 +29,11 @@ class Widget {
   }
 
   public clear(): Widget {
-
-    // while (this.control.firstChild) {   
-    //   this.control.firstChild.remove();
-    // }
+    // this only clear the next 
     for (const item of this.widgets) {
-      item.dispose();
-      item.removeEvents();
-      item.clear();
-      item.control.remove();
-      //item.widgets = [];
-      this.widgets.length = 0;
+      item.delete();
     }
-    //this.widgets = []; // clearing up the widgets after the clear to avoid loading
-    this.widgets.length = 0;
+
     return this;
   }
 
@@ -50,20 +41,15 @@ class Widget {
 
   }
 
-  public remove(index: number = 0): void {
-    if (typeof (this.widgets[index]) != 'undefined') {
-      this.widgets[index].clear();
-      this.widgets[index].control.remove();
-    }
-    this.widgets.splice(index, 1);
-    this.control.remove();
-  }
 
   public delete(): void {
+    this.dispose();
     this.removeEvents();
     this.clear();
     this.control.remove();
+    this.widgets.length = 0;
   }
+
   public style(styles: { [index: string]: string | number } = {}, value: string = ''): Widget {
     if (typeof (styles) == 'object') {
       for (const item in styles) {
