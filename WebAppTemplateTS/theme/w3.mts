@@ -2965,6 +2965,207 @@ class ListView extends div {
     }
 }
 
+
+
+class Dialog extends div {
+    is_mouse_down: boolean;
+    mouse_pos: {x: number, y: number};
+    dialog_pos: {x: number, y: number};
+    content: div;
+
+    constructor(option: { width: number, height: number, bgColor?: Color, round?:boolean, header?: { color?: Color, icon?: Icons, title?: string } }) {
+        super();
+        
+        const { width, height, header, bgColor, round } = option;
+
+        super.style({
+            width: `${width}px`,
+            height: `${height}px`,
+            position: 'absolute',
+            left: '10%',
+            top: '10px',
+            zIndex: '20',
+            boxShadow: '0 0 3px rgba(0, 0, 0, 0.2)'
+        });
+
+        if (bgColor != undefined) {
+
+            super.class(`w3-${bgColor}`);
+        }
+
+
+        const hdr = new div().style({
+            width: '100%',
+            height: '50px',
+            position: 'relative',
+            cursor: 'move',
+            paddingLeft: '10px'
+        });
+
+        if (option.round != undefined && option.round) {
+            hdr.style({
+                borderTopRightRadius: '10px',
+                borderTopLeftRadius: '10px'
+            });
+
+            super.style({
+                borderRadius: '10px'
+            });
+        }
+
+        if (header != undefined && header.color != undefined) {
+            hdr.class(`w3-${header.color}`);
+        } else {
+            // default
+            hdr.class(`w3-${Color.Blue}`);
+        }
+
+        if (header != undefined) {
+            hdr.add(new Row([ 
+                header.icon != undefined ? new Icon(header.icon).style({ width: '20px' }) : new Text(''),
+                header.title != undefined ? new Text(header.title): new Text('') 
+            
+            ]).style({ paddingTop: '13px' }));
+        }
+
+        this.mouse_pos = {x: 0, y: 0};
+        this.dialog_pos = {x: 0, y: 0};
+
+
+
+        // for mouse events
+        hdr.addEventListener('mousedown', this.m_down);
+        hdr.addEventListener('mouseup', this.m_up);
+        hdr.addEventListener('mouseleave', this.m_leave);
+        hdr.addEventListener('mousemove', this.m_move);
+
+
+        // Touch events
+        hdr.addEventListener('touchstart', this.t_down);
+        hdr.addEventListener('touchend', this.t_up);
+        hdr.addEventListener('touchcancel', this.t_leave);
+        hdr.addEventListener('touchmove', this.t_move);
+
+
+
+        this.is_mouse_down = false;
+
+        this.content = new div();
+
+        super.add(hdr);        
+        super.add(this.content);
+    }
+
+
+    public removeItem() {
+        this.content.clear();
+        return this;
+    }
+
+    public addItem(item: Widget|Widget[]) {
+
+        this.content.add(item);        
+        return this;
+    }
+
+    public m_down = (e: any) => {
+        //console.log(e.clientY);
+        //console.log(e);
+    
+        this.mouse_pos.x = e.clientX;
+        this.mouse_pos.y = e.clientY;
+        
+        this.is_mouse_down = true;
+    }
+
+    public m_up = (e: any) => {
+        this.is_mouse_down = false;
+    }
+
+    public m_leave = (e: any) => {
+        this.is_mouse_down = false;
+    }
+
+    public m_move = (e: any) => {
+        if (this.is_mouse_down) {
+            this.dialog_pos.x = this.mouse_pos.x - e.clientX;
+            this.dialog_pos.y = this.mouse_pos.y - e.clientY;
+
+            this.mouse_pos.x = e.clientX;
+            this.mouse_pos.y = e.clientY;
+
+            super.style({
+                'top': `${this.control.offsetTop - this.dialog_pos.y}px`,
+                'left': `${this.control.offsetLeft - this.dialog_pos.x}px`
+            });
+
+            // pos1 = pos3 - e.clientX;
+            // pos2 = pos4 - e.clientY;
+            // pos3 = e.clientX;
+            // pos4 = e.clientY;
+            // // set the element's new position:
+            // elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            // elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+
+        }
+    }
+
+
+
+    public t_down = (e: any) => {
+        //console.log(e.clientY);
+        //console.log(e);
+        
+    
+        this.mouse_pos.x = e.touches[0].clientX;
+        this.mouse_pos.y = e.touches[0].clientY;
+        
+        this.is_mouse_down = true;
+    }
+
+    public t_up = (e: any) => {
+        this.is_mouse_down = false;
+    }
+
+    public t_leave = (e: any) => {
+        this.is_mouse_down = false;
+    }
+
+    public t_move = (e: any) => {
+        if (this.is_mouse_down) {
+            this.dialog_pos.x = this.mouse_pos.x - e.touches[0].clientX;
+            this.dialog_pos.y = this.mouse_pos.y - e.touches[0].clientY;
+
+            this.mouse_pos.x = e.touches[0].clientX;
+            this.mouse_pos.y = e.touches[0].clientY;
+
+            super.style({
+                'top': `${this.control.offsetTop - this.dialog_pos.y}px`,
+                'left': `${this.control.offsetLeft - this.dialog_pos.x}px`
+            });
+
+            // pos1 = pos3 - e.clientX;
+            // pos2 = pos4 - e.clientY;
+            // pos3 = e.clientX;
+            // pos4 = e.clientY;
+            // // set the element's new position:
+            // elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            // elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+
+        }
+    }
+
+
+
+    public open() {
+
+    }
+
+    public close() {
+
+    }
+}
+
 /* enum export */
 
 export { Icons, Color, Size, Direction, GridSize, InputType, FlexDirection };
@@ -2979,6 +3180,7 @@ export {
 // end my custom widget
 
 export {
+    Dialog,
     ListView,
     BreadCrumb,
     Divider,

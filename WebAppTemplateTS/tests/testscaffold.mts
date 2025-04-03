@@ -1,13 +1,27 @@
 import { div } from "../plugin/core/core.mts";
-import { Button, Color, Icon, Icons, Row, WindowApp, Tile, Column, Grid, GridSize, BasicTab, Padding, BreadCrumb, ListView, Display } from "../theme/w3.mts";
+import { Button, Color, Icon, Icons, Row, WindowApp, Tile, Column, Grid, GridSize, BasicTab, Padding, BreadCrumb, ListView, Display, Dialog } from "../theme/w3.mts";
 
 class DashBoard extends div {
   constructor() {
     super();
 
-    super.add(new Button('dashboard').addEventListener('click', () => {
-      console.log('hellow dashboard');
-    }));
+
+    const dialog = new Dialog({
+      round: true,
+      width: 300,
+      height: 200,
+      header: {
+        icon: Icons.Play,
+        title: 'USER INFORMATION'
+      }
+    });
+
+    dialog.addItem(new Button('hellow this is a sample', Color.Red));
+
+
+
+    
+    super.add([dialog]);
   }
 
   public dispose(): void {
