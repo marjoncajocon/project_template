@@ -28,13 +28,12 @@ class Widget {
     return this.control;
   }
 
-  public clear(): Widget {
+  public clear(): void {
     // this only clear the next 
     for (const item of this.widgets) {
       item.delete();
     }
 
-    return this;
   }
 
   public dispose(): void {
