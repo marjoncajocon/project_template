@@ -1,13 +1,27 @@
 import { div } from "../plugin/core/core.mts";
-import { Button, Color, Icon, Icons, Row, WindowApp, Tile, Column } from "../theme/w3.mts";
+import { Button, Color, Icon, Icons, Row, WindowApp, Tile, Column, Grid, GridSize, BasicTab, Padding, BreadCrumb, ListView, Display, Dialog } from "../theme/w3.mts";
 
 class DashBoard extends div {
   constructor() {
     super();
 
-    super.add(new Button('dashboard').addEventListener('click', () => {
-      console.log('hellow dashboard');
-    }));
+
+    const dialog = new Dialog({
+      round: true,
+      width: 300,
+      height: 200,
+      header: {
+        icon: Icons.Play,
+        title: 'USER INFORMATION'
+      }
+    });
+
+    dialog.addItem(new Button('hellow this is a sample', Color.Red));
+
+
+
+    
+    super.add([dialog]);
   }
 
   public dispose(): void {
@@ -19,7 +33,58 @@ class Profile extends div {
   constructor() {
     super();
 
-    super.add(new Button('Profile'));
+    const tab = new BasicTab({
+      bgColor: Color.Yellow
+    });
+
+    tab.set({
+      title: 'Home',
+      fn: () => {
+
+      },
+      active: true
+    });
+
+    tab.set({
+      title: 'Profile',
+      fn: () => {
+        
+      }
+    });
+    tab.set({
+      title: 'About',
+      fn: () => {
+        
+      }
+    });
+
+
+
+    const side = new ListView({});
+
+    side.addItem(new div().style({ 
+      width: '1000px',
+      height: '80px',
+      backgroundColor: 'blue',
+      marginRight: '50px',
+      display: 'inline-block'
+    }));
+
+    side.addItem(new div().style({ 
+      width: '1000px',
+      height: '80px',
+      backgroundColor: 'blue',
+      display: 'inline-block'
+    }));
+
+
+    
+    super.add(new Padding(new div().add([
+      new BreadCrumb({ color: Color.IOSGreen, round: false}).set(['Home', 'Profile', 'about']),
+      side
+    ]), 2));
+
+
   }
 
   public dispose(): void {
