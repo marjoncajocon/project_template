@@ -28,42 +28,27 @@ class Widget {
     return this.control;
   }
 
-  public clear(): Widget {
-
-    // while (this.control.firstChild) {   
-    //   this.control.firstChild.remove();
-    // }
+  public clear(): void {
+    // this only clear the next 
+    // this function use for deep clear the items
     for (const item of this.widgets) {
-      item.dispose();
-      item.removeEvents();
-      item.clear();
-      item.control.remove();
-      //item.widgets = [];
-      this.widgets.length = 0;
+      item.delete();
     }
-    //this.widgets = []; // clearing up the widgets after the clear to avoid loading
     this.widgets.length = 0;
-    return this;
   }
 
   public dispose(): void {
 
   }
 
-  public remove(index: number = 0): void {
-    if (typeof (this.widgets[index]) != 'undefined') {
-      this.widgets[index].clear();
-      this.widgets[index].control.remove();
-    }
-    this.widgets.splice(index, 1);
-    this.control.remove();
-  }
 
   public delete(): void {
-    this.removeEvents();
-    this.clear();
-    this.control.remove();
+    this.clear(); // clear first the leaves
+    this.removeEvents(); // remove the current events
+    this.dispose(); // diposal 
+    this.control.remove(); // this is the final
   }
+
   public style(styles: { [index: string]: string | number } = {}, value: string = ''): Widget {
     if (typeof (styles) == 'object') {
       for (const item in styles) {

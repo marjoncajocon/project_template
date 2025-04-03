@@ -1,12 +1,10 @@
 import { div } from "../plugin/core/core.mts";
 import { Button, Color, Icon, Icons, Row, WindowApp, Tile, Column, Grid, GridSize, BasicTab, Padding, BreadCrumb, ListView, Display, Dialog } from "../theme/w3.mts";
 
-class DashBoard extends div {
+
+class TestDialog extends Dialog {
   constructor() {
-    super();
-
-
-    const dialog = new Dialog({
+    super({
       round: true,
       width: 300,
       height: 200,
@@ -15,13 +13,31 @@ class DashBoard extends div {
         title: 'USER INFORMATION'
       }
     });
+  }
+
+  public dispose(): void {
+    console.log('TOP DIPOSED!');
+    super.dispose();
+  }
+}
+
+class DashBoard extends div {
+  constructor() {
+    super();
+
+
+    const dialog = new TestDialog();
 
     dialog.addItem(new Button('hellow this is a sample', Color.Red));
 
 
+    const btn = new Button('Open', Color.Red);
 
+    btn.addEventListener('click', async () => {
+      dialog.open();
+    });
     
-    super.add([dialog]);
+    super.add([btn]);
   }
 
   public dispose(): void {
