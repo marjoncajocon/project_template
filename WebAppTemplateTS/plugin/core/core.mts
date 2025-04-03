@@ -30,10 +30,11 @@ class Widget {
 
   public clear(): void {
     // this only clear the next 
+    // this function use for deep clear the items
     for (const item of this.widgets) {
       item.delete();
     }
-
+    this.widgets.length = 0;
   }
 
   public dispose(): void {
@@ -42,11 +43,10 @@ class Widget {
 
 
   public delete(): void {
-    this.dispose();
-    this.removeEvents();
-    this.clear();
-    this.control.remove();
-    this.widgets.length = 0;
+    this.clear(); // clear first the leaves
+    this.removeEvents(); // remove the current events
+    this.dispose(); // diposal 
+    this.control.remove(); // this is the final
   }
 
   public style(styles: { [index: string]: string | number } = {}, value: string = ''): Widget {
