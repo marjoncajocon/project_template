@@ -1,5 +1,5 @@
 import { div } from "../plugin/core/core.mts";
-import { Button, Color, Icon, Icons, Row, WindowApp, Tile, Column, Grid, GridSize, BasicTab, Padding, BreadCrumb, ListView, Display, Dialog } from "../theme/w3.mts";
+import { Button, Color, Icon, Icons, Row, WindowApp, Tile, Column, Grid, GridSize, BasicTab, Padding, BreadCrumb, ListView, Display, Dialog, TextField, InputType } from "../theme/w3.mts";
 
 
 class TestDialog extends Dialog {
@@ -7,12 +7,26 @@ class TestDialog extends Dialog {
     super({
       round: true,
       width: 300,
-      height: 200,
+      height: 300,
+      bgColor: Color.Sand,
       header: {
-        icon: Icons.Play,
+        icon: Icons.User,
         title: 'USER INFORMATION'
       }
     });
+
+
+    const username = new TextField('Username', InputType.Text, 'Hellow').border();
+    const password = new TextField('Password', InputType.Password, 'Enter Password').border();
+    const login = new Button('Sign In', Color.Cyan);
+    this.addItem(new Padding([
+      username,
+      password,
+      login.style({
+        marginTop: '10px'
+      })
+    ],20));
+    
   }
 
   public dispose(): void {
@@ -26,15 +40,17 @@ class DashBoard extends div {
     super();
 
 
-    const dialog = new TestDialog();
+    
 
-    dialog.addItem(new Button('hellow this is a sample', Color.Red));
+    
 
 
     const btn = new Button('Open', Color.Red);
 
     btn.addEventListener('click', async () => {
-      dialog.open();
+      const dialog = new TestDialog();
+      const res = await dialog.open();
+      console.log(res);
     });
     
     super.add([btn]);

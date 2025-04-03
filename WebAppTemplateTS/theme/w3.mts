@@ -755,7 +755,7 @@ class TextField extends div {
     search: Widget;
 
 
-    public constructor(text: string | null | Widget = null, type: string = "text", placeholder: null | string = null, error: boolean = false) {
+    public constructor(text: string | null | Widget = null, type: InputType = InputType.Text, placeholder: null | string = null, error: boolean = false) {
         super();
 
         super.style({
@@ -2974,20 +2974,33 @@ class Dialog extends div {
     content: div;
     hdr: div;
 
-    constructor(option: { width: number, height: number, bgColor?: Color, round?:boolean, header?: { color?: Color, icon?: Icons, title?: string } }) {
+    resolve: Function
+
+    constructor(option: { position?: {
+        left: number,
+        top: number
+    }, width: number, height: number, bgColor?: Color, round?:boolean, header?: { color?: Color, icon?: Icons, title?: string } }) {
         super();
         
-        const { width, height, header, bgColor, round } = option;
+        const { position, width, height, header, bgColor, round } = option;
 
         super.style({
             width: `${width}px`,
             height: `${height}px`,
             position: 'absolute',
-            left: '10%',
-            top: '100px',
+            left: `calc((100% / 2) - (${width}px / 2))`,
+            top: `calc((100% / 2) + (${height}px / 2))`,
             zIndex: '20',
-            boxShadow: '0 0 3px rgba(0, 0, 0, 0.2)'
+            boxShadow: '0 0 3px rgba(0, 0, 0, 0.2)',
+            border: '1px solid white'
         });
+
+        if (position != undefined) {
+            super.style({
+                left: `${position.left}px`,
+                top: `${position.top}px`
+            });
+        }
 
         if (bgColor != undefined) {
 
@@ -3002,6 +3015,9 @@ class Dialog extends div {
             cursor: 'move',
             paddingLeft: '10px'
         });
+
+        this.hdr.addEventListener('dragstart',  () => false);
+        this.hdr.addEventListener('ondrop', () => false);
 
         if (option.round != undefined && option.round) {
             this.hdr.style({
@@ -3081,10 +3097,17 @@ class Dialog extends div {
 
     public async open() {
         this.body.appendChild(this.control);
+        return new Promise((resolve, reject) => {
+            this.resolve = resolve;
+        });
     }
 
-    public close() {
+    public close(resp:any = null) {
         this.delete();
+        
+        if (this.resolve != undefined) {
+            this.resolve(resp);
+        }
     }
     
     public removeItem() {
