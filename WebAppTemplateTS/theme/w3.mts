@@ -334,7 +334,7 @@ enum InputType {
 class Container extends div {
     constructor() {
         super();
-        super.class(["w3-container"]);
+        super.AddClass(["w3-container"]);
 
     }
 }
@@ -342,17 +342,17 @@ class Container extends div {
 class Content extends div {
     constructor() {
         super();
-        super.class(["w3-content", "w3-display-container"]);
+        super.AddClass(["w3-content", "w3-display-container"]);
     }
 }
 
 class Panel extends div {
     constructor(color: Color | null = null) {
         super();
-        super.class(["w3-panel"]);
+        super.AddClass(["w3-panel"]);
 
         if (color != null) {
-            super.class(`w3-${color}`);
+            super.AddClass(`w3-${color}`);
         }
     }
 }
@@ -360,10 +360,10 @@ class Panel extends div {
 class Card extends div {
     constructor(color: Color | null = null) {
         super();
-        super.class(["w3-card"]);
+        super.AddClass(["w3-card"]);
 
         if (color != null) {
-            super.class(`w3-${color}`);
+            super.AddClass(`w3-${color}`);
         }
     }
 }
@@ -373,32 +373,32 @@ class ButtonGroup extends div {
 
     constructor(btn: Widget | null | Widget[]) {
         super();
-        super.class("w3-bar");
+        super.AddClass("w3-bar");
 
         this.lists = [];
 
         if (btn instanceof Widget) {
-            btn.class("w3-bar-item");
-            super.add(btn);
+            btn.AddClass("w3-bar-item");
+            super.Add(btn);
             this.lists.push(btn);
         } else if (btn instanceof Array) {
             for (const item of btn) {
-                item.class("w3-bar-item");
-                super.add(item);
+                item.AddClass("w3-bar-item");
+                super.Add(item);
 
                 this.lists.push(item);
             }
         }
     }
 
-    public round(): Widget {
+    public Round(): Widget {
         if (this.lists.length > 0) {
-            this.lists[0].style({
+            this.lists[0].AddStyle({
                 borderTopLeftRadius: "20px",
                 borderBottomLeftRadius: "20px"
             }); /// first button;
 
-            this.lists[this.lists.length - 1].style({
+            this.lists[this.lists.length - 1].AddStyle({
                 borderTopRightRadius: "20px",
                 borderBottomRightRadius: "20px"
             })
@@ -415,25 +415,25 @@ class Button extends button {
 
     constructor(text: string | null | Widget = null, color: Color | null = null) {
         super();
-        super.class(["w3-btn"]);
+        super.AddClass(["w3-btn"]);
         if (text instanceof Widget) {
-            super.add(text);
+            super.Add(text);
         }
         else {
-            super.html(text);
+            super.Html(text);
         }
 
         if (color != null) {
-            super.class(`w3-${color}`);
+            super.AddClass(`w3-${color}`);
         }
 
-        this.loader = new div().class("loader").style({
+        this.loader = new div().AddClass("loader").AddStyle({
             position: "absolute",
             top: '5px',
             left: '5px'
-        }).hide();
+        }).Hide();
 
-        this.loader_txt = new Text().style({
+        this.loader_txt = new Text().AddStyle({
             position: "absolute",
             top: '5px',
             left: '40px',
@@ -441,56 +441,56 @@ class Button extends button {
             fontWeight: "bold"
         });
 
-        super.add([this.loader, this.loader_txt]);
+        super.Add([this.loader, this.loader_txt]);
     }
 
-    public round(): Widget {
-        super.style({
+    public Round(): Widget {
+        super.AddStyle({
             borderRadius: "20px"
         });
         return this;
     }
 
-    public size(size: Size): Widget {
-        super.class(`w3-${size}`);
+    public Size(size: Size): Widget {
+        super.AddClass(`w3-${size}`);
 
         return this;
     }
-    public circle(): Widget {
-        super.class("w3-circle");
+    public Circle(): Widget {
+        super.AddClass("w3-circle");
         return this;
     }
-    public block(): Widget {
-        super.class("w3-block");
+    public Block(): Widget {
+        super.AddClass("w3-block");
         return this;
     }
-    public button(): Widget {
-        super.class("w3-button");
-        return this;
-    }
-
-    public ripple(): Widget {
-        super.class("w3-ripple");
-        return this;
-    }
-    public border(): Widget {
-        super.class("w3-border");
+    public Button(): Widget {
+        super.AddClass("w3-button");
         return this;
     }
 
-    public loaderText(txt: string): void {
-        this.loader_txt.text(txt);
+    public Ripple(): Widget {
+        super.AddClass("w3-ripple");
+        return this;
+    }
+    public Border(): Widget {
+        super.AddClass("w3-border");
+        return this;
     }
 
-    public showLoader(): void {
-        this.loader.show();
-        super.attr({ disabled: "" });
-        super.style({ position: "relative" });
+    public LoaderText(txt: string): void {
+        this.loader_txt.Text(txt);
     }
-    public hideLoader(): void {
-        super.removeAttr("disabled");
-        this.loader.hide();
-        super.style({ position: '' });
+
+    public ShowLoader(): void {
+        this.loader.Show();
+        super.AddAttr({ disabled: "" });
+        super.AddStyle({ position: "relative" });
+    }
+    public HideLoader(): void {
+        super.DeleteAttr("disabled");
+        this.loader.Hide();
+        super.AddStyle({ position: '' });
     }
 
 }
@@ -499,35 +499,35 @@ class Text extends div {
     constructor(text: string | null = null, color: Color | null = null) {
         super();
         if (text != null) {
-            super.text(text);
+            super.Text(text);
         }
 
         if (color != null) {
-            super.class(`w3-text-${color}`);
+            super.AddClass(`w3-text-${color}`);
         }
 
 
     }
 
-    public textColor(): Widget {
-        super.style({
+    public TextColor(): Widget {
+        super.AddStyle({
             color: "rgb(54, 54, 54)",
             fontSize: "10pt"
         });
         return this;
     }
 
-    public setTextColor(color: Color): Widget {
-        super.class(`w3-text-${color}`);
+    public SetTextColor(color: Color): Widget {
+        super.AddClass(`w3-text-${color}`);
         return this;
     }
 
-    public left(): Widget {
-        super.class("w3-left-align");
+    public Left(): Widget {
+        super.AddClass("w3-left-align");
         return this;
     }
-    public right(): Widget {
-        super.class("w3-right-align");
+    public Right(): Widget {
+        super.AddClass("w3-right-align");
         return this;
     }
 }
@@ -536,16 +536,16 @@ class Html extends div {
     constructor(text: string | null = null) {
         super();
         if (text != null) {
-            super.html(text);
+            super.Html(text);
         }
     }
 
-    public left(): Widget {
-        super.class("w3-left-align");
+    public Left(): Widget {
+        super.AddClass("w3-left-align");
         return this;
     }
-    public right(): Widget {
-        super.class("w3-right-align");
+    public Right(): Widget {
+        super.AddClass("w3-right-align");
         return this;
     }
 }
@@ -553,12 +553,12 @@ class Html extends div {
 class TableResponsive extends div {
     constructor(obj: Widget | Widget[], height: number = 0, padding: number = 0) {
         super();
-        super.class("w3-responsive");
+        super.AddClass("w3-responsive");
 
-        super.add(obj);
+        super.Add(obj);
 
         if (height != 0) {
-            super.style({
+            super.AddStyle({
                 height: `${height}px`,
                 overflowY: "auto",
                 position: "relative"
@@ -566,7 +566,7 @@ class TableResponsive extends div {
         }
 
         if (padding != 0) {
-            super.style({ padding: `${padding}px` });
+            super.AddStyle({ padding: `${padding}px` });
         }
     }
 }
@@ -578,12 +578,12 @@ class Table extends table {
     constructor(header: string[] = [], size: Size | null = null, color: Color | null = null, header_height: number | null = null, sticky: boolean = false) {
         super();
 
-        super.class(["c-table", "w3-table-all"]);
+        super.AddClass(["c-table", "w3-table-all"]);
 
         if (size != null) {
-            super.class([`w3-${size}`]);
+            super.AddClass([`w3-${size}`]);
         } else {
-            super.class([`w3-${Size.Small}`]);
+            super.AddClass([`w3-${Size.Small}`]);
         }
 
         const tr1 = new tr();;
@@ -591,28 +591,28 @@ class Table extends table {
         const header_len = header.length;
         for (let i = 0; i < header_len; i++) {
             const item = header[i];
-            const td1 = new th().html(item);
+            const td1 = new th().Html(item);
             if (color != null) {
                 if (td1 instanceof Widget) {
-                    td1.class(`w3-${color}`);
+                    td1.AddClass(`w3-${color}`);
                 }
             }
 
             if (header_height != null) {
                 if (td1 instanceof Widget)
-                    td1.style({ height: `${header_height}px` });
+                    td1.AddStyle({ height: `${header_height}px` });
             } else {
                 if (td1 instanceof Widget)
-                    td1.style({ height: `0px`, padding: "0px" });
+                    td1.AddStyle({ height: `0px`, padding: "0px" });
 
             }
 
             if (td1 instanceof Widget)
-                tr1.add(td1);
+                tr1.Add(td1);
 
             if (sticky) {
                 if (td1 instanceof Widget)
-                    td1.style({
+                    td1.AddStyle({
                         position: "sticky",
                         top: "0px",
                         zIndex: "100",
@@ -625,12 +625,12 @@ class Table extends table {
 
 
 
-        super.add(tr1);
+        super.Add(tr1);
 
         this.rows = [];
     }
 
-    public add(items: Widget | Widget[] | string[] | any[] = [], arr: { [index: number]: string }[] = [], padding = 0): Widget {
+    public AddItem(items: Widget | Widget[] | string[] | any[] = [], arr: { [index: number]: string }[] = [], padding = 0): Widget {
 
         const tr1 = new tr();
         if (items instanceof Array) {
@@ -640,27 +640,27 @@ class Table extends table {
                 const td1 = new td();
 
                 if (padding != 0) {
-                    td1.style({ padding: `${padding}px` });
+                    td1.AddStyle({ padding: `${padding}px` });
                 }
 
                 if (item instanceof Widget) {
-                    td1.add(item);
+                    td1.Add(item);
                 } else {
-                    td1.html(item);
+                    td1.Html(item);
                 }
-                tr1.add(td1);
+                tr1.Add(td1);
 
                 if (arr) {
                     if (typeof (arr[i]) != "undefined") {
                         if (typeof (arr[i]["style"]) != "undefined") {
-                            td1.style(arr[i]["style"]);
+                            td1.AddStyle(arr[i]["style"]);
                         }
                     }
                 }
             }
         }
 
-        super.add(tr1);
+        super.Add(tr1);
 
         this.rows.push(tr1);
 
@@ -668,33 +668,33 @@ class Table extends table {
 
     }
 
-    public clearBody(): Widget {
+    public ClearItem(): Widget {
         for (const item of this.rows) {
-            item.delete();
+            item.Delete();
         }
 
         this.rows = [];
         return this;
     }
 
-    public striped(): Widget {
-        super.class("c-table-striped");
+    public Striped(): Widget {
+        super.AddClass("c-table-striped");
         return this;
     }
-    public border(): Widget {
-        super.class("c-table-border");
+    public Border(): Widget {
+        super.AddClass("c-table-border");
         return this;
     }
-    public all(): Widget {
-        super.class("w3-table-all");
+    public All(): Widget {
+        super.AddClass("w3-table-all");
         return this;
     }
-    public center(): Widget {
-        super.class("w3-centered");
+    public Center(): Widget {
+        super.AddClass("w3-centered");
         return this;
     }
-    public hover(): Widget {
-        super.class("c-table-hover");
+    public Hover(): Widget {
+        super.AddClass("c-table-hover");
         return this;
     }
 }
@@ -703,44 +703,44 @@ class Table extends table {
 class List extends ul {
     constructor(size: Size | null = null) {
         super();
-        super.class("w3-ul");
+        super.AddClass("w3-ul");
         if (size != null) {
-            super.class(`w3-${size}`);
+            super.AddClass(`w3-${size}`);
         }
     }
 
-    public add(widget: Widget | Widget[] | string | null = null, color: Color | null = null, hover_color: Color | null = null): Widget {
+    public AddItem(widget: Widget | Widget[] | string | null = null, color: Color | null = null, hover_color: Color | null = null): Widget {
         const li1 = new li();
 
         if (color != null) {
-            li1.class(`w3-${color}`);
+            li1.AddClass(`w3-${color}`);
         }
 
         if (widget instanceof Widget) {
-            li1.add(widget);
+            li1.Add(widget);
         } else if (typeof (widget) == "string") {
-            li1.html(widget);
+            li1.Html(widget);
         }
 
         if (hover_color != null) {
-            li1.class(`w3-hover-${hover_color}`);
+            li1.AddClass(`w3-hover-${hover_color}`);
         }
 
-        super.add(li1);
+        super.Add(li1);
 
         return li1;
     }
 
-    public border(): Widget {
-        super.class("w3-border");
+    public Border(): Widget {
+        super.AddClass("w3-border");
         return this;
     }
-    public center(): Widget {
-        super.class("w3-center");
+    public Center(): Widget {
+        super.AddClass("w3-center");
         return this;
     }
-    public hover(): Widget {
-        super.class("w3-hoverable");
+    public Hover(): Widget {
+        super.AddClass("w3-hoverable");
         return this;
     }
 }
@@ -758,52 +758,52 @@ class TextField extends div {
     public constructor(text: string | null | Widget = null, type: InputType = InputType.Text, placeholder: null | string = null, error: boolean = false) {
         super();
 
-        super.style({
+        super.AddStyle({
             position: "relative"
         });
 
         this.label = new label();
-        this.tf = new input().class(["w3-input"]);
+        this.tf = new input().AddClass(["w3-input"]);
         this.error_label = new label();
 
 
         if (text != null) {
             if (text instanceof Widget) {
-                this.label.add(text);
+                this.label.Add(text);
             } else {
 
-                this.label.html(text);
+                this.label.Html(text);
 
-                this.label.style({
+                this.label.AddStyle({
                     color: "rgb(54, 54, 54)",
                     fontSize: "10pt"
                 });
 
             }
-            super.add(this.label);
+            super.Add(this.label);
         }
 
-        this.tf.attr("type", type);
+        this.tf.AddAttr({"type": type});
 
         if (placeholder != null) {
-            this.tf.attr("placeholder", placeholder);
+            this.tf.AddAttr({"placeholder": placeholder});
         }
 
-        super.add([
+        super.Add([
             this.tf
         ]);
 
         if (error) {
-            super.add(this.error_label);
+            super.Add(this.error_label);
         }
 
-        this.search = new Card().hide();
+        this.search = new Card().Hide();
 
-        super.add(this.search);
+        super.Add(this.search);
 
     }
 
-    public filter(param: { data: { key: string, value: string }[], network: boolean, url: string, token_key: string, token_value: string }): void {
+    public Filter(param: { data: { key: string, value: string }[], network: boolean, url: string, token_key: string, token_value: string }): void {
 
         const {
             data = [],
@@ -814,7 +814,7 @@ class TextField extends div {
         } = param;
 
 
-        this.search.style({
+        this.search.AddStyle({
             width: "100%",
             height: "100px",
             overflowY: "auto",
@@ -826,52 +826,52 @@ class TextField extends div {
         });
 
         if (!network) {
-            this.tf.addEventListener("keyup", () => {
-                this.search.clear();
+            this.tf.AddEventListener("keyup", () => {
+                this.search.Clear();
 
                 let has_found = false;
                 for (const item of data) {
 
-                    if (this.tf.getValue() != "" && item.value.toLowerCase().indexOf(this.tf.getValue().toLowerCase()) > -1) {
+                    if (this.tf.GetValue() != "" && item.value.toLowerCase().indexOf(this.tf.GetValue().toString().toLowerCase()) > -1) {
                         has_found = true;
 
-                        const btn = new Button().style({
+                        const btn = new Button().AddStyle({
                             width: "100%",
                             textAlign: "left",
                             paddingLeft: "5px"
                         });
 
-                        btn.text(item.value);
+                        btn.Text(item.value);
 
                         if (btn instanceof Button) {
-                            btn.size(Size.Small);
+                            btn.Size(Size.Small);
                         }
 
-                        this.search.add(
+                        this.search.Add(
                             btn
                         );
 
-                        btn.addEventListener("click", () => {
-                            this.tf.setValue(item.key);
-                            this.search.hide();
+                        btn.AddEventListener("click", () => {
+                            this.tf.AddValue(item.key);
+                            this.search.Hide();
                         });
                     }
                 }
 
                 if (has_found) {
-                    this.search.show();
+                    this.search.Show();
                 } else {
-                    this.search.hide();
+                    this.search.Hide();
                 }
             });
         } else {
 
             let time_out: null | number | undefined = null;
-            this.tf.addEventListener("keyup", () => {
+            this.tf.AddEventListener("keyup", () => {
 
-                if (this.tf.getValue().trim() == "") {
-                    this.search.clear();
-                    this.search.hide();
+                if (this.tf.GetValue().toString().trim() == "") {
+                    this.search.Clear();
+                    this.search.Hide();
                     return;
                 }
 
@@ -886,55 +886,55 @@ class TextField extends div {
                         header["Content-Type"] = "application/json";
                         header[token_key] = token_value;
 
-                        this.search.show();
+                        this.search.Show();
                         const http = new Http({
                             url: `${url}`,
                             method: "POST",
                             header: header,
                             body: {
-                                search: this.tf.getValue()
+                                search: this.tf.GetValue().toString()
                             }
                         });
-                        this.search.clear();
+                        this.search.Clear();
 
 
-                        const res = JSON.parse(await http.load<string>());
+                        const res = JSON.parse(await http.Load<string>());
                         console.log(res);
 
                         // plotting the result
                         for (const item of res) {
                             const btn = new Button();
 
-                            btn.style({
+                            btn.AddStyle({
                                 width: "100%",
                                 textAlign: "left",
                                 paddingLeft: "5px"
                             });
 
-                            btn.text(item.value);
+                            btn.Text(item.value);
 
-                            btn.size(Size.Small);
+                            btn.Size(Size.Small);
 
-                            this.search.add(
+                            this.search.Add(
                                 btn
                             );
 
-                            btn.addEventListener("click", () => {
-                                this.tf.setValue(item.value);
-                                this.search.hide();
+                            btn.AddEventListener("click", () => {
+                                this.tf.AddValue(item.value);
+                                this.search.Hide();
                             });
                         }
                         // show the search result
                         if (res.length > 0) {
-                            this.search.show();
+                            this.search.Show();
                         } else {
-                            this.search.hide();
+                            this.search.Hide();
                         }
 
 
                     } catch (er) {
                         console.log(er);
-                        this.search.hide();
+                        this.search.Hide();
                     }
 
                 }, 200);
@@ -945,24 +945,24 @@ class TextField extends div {
 
     }
 
-    public error(err: string | null = null): void {
+    public Error(err: string | null = null): void {
 
         if (err != null) {
-            this.tf.class(`w3-border-${Color.Red}`);
-            this.error_label.class(`w3-text-${Color.Red}`);
-            this.error_label.html(err);
+            this.tf.AddClass(`w3-border-${Color.Red}`);
+            this.error_label.AddClass(`w3-text-${Color.Red}`);
+            this.error_label.Html(err);
         } else {
-            this.tf.removeClass(`w3-border-${Color.Red}`);
-            this.error_label.removeClass(`w3-text-${Color.Red}`);
-            this.error_label.html("");
+            this.tf.DeleteClass(`w3-border-${Color.Red}`);
+            this.error_label.DeleteClass(`w3-text-${Color.Red}`);
+            this.error_label.Html("");
         }
     }
 
-    public setIconPrefix(param: { icon: Icons | null, size?: number, color?: Color | null }): void {
+    public SetIconPrefix(param: { icon: Icons | null, size?: number, color?: Color | null }): void {
 
         const { icon = null, size = 20, color = null } = param;
         if (icon != null) {
-            const ico = new Icon(icon, color).style({
+            const ico = new Icon(icon, color).AddStyle({
                 position: "absolute",
                 bottom: "10px",
                 left: "5px",
@@ -971,19 +971,19 @@ class TextField extends div {
                 height: `${size}px`
             });
 
-            this.tf.style({
+            this.tf.AddStyle({
                 paddingLeft: `${size + (size / 2)}px`
             });
 
-            super.add(ico);
+            super.Add(ico);
         }
 
     }
 
-    public setIconSuffix(param: { icon: Icons | null, size?: number, color?: Color | null }) {
+    public SetIconSuffix(param: { icon: Icons | null, size?: number, color?: Color | null }) {
         const { icon = null, size = 20, color = null } = param;
         if (icon != null) {
-            const ico = new Icon(icon, color).style({
+            const ico = new Icon(icon, color).AddStyle({
                 position: "absolute",
                 bottom: "10px",
                 right: "5px",
@@ -992,50 +992,50 @@ class TextField extends div {
                 height: `${size}px`
             });
 
-            this.tf.style({
+            this.tf.AddStyle({
                 paddingRight: `${size + (size / 2)}px`
             });
 
-            super.add(ico);
+            super.Add(ico);
         }
         return this;
     }
 
-    public size(size: Size) {
-        this.tf.class(`w3-${size}`);
+    public Size(size: Size) {
+        this.tf.AddClass(`w3-${size}`);
         return this;
     }
 
-    public labelColor(color: Color | null = null) {
-        this.label.class(`w3-text-${color}`);
+    public LbelColor(color: Color | null = null) {
+        this.label.AddClass(`w3-text-${color}`);
         return this;
     }
-    public round() {
-        this.tf.class("w3-round");
-        return this;
-    }
-
-    public border() {
-        this.tf.class("w3-border");
+    public Round() {
+        this.tf.AddClass("w3-round");
         return this;
     }
 
-    public getText() {
-        return this.tf.value();
-    }
-
-    public setText(value) {
-        this.tf.value(value);
+    public Border() {
+        this.tf.AddClass("w3-border");
         return this;
     }
 
-    public disabled() {
-        this.tf.attr("disabled", "");
+    public GetValue() {
+        return this.tf.GetValue();
+    }
+
+    public AddValue(value) {
+        this.tf.AddValue(value);
         return this;
     }
 
-    public enabled() {
-        this.tf.removeAttr("disabled");
+    public Disabled() {
+        this.tf.AddAttr({"disabled": ""});
+        return this;
+    }
+
+    public Enabled() {
+        this.tf.DeleteAttr("disabled");
         return this;
     }
 }
@@ -1049,83 +1049,83 @@ class TextBox extends div {
     constructor(text: string | Widget | null = null, placeholder: string | null = null, error: boolean = false) {
         super();
         this.label = new label();
-        this.tf = new textarea().class(["w3-input"]);
+        this.tf = new textarea().AddClass(["w3-input"]);
         this.error_label = new label();
 
         if (text != null) {
             if (text instanceof Widget) {
-                this.label.add(text);
+                this.label.Add(text);
             } else {
-                this.label.html(text);
+                this.label.Html(text);
             }
-            super.add(this.label);
+            super.Add(this.label);
         }
 
 
         if (placeholder != null) {
-            this.tf.attr("placeholder", placeholder);
+            this.tf.AddAttr({"placeholder": placeholder});
         }
 
-        super.add([
+        super.Add([
             this.tf
         ]);
 
         if (error) {
-            super.add(this.error_label);
+            super.Add(this.error_label);
         }
 
     }
 
-    public error(err: null | string = null) {
+    public Error(err: null | string = null) {
 
         if (err != null) {
-            this.tf.class(`w3-border-${Color.Red}`);
-            this.error_label.class(`w3-text-${Color.Red}`);
-            this.error_label.html(err);
+            this.tf.AddClass(`w3-border-${Color.Red}`);
+            this.error_label.AddClass(`w3-text-${Color.Red}`);
+            this.error_label.Html(err);
         } else {
-            this.tf.removeClass(`w3-border-${Color.Red}`);
-            this.error_label.removeClass(`w3-text-${Color.Red}`);
-            this.error_label.html("");
+            this.tf.DeleteClass(`w3-border-${Color.Red}`);
+            this.error_label.DeleteClass(`w3-text-${Color.Red}`);
+            this.error_label.Html("");
         }
         return this;
     }
 
 
-    public size(size: Size) {
-        this.tf.class(`w3-${size}`);
+    public Size(size: Size) {
+        this.tf.AddClass(`w3-${size}`);
         return this;
     }
 
-    public labelColor(color: Color | null = null) {
-        this.label.class(`w3-text-${color}`);
+    public LabelColor(color: Color | null = null) {
+        this.label.AddClass(`w3-text-${color}`);
         return this;
     }
-    public round() {
-        this.tf.class("w3-round");
-        return this;
-    }
-
-    public border() {
-        this.tf.class("w3-border");
+    public Round() {
+        this.tf.AddClass("w3-round");
         return this;
     }
 
-    public getText() {
-        return this.tf.value();
-    }
-
-    public setText(value: string | null) {
-        this.tf.value(value);
+    public Border() {
+        this.tf.AddClass("w3-border");
         return this;
     }
 
-    public disabled() {
-        this.tf.attr("disabled", "");
+    public GetValue() {
+        return this.tf.GetValue();
+    }
+
+    public AddValue(value: string) {
+        this.tf.AddValue(value);
         return this;
     }
 
-    public enabled() {
-        this.tf.removeAttr("disabled");
+    public Disabled() {
+        this.tf.AddAttr({"disabled": ""});
+        return this;
+    }
+
+    public Enabled() {
+        this.tf.DeleteAttr("disabled");
         return this;
     }
 }
@@ -1134,10 +1134,10 @@ class Radio extends span {
     tf: input;
     label: label;
 
-    constructor(text: string | null = null, name: string | null = null) {
+    constructor(text: string | null = null, name: string) {
         super();
 
-        this.tf = new input().attr({
+        this.tf = new input().AddAttr({
             type: "radio",
             class: "w3-radio",
             name: name
@@ -1145,27 +1145,27 @@ class Radio extends span {
 
         this.label = new label();
 
-        super.add(this.tf);
+        super.Add(this.tf);
 
         if (text != null) {
-            this.label.html(text);
-            super.add(this.label);
+            this.label.Html(text);
+            super.Add(this.label);
         }
 
     }
-    public enabled() {
-        this.tf.removeAttr("disabled");
+    public Enabled() {
+        this.tf.DeleteAttr("disabled");
         return this;
     }
 
-    public setText(bool: boolean) {
+    public AddValue(bool: boolean) {
         if (this.tf.control instanceof HTMLInputElement) {
             this.tf.control.checked = bool;
         }
         return this;
     }
 
-    public getText(): boolean {
+    public GetValue(): boolean {
 
         if (this.tf.control instanceof HTMLInputElement) {
             return this.tf.control.checked;
@@ -1174,8 +1174,8 @@ class Radio extends span {
         return false;
     }
 
-    public disabled() {
-        this.tf.attr("disabled", "");
+    public Disabled() {
+        this.tf.AddAttr({"disabled": ""});
         return this;
     }
 }
@@ -1187,25 +1187,25 @@ class CheckBox extends span {
     constructor(text: string | null = null) {
         super();
 
-        this.tf = new input().attr({
+        this.tf = new input().AddAttr({
             type: "checkbox",
             class: "w3-radio"
         });
 
         this.label = new label();
 
-        super.add(this.tf);
+        super.Add(this.tf);
 
         if (text != null) {
-            this.label.html(text);
-            super.add(this.label);
+            this.label.Html(text);
+            super.Add(this.label);
         }
 
     }
 
 
 
-    public setText(bool: boolean) {
+    public AddValue(bool: boolean) {
         if (this.tf.control instanceof HTMLInputElement) {
             this.tf.control.checked = bool;
         }
@@ -1213,20 +1213,20 @@ class CheckBox extends span {
         return this;
     }
 
-    public getText(): boolean {
+    public GetValue(): boolean {
         if (this.tf.control instanceof HTMLInputElement) {
             return this.tf.control.checked;
         }
         return false;
     }
 
-    public enabled() {
-        this.tf.removeAttr("disabled");
+    public Enabled() {
+        this.tf.DeleteAttr("disabled");
         return this;
     }
 
-    public disabled() {
-        this.tf.attr("disabled", "");
+    public Disabled() {
+        this.tf.AddAttr({"disabled": ""});
         return this;
     }
 }
@@ -1236,48 +1236,48 @@ class CheckBox extends span {
 class ComboBox extends select {
     constructor() {
         super();
-        super.class("w3-select");
+        super.AddClass("w3-select");
 
 
     }
 
-    public set(key: string, value: string): option {
+    public AddItem(key: string, value: string): option {
         const opt = new option();
-        opt.attr({
+        opt.AddAttr({
             value: key
         });
-        opt.html(value);
-        super.add(opt);
+        opt.Html(value);
+        super.Add(opt);
         return opt;
     }
 
-    public enabled() {
-        this.removeAttr("disabled");
+    public Enabled() {
+        this.DeleteAttr("disabled");
         return this;
     }
 
-    public disabled() {
-        this.attr("disabled", "");
+    public Disabled() {
+        this.AddAttr({"disabled": ""});
         return this;
     }
 
-    public size(size: Size) {
-        this.class(`w3-${size}`);
+    public Size(size: Size) {
+        this.AddClass(`w3-${size}`);
         return this;
     }
 
-    public border() {
-        super.class("w3-border");
+    public Border() {
+        super.AddClass("w3-border");
         return this;
     }
 
-    public setText(value: string) {
-        super.value(value);
+    public AddValue(value: string) {
+        super.AddValue(value);
         return this;
     }
 
-    public getText() {
-        return super.value();
+    public GetValue() {
+        return super.GetValue();
     }
 }
 
@@ -1285,23 +1285,23 @@ class ComboBox extends select {
 class Badge extends span {
     constructor(text: string | null = null, color: Color | null = null, size: Size | null = null) {
         super();
-        super.class("w3-badge");
+        super.AddClass("w3-badge");
 
         if (size != null) {
-            super.class(`w3-${size}`);
+            super.AddClass(`w3-${size}`);
         }
 
         if (color != null) {
-            super.class(`w3-${color}`);
+            super.AddClass(`w3-${color}`);
         }
 
         if (text != null) {
-            super.html(text);
+            super.Html(text);
         }
     }
 
-    public textColor(color: Color) {
-        super.class(`w3-text-${color}`);
+    public TextColor(color: Color) {
+        super.AddClass(`w3-text-${color}`);
         return this;
     }
 }
@@ -1309,27 +1309,27 @@ class Badge extends span {
 class Tag extends span {
     constructor(text: string | null = null, color: Color | null = null, size: Size | null = null) {
         super();
-        super.class("w3-tags");
+        super.AddClass("w3-tags");
 
         if (size != null) {
-            super.class(`w3-${size}`);
+            super.AddClass(`w3-${size}`);
         }
 
         if (color != null) {
-            super.class(`w3-${color}`);
+            super.AddClass(`w3-${color}`);
         }
 
         if (text != null) {
-            super.html(text);
+            super.Html(text);
         }
     }
 
-    public textColor(color: Color) {
-        super.class(`w3-text-${color}`);
+    public TextColor(color: Color) {
+        super.AddClass(`w3-text-${color}`);
         return this;
     }
-    public border() {
-        super.class("w3-border");
+    public Border() {
+        super.AddClass("w3-border");
         return this;
     }
 }
@@ -1337,41 +1337,41 @@ class Tag extends span {
 class Grid extends div {
     constructor(is_padding: boolean = false) {
         super();
-        super.class("w3-row");
+        super.AddClass("w3-row");
 
         if (is_padding) {
-            super.class(["w3-row-padding", "w3-stretch"]);
+            super.AddClass(["w3-row-padding", "w3-stretch"]);
         }
     }
 
-    public set(obj: Widget | string, sizes: GridSize[] = []) {
-        const cell = new div().class("w3-col");
+    public AddItem(obj: Widget | string, sizes: GridSize[] = []) {
+        const cell = new div().AddClass("w3-col");
 
         for (const item of sizes) {
             if (item == GridSize.Rest) {
-                cell.class(`w3-${GridSize.Rest}`);
+                cell.AddClass(`w3-${GridSize.Rest}`);
             } else {
-                cell.class(item);
+                cell.AddClass(item);
             }
         }
 
         if (obj instanceof Widget) {
-            cell.add(obj);
+            cell.Add(obj);
         } else {
-            cell.html(obj);
+            cell.Html(obj);
         }
 
-        super.add(cell);
+        super.Add(cell);
         return cell;
     }
 
-    public padding() {
-        super.class("w3-row-padding");
+    public Padding() {
+        super.AddClass("w3-row-padding");
         return this;
     }
 
-    public section() {
-        super.class("w3-section");
+    public Section() {
+        super.AddClass("w3-section");
         return this;
     }
 }
@@ -1379,61 +1379,61 @@ class Grid extends div {
 class Bar extends div {
     constructor(color: Color | null = null, size: Size | null = null) {
         super();
-        super.class("w3-bar");
-        super.style({
+        super.AddClass("w3-bar");
+        super.AddStyle({
             "overflow-x": "auto",
             "white-space": "nowrap"
         })
 
 
         if (color != null) {
-            super.class(`w3-${color}`);
+            super.AddClass(`w3-${color}`);
         }
 
         if (size != null) {
-            super.class(`w3-${size}`);
+            super.AddClass(`w3-${size}`);
         }
 
 
     }
 
-    public block() {
-        super.class("w3-bar-block");
+    public Block() {
+        super.AddClass("w3-bar-block");
         return this;
     }
 
-    public set(text: string | null | Widget = null, isRight: boolean = false, hovercolor: Color | null = null, evt: EventListenerOrEventListenerObject | null = null, hoverableBGColor: Color | null = null, hoverText: Color | null = null) {
-        const item = new div().class("w3-bar-item");
+    public AddItem(text: string | null | Widget = null, isRight: boolean = false, hovercolor: Color | null = null, evt: EventListenerOrEventListenerObject | null = null, hoverableBGColor: Color | null = null, hoverText: Color | null = null) {
+        const item = new div().AddClass("w3-bar-item");
         if (text instanceof Widget) {
-            item.add(text);
+            item.Add(text);
         }
         else {
-            item.html(text);
+            item.Html(text);
         }
 
         if (hovercolor != null) {
-            item.class(`w3-hover-${hovercolor}`);
+            item.AddClass(`w3-hover-${hovercolor}`);
         }
 
         if (evt != null) {
-            item.addEventListener("click", evt);
+            item.AddEventListener("click", evt);
         }
 
 
 
         if (hoverableBGColor != null) {
-            item.class(`w3-hover-${hoverableBGColor}`);
+            item.AddClass(`w3-hover-${hoverableBGColor}`);
         }
 
         if (hoverText != null) {
-            item.class(`w3-hover-${hoverText}`);
+            item.AddClass(`w3-hover-${hoverText}`);
         }
 
         if (isRight) {
-            item.class("w3-right");
+            item.AddClass("w3-right");
         }
 
-        super.add(item);
+        super.Add(item);
         return item;
     }
 }
@@ -1443,32 +1443,32 @@ class DropDownHover extends div {
 
     constructor(title: string | null = null) {
         super();
-        super.class("w3-dropdown-hover");
+        super.AddClass("w3-dropdown-hover");
         const btn = new Button(title);
 
-        super.add(btn);
-        this.drop_content = new div().class(["w3-dropdown-content", "w3-bar-block", "w3-card-4"]);
+        super.Add(btn);
+        this.drop_content = new div().AddClass(["w3-dropdown-content", "w3-bar-block", "w3-card-4"]);
 
-        super.add(this.drop_content);
+        super.Add(this.drop_content);
     }
 
-    public set(title: string | Widget | null = null, fn: null | EventListenerOrEventListenerObject = null) {
-        const a1 = new a().class(["w3-bar-item", "w3-button"]);
+    public AddItem(title: string | Widget | null = null, fn: null | EventListenerOrEventListenerObject = null) {
+        const a1 = new a().AddClass(["w3-bar-item", "w3-button"]);
 
         if (title instanceof Widget) {
-            a1.add(title);
+            a1.Add(title);
 
             if (typeof (fn) == "function") {
-                a1.addEventListener("click", fn);
+                a1.AddEventListener("click", fn);
             }
         } else {
-            a1.html(title);
+            a1.Html(title);
             if (typeof (fn) == "function") {
-                a1.addEventListener("click", fn);
+                a1.AddEventListener("click", fn);
             }
         }
 
-        this.drop_content.add(a1);
+        this.drop_content.Add(a1);
         return a1;
     }
 }
@@ -1477,25 +1477,25 @@ class Accordion extends span {
     constructor(title: string | null = null, content: Widget | null = null) {
         super();
         const btn = new Button(title);
-        btn.button()
-        btn.block()
-        btn.class("w3-left-align");
+        btn.Button()
+        btn.Block()
+        btn.AddClass("w3-left-align");
 
-        const div = new Container().class("w3-hide");
+        const div = new Container().AddClass("w3-hide");
 
         if (content instanceof Widget) {
-            div.add(content);
+            div.Add(content);
         } else {
-            div.html(content);
+            div.Html(content);
         }
 
-        super.add([btn, div]);
+        super.Add([btn, div]);
 
-        btn.addEventListener("click", () => {
-            if (div.hasClass("w3-show")) {
-                div.removeClass("w3-show");
+        btn.AddEventListener("click", () => {
+            if (div.HasClass("w3-show")) {
+                div.DeleteClass("w3-show");
             } else {
-                div.addClass("w3-show");
+                div.AddClass("w3-show");
             }
         });
     }
@@ -1506,16 +1506,16 @@ class Icon extends i {
         super();
 
         if (ico != null) {
-            super.class(["fa", `fa-${ico}`]);
+            super.AddClass(["fa", `fa-${ico}`]);
         }
 
         if (color != null) {
-            super.class(`w3-text-${color}`);
+            super.AddClass(`w3-text-${color}`);
         }
     }
 
     setColor(color) {
-        super.class(`w3-text-${color}`);
+        super.AddClass(`w3-text-${color}`);
         return this;
     }
 }
@@ -1524,19 +1524,19 @@ class Label extends label {
         super();
 
         if (title instanceof Widget) {
-            super.add(title);
+            super.Add(title);
         }
         else if (title instanceof Array) {
             for (const item of title) {
                 if (item instanceof Widget) {
-                    super.add(item);
+                    super.Add(item);
                 } else {
-                    super.add(new Label(item));
+                    super.Add(new Label(item));
                 }
             }
         }
         else {
-            super.text(title);
+            super.Text(title);
         }
     }
 }
@@ -1544,32 +1544,32 @@ class Label extends label {
 class SideBar extends div {
     constructor(title: string | Widget | null = null) {
         super();
-        super.class(["w3-sidebar", "w3-light-grey", "w3-bar-block"]);
+        super.AddClass(["w3-sidebar", "w3-light-grey", "w3-bar-block"]);
         if (title instanceof Widget) {
-            super.add(title);
+            super.Add(title);
         } else {
             const hh = new h3();
 
-            hh.html(title);
-            super.add(hh);
+            hh.Html(title);
+            super.Add(hh);
         }
     }
 
-    public set(title: Widget | string | null = null, fn: null | EventListenerOrEventListenerObject = null) {
+    public AddItem(title: Widget | string | null = null, fn: null | EventListenerOrEventListenerObject = null) {
         if (title instanceof Widget) {
-            super.add(title);
+            super.Add(title);
             return title;
         } else {
-            const a1 = new a().attr({
+            const a1 = new a().AddAttr({
                 href: "#",
                 class: "w3-bar-item w3-button"
             });
-            a1.html(title);
+            a1.Html(title);
 
             if (typeof (fn) == "function") {
-                a1.addEventListener("click", fn);
+                a1.AddEventListener("click", fn);
             }
-            super.add(a1);
+            super.Add(a1);
             return a1;
         }
 
@@ -1594,48 +1594,48 @@ class LeftTab extends div {
 
         this.grid = new Grid();
 
-        this.side_bar = new div().class(["w3-card"]);
+        this.side_bar = new div().AddClass(["w3-card"]);
 
 
         if (bgColor != null) {
-            this.side_bar.class(`w3-${bgColor}`);
+            this.side_bar.AddClass(`w3-${bgColor}`);
         }
 
 
-        this.content = new div().style({ width: "100%" }).class("w3-card");
+        this.content = new div().AddStyle({ width: "100%" }).AddClass("w3-card");
 
-        this.grid.set(this.side_bar, [GridSize.Small12, GridSize.Medium3, GridSize.Large12]);
+        this.grid.AddItem(this.side_bar, [GridSize.Small12, GridSize.Medium3, GridSize.Large12]);
 
-        const main_row = new Row().add(this.content).style({ paddingLeft: "5px" });
-        this.grid.set(main_row, [GridSize.Small12, GridSize.Medium9, GridSize.Large10]);
+        const main_row = new Row().Add(this.content).AddStyle({ paddingLeft: "5px" });
+        this.grid.AddItem(main_row, [GridSize.Small12, GridSize.Medium9, GridSize.Large10]);
 
         if (window.innerWidth <= 600) {
-            main_row.style({
+            main_row.AddStyle({
                 paddingTop: "10px",
                 paddingLeft: ""
             });
         }
 
         if (roundContent) {
-            this.content.style({
+            this.content.AddStyle({
                 borderRadius: "10px"
             });
         }
 
 
-        super.add([
+        super.Add([
             this.grid
         ]);
 
     }
 
-    public checkRound() {
+    public CheckRound() {
         if (this.round) {
 
 
             /// clearRadius:
             for (const btn of this.lists) {
-                btn.style({
+                btn.AddStyle({
                     borderTopRightRadius: "",
                     borderTopLeftRadius: "",
                     borderBottomRightRadius: "",
@@ -1646,16 +1646,16 @@ class LeftTab extends div {
             /// 
 
 
-            this.side_bar.style({
+            this.side_bar.AddStyle({
                 borderRadius: "10px"
             });
 
-            this.lists[0].style({
+            this.lists[0].AddStyle({
                 borderTopRightRadius: "10px",
                 borderTopLeftRadius: "10px"
             });
 
-            this.lists[this.lists.length - 1].style({
+            this.lists[this.lists.length - 1].AddStyle({
                 borderBottomRightRadius: "10px",
                 borderBottomLeftRadius: "10px"
             })
@@ -1663,48 +1663,48 @@ class LeftTab extends div {
         }
     }
 
-    public addActive(cur_btn) {
+    public AddActive(cur_btn) {
         for (const btn of this.lists) {
-            btn.removeClass("w3-rtab-active");
+            btn.DeleteClass("w3-rtab-active");
         }
 
         cur_btn.addClass("w3-rtab-active");
     }
 
-    public set(param: { title: string | null | Widget, fn: Function | null, active?: boolean, color?: Color | null }) {
+    public AddItem(param: { title: string | null | Widget, fn: Function | null, active?: boolean, color?: Color | null }) {
         const { title = null, fn = null, active = false, color = null } = param;
-        const btn = new button().style({
+        const btn = new button().AddStyle({
             width: "100%",
             textAlign: "left",
             paddingLeft: "10px",
             fontSize: "8pt"
-        }).class(["w3-bar-item", "w3-button", "tablink"]);
+        }).AddClass(["w3-bar-item", "w3-button", "tablink"]);
 
         if (title instanceof Widget) {
-            btn.add(title);
+            btn.Add(title);
         } else {
-            btn.html(title);
+            btn.Html(title);
         }
 
-        this.side_bar.add(btn);
+        this.side_bar.Add(btn);
 
         if (typeof (fn) == "function") {
-            btn.addEventListener("click", () => {
-                this.addActive(btn);
-                this.content.clear();
+            btn.AddEventListener("click", () => {
+                this.AddActive(btn);
+                this.content.Clear();
                 fn(this.content);
             });
         }
 
         if (active) {
-            this.addActive(btn);
+            this.AddActive(btn);
             if (typeof (fn) == "function")
                 fn(this.content);
         }
 
         this.lists.push(btn);
 
-        this.checkRound();
+        this.CheckRound();
 
         return this;
     }
@@ -1721,7 +1721,7 @@ class BasicTab extends div {
         const { bgColor = null, size = null, borderRadius = 0 } = param;
         super();
 
-        this.menu = new div().style({
+        this.menu = new div().AddStyle({
             width: "100%",
             borderTopRightRadius: "10px",
             borderTopLeftRadius: "10px",
@@ -1732,17 +1732,17 @@ class BasicTab extends div {
         this.borderRadius = borderRadius;
 
         if (borderRadius > 0) {
-            this.menu.style({
+            this.menu.AddStyle({
                 borderRadius: `${borderRadius}px`
             })
         }
 
         if (bgColor != null) {
-            this.menu.class(`w3-${bgColor}`);
+            this.menu.AddClass(`w3-${bgColor}`);
         }
 
         if (size != null) {
-            this.menu.class(`w3-${size}`);
+            this.menu.AddClass(`w3-${size}`);
         }
 
         // <div class="w3-bar w3-black">
@@ -1752,20 +1752,20 @@ class BasicTab extends div {
         // </div>
         this.content = new div();
 
-        super.add([
+        super.Add([
             this.menu,
             this.content
         ]);
 
         this.list = [];
     }
-    public clearActive() {
+    public ClearActive() {
         for (const item of this.list) {
-            item.removeClass("w3-tab-active");
+            item.DeleteClass("w3-tab-active");
             //item.removeAttr("disabled");
         }
     }
-    public set(param: { title: string | Widget | null, fn: Function | null, active?: boolean, color?: Color | null }) {
+    public AddItem(param: { title: string | Widget | null, fn: Function | null, active?: boolean, color?: Color | null }) {
         const { title = null, fn = null, active = false, color = null } = param;
         if (title instanceof Widget) {
 
@@ -1778,35 +1778,35 @@ class BasicTab extends div {
             //     height: "100%"
             // });
 
-            const btn = new button().class(["w3-bar-item", "w3-button", "tablink"]);
-            btn.html(title);
-            btn.style({
+            const btn = new button().AddClass(["w3-bar-item", "w3-button", "tablink"]);
+            btn.Html(title);
+            btn.AddStyle({
                 borderTopLeftRadius: "8px",
                 borderTopRightRadius: "8px",
                 border: "1px solid rgba(0, 0, 0, 0)"
             });
 
 
-            this.menu.add(btn);
+            this.menu.Add(btn);
 
             this.list.push(btn);
 
             if (active) {
-                btn.class("w3-tab-active");
+                btn.AddClass("w3-tab-active");
                 //btn.attr({"disabled": ""});
-                this.content.clear();
+                this.content.Clear();
                 if (typeof (fn) == "function")
                     fn(this.content);
             }
 
 
             if (typeof (fn) == "function") {
-                btn.addEventListener("click", () => {
+                btn.AddEventListener("click", () => {
 
-                    this.clearActive();
-                    btn.class("w3-tab-active");
+                    this.ClearActive();
+                    btn.AddClass("w3-tab-active");
                     //btn.attr({"disabled": ""});
-                    this.content.clear();
+                    this.content.Clear();
                     fn(this.content);
 
                 });
@@ -1818,14 +1818,14 @@ class BasicTab extends div {
 class TabBody extends div {
     constructor() {
         super();
-        super.style({
+        super.AddStyle({
             border: "2px solid #e3e3e3",
             borderTop: "none",
             position: "relative"
         });
     }
     public round() {
-        super.style({
+        super.AddStyle({
             borderBottomRightRadius: "10px",
             borderBottomLeftRadius: "10px"
         });
@@ -1841,30 +1841,30 @@ class Pagination extends div {
     active_color: string;
     constructor(change_fn: Function | null = null, active_color: Color | null = null, size: Size | null = null) {
         super();
-        super.class(["w3-bar"]);
+        super.AddClass(["w3-bar"]);
 
         if (size != null) {
-            super.class(`w3-${size}`);
+            super.AddClass(`w3-${size}`);
         }
 
         const before = new a();
-        before.attr({
+        before.AddAttr({
             href: "#",
             class: "w3-bar-item w3-button"
-        }).html(`&laquo;`);
+        }).Html(`&laquo;`);
 
         const forward = new a();
-        forward.attr({
+        forward.AddAttr({
             href: "#",
             class: "w3-bar-item w3-button"
-        }).html(`&raquo;`);
+        }).Html(`&raquo;`);
 
-        super.add(before);
+        super.Add(before);
 
         this.between = new span();
-        super.add(this.between);
+        super.Add(this.between);
 
-        super.add(forward);
+        super.Add(forward);
 
         this.change_fn = change_fn;
 
@@ -1879,7 +1879,7 @@ class Pagination extends div {
             this.active_color = `w3-${Color.Green}`;
         }
 
-        const changeDir = (step) => {
+        const changeDir = (step: number) => {
             if (this.links.length == 0) return; // if no data no process 
 
             this.current_page += step;
@@ -1896,11 +1896,11 @@ class Pagination extends div {
             }
 
             for (const item of this.links) {
-                item.link.removeClass(this.active_color);
+                item.link.DeleteClass(this.active_color);
             }
 
 
-            this.links[this.current_page - 1].link.addClass(this.active_color);
+            this.links[this.current_page - 1].link.AddClass(this.active_color);
 
             if (typeof (this.change_fn) == "function") {
                 this.change_fn(this.links[this.current_page - 1].num);
@@ -1908,23 +1908,23 @@ class Pagination extends div {
 
         };
 
-        forward.addEventListener("click", () => {
+        forward.AddEventListener("click", () => {
             changeDir(1);
         });
 
-        before.addEventListener("click", () => {
+        before.AddEventListener("click", () => {
             changeDir(-1);
         });
 
 
     }
 
-    public border() {
-        super.class("w3-border");
+    public Border() {
+        super.AddClass("w3-border");
         return this;
     }
 
-    public set(num: number | null = null, active: boolean | null = null, change: Function | null = null, style: { [index: string]: string } | null = null) {
+    public AddItem(num: number | null = null, active: boolean | null = null, change: Function | null = null, style: { [index: string]: string } | null = null) {
 
         active = active == null ? false : active;
 
@@ -1934,16 +1934,16 @@ class Pagination extends div {
 
         const link = new a();
 
-        link.attr({
+        link.AddAttr({
             href: "#",
             class: "w3-bar-item w3-button"
-        }).html(`${num} `);
+        }).Html(`${num} `);
 
         if (style != null) {
-            link.style(style);
+            link.AddStyle(style);
         }
 
-        this.between.add(link);
+        this.between.Add(link);
 
         if (typeof (num) == "number")
             this.links.push({
@@ -1951,13 +1951,13 @@ class Pagination extends div {
                 link: link
             });
 
-        link.addEventListener("click", () => {
+        link.AddEventListener("click", () => {
 
             for (const item of this.links) {
-                item.link.removeClass(this.active_color);
+                item.link.DeleteClass(this.active_color);
             }
 
-            link.addClass(this.active_color);
+            link.AddClass(this.active_color);
             if (typeof (this.change_fn) == "function") {
                 this.change_fn(num);
             }
@@ -1969,10 +1969,10 @@ class Pagination extends div {
         if (active) {
 
             for (const item of this.links) {
-                item.link.removeClass(this.active_color);
+                item.link.DeleteClass(this.active_color);
             }
 
-            link.addClass(this.active_color);
+            link.AddClass(this.active_color);
 
             if (typeof (this.change_fn) == "function") {
                 if (change == null || change) {
@@ -1991,25 +1991,25 @@ class ProgressBar extends div {
     con: div;
     constructor(color: Color | null = null) {
         super();
-        super.class(["w3-light-grey", "w3-round"]).style({
+        super.AddClass(["w3-light-grey", "w3-round"]).AddStyle({
             height: "20px"
         });
 
-        this.con = new div().class(["w3-container", "w3-round", `w3-${color == null ? Color.Blue : color}`]).style({
+        this.con = new div().AddClass(["w3-container", "w3-round", `w3-${color == null ? Color.Blue : color}`]).AddStyle({
             width: "1%",
             height: "100%"
         });
 
-        super.add(this.con);
+        super.Add(this.con);
     }
 
-    public update(percent: number, value: number | string | null = null) {
-        this.con.style({
+    public Update(percent: number, value: number | string | null = null) {
+        this.con.AddStyle({
             width: `${percent}% `
         });
 
         if (value != null) {
-            this.con.html(`${value}% `);
+            this.con.Html(`${value}% `);
         }
     }
 }
@@ -2017,7 +2017,7 @@ class ProgressBar extends div {
 class Center extends div {
     constructor() {
         super();
-        super.class("w3-center");
+        super.AddClass("w3-center");
     }
 }
 
@@ -2027,15 +2027,15 @@ class Modal extends div {
 
     constructor(title: null | string | Widget = null, maxwidth: string | null = null, bgcolor: Color | null = null, animate: Direction = Direction.Top) {
         super();
-        super.class("w3-modal").style({ zIndex: "1000" });
+        super.AddClass("w3-modal").AddStyle({ zIndex: "1000" });
 
-        this.content = new div().class(["w3-modal-content", "w3-card-4"]).style({ borderRadius: "10px" });
+        this.content = new div().AddClass(["w3-modal-content", "w3-card-4"]).AddStyle({ borderRadius: "10px" });
 
         if (animate != null) {
-            this.content.class(`w3-animate-${animate}`);
+            this.content.AddClass(`w3-animate-${animate}`);
         }
         if (maxwidth != null) {
-            this.content.style({
+            this.content.AddStyle({
                 width: maxwidth,
                 maxWidth: "98%"
             })
@@ -2044,7 +2044,7 @@ class Modal extends div {
 
 
         if (title != null) {
-            const header = new Card().add(new Label(title)).style({
+            const header = new Card().Add(new Label(title)).AddStyle({
                 padding: "15px",
                 position: "relative",
                 borderTopRightRadius: "10px",
@@ -2052,38 +2052,38 @@ class Modal extends div {
             });
 
             const close = new Button("X");
-            close.style({
+            close.AddStyle({
                 position: "absolute",
                 top: "10px",
                 right: "10px"
             });
 
-            close.size(Size.Tiny);
+            close.Size(Size.Tiny);
 
-            header.add(close);
+            header.Add(close);
 
             if (bgcolor != null) {
-                header.class(`w3-${bgcolor}`);
+                header.AddClass(`w3-${bgcolor}`);
             }
 
-            this.content.add(new div().class(["w3-container"]));
-            this.content.add(header);
+            this.content.Add(new div().AddClass(["w3-container"]));
+            this.content.Add(header);
 
-            close.addEventListener("click", () => {
-                this.close();
+            close.AddEventListener("click", () => {
+                this.Close();
             });
         }
-        super.add(this.content);
+        super.Add(this.content);
 
 
     }
 
-    public set(obj: null | Widget | Widget[] = null) {
+    public AddItem(obj: null | Widget | Widget[] = null) {
         if (obj instanceof Widget) {
-            this.content.add(obj);
+            this.content.Add(obj);
         } else if(obj instanceof Array) {
             for (const item of obj) {
-                this.content.add(item);
+                this.content.Add(item);
             }
         
         } else {
@@ -2091,10 +2091,10 @@ class Modal extends div {
         }
     }
 
-    public async open() {
-        super.show();
+    public async Open() {
+        super.Show();
         //this.body.appendChild(super.control());
-        MyApp.add(this);
+        MyApp.Add(this);
         const promise = new Promise((resolve, reject) => {
             this.resolvefn = resolve;
         });
@@ -2102,15 +2102,12 @@ class Modal extends div {
         return promise;
     }
 
-    public close(value: string | null | boolean = null) {
+    public Close(value: string | null | boolean = null) {
         if (this.resolvefn) {
             this.resolvefn(value);
         }
-        super.hide();
-        this.delete();
-        if (typeof (this.dispose) == "function") {
-            this.dispose(); // dispose for the modal
-        }
+        super.Hide();
+        this.Delete();
     }
 
 }
@@ -2118,15 +2115,15 @@ class Modal extends div {
 class Code extends div {
     constructor(lang: string | null = null) {
         super();
-        super.class("w3-code");
+        super.AddClass("w3-code");
 
         if (lang != null) {
-            super.class(`${lang} High`);
+            super.AddClass(`${lang} High`);
         }
     }
 
-    public write(code: string | null = null) {
-        super.text(code);
+    public AddValue(code: string) {
+        super.Text(code);
         return this;
     }
 }
@@ -2134,7 +2131,7 @@ class Code extends div {
 class Display extends div {
     constructor(pos: Direction = Direction.Middle) {
         super();
-        super.class(`w3-display-${pos}`);
+        super.AddClass(`w3-display-${pos}`);
     }
 }
 
@@ -2142,12 +2139,12 @@ class Display extends div {
 class Row extends div {
     constructor(obj: Widget | Widget[] | null = null, direction: FlexDirection|null = null) {
         super();
-        super.style({
+        super.AddStyle({
             display: 'flex'
         });
 
         if (direction != null) {
-            super.style({
+            super.AddStyle({
                 FlexDirection: direction
             });
         }
@@ -2169,7 +2166,7 @@ class Row extends div {
             //obj.style({ display: "inline-block" });
             //super.add(new div().class(["w3-cell", direction == null ? "w3-cell-top" : `w3-cell-${direction}`]).add(obj));
 
-            super.add(new div().style(item_style).add(obj));
+            super.Add(new div().AddStyle(item_style).Add(obj));
 
         } else if (obj instanceof Array) {
             for (const item of obj) {
@@ -2177,7 +2174,7 @@ class Row extends div {
                     //item.style({ display: "inline-block" });
                     //item.class("w3-cell");
                     //super.add(new div().class(["w3-cell", direction == null ? "w3-cell-top" : `w3-cell-${direction}`]).add(item));
-                    super.add(new div().style(item_style).add(item));
+                    super.Add(new div().AddStyle(item_style).Add(item));
                 }
             }
         }
@@ -2192,14 +2189,14 @@ class Column extends div {
 
         if (obj instanceof Widget) {
             //obj.style({ display: "inline-block" });
-            super.add(new div().class("w3-row").add(obj));
+            super.Add(new div().AddClass("w3-row").Add(obj));
 
         } else if (obj instanceof Array) {
             for (const item of obj) {
                 if (item instanceof Widget) {
                     //item.style({ display: "inline-block" });
                     //item.class("w3-cell");
-                    super.add(new div().class("w3-row").add(item));
+                    super.Add(new div().AddClass("w3-row").Add(item));
                 }
             }
         }
@@ -2211,22 +2208,22 @@ class Column extends div {
 class Photo2d extends img {
     constructor() {
         super();
-        super.class("w3-image");
+        super.AddClass("w3-image");
     }
 
-    public path(src: string) {
-        super.attr({
+    public Path(src: string) {
+        super.AddAttr({
             "src": src
         });
 
 
-        super.style({
+        super.AddStyle({
             "-webkit-filter": "blur(8px)",
             "filter": "blur(8px)"
         })
 
-        super.addEventListener("load", () => {
-            super.style({
+        super.AddEventListener("load", () => {
+            super.AddStyle({
                 "-webkit-filter": "",
                 "filter": ""
             })
@@ -2235,61 +2232,61 @@ class Photo2d extends img {
         return this;
     }
 
-    public default() {
-        super.style({
+    public Default() {
+        super.AddStyle({
             objectFit: "cover"
         });
         return this;
     }
 
-    public base64() {
+    public Base64() {
         return this;
     }
 
-    public sepia() {
-        super.class("w3-sepia");
+    public Sepia() {
+        super.AddClass("w3-sepia");
         return this;
     }
-    public sepiaMin() {
-        super.class("w3-sepia-min");
+    public SepiaMin() {
+        super.AddClass("w3-sepia-min");
         return this;
     }
-    public sepiaMax() {
-        super.class("w3-sepia-max");
-        return this;
-    }
-
-    public hoverOpacity() {
-        super.class("w3-hover-opacity");
-        return this;
-    }
-    public hoverGrayScale() {
-        super.class("w3-hover-grayscale");
+    public SepiaMax() {
+        super.AddClass("w3-sepia-max");
         return this;
     }
 
-    public hoverSepia() {
-        super.class("w3-hover-sepia");
+    public HoverOpacity() {
+        super.AddClass("w3-hover-opacity");
+        return this;
+    }
+    public HoverGrayScale() {
+        super.AddClass("w3-hover-grayscale");
         return this;
     }
 
-    public round() {
-        super.class("w3-round");
+    public HoverSepia() {
+        super.AddClass("w3-hover-sepia");
         return this;
     }
 
-    public circle() {
-        super.class("w3-circle");
+    public Round() {
+        super.AddClass("w3-round");
         return this;
     }
 
-    public border() {
-        super.class("w3-border");
+    public Circle() {
+        super.AddClass("w3-circle");
         return this;
     }
 
-    public padding() {
-        super.class("w3-padding");
+    public Border() {
+        super.AddClass("w3-border");
+        return this;
+    }
+
+    public Padding() {
+        super.AddClass("w3-padding");
         return this;
     }
 }
@@ -2297,21 +2294,21 @@ class Photo2d extends img {
 class Box extends div {
     constructor(width: number | string | null = null, height: number | string | null = null) {
         super();
-        super.class("w3-cell");
-        super.style({
+        super.AddClass("w3-cell");
+        super.AddStyle({
             // display: "inline-block",
             width: "1px",
             height: "1px"
         });
 
         if (width != null) {
-            super.style({
+            super.AddStyle({
                 width: typeof (width) == "number" ? `${width} px` : width
             });
         }
 
         if (height != null) {
-            super.style({
+            super.AddStyle({
                 width: typeof (height) == "number" ? `${height} px` : height
             });
         }
@@ -2329,13 +2326,13 @@ class Canvas extends canvas {
         }
 
         if (width != null) {
-            super.attr({
+            super.AddAttr({
                 width: width
             });
         }
 
         if (height != null) {
-            super.attr({
+            super.AddAttr({
                 height: height
             });
         }
@@ -2351,53 +2348,53 @@ class TextFieldFilter extends div {
         this.input = new TextField(text, type, placeholder, error);
 
         this.list = new List();
-        this.list.border()
-        this.list.hide();
+        this.list.Border()
+        this.list.Hide();
 
-        super.add([
+        super.Add([
             this.input, this.list
         ]);
 
 
         let time: number | null = null;
-        this.input.tf.addEventListener("focusin", () => {
+        this.input.tf.AddEventListener("focusin", () => {
             if (time != null)
                 clearTimeout(time);
 
-            this.list.show();
+            this.list.Show();
         });
 
 
-        this.input.tf.addEventListener("focusout", () => {
+        this.input.tf.AddEventListener("focusout", () => {
             time = setTimeout(() => {
-                this.list.hide();
+                this.list.Hide();
             }, 1000);
         });
 
-        this.list.addEventListener("mouseover", () => {
+        this.list.AddEventListener("mouseover", () => {
             if (time != null)
                 clearTimeout(time);
-            this.list.show();
+            this.list.Show();
         });
 
-        this.list.addEventListener("mouseout", () => {
+        this.list.AddEventListener("mouseout", () => {
             time = setTimeout(() => {
-                this.list.hide();
+                this.list.Hide();
             }, 1000);
         });
 
     }
-    public init(items: { key: string, value: string }[] | null = null) {
+    public Init(items: { key: string, value: string }[] | null = null) {
 
         if (items != null)
             for (const item of items) {
-                this.list.add(item.value);
+                this.list.AddItem(item.value);
             }
 
         return this;
     }
-    public border() {
-        this.input.tf.class("w3-border");
+    public Border() {
+        this.input.tf.AddClass("w3-border");
         return this;
     }
 
@@ -2408,19 +2405,19 @@ class Alert1 extends Modal {
     constructor(msg: string, color: Color = Color.Sand) {
         super(new Row([new Icon(Icons.Message), new Box(10), new Text("Alert")]), "480px", color);
 
-        const ok = new Button(new Row([new Icon(Icons.Check), new Box(5), new Text("OK")]), Color.Blue).size(Size.Small).style({ borderRadius: "20px" });
+        const ok = new Button(new Row([new Icon(Icons.Check), new Box(5), new Text("OK")]), Color.Blue).Size(Size.Small).AddStyle({ borderRadius: "20px" });
 
-        super.set(new Panel().style({
+        super.AddItem(new Panel().AddStyle({
             padding: "0px 20px 20px 20px"
-        }).add(new Column([
-            new Html(`<p> ${msg} </p>`).style({ fontSize: "13pt" }),
+        }).Add(new Column([
+            new Html(`<p> ${msg} </p>`).AddStyle({ fontSize: "13pt" }),
             new Row([
                 ok, new Box(10)
             ])
         ])));
 
-        ok.addEventListener("click", async () => {
-            super.close(true);
+        ok.AddEventListener("click", async () => {
+            super.Close(true);
         });
 
     }
@@ -2430,34 +2427,34 @@ class Confirm1 extends Modal {
     constructor(msg: string, color: Color) {
         super(new Row([new Icon(Icons.QuestionCircle), new Box(10), new Text("Confirmation")]), "480px", color, Direction.Bottom);
 
-        const ok = new Button(new Row([new Icon(Icons.Check), new Box(5), new Text("OK")]), Color.Blue).size(Size.Small).style({ borderRadius: "20px" });
-        const cancel = new Button(new Row([new Icon(Icons.Close), new Box(5), new Text("CANCEL")]), Color.Red).size(Size.Small).style({ borderRadius: "20px" });
+        const ok = new Button(new Row([new Icon(Icons.Check), new Box(5), new Text("OK")]), Color.Blue).Size(Size.Small).AddStyle({ borderRadius: "20px" });
+        const cancel = new Button(new Row([new Icon(Icons.Close), new Box(5), new Text("CANCEL")]), Color.Red).Size(Size.Small).AddStyle({ borderRadius: "20px" });
 
-        super.set(new Panel().style({
+        super.AddItem(new Panel().AddStyle({
             padding: "0px 20px 20px 20px"
-        }).add(new Column([
-            new Html(`<p>${msg}</p>`).style({ fontSize: "13pt" }),
+        }).Add(new Column([
+            new Html(`<p>${msg}</p>`).AddStyle({ fontSize: "13pt" }),
             new Row([
                 ok, new Box(5), cancel
             ])
         ])));
 
-        ok.addEventListener("click", async () => {
-            super.close(true);
+        ok.AddEventListener("click", async () => {
+            super.Close(true);
         });
 
-        cancel.addEventListener("click", () => {
-            super.close(false);
+        cancel.AddEventListener("click", () => {
+            super.Close(false);
         });
     }
 }
 
 const Alert = async (msg: string = "Alert", color: Color = Color.Sand) => {
-    return new Alert1(msg, color).open();
+    return new Alert1(msg, color).Open();
 }
 
 const Confirm = async (msg: string = "Confirm", color: Color = Color.Red) => {
-    return new Confirm1(msg, color).open();
+    return new Confirm1(msg, color).Open();
 };
 
 
@@ -2466,26 +2463,26 @@ class Loader extends div {
         super();
 
         if (w != null) {
-            super.style({
+            super.AddStyle({
                 width: `${w}px`
             });
         }
 
         if (h != null) {
-            super.style({
+            super.AddStyle({
                 width: `${h}px`
             });
         }
 
-        super.class("loader");
+        super.AddClass("loader");
     }
 
     open() {
-        super.show();
+        super.Show();
     }
 
     close() {
-        super.delete();
+        super.Delete();
     }
 }
 
@@ -2496,45 +2493,45 @@ class Switch extends label {
     constructor(param: { check?: boolean, size?: number, round?: boolean }) {
         const { check = false, size = 30, round = false } = param;
         super();
-        super.class("switch");
+        super.AddClass("switch");
 
         this.tf = new input();
-        this.tf.attr({ "type": "checkbox" });
+        this.tf.AddAttr({ "type": "checkbox" });
 
-        const slider = new span().class("slider");
+        const slider = new span().AddClass("slider");
 
         if (round) {
-            slider.class("round");
+            slider.AddClass("round");
         }
         if (this.tf.control instanceof HTMLInputElement)
             this.tf.control.checked = check;
 
-        super.add([
+        super.Add([
             this.tf,
             slider
         ]);
     }
 
-    public setText(check: boolean = true) {
+    public addValue(check: boolean = true) {
         if (this.tf.control instanceof HTMLInputElement)
             this.tf.control.checked = check;
 
         return this;
     }
 
-    public getText(): boolean {
+    public getValue(): boolean {
         if (this.tf.control instanceof HTMLInputElement)
             return this.tf.control.checked;
         return false;
     }
 
-    public disabled() {
-        this.tf.attr("disabled", "");
+    public Disabled() {
+        this.tf.AddAttr({"disabled": ""});
         return this;
     }
 
-    public enabled() {
-        this.tf.removeAttr("disabled");
+    public Enabled() {
+        this.tf.DeleteAttr("disabled");
         return this;
     }
 
@@ -2545,16 +2542,16 @@ class Divider extends hr {
     constructor() {
         super();
     }
-    public dotted() {
-        super.style({
+    public Dotted() {
+        super.AddStyle({
             borderStyle: "dotted"
         });
 
         return this;
     }
 
-    public dashed() {
-        super.style({
+    public Dashed() {
+        super.AddStyle({
             borderStyle: "dashed"
         });
 
@@ -2563,12 +2560,12 @@ class Divider extends hr {
 }
 
 class Padding extends div {
-    constructor(obj, padding = 0) {
+    constructor(obj: Widget| Widget[], padding: number = 0) {
         super();
-        super.add(obj);
+        super.Add(obj);
 
         if (padding != 0) {
-            super.style({
+            super.AddStyle({
                 padding: `${padding}px`
             });
         }
@@ -2579,7 +2576,7 @@ class Padding extends div {
 class BackDrop extends div {
     constructor() {
         super();
-        super.style({
+        super.AddStyle({
             position: 'fixed',
             top: '0px',
             left: '0px',
@@ -2588,22 +2585,22 @@ class BackDrop extends div {
             height: '100%',
             width: '100%'
         });
-        this.hide();
+        this.Hide();
         this.body.appendChild(this.control);
 
-        this.addEventListener('click', (e) => {
+        this.AddEventListener('click', (e) => {
             this.close();
         });
     }
 
-    public open() {
+    public Open() {
 
         
-        this.show();
+        this.Show();
     }
 
     public close() {
-        this.hide();
+        this.Hide();
     }
 }
 
@@ -2616,7 +2613,7 @@ class Tile extends div{
     }) {
         super();
 
-        super.style({
+        super.AddStyle({
             width: '100%',
             height: '40px',
             paddingLeft: '15px',
@@ -2627,20 +2624,20 @@ class Tile extends div{
             cursor: 'pointer'
         });
 
-        super.addEventListener('mouseover', () => {
-            super.style({
+        super.AddEventListener('mouseover', () => {
+            super.AddStyle({
                 backgroundColor: 'rgba(0, 0, 0, 0.1)'
             });
         });
 
-        super.addEventListener('mouseout', () => {
-            super.style({
+        super.AddEventListener('mouseout', () => {
+            super.AddStyle({
                 backgroundColor: 'rgba(0, 0, 0, 0.2)'
             });
         });
 
-        super.add(new Row([
-            option.icon != undefined ? new Icon(option.icon).style({ width: '30px' }) : new Text(''),
+        super.Add(new Row([
+            option.icon != undefined ? new Icon(option.icon).AddStyle({ width: '30px' }) : new Text(''),
             option.title != undefined ? new Text(option.title) : new Text('')
         ]));
     
@@ -2670,7 +2667,7 @@ class WindowApp extends div {
         body?: Widget
     }) {
         super();
-        this.content = new div().style({
+        this.content = new div().AddStyle({
             width: '100%',
             height: 'calc(100% - 56px)',
             position: 'fixed',
@@ -2686,8 +2683,8 @@ class WindowApp extends div {
         if (option.appBar != undefined) {
 
             const drawer_bar = new button();
-            drawer_bar.html(`<i class="fa fa-bars"></i>`);
-            drawer_bar.style({
+            drawer_bar.Html(`<i class="fa fa-bars"></i>`);
+            drawer_bar.AddStyle({
                 width: '40px',
                 height: '40px',
                 // marginTop: '7px',
@@ -2703,7 +2700,7 @@ class WindowApp extends div {
 
             const bar = new div();
             
-            bar.style({ 
+            bar.AddStyle({ 
                 width: '100%',
                 height: option.appBar.height != undefined ? `${option.appBar.height}px`  : '56px',
                 zIndex: '100',
@@ -2711,35 +2708,35 @@ class WindowApp extends div {
                 position: 'fixed'
             });
 
-            bar.class(`w3-${option.appBar.color != undefined ? option.appBar.color : Color.Blue}`);
+            bar.AddClass(`w3-${option.appBar.color != undefined ? option.appBar.color : Color.Blue}`);
             
             /* Drawing the title */
         
             const left = new Row([
                 option.appBar.drawer != undefined ? drawer_bar : new Text(''),
-                option.appBar.title != undefined && typeof(option.appBar.title) == 'string' ? new Text(option.appBar.title).style({
+                option.appBar.title != undefined && typeof(option.appBar.title) == 'string' ? new Text(option.appBar.title).AddStyle({
                     fontWeight: 'bold',
                     fontSize: '15pt',
                     marginTop: '5px',
                     marginLeft: '5px'
                 }) : new Text('')
             ]);
-            left.style({ marginTop: '8px' });
+            left.AddStyle({ marginTop: '8px' });
 
-            bar.add(left);
+            bar.Add(left);
 
             /* Drawing the Action */
 
             if (option.appBar.action != undefined) {
                 /* Drawing the right action */
-                const action = new div().style({
+                const action = new div().AddStyle({
                     position: 'absolute',
                     right: '2px',
                     top: '0px'
                 });
 
-                action.add(option.appBar.action);
-                bar.add(action);
+                action.Add(option.appBar.action);
+                bar.Add(action);
             }
 
             /* Drawing a drawer*/
@@ -2748,10 +2745,10 @@ class WindowApp extends div {
                 
 
                 const drawer = new div();   
-                drawer.addEventListener('click', (e)  => {
+                drawer.AddEventListener('click', (e)  => {
                     e.stopPropagation();
                 });
-                drawer.style({
+                drawer.AddStyle({
                     width: '240px',
                     height: '100%',
                     position: 'absolute',
@@ -2761,9 +2758,9 @@ class WindowApp extends div {
 
                 /* Drawer Header */
                 if (option.appBar.drawer.header != undefined) {
-                    drawer.class(`w3-animate-${Direction.Left}`);
+                    drawer.AddClass(`w3-animate-${Direction.Left}`);
                     const header = new div();
-                    header.style({
+                    header.AddStyle({
                         height: '56px',
                         width: '100%',
                         borderBottom: '1px solid rgba(0, 0, 0, 0.3)'
@@ -2771,7 +2768,7 @@ class WindowApp extends div {
 
                     const left2 = new Row([
                         // option.appBar.drawer != undefined ? drawer_bar : new Text(''),
-                        option.appBar.title != undefined && typeof(option.appBar.drawer.header.title) == 'string' ? new Text(option.appBar.drawer.header.title).style({
+                        option.appBar.title != undefined && typeof(option.appBar.drawer.header.title) == 'string' ? new Text(option.appBar.drawer.header.title).AddStyle({
                             fontWeight: 'bold',
                             fontSize: '15pt',
                             marginTop: '10px',
@@ -2779,24 +2776,24 @@ class WindowApp extends div {
                         }) : option.appBar.drawer.header.title instanceof Widget ? option.appBar.drawer.header.title : new Text('')
                     ]);
                     //left2.style({ marginTop: '8px' });
-                    header.add(left2);
+                    header.Add(left2);
 
-                    drawer.add(header);
+                    drawer.Add(header);
                 }
                 /* end Drawer Header */ 
 
                 if (option.appBar.drawer.color != undefined) {
-                    drawer.class(`w3-${option.appBar.drawer.color}`);
+                    drawer.AddClass(`w3-${option.appBar.drawer.color}`);
                 } else {
                     // default color
-                    drawer.class(`w3-${Color.White}`);
+                    drawer.AddClass(`w3-${Color.White}`);
                 }
 
-                this.backdrop.add(drawer);
+                this.backdrop.Add(drawer);
 
-                drawer_bar.addEventListener('click', () => {
+                drawer_bar.AddEventListener('click', () => {
                     console.log('Drawer clicked!');
-                    this.backdrop.open();
+                    this.backdrop.Open();
                 });
 
                 /* Draw ITEM */
@@ -2804,7 +2801,7 @@ class WindowApp extends div {
                 if (option.appBar.drawer.item != undefined) {
                     // draw the item here
                     const header_item = new div();
-                    header_item.style({
+                    header_item.AddStyle({
                         height: 'calc(100% - 57px)',
                         width: '100%',
                         overflowY: 'auto',
@@ -2816,37 +2813,37 @@ class WindowApp extends div {
 
 
                     for (const item of option.appBar.drawer.item) {
-                        header_item.add(item.style({marginBottom: '1px', borderRadius: '5px'}));
+                        header_item.Add(item.AddStyle({marginBottom: '1px', borderRadius: '5px'}));
 
-                        item.addEventListener('click', () => {
+                        item.AddEventListener('click', () => {
                             this.backdrop.close();
                         });
                     }
 
-                    drawer.add(header_item);
+                    drawer.Add(header_item);
                 }
             }
 
 
-            super.add(bar);
+            super.Add(bar);
         }
 
         /* Body of the WindowApp */
 
         if (option.body != undefined) {
-            this.updateBody(option.body);
+            this.UpdateBody(option.body);
         }
 
-        super.add(this.content);
+        super.Add(this.content);
     }
 
-    public updateBody(body: Widget) {
-        this.content.clear();
-        this.content.add(body);
+    public UpdateBody(body: Widget) {
+        this.content.Clear();
+        this.content.Add(body);
     }
 
-    public dispose(): void {
-        this.backdrop.delete(); // ensuring that the backdrop is removed
+    public Dispose(): void {
+        this.backdrop.Delete(); // ensuring that the backdrop is removed
     }
 }
 
@@ -2854,24 +2851,24 @@ class WindowApp extends div {
 class BreadCrumb extends ul {
     constructor(option: { color?: Color, round?: boolean }) {
         super();
-        super.class('bread');
+        super.AddClass('bread');
 
         const {color, round} = option;
         if (color != undefined) {
-            super.class(`w3-${color}`);    
+            super.AddClass(`w3-${color}`);    
         }
 
         if (round != undefined && round) {
-            super.style({ borderRadius: '20px' });
+            super.AddStyle({ borderRadius: '20px' });
         }
     }
 
-    public set(texts: string[]) {
-        super.clear(); /*  Clear */
+    public AddItem(texts: string[]) {
+        super.Clear(); /*  Clear */
         for (const txt of texts) {
-            const item = new li().html(txt);
+            const item = new li().Html(txt);
             if (item instanceof Widget) 
-                super.add(item);
+                super.Add(item);
         }
         return this;
     }
@@ -2884,7 +2881,7 @@ class ListView extends div {
     point_start: number;
     constructor({  }) {
         super();
-        super.style({
+        super.AddStyle({
             width: '100%',
             height: '100px',
             position: 'relative',
@@ -2893,18 +2890,18 @@ class ListView extends div {
             overflowX: 'hidden'
         });
 
-        this.content = new div().style({
+        this.content = new div().AddStyle({
             height: '100%',
             minHeight: '100%'
         });
 
-        super.add(this.content);
+        super.Add(this.content);
 
         /*  */
-        this.content.addEventListener('mousedown', this.mt_down);
-        this.content.addEventListener('mouseup', this.mt_up);
-        this.content.addEventListener('mousemove', this.mt_move);
-        this.content.addEventListener('mouseleave', this.mt_leave);
+        this.content.AddEventListener('mousedown', this.mt_down);
+        this.content.AddEventListener('mouseup', this.mt_up);
+        this.content.AddEventListener('mousemove', this.mt_move);
+        this.content.AddEventListener('mouseleave', this.mt_leave);
         
         this.is_mt_down = false;
 
@@ -2936,7 +2933,7 @@ class ListView extends div {
         this.point_start = layerX;
         console.log(this.point_start);
         //this.content.control.style.marginLeft += 10;
-        this.content.style({
+        this.content.AddStyle({
             marginLeft: `${this.point_start}px`
         });
         //console.log(layerX, layerY);
@@ -2944,20 +2941,20 @@ class ListView extends div {
 
     }
 
-    public addItem(item: Widget) {
-        this.content.add(item);
+    public AddItem(item: Widget) {
+        this.content.Add(item);
 
-        this.update(item);
+        this.Update(item);
         return this;
     }
 
-    private update(item: Widget) {
+    private Update(item: Widget) {
         /// update if there is a chnages in the file    
         
         setTimeout(() => {
             const w = this.content.control.clientWidth + item.control.clientWidth;
             
-            this.content.style({
+            this.content.AddStyle({
                 width: `${w}px`
             });
         }, 200);
@@ -2984,7 +2981,7 @@ class Dialog extends div {
         
         const { position, width, height, header, bgColor, round } = option;
 
-        super.style({
+        super.AddStyle({
             width: `${width}px`,
             height: `${height}px`,
             position: 'fixed',
@@ -2996,7 +2993,7 @@ class Dialog extends div {
         });
 
         if (position != undefined) {
-            super.style({
+            super.AddStyle({
                 left: `${position.left}px`,
                 top: `${position.top}px`
             });
@@ -3004,11 +3001,11 @@ class Dialog extends div {
 
         if (bgColor != undefined) {
 
-            super.class(`w3-${bgColor}`);
+            super.AddClass(`w3-${bgColor}`);
         }
 
 
-        this.hdr = new div().style({
+        this.hdr = new div().AddStyle({
             width: '100%',
             height: '50px',
             position: 'relative',
@@ -3016,39 +3013,39 @@ class Dialog extends div {
             paddingLeft: '10px'
         });
 
-        this.hdr.addEventListener('dragstart',  () => false);
-        this.hdr.addEventListener('ondrop', () => false);
+        this.hdr.AddEventListener('dragstart',  () => false);
+        this.hdr.AddEventListener('ondrop', () => false);
 
         if (option.round != undefined && option.round) {
-            this.hdr.style({
+            this.hdr.AddStyle({
                 borderTopRightRadius: '10px',
                 borderTopLeftRadius: '10px'
             });
 
-            super.style({
+            super.AddStyle({
                 borderRadius: '10px'
             });
         }
 
         if (header != undefined && header.color != undefined) {
-            this.hdr.class(`w3-${header.color}`);
+            this.hdr.AddClass(`w3-${header.color}`);
         } else {
             // default
-            this.hdr.class(`w3-${Color.Blue}`);
+            this.hdr.AddClass(`w3-${Color.Blue}`);
         }
 
         if (header != undefined) {
-            this.hdr.add(new Row([ 
-                header.icon != undefined ? new Icon(header.icon).style({ width: '20px' }) : new Text(''),
+            this.hdr.Add(new Row([ 
+                header.icon != undefined ? new Icon(header.icon).AddStyle({ width: '20px' }) : new Text(''),
                 header.title != undefined ? new Text(header.title): new Text('') 
             
-            ]).style({ paddingTop: '13px' }));
+            ]).AddStyle({ paddingTop: '13px' }));
         }
 
 
         /*  close btn */
         const btn = new button();
-        btn.style({
+        btn.AddStyle({
             position: 'absolute',
             right: '10px',
             top: '10px',
@@ -3058,13 +3055,13 @@ class Dialog extends div {
             borderRadius: '5px',
             cursor: 'pointer'
         });
-        btn.html(`<i class="fa fa-close">`);
+        btn.Html(`<i class="fa fa-close">`);
 
-        btn.addEventListener('click', () => {
-            this.close();
+        btn.AddEventListener('click', () => {
+            this.Close();
         });
 
-        this.hdr.add(btn);
+        this.hdr.Add(btn);
 
 
         this.mouse_pos = {x: 0, y: 0};
@@ -3073,17 +3070,17 @@ class Dialog extends div {
 
 
         // for mouse events
-        this.hdr.addEventListener('mousedown', this.m_down);
-        this.hdr.addEventListener('mouseup', this.m_up);
-        this.hdr.addEventListener('mouseleave', this.m_leave);
-        this.hdr.addEventListener('mousemove', this.m_move);
+        this.hdr.AddEventListener('mousedown', this.m_down);
+        this.hdr.AddEventListener('mouseup', this.m_up);
+        this.hdr.AddEventListener('mouseleave', this.m_leave);
+        this.hdr.AddEventListener('mousemove', this.m_move);
 
 
         // Touch events
-        this.hdr.addEventListener('touchstart', this.t_down);
-        this.hdr.addEventListener('touchend', this.t_up);
-        this.hdr.addEventListener('touchcancel', this.t_leave);
-        this.hdr.addEventListener('touchmove', this.t_move);
+        this.hdr.AddEventListener('touchstart', this.t_down);
+        this.hdr.AddEventListener('touchend', this.t_up);
+        this.hdr.AddEventListener('touchcancel', this.t_leave);
+        this.hdr.AddEventListener('touchmove', this.t_move);
 
 
 
@@ -3091,44 +3088,44 @@ class Dialog extends div {
 
         this.content = new div();
 
-        super.add(this.hdr);        
-        super.add(this.content);
+        super.Add(this.hdr);        
+        super.Add(this.content);
     }
 
-    public async open() {
+    public async Open() {
         this.body.appendChild(this.control);
         return new Promise((resolve, reject) => {
             this.resolve = resolve;
         });
     }
 
-    public close(resp:any = null) {
-        this.delete();
+    public Close(resp:any = null) {
+        this.Delete();
         
         if (this.resolve != undefined) {
             this.resolve(resp);
         }
     }
     
-    public removeItem() {
-        this.content.clear();
+    public DeleteItem() {
+        this.content.Clear();
         return this;
     }
 
-    public addItem(item: Widget|Widget[]) {
+    public AddItem(item: Widget|Widget[]) {
 
-        this.content.add(item);        
+        this.content.Add(item);        
         return this;
     }
 
     private priority() {
-        super.style({
+        super.AddStyle({
             zIndex: '1001'
         });
     }
 
     private removePriority() {
-        super.style({
+        super.AddStyle({
             zIndex: '1000'
         });
     }
@@ -3163,7 +3160,7 @@ class Dialog extends div {
             this.mouse_pos.x = e.clientX;
             this.mouse_pos.y = e.clientY;
 
-            super.style({
+            super.AddStyle({
                 'top': `${this.control.offsetTop - this.dialog_pos.y}px`,
                 'left': `${this.control.offsetLeft - this.dialog_pos.x}px`
             });
@@ -3211,7 +3208,7 @@ class Dialog extends div {
             this.mouse_pos.x = e.touches[0].clientX;
             this.mouse_pos.y = e.touches[0].clientY;
 
-            super.style({
+            super.AddStyle({
                 'top': `${this.control.offsetTop - this.dialog_pos.y}px`,
                 'left': `${this.control.offsetLeft - this.dialog_pos.x}px`
             });
