@@ -15,7 +15,8 @@ class Widget {
     this.widgets = [];
     this.events_list = [];
   }
-  public hasClass(className): boolean {
+
+  public HasClass(className: string): boolean {
     const clist = this.control.classList;
     for (const item of clist) {
       if (item == className) {
@@ -24,32 +25,30 @@ class Widget {
     }
     return false;
   }
-  public getContainer(): WidgetElement {
-    return this.control;
-  }
-
-  public clear(): void {
+  
+  public Clear(): void {
     // this only clear the next 
     // this function use for deep clear the items
     for (const item of this.widgets) {
-      item.delete();
+      item.Delete();
     }
     this.widgets.length = 0;
   }
 
-  public dispose(): void {
+  public Dispose(): void {
 
   }
 
 
-  public delete(): void {
-    this.clear(); // clear first the leaves
-    this.removeEvents(); // remove the current events
-    this.dispose(); // diposal 
+  public Delete(): void {
+    this.Clear(); // clear first the leaves
+    this.RemoveEvents(); // remove the current events
+    this.Dispose(); // diposal 
     this.control.remove(); // this is the final
   }
 
-  public style(styles: { [index: string]: string | number } = {}, value: string = ''): Widget {
+
+  public AddStyle(styles: { [index: string]: string } | string, value = ''): Widget {
     if (typeof (styles) == 'object') {
       for (const item in styles) {
         this.control.style[item] = styles[item];
@@ -59,17 +58,8 @@ class Widget {
     }
     return this;
   }
-  public setStyle(styles: { [index: string]: string } | string, value = ''): Widget {
-    if (typeof (styles) == 'object') {
-      for (const item in styles) {
-        this.control.style[item] = styles[item];
-      }
-    } else if (typeof (styles) == 'string') {
-      this.control.style[styles] = value;
-    }
-    return this;
-  }
-  public class(cs: string[] | string): Widget {
+  
+  public AddClass(cs: string | string[]): Widget {
     if (typeof (cs) == 'string') {
       this.control.classList.add(cs);
     } else if (cs instanceof Array) {
@@ -81,19 +71,7 @@ class Widget {
     }
     return this;
   }
-  public addClass(cs: string | string[]): Widget {
-    if (typeof (cs) == 'string') {
-      this.control.classList.add(cs);
-    } else if (cs instanceof Array) {
-      for (const item of cs) {
-        if (typeof (item) == 'string') {
-          this.control.classList.add(item);
-        }
-      }
-    }
-    return this;
-  }
-  public removeClass(cs: string | string[]): Widget {
+  public DeleteClass(cs: string | string[]): Widget {
     if (typeof (cs) == 'string') {
       this.control.classList.remove(cs);
     } else if (cs instanceof Array) {
@@ -106,22 +84,8 @@ class Widget {
     return this;
   }
 
-  public attr(attrs: string | { [index: string]: any }, value: string = ''): Widget {
-    if (attrs != null) {
-      if (typeof (attrs) == 'object') {
-        for (const item in attrs) {
-          this.control.setAttribute(item, attrs[item]);
-        }
-      } else if (typeof (attrs) == 'string') {
-        this.control.setAttribute(attrs, value);
-      }
-      return this;
-    } else { }
 
-    return this;
-  }
-
-  public removeAttr(name: string | string[]) {
+  public DeleteAttr(name: string | string[]) {
     if (typeof (name) == "string") {
       this.control.removeAttribute(name);
     } else if (name instanceof Array) {
@@ -133,7 +97,7 @@ class Widget {
     return this;
   }
 
-  public setAttr(attrs: { [index: string]: string }, value: string = ''): Widget {
+  public AddAttr(attrs: { [index: string]: string }, value: string = ''): Widget {
     if (typeof (attrs) == 'object') {
       for (const item in attrs) {
         this.control.setAttribute(item, attrs[item]);
@@ -143,25 +107,33 @@ class Widget {
     }
     return this;
   }
-  public getAttr(key: string): string | null {
+  public GetAttr(key: string): string | null {
     return this.control.getAttribute(key);
   }
-  public setValue(v: string): Widget {
+  public AddValue(v: string|boolean): Widget {
     if (this.control instanceof HTMLInputElement || this.control instanceof HTMLSelectElement) {
-      this.control.value = v;
+      if (typeof(v) == 'string') {
+        this.control.value = v;
+      } else if (this.control.type == 'radio' || this.control.type == 'checkbox'){
+        this.control.checked = v;
+      }
     }
     return this;
   }
-  public getValue(): string {
+  public GetValue(): string|boolean {
     //return this.control.value;
     if (this.control instanceof HTMLInputElement || this.control instanceof HTMLSelectElement) {
-      return this.control.value;
+      if (typeof(this.control.value) == 'string') {
+        return this.control.value;
+      } else if (this.control.type == 'radio' || this.control.type == 'checkbox'){
+        return this.control.checked;
+      }
     }
-    return "";
+    return false;
   }
-  protected __escape(text: string): string {
+  protected __Escape(text: string): string {
     if (typeof text !== 'string') {
-      return text; // if not a string, return as is
+      return text; // if not a string, return as is 
     }
     const htmlEntities = {
       "&": "&amp;",
@@ -174,26 +146,8 @@ class Widget {
       return htmlEntities[match];
     });
   }
-  public value(value: string | null = null): string | null {
-    if (this.obj === "input" || this.obj === "select" || this.obj == "textarea") {
-      if (value != null) {
-        if (this.control instanceof HTMLInputElement || this.control instanceof HTMLSelectElement) {
-          this.control.value = value;
-        }
-
-        return null;
-      }
-
-      if (this.control instanceof HTMLInputElement || this.control instanceof HTMLSelectElement) {
-
-        return this.control.value;
-      }
-    }
-
-    return null;
-  }
-
-  public html(html: string | null = null): string | Widget {
+ 
+  public Html(html: string | null = null): string | Widget {
     if (html != null) {
 
       this.control.innerHTML = html;
@@ -202,26 +156,23 @@ class Widget {
     }
     return this.control.innerHTML;;
   }
-  public text(text: string | null = null): string | Widget {
+  public Text(text: string | null = null): string | Widget {
     if (text != null) {
-      this.control.innerHTML = this.__escape(text);
+      this.control.innerHTML = this.__Escape(text);
       return this;
     }
     return this.control.innerText;
   }
-  public show(): Widget {
+  public Show(): Widget {
     this.control.style.display = 'inline-block';
     return this;
   }
-  public hide(): Widget {
+  public Hide(): Widget {
     this.control.style.display = 'none';
     return this;
   }
-  public setHTML(html: string): Widget {
-    this.control.innerHTML = html;
-    return this;
-  }
-  public add(widget: Widget | Widget[]): Widget {
+  
+  public Add(widget: Widget | Widget[]): Widget {
     if (widget instanceof Widget) {
       this.widgets.push(widget);
       this.control.appendChild(widget.control);
@@ -236,7 +187,7 @@ class Widget {
     return this;
   }
 
-  public prepend(widget: Widget | Widget[]): Widget {
+  public Prepend(widget: Widget | Widget[]): Widget {
     if (widget instanceof Widget) {
       this.widgets.push(widget);
       this.control.prepend(widget.control);
@@ -251,7 +202,7 @@ class Widget {
     return this;
   }
 
-  public addEventListener(evt: string, fn: EventListenerOrEventListenerObject): Widget {
+  public AddEventListener(evt: string, fn: EventListenerOrEventListenerObject): Widget {
     this.control.addEventListener(evt, fn);
 
     //this.events_list.push(Ceven [evt, fn]);
@@ -259,7 +210,7 @@ class Widget {
     return this;
   }
 
-  private removeEvents(): Widget {
+  private RemoveEvents(): Widget {
     for (const item of this.events_list) {
       console.log(`Clean up: ${item[0]} - ${item[1]}`);
       this.control.removeEventListener(item[0], item[1]);
@@ -269,11 +220,6 @@ class Widget {
     return this;
   }
 
-  public action(evt: string, fn: EventListenerObject) {
-    this.control.addEventListener(evt, fn);
-    this.events_list.push([evt, fn]);
-    return this;
-  }
 }
 class html extends Widget { constructor() { super("html"); } }
 class head extends Widget { constructor() { super("head"); } }
@@ -388,7 +334,7 @@ class Window extends Widget {
     height: string | null
   } | null = null) {
     super('div');
-    this.setStyle({
+    this.AddStyle({
       width: '100%',
       height: '100%',
       position: 'relative'
@@ -396,15 +342,15 @@ class Window extends Widget {
     if (typeof (param) == 'object') {
       //const { app = null, title = '', width = null, height = null } = param;
     }
-    this.hide();
+    this.Hide();
     this.body.appendChild(this.control);
   }
-  public navigate(obj: Widget | Widget[]): void {
-    this.clear();
-    this.add(obj);
+  public Navigate(obj: Widget | Widget[]): void {
+    this.Clear();
+    this.Add(obj);
   }
-  public run(): void {
-    this.show();
+  public Run(): void {
+    this.Show();
   }
 }
 
@@ -460,7 +406,7 @@ class Http {
       this.body = body;
     }
   }
-  public async load<T>(): Promise<T> {
+  public async Load<T>(): Promise<T> {
     this.xml.send(this.body);
     const promise = new Promise<T>((resolve, reject) => {
       this.xml.addEventListener('load', function () {
@@ -473,20 +419,20 @@ class Http {
     return await promise;
   }
 
-  public then(fn: (response: any) => void): void {
+  public Then(fn: (response: any) => void): void {
     this.xml.addEventListener('load', (e) => {
       fn(this.xml.response);
     });
   }
 
-  public progress(fn: Function): void {
+  public Progress(fn: Function): void {
     if (typeof (fn) == 'function') {
       this.xml.addEventListener('progress', (e) => {
         fn(e);
       });
     }
   }
-  public upload_progress(fn: Function): void {
+  public UploadProgress(fn: Function): void {
     if (typeof (fn) == 'function') {
       this.xml.upload.addEventListener('progress', (e) => {
         fn(e);
@@ -513,7 +459,7 @@ class DateCore {
 
   }
 
-  public date_check(frm: string, t: string): [boolean, number, string[]] {
+  public DateCheck(frm: string, t: string): [boolean, number, string[]] {
     var from_d = frm;
     var to_d = t;
 
@@ -543,7 +489,7 @@ class DateCore {
     return b;
   }
 
-  getDay(date_str) {
+  GetDay(date_str: string) {
     return this.names[new Date(date_str).getDay()];
   }
 }
