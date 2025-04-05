@@ -1,4 +1,6 @@
+import MyApp from "../main.mts";
 import { Box, Button, Card, Color, Grid, GridSize, InputType, Panel, Size, Text, TextField } from "../theme/w3.mts";
+import Dashboard from "./dashboard.mts";
 
 class Login extends Panel {
   constructor() {
@@ -17,6 +19,10 @@ class Login extends Panel {
       signin
     ]), [ GridSize.Medium4 ]);
     grid.AddItem(new Text('.'), [ GridSize.Medium4 ]);
+
+    signin.AddEventListener('click', () => {
+      MyApp.Navigate(new Dashboard());
+    });
   
     super.Add(grid);
   }

@@ -2669,10 +2669,10 @@ class WindowApp extends div {
     private backdrop: BackDrop;
     constructor(option: {
         appBar?: {
-            title?: string|Widget,
+            title: string|Widget,
             action?: Widget,
             height?: number,
-            color?: Color,
+            color: Color,
             drawer?: {
                 header?: {
                     icon?: Icons,
