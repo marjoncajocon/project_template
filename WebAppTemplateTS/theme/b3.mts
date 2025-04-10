@@ -854,6 +854,27 @@ class Alerts extends div {
   }
 }
 
+class Well extends div {
+  constructor(option: {size?: Size, content?: string|Widget}) {
+    super();
+
+    const {size, content} = option;
+    super.AddClass('well');
+  
+    if (size != undefined) {
+      super.AddClass(`well-${size}`);
+    }
+
+
+    if (content != undefined && typeof(content) == 'string') {
+      super.Text(content);
+    } else if (content != undefined && content instanceof Widget) {
+      super.Add(content);
+    }
+
+  }
+}
+
 class Text extends span {
   constructor(option: {text: string}) {
     super();
@@ -863,9 +884,20 @@ class Text extends span {
 }
 
 
+class Html extends span {
+  constructor(option: {text: string}) {
+    super();
+    const {text} = option;
+    super.Html(text);
+  }
+}
+
+
 export { Color, Size, Icons, InputType }
 
-export { 
+export {
+  Well, 
+  Html,
   Text,
   Button, 
   ButtonGroup, 

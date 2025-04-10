@@ -1,5 +1,5 @@
 import { button, div } from "../plugin/core/core.mts";
-import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, Color, Icon, Icons, InputType, Label, ListGroup, Pagination, Panel, ProgressBar, Size, Status, TextBox, Textfield} from "../theme/b3.mts";
+import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, Color, Icon, Icons, InputType, Label, ListGroup, Pagination, Panel, ProgressBar, Size, Status, TextBox, Textfield, Well} from "../theme/b3.mts";
 
 class TestBootstrap3 extends div {
   constructor() {
@@ -107,8 +107,13 @@ class TestBootstrap3 extends div {
     const erralert = new Alerts({color: Color.Danger, msg: "This is an error!"});
     const sucalert = new Alerts({color: Color.Success, msg: "This is an Success!"});
 
+    const testwell = new Well({content: new Button({text: 'test well', color: Color.Primary}), size: Size.Large});
+
+
+    
     super.Add(erralert);
     super.Add(sucalert);
+    super.Add(testwell);
   
 
   }
