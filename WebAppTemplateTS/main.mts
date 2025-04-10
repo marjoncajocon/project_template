@@ -25,7 +25,7 @@ import './theme/bootstrap3/css/bootstrap.css';
 //import './theme/bootstrap3/css/theme-5-flat.css';
 //import './theme/bootstrap3/css/theme-journal.css';
 //import './theme/bootstrap3/css/theme-lumen.css'; // this is very nice looking
-//import './theme/bootstrap3/css/theme-paper.css';
+//import './theme/bootstrap3/css/theme-paper.css';/// nice also like material ui
 //import './theme/bootstrap3/css/theme-readable.css';
 //import './theme/bootstrap3/css/theme-sandstone.css'; // second very nice looking
 //import './theme/bootstrap3/css/theme-yeti.css';

@@ -1,11 +1,20 @@
 import { button, div } from "../plugin/core/core.mts";
-import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, Color, Icon, Icons, InputType, Label, ListGroup, Pagination, Panel, ProgressBar, Size, Status, Table, TextBox, Textfield, Well} from "../theme/b3.mts";
+import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Icon, Icons, InputType, Label, ListGroup, Navbar, Pagination, Panel, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well} from "../theme/b3.mts";
 
 class TestBootstrap3 extends div {
   constructor() {
     super();
 
-    super.AddStyle({padding: '20px'});
+    //super.AddStyle({padding: '20px'});
+
+    const nav = new Navbar({
+      title: 'Project Template',
+      right_menu: [
+        new Button({text: 'Logout', color: Color.Danger, prefix_icon: Icons.LogOut}).AddStyle({marginTop: '10px', marginRight: '10px'}),
+        new Button({color: Color.Info, prefix_icon: Icons.Bell}).AddStyle({marginTop: '10px', marginRight: '10px'})
+      ]});
+
+    super.Add(nav);
 
     super.Add(new Button({
       text: 'Hellow testing',
@@ -141,12 +150,43 @@ class TestBootstrap3 extends div {
       item: ['12', 'marjon', '20', 'Action']
     });
     
+    const check = new CheckBox({
+      title: 'Remember Me'
+    });
+
+    check.SetValue(true);
+
+    check.Disabled();
+
+    check.Enabled();
+
+
+    const male = new Radio({title: 'Male', group: 'gender'});
+    const female = new Radio({title: 'Female', group: 'gender'});
+    const other = new Radio({title: 'Other', group: 'gender'});
+    other.Disabled();
+
+    const select = new SelectBox({
+      title: 'Select Gender'
+    });
+
+    select.AddItem({key: 'm', value: 'Male'});
+    select.AddItem({key: 'f', value: 'Female'});
+    select.AddItem({key: 'o', value: 'Other'});
+
+    select.SetValue('o');
+
+    console.log(select.GetValue());
 
     super.Add(erralert);
     super.Add(sucalert);
     super.Add(testwell);
     super.Add(tbl);
-  
+    super.Add(check);
+    super.Add(male);
+    super.Add(female);
+    super.Add(other);
+    super.Add(select);
 
   }
 }

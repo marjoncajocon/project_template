@@ -1,4 +1,4 @@
-import { a, button, div, img, input, label, li, span, table, tbody, td, textarea, th, thead, tr, ul, Widget } from "../plugin/core/core.mts";
+import { a, button, div, img, input, label, li, nav, option, select, span, table, tbody, td, textarea, th, thead, tr, ul, Widget } from "../plugin/core/core.mts";
 
 
 enum Color {
@@ -319,14 +319,25 @@ class Button extends button {
     color?: Color,
     block?: boolean,
     active?: boolean,
-    size?: Size
+    size?: Size,
+    prefix_icon?: Icons
   }) {
     super();
 
-    const { text, color, block, active, size } = option;
+    const { text, color, block, active, size, prefix_icon } = option;
     
+    if (prefix_icon != undefined) {
+      const ico = new Icon({icon: prefix_icon});
+      super.Add(ico);
+
+      if (prefix_icon != undefined && text != undefined) 
+        ico.AddStyle({marginRight: '5px'});
+    }
+
+
+
     if (text != undefined && typeof(text) == 'string')
-      super.Text(text);
+      super.Add(new Text( {text: text }));
 
     super.AddClass('btn');
 
@@ -343,6 +354,8 @@ class Button extends button {
 
     if (size != undefined)
       super.AddClass(`btn-${size}`)
+
+    
 
 
   }
@@ -503,10 +516,11 @@ class Pagination extends ul {
       
       const ww = new li().Add(link);
       
-      ww.AddEventListener('click', () => {
+      ww.AddEventListener('click', (e) => {
         this.ClearActive();
         ww.AddClass('active');
         this.changeCallback(item);
+        e.preventDefault();
       });
 
       super.Add(ww);
@@ -521,10 +535,11 @@ class Pagination extends ul {
 
         
         const ww = new li().Add(link);
-        ww.AddEventListener('click', () => {
+        ww.AddEventListener('click', (e) => {
           this.ClearActive();
           ww.AddClass('active');
           this.changeCallback(b);
+          e.preventDefault();
         });
 
         super.Add(ww);
@@ -564,6 +579,10 @@ class BreadCrumb extends ul {
       list.Add(aa.AddAttr({ 
         'href': '#'
       }));
+
+      list.AddEventListener('click', (e) => {
+        e.preventDefault();
+      });
 
       super.Add(list);
 
@@ -668,7 +687,7 @@ class BasicTab extends div {
     }
 
 
-    lli.AddEventListener('click', () => {
+    lli.AddEventListener('click', (e) => {
       this.ClearActive();
       lli.AddClass('active');
 
@@ -676,6 +695,7 @@ class BasicTab extends div {
         this.content.Clear();
         this.content.Add(body);
       }
+      e.preventDefault();
     });
 
     this.menu.Add(lli);
@@ -918,7 +938,7 @@ class Table extends div {
   // add table to excel download,
   // add table printing
   // add pagination of the table
-  
+
   private table: table;
   private tbody: tbody;
   constructor(option: {
@@ -1010,9 +1030,232 @@ class Table extends div {
   }
 }
 
+class CheckBox extends span {
+  check: input
+  constructor(option: {title?: string}) {
+    super();
+    const {title} = option;
+    super.AddClass(`checkbox-inline`);
+    this.check = new input();
+    this.check.AddAttr({ type: 'checkbox'});
+    
+
+    super.Add(this.check);
+
+    if (title != undefined) 
+      super.Add(new Text({ text: title }));
+
+  }
+
+  SetValue(v: boolean) {
+    if (this.check.control instanceof HTMLInputElement)
+      return this.check.control.checked = v;
+
+    return this;
+  }
+
+  GetValue() {
+    if (this.check.control instanceof HTMLInputElement)
+      return this.check.control.checked;
+
+    return false;
+  }
+
+  Disabled() {
+    this.check.AddAttr({disabled: ""});
+    return this;
+  }
+
+  Enabled() {
+    this.check.DeleteAttr("disabled");
+    return this;
+  }
+}
+
+
+class Radio extends span {
+  check: input
+  constructor(option: {title?: string, group: string}) {
+    super();
+    const {title, group} = option;
+    super.AddClass(`checkbox-inline`);
+    this.check = new input();
+    this.check.AddAttr({ type: 'radio'});
+    
+
+    super.Add(this.check);
+
+    if (title != undefined) 
+      super.Add(new Text({ text: title }).AddStyle({ marginLeft: '5px' }));
+
+    if (group != undefined) 
+      this.check.AddAttr({name: group});    
+
+  }
+
+  SetValue(v: boolean) {
+    if (this.check.control instanceof HTMLInputElement)
+      return this.check.control.checked = v;
+
+    return this;
+  }
+
+  GetValue() {
+    if (this.check.control instanceof HTMLInputElement)
+      return this.check.control.checked;
+
+    return false;
+  }
+
+  Disabled() {
+    this.check.AddAttr({disabled: ""});
+    return this;
+  }
+
+  Enabled() {
+    this.check.DeleteAttr("disabled");
+    return this;
+  }
+}
+
+class SelectBox extends div {
+  input: select
+  constructor(option: { size?: Size, title?: string, multiple?: boolean }) {
+    super();
+    const {size, title, multiple} = option;
+
+    super.AddClass('form-group');
+    this.input = new select();
+
+    
+    this.input.AddClass('form-control');
+
+    if (size != undefined)
+      this.input.AddClass(`input-${size}`);
+    
+    if (title != undefined) {
+      
+      const lbl = new label();
+      lbl.Text(title);
+
+      super.Add(lbl);
+
+    }
+      
+
+    if (multiple != undefined && multiple) 
+      this.input.AddAttr({multiple: ''});
+
+    super.Add(this.input);
+    
+  }
+
+  ClearItem() {
+    this.input.Clear();
+    return this;
+  }
+
+  AddItem(obj:{key: string, value: string}) {
+    const opt = new option();
+    const {key, value} = obj;
+
+    opt.Text(value);
+    opt.AddAttr({value: key});
+
+    this.input.Add(opt);
+    return this;
+  }
+
+  SetValue(v: string) {
+    this.input.AddValue(v);
+    return this;
+  }
+
+  GetValue() {
+    
+    return this.input.GetValue();
+  }
+
+  Disabled() {
+
+    this.input.AddAttr({disabled: ""});
+
+    return this;
+  }
+
+  Enabled() {
+    this.input.DeleteAttr("disabled");
+    return this;
+  }
+}
+
+class Row extends span{
+  constructor() {
+    super();
+
+
+  }
+}
+
+class Navbar extends nav {
+  constructor(option: { title?: string|Widget, right_menu?: Widget[], fixed?: boolean }) {
+    super();
+
+    const {title, right_menu, fixed} = option;
+
+
+
+    super.AddClass(['navbar', 'navbar-default']);
+
+
+    const container = new div().AddClass('container-fluid');
+
+    if (title != undefined) {
+      /// draw the title
+      const header = new div().AddClass('navbar-header');
+      const haa = new a();
+      haa.AddClass('navbar-brand');
+      haa.AddAttr({ href: '#' });
+      if (typeof(title) == 'string')
+        haa.Html(title);
+      else if (title instanceof Widget)
+        haa.Add(title);
+      
+      header.Add(haa);
+      container.Add(header);
+    }
+
+
+    if (right_menu != undefined) {
+      /// drawing the right page
+      // example button like sign out or notifications
+      const uul = new ul();
+
+      for (const item of right_menu) {
+        const lli = new li(); 
+        
+        lli.Add(item);
+
+        uul.Add(lli);
+      }    
+
+      uul.AddClass(['nav', 'navbar-nav', 'navbar-right']);
+      container.Add(uul);
+    }
+    
+
+    super.Add(container);
+  }
+}
+
 export { Color, Size, Icons, InputType, Corner }
 
 export {
+  Navbar,
+  Row,
+  SelectBox,
+  Radio,
+  CheckBox,
   Table,
   Image,
   Well, 
