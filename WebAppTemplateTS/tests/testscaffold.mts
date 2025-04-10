@@ -129,7 +129,7 @@ class Profile extends div {
 
   }
 
-  public dispose(): void {
+  public Dispose(): void {
     console.log('close profile');
   }
 }
@@ -141,7 +141,7 @@ class TestScaffold extends div{
 
     const app = new WindowApp({
       appBar: {
-        title: "HRMS V3",
+        title: "Project Template",
         color: Color.Blue,
         action: new Row([ new Button('Profile', Color.Cobalt), new Button('Sign Out', Color.Amber)]).AddStyle({ marginTop: '8px' }),
         drawer: {

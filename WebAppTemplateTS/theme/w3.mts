@@ -358,13 +358,31 @@ class Panel extends div {
 }
 
 class Card extends div {
-    constructor(color: Color | null = null) {
+    constructor(option : { color?: Color, padding?: number} = {}) {
         super();
         super.AddClass(["w3-card"]);
 
-        if (color != null) {
+        const {color, padding} = option;
+
+        if (color != undefined) {
             super.AddClass(`w3-${color}`);
         }
+
+        if (padding != undefined) {
+            super.AddStyle({
+                padding: `${padding}px`
+            });
+        } else {
+            super.AddStyle({
+                padding: `5px`
+            }); // default padding
+        }
+
+
+    }
+    public AddItem(obj: Widget|Widget[]): Widget{
+        super.Add(obj);
+        return this;
     }
 }
 
@@ -2651,10 +2669,10 @@ class WindowApp extends div {
     private backdrop: BackDrop;
     constructor(option: {
         appBar?: {
-            title?: string|Widget,
+            title: string|Widget,
             action?: Widget,
             height?: number,
-            color?: Color,
+            color: Color,
             drawer?: {
                 header?: {
                     icon?: Icons,
