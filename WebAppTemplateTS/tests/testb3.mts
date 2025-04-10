@@ -1,9 +1,11 @@
 import { button, div } from "../plugin/core/core.mts";
-import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, Color, Icon, Icons, InputType, Label, ListGroup, Pagination, Panel, ProgressBar, Size, Status, TextBox, Textfield, Well} from "../theme/b3.mts";
+import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, Color, Icon, Icons, InputType, Label, ListGroup, Pagination, Panel, ProgressBar, Size, Status, Table, TextBox, Textfield, Well} from "../theme/b3.mts";
 
 class TestBootstrap3 extends div {
   constructor() {
     super();
+
+    super.AddStyle({padding: '20px'});
 
     super.Add(new Button({
       text: 'Hellow testing',
@@ -109,11 +111,41 @@ class TestBootstrap3 extends div {
 
     const testwell = new Well({content: new Button({text: 'test well', color: Color.Primary}), size: Size.Large});
 
+    const tbl = new Table({
+      header: ['Id', 'Name', 'Age', 'Action'],
+      scrollable: true,
+      hover: true,
+      striped: true,
+      bordered: true
+    });
 
+    tbl.AddItem({
+      item: ['12', 'marjon', '20', 'Action'],
+      color: Color.Warning
+    });
+    tbl.AddItem({
+      item: ['12', 'marjon', '20', 'Action']
+    });
+    tbl.AddItem({
+      item: ['12', 'marjon', '20', 'Action']
+    });
+    tbl.AddItem({
+      item: ['12', 'marjon', '20', 'Action']
+    });
+    tbl.AddItem({
+      item: ['12', 'marjon', '20', 'Action'],
+      color: Color.Danger
+    });
+
+    tbl.AddItem({
+      item: ['12', 'marjon', '20', 'Action']
+    });
     
+
     super.Add(erralert);
     super.Add(sucalert);
     super.Add(testwell);
+    super.Add(tbl);
   
 
   }

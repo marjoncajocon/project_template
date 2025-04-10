@@ -17,7 +17,7 @@
 // export default MyApp;
 
 import './theme/bootstrap3/css/bootstrap.css';
-import './theme/bootstrap3/css/bootstrap-theme.css';
+//import './theme/bootstrap3/css/bootstrap-theme.css';
 //import './theme/bootstrap3/css/theme-bootswatch.css';
 //import './theme/bootstrap3/css/theme-2.css';
 //import './theme/bootstrap3/css/theme-3.css';

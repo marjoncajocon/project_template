@@ -1,4 +1,4 @@
-import { a, button, div, input, label, li, span, textarea, ul, Widget } from "../plugin/core/core.mts";
+import { a, button, div, img, input, label, li, span, table, tbody, td, textarea, th, thead, tr, ul, Widget } from "../plugin/core/core.mts";
 
 
 enum Color {
@@ -305,6 +305,12 @@ enum Status {
   Ok = "Okay",
   Error = "Not Okay",
   Warning = "Warning"
+}
+
+enum Corner {
+  Rounded = 'rounded',
+  Thumbnail = 'thumbnail',
+  Circle = 'circle'
 }
 
 class Button extends button {
@@ -892,10 +898,123 @@ class Html extends span {
   }
 }
 
+class Image extends img {
+  constructor(option: {type: Corner}) {
+    super();
 
-export { Color, Size, Icons, InputType }
+    const {type} = option;
+
+    super.AddClass(`img-${type}`);
+
+  }
+}
+
+
+class Table extends div {
+
+  // future plan for the table,
+  // add a search filter,,
+  // add a network support
+  // add table to excel download,
+  // add table printing
+  // add pagination of the table
+  
+  private table: table;
+  private tbody: tbody;
+  constructor(option: {
+    header: (Widget|string)[],
+    scrollable?: boolean,
+    striped?: boolean,
+    bordered?: boolean,
+    hover?: boolean,
+    condensed?: boolean
+  }) {
+
+    super();
+    const {scrollable, striped, bordered, hover, condensed, header} = option;
+    if (scrollable != undefined && scrollable)
+      super.AddClass('table-responsive');
+
+    this.table = new table();
+    this.table.AddClass('table');
+
+
+    if (striped != undefined && striped)
+      this.table.AddClass('table-striped');
+
+    if (bordered != undefined && bordered) 
+      this.table.AddClass('table-bordered');
+    
+    if (hover != undefined && hover)
+      this.table.AddClass('table-hover');
+
+    if (condensed != undefined && condensed) 
+      this.table.AddClass('table-condensed');
+
+
+    // create a header
+    const ttr = new tr();
+    for (const item of header) {
+      const tth = new th();
+      
+      if (typeof(item) == 'string') {
+        tth.Text(item);
+      } else if (item instanceof Widget) {
+        tth.Add(item);
+      }
+
+      ttr.Add(tth);
+    }
+    this.table.Add(new thead().Add(ttr));
+    // end create header
+    this.tbody = new tbody();
+
+    this.table.Add(this.tbody);
+  
+
+    super.Add(this.table);
+  }
+
+  ClearItem() {
+    this.tbody.Clear();
+    return this;
+  }
+
+  AddItem(option: {
+    item: (string|Widget)[],
+    color?: Color
+  }) {
+    const {item, color} = option;
+
+    const ttr = new tr();
+    for (const o of item) {
+      const ttd = new td();
+        
+      if (typeof(o) == 'string') {
+        ttd.Text(o);
+      } else if (o instanceof Widget) {
+        ttd.Add(o);
+      }
+
+      ttr.Add(ttd);
+    }
+
+    if (color != undefined) {
+      ttr.AddClass(color);
+    }
+
+    this.tbody.Add(ttr);
+  
+    return ttr;
+
+  }
+}
+
+export { Color, Size, Icons, InputType, Corner }
 
 export {
+  Table,
+  Image,
   Well, 
   Html,
   Text,
