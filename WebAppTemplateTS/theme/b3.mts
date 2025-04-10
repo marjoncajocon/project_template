@@ -313,6 +313,60 @@ enum Corner {
   Circle = 'circle'
 }
 
+enum GridSize {
+  Phone1 = 'col-xs-1',
+  Phone2 = 'col-xs-2',
+  Phone3 = 'col-xs-3',
+  Phone4 = 'col-xs-4',
+  Phone5 = 'col-xs-5',
+  Phone6 = 'col-xs-6',
+  Phone7 = 'col-xs-7',
+  Phone8 = 'col-xs-8',
+  Phone9 = 'col-xs-9',
+  Phone10 = 'col-xs-10',
+  Phone11 = 'col-xs-11',
+  Phone12 = 'col-xs-12',
+
+  Tablet1 = 'col-sm-1',
+  Tablet2 = 'col-sm-2',
+  Tablet3 = 'col-sm-3',
+  Tablet4 = 'col-sm-4',
+  Tablet5 = 'col-sm-5',
+  Tablet6 = 'col-sm-6',
+  Tablet7 = 'col-sm-7',
+  Tablet8 = 'col-sm-8',
+  Tablet9 = 'col-sm-9',
+  Tablet10 = 'col-sm-10',
+  Tablet11 = 'col-sm-11',
+  Tablet12 = 'col-sm-12',
+
+  Laptop1 = 'col-md-1',
+  Laptop2 = 'col-md-2',
+  Laptop3 = 'col-md-3',
+  Laptop4 = 'col-md-4',
+  Laptop5 = 'col-md-5',
+  Laptop6 = 'col-md-6',
+  Laptop7 = 'col-md-7',
+  Laptop8 = 'col-md-8',
+  Laptop9 = 'col-md-9',
+  Laptop10 = 'col-md-10',
+  Laptop11 = 'col-md-11',
+  Laptop12 = 'col-md-12',
+
+  Desktop1 = 'col-lg-1',
+  Desktop2 = 'col-lg-2',
+  Desktop3 = 'col-lg-3',
+  Desktop4 = 'col-lg-4',
+  Desktop5 = 'col-lg-5',
+  Desktop6 = 'col-lg-6',
+  Desktop7 = 'col-lg-7',
+  Desktop8 = 'col-lg-8',
+  Desktop9 = 'col-lg-9',
+  Desktop10 = 'col-lg-10',
+  Desktop11 = 'col-lg-11',
+  Desktop12 = 'col-lg-12'
+}
+
 class Button extends button {
   constructor(option: {
     text?: string|Widget,
@@ -320,11 +374,12 @@ class Button extends button {
     block?: boolean,
     active?: boolean,
     size?: Size,
-    prefix_icon?: Icons
+    prefix_icon?: Icons,
+    suffix_icon?: Icons
   }) {
     super();
 
-    const { text, color, block, active, size, prefix_icon } = option;
+    const { text, color, block, active, size, prefix_icon, suffix_icon } = option;
     
     if (prefix_icon != undefined) {
       const ico = new Icon({icon: prefix_icon});
@@ -336,8 +391,19 @@ class Button extends button {
 
 
 
+
     if (text != undefined && typeof(text) == 'string')
       super.Add(new Text( {text: text }));
+
+
+    if (suffix_icon != undefined) {
+      const ico = new Icon({icon: suffix_icon});
+      super.Add(ico);
+
+      if (suffix_icon != undefined && text != undefined) 
+        ico.AddStyle({marginLeft: '5px'});
+    }
+
 
     super.AddClass('btn');
 
@@ -715,16 +781,23 @@ class Textfield extends div {
     type?: InputType,
     size?: Size,
     placeholder?: string,
-    feedback?: boolean
+    feedback?: boolean,
+    prefix_icon?: Icons
   }) {
     super();
-    const {title, type, size, placeholder, feedback} = option;
+    const {title, type, size, placeholder, feedback, prefix_icon} = option;
 
     if (feedback != undefined && feedback) {
       super.AddClass('has-feedback');
     }
 
-    super.AddClass('form-group');
+    if (prefix_icon != undefined) {
+      super.AddClass('input-group');
+    } else {
+      super.AddClass('form-group');
+    }
+
+
     this.input = new input();
 
     this.input.AddClass('form-control');
@@ -742,6 +815,14 @@ class Textfield extends div {
       const lbl = new label();
       lbl.Text(title);
       super.Add(lbl);
+    }
+
+    if (prefix_icon != undefined) {
+      const spn = new span();
+      spn.AddClass('input-group-addon');
+      spn.AddClass('text-danger');
+      spn.Add(new Icon({icon: prefix_icon}));
+      super.Add(spn);
     }
 
     super.Add(this.input);
@@ -1189,13 +1270,7 @@ class SelectBox extends div {
   }
 }
 
-class Row extends span{
-  constructor() {
-    super();
 
-
-  }
-}
 
 class Navbar extends nav {
   constructor(option: { title?: string|Widget, right_menu?: Widget[], fixed?: boolean }) {
@@ -1248,11 +1323,53 @@ class Navbar extends nav {
   }
 }
 
-export { Color, Size, Icons, InputType, Corner }
+class Grid extends div {
+  row: div
+  constructor(option: { 
+    item: Widget[],
+    size: GridSize[]
+  }) {
+    super();
+    super.AddClass('container-fluid');
+
+    this.row = new div();
+    this.row.AddClass('row');
+
+   
+    const {item, size} = option;
+    
+    for (const item1 of item) {
+      const cell = new div();
+      cell.AddClass(size);
+
+      cell.Add(item1);
+
+      this.row.Add(cell);
+    }
+
+
+    super.Add(this.row);
+
+
+  }
+
+  
+}
+
+
+
+class Dialog extends div {
+  constructor() {
+    super();
+  }
+}
+
+export { Color, Size, Icons, InputType, Corner, GridSize }
 
 export {
+  Grid,
+  Dialog,
   Navbar,
-  Row,
   SelectBox,
   Radio,
   CheckBox,
@@ -1277,3 +1394,36 @@ export {
   Status,
   Alerts
 };
+
+
+// for row implementation
+// .row {
+//   display: flex;                /* Enables flex context for all its children */
+//   justify-content: space-between; /* Align children with space between them */
+//   align-items: center;         /* Center content vertically */
+//   padding: 10px;              /* Add some padding */
+//   background-color: #f2f2f2;  /* Background color for the row */
+// }
+// .item {
+//   padding: 20px;              /* Padding around items */
+//   background-color: #4CAF50;  /* Background color for items */
+//   color: white;               /* Text color */
+//   border-radius: 5px;        /* Rounded corners */
+// }
+
+// for columen implementation
+
+// .column {
+//   display: flex;                /* Enables flex context for all its children */
+//   flex-direction: column;      /* Align items vertically */
+//   align-items: center;         /* Center items horizontally */
+//   padding: 10px;              /* Add some padding */
+//   background-color: #e7e7e7;  /* Background color for the column */
+// }
+// .item {
+//   padding: 20px;              /* Padding around items */
+//   background-color: #4CAF50;  /* Background color for items */
+//   color: white;               /* Text color */
+//   border-radius: 5px;        /* Rounded corners */
+//   margin: 10px 0;            /* Margin between items */
+// }

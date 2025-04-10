@@ -1,5 +1,5 @@
 import { button, div } from "../plugin/core/core.mts";
-import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Icon, Icons, InputType, Label, ListGroup, Navbar, Pagination, Panel, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well} from "../theme/b3.mts";
+import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Grid, GridSize, Icon, Icons, InputType, Label, ListGroup, Navbar, Pagination, Panel, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well} from "../theme/b3.mts";
 
 class TestBootstrap3 extends div {
   constructor() {
@@ -178,6 +178,35 @@ class TestBootstrap3 extends div {
 
     console.log(select.GetValue());
 
+
+    const btn = new Button({text:'Open Modal', prefix_icon: Icons.Open, color: Color.Warning, suffix_icon: Icons.Send});
+
+    btn.AddEventListener('click', () => {
+      console.log('sample');
+    });
+
+    const tf_icon = new Textfield({
+      title: 'Enter Pin',
+      placeholder: 'Enter Pin'
+    });
+
+
+    const testgrid = new Grid({
+      item: [
+        new Panel({color: Color.Danger}), 
+        new Panel({color: Color.Primary})
+      ],
+      size: [GridSize.Laptop6, GridSize.Phone6]
+    });
+
+    const testgrid2 = new Grid({
+      item: [
+        new Panel({color: Color.Warning, title: 'Hello Grid2', body: new Panel({color: Color.Danger})}), 
+        new Panel({color: Color.Primary})
+      ],
+      size: [GridSize.Laptop3, GridSize.Phone6, GridSize.Desktop12]
+    });
+
     super.Add(erralert);
     super.Add(sucalert);
     super.Add(testwell);
@@ -187,6 +216,13 @@ class TestBootstrap3 extends div {
     super.Add(female);
     super.Add(other);
     super.Add(select);
+
+    super.Add(btn);
+
+    super.Add(tf_icon);
+
+    super.Add(testgrid);
+    super.Add(testgrid2);
 
   }
 }
