@@ -1,5 +1,5 @@
 import { button, div } from "../plugin/core/core.mts";
-import {Badge, BasicTab, BreadCrumb, Button, ButtonGroup, Color, Icon, Icons, Label, ListGroup, Pagination, Panel, ProgressBar, Size} from "../theme/b3.mts";
+import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, Color, Icon, Icons, InputType, Label, ListGroup, Pagination, Panel, ProgressBar, Size, Status, TextBox, Textfield} from "../theme/b3.mts";
 
 class TestBootstrap3 extends div {
   constructor() {
@@ -17,8 +17,8 @@ class TestBootstrap3 extends div {
       vertical: true,
       list: [
         new Button({text: 'test 1', color: Color.Primary}),
-        new Button({text: 'testfdsaf 2', color: Color.Primary}),
-        new Button({text: 'testffdsf 3', color: Color.Primary})
+        new Button({text: 'testfdsaf 2', color: Color.Warning}),
+        new Button({text: 'testffdsf 3', color: Color.Success})
 
       ]
     }));
@@ -48,19 +48,68 @@ class TestBootstrap3 extends div {
 
     tab.AddItem({
       title: 'Home',
-      active: true
+      active: true,
+      body: new Button({ text: 'Home Page' })
     });
 
     tab.AddItem({
-      title: 'Contact'
+      title: 'Contact',
+      body: new Button({ text: 'Contact Page' })
     });
 
     tab.AddItem({
-      title: 'About'
+      title: 'About',
+      body: new Button({ text: 'About Page' })
     });
 
     super.Add(tab);
 
+    const username = new Textfield({
+      title: 'Username',
+      type: InputType.Text,
+      placeholder: 'Enter username',
+      feedback: true
+    });
+
+   
+    username.AddEventListener('keyup', () => {
+      if (username.GetValue() == 'okay') {
+        username.UpdateFeedBack({ status: Status.Ok});
+      } else if (username.GetValue() == 'warn'){
+        username.UpdateFeedBack({ status: Status.Warning});
+      } else {
+        username.UpdateFeedBack({ status: Status.Error});
+      }
+    });
+
+
+    const ubox = new TextBox({
+      title: 'Username',
+      placeholder: 'Enter username',
+      feedback: true
+    });
+
+   
+    ubox.AddEventListener('keyup', () => {
+      if (ubox.GetValue() == 'okay') {
+        ubox.UpdateFeedBack({ status: Status.Ok});
+      } else if (ubox.GetValue() == 'warn'){
+        ubox.UpdateFeedBack({ status: Status.Warning});
+      } else {
+        ubox.UpdateFeedBack({ status: Status.Error});
+      }
+    });
+
+
+    super.Add(username);
+    super.Add(ubox);
+
+    const erralert = new Alerts({color: Color.Danger, msg: "This is an error!"});
+    const sucalert = new Alerts({color: Color.Success, msg: "This is an Success!"});
+
+    super.Add(erralert);
+    super.Add(sucalert);
+  
 
   }
 }

@@ -1,4 +1,4 @@
-import { a, button, div, li, span, ul, Widget } from "../plugin/core/core.mts";
+import { a, button, div, input, label, li, span, textarea, ul, Widget } from "../plugin/core/core.mts";
 
 
 enum Color {
@@ -277,6 +277,36 @@ enum Icons {
   MenuUp = 'menu-up',
 }
 
+enum InputType {
+  Text = "text",
+  Password = "password",
+  Email = "email",
+  Number = "number",
+  URL = "url",
+  Telephone = "tel",
+  Search = "search",
+  Date = "date",
+  DateTimeLocal = "datetime-local",
+  Month = "month",
+  Week = "week",
+  Time = "time",
+  Color = "color",
+  File = "file",
+  Range = "range",
+  Checkbox = "checkbox",
+  Radio = "radio",
+  Hidden = "hidden",
+  Submit = "submit",
+  Reset = "reset",
+  Button = "button",
+}
+
+enum Status {
+  Ok = "Okay",
+  Error = "Not Okay",
+  Warning = "Warning"
+}
+
 class Button extends button {
   constructor(option: {
     text?: string|Widget,
@@ -353,6 +383,7 @@ class Badge extends span {
 }
 
 class Icon extends span {
+  gicon: Icons
   constructor(option: { icon: Icons}) {
     super();
 
@@ -360,6 +391,18 @@ class Icon extends span {
 
     super.AddClass(['glyphicon', `glyphicon-${icon}`]);
 
+    this.gicon = icon;
+
+  }
+
+  Update(option: {icon: Icons}) {
+    const {icon} = option;
+
+    super.DeleteClass(`glyphicon-${this.gicon}`);
+    super.AddClass(['glyphicon', `glyphicon-${icon}`]);
+    
+    this.gicon = icon;
+    return this;
   }
 }
 
@@ -570,6 +613,7 @@ class Panel extends div {
 class BasicTab extends div {
   private menu: ul;
   private list: li[];
+  private content: Widget;
 
   constructor(option: { }) {
     super();
@@ -579,7 +623,10 @@ class BasicTab extends div {
     this.menu = new ul();
     this.menu.AddClass(['nav', 'nav-tabs']);
 
+    this.content = new div();
+
     super.Add(this.menu);
+    super.Add(this.content);
 
   }
 
@@ -604,13 +651,25 @@ class BasicTab extends div {
     aa.Text(title);
     lli.Add(aa);
 
-    if (active != undefined && active) 
+    if (active != undefined && active) {
       lli.AddClass('active');
+      
+      if (body != undefined) {
+        this.content.Clear();
+        this.content.Add(body);
+      }
+
+    }
 
 
     lli.AddEventListener('click', () => {
       this.ClearActive();
       lli.AddClass('active');
+
+      if (body != undefined) {
+        this.content.Clear();
+        this.content.Add(body);
+      }
     });
 
     this.menu.Add(lli);
@@ -621,9 +680,193 @@ class BasicTab extends div {
   }
 }
 
-export { Color, Size, Icons }
+
+class Textfield extends div {
+  input: input;
+  ico: Icon;
+  constructor(option: { 
+    title?: string,
+    type?: InputType,
+    size?: Size,
+    placeholder?: string,
+    feedback?: boolean
+  }) {
+    super();
+    const {title, type, size, placeholder, feedback} = option;
+
+    if (feedback != undefined && feedback) {
+      super.AddClass('has-feedback');
+    }
+
+    super.AddClass('form-group');
+    this.input = new input();
+
+    this.input.AddClass('form-control');
+
+    if (size != undefined)
+      this.input.AddClass(`input-${size}`);
+    
+    if (type != undefined)
+      this.input.AddAttr({type: type});
+
+    if (placeholder != undefined)
+      this.input.AddAttr({placeholder: placeholder});
+
+    if (title != undefined) {
+      const lbl = new label();
+      lbl.Text(title);
+      super.Add(lbl);
+    }
+
+    super.Add(this.input);
+    
+    if (feedback != undefined && feedback) {
+      this.ico = new Icon({ icon: Icons.Ok });
+      this.ico.AddClass('form-control-feedback');
+      this.ico.Hide();
+      super.Add(this.ico);
+    }
+    
+  }
+
+  UpdateFeedBack(option: { msg?: string, status: Status }) {
+    const {msg, status} = option;
+
+    super.DeleteClass(['has-success', 'has-error', 'has-warning' ]);
+
+    if (status == Status.Ok) {
+      super.AddClass('has-success');
+      this.ico.Show();
+      this.ico.Update({icon: Icons.Ok});
+    } else if (status == Status.Error) {
+      super.AddClass('has-error');
+      this.ico.Update({icon: Icons.Remove});
+      this.ico.Show();
+    } else if (status == Status.Warning) {
+      super.AddClass('has-warning');
+      this.ico.Update({icon: Icons.WarningSign});
+      this.ico.Show();
+    }
+
+  }
+
+  GetValue() {
+    return this.input.GetValue();
+  }
+
+  SetValue(n: string) {
+    this.input.AddValue(n);
+  }
+}
+
+
+class TextBox extends div {
+  input: textarea;
+  ico: Icon;
+  constructor(option: { 
+    title?: string,
+    size?: Size,
+    placeholder?: string,
+    feedback?: boolean
+  }) {
+    super();
+    const {title, size, placeholder, feedback} = option;
+
+    if (feedback != undefined && feedback) {
+      super.AddClass('has-feedback');
+    }
+
+    super.AddClass('form-group');
+    this.input = new textarea();
+
+    this.input.AddClass('form-control');
+
+    if (size != undefined)
+      this.input.AddClass(`input-${size}`);
+    
+
+
+    if (placeholder != undefined)
+      this.input.AddAttr({placeholder: placeholder});
+
+    if (title != undefined) {
+      const lbl = new label();
+      lbl.Text(title);
+      super.Add(lbl);
+    }
+
+    super.Add(this.input);
+    
+    if (feedback != undefined && feedback) {
+      this.ico = new Icon({ icon: Icons.Ok });
+      this.ico.AddClass('form-control-feedback');
+      this.ico.Hide();
+      super.Add(this.ico);
+    }
+    
+  }
+
+  UpdateFeedBack(option: { msg?: string, status: Status }) {
+    const {msg, status} = option;
+
+    super.DeleteClass(['has-success', 'has-error', 'has-warning' ]);
+
+    if (status == Status.Ok) {
+      super.AddClass('has-success');
+      this.ico.Show();
+      this.ico.Update({icon: Icons.Ok});
+    } else if (status == Status.Error) {
+      super.AddClass('has-error');
+      this.ico.Update({icon: Icons.Remove});
+      this.ico.Show();
+    } else if (status == Status.Warning) {
+      super.AddClass('has-warning');
+      this.ico.Update({icon: Icons.WarningSign});
+      this.ico.Show();
+    }
+
+  }
+
+  GetValue() {
+    return this.input.GetValue();
+  }
+
+  SetValue(n: string) {
+    this.input.AddValue(n);
+  }
+}
+
+class Alerts extends div {
+  constructor(option: {
+    color: Color,
+    msg?: string|Widget
+  }) {
+    
+    super();
+    const {color, msg} = option;
+
+    super.AddClass(['alert', `alert-${color}`]);
+
+    if (msg != undefined && typeof(msg) == 'string') {
+      super.Add(new Text({text: msg}));
+    } 
+
+  }
+}
+
+class Text extends span {
+  constructor(option: {text: string}) {
+    super();
+    const {text} = option;
+    super.Text(text);
+  }
+}
+
+
+export { Color, Size, Icons, InputType }
 
 export { 
+  Text,
   Button, 
   ButtonGroup, 
   Icon, 
@@ -634,5 +877,9 @@ export {
   BreadCrumb, 
   ListGroup,
   Panel,
-  BasicTab 
+  BasicTab,
+  Textfield,
+  TextBox,
+  Status,
+  Alerts
 };
