@@ -1,14 +1,17 @@
-import { a, button, div, img, input, label, li, nav, option, select, span, table, tbody, td, textarea, th, thead, tr, ul, Widget } from "../plugin/core/core.mts";
+import { a, button, col, div, head, img, input, label, li, nav, option, select, span, table, tbody, td, textarea, th, thead, tr, ul, Widget } from "../plugin/core/core.mts";
 
 
 enum Color {
   Default = 'default',
   Primary = 'primary',
+  Secondary = 'secondary',
   Success = 'success',
   Info = 'info',
   Warning = 'warning',
   Danger = 'danger',
-  Link = 'link'
+  Link = 'link',
+  Dark = 'dark',
+  Light = 'light'
 }
 
 enum Size {
@@ -657,13 +660,22 @@ class BreadCrumb extends ul {
 }
 
 class ListGroup extends ul {
-  constructor() {
+  constructor(option: {list?: Widget[]}) {
     super();
     super.AddClass('list-group');
+
+    const { list } = option;
+
+    // if there is list of item then add it
+    if (list != undefined) 
+      for (const item of list)
+        this.AddItem(item);
+
   }
 
   AddItem(item: Widget) {
     const _li = new li();
+    _li.AddClass('list-group-item');
     _li.Add(item);
     super.Add(_li);
 
@@ -671,7 +683,7 @@ class ListGroup extends ul {
   }
 }
 
-class Panel extends div {
+class Card extends div {
   constructor(option: { color?: Color, body?: Widget, footer?: Widget, title?: string }) {
     super();
     const {color, body, footer, title} = option;
@@ -1357,16 +1369,307 @@ class Grid extends div {
 }
 
 
-
-class Dialog extends div {
-  constructor() {
+class Panel extends div {
+  constructor(option: {
+    color?: Color,
+    image?: string,
+    network_image?: string,
+    width?: number,
+    height?: number
+  }) {
     super();
+
+    const {color, network_image, image, width, height} = option;
+
+    if (color != undefined)
+      super.AddClass(`bg-${color}`);
+
+    if (width != undefined)
+      super.AddStyle({width: `${width}px`});
+
+    if (height != undefined)
+      super.AddStyle({height: `${height}px`});
+
   }
 }
+
+
+class Dialog extends div {
+    is_mouse_down: boolean;
+    mouse_pos: {x: number, y: number};
+    dialog_pos: {x: number, y: number};
+    content: div;
+    hdr: div;
+
+    resolve: Function
+
+    constructor(option: { position?: {
+        left: number,
+        top: number
+    }, width: number, height: number, bgColor?: Color, round?:boolean, header?: { color?: Color, icon?: Icons, title?: string } }) {
+        super();
+        
+        const { position, width, height, header, bgColor, round } = option;
+
+        super.AddStyle({
+            width: `${width}px`,
+            height: `${height}px`,
+            position: 'fixed',
+            left: `calc((100% / 2) - (${width}px / 2))`,
+            top: `15%`,
+            zIndex: '1000',
+            boxShadow: '0 0 3px rgba(0, 0, 0, 0.2)',
+            border: '1px solid white'
+        });
+
+        if (position != undefined) {
+            super.AddStyle({
+                left: `${position.left}px`,
+                top: `${position.top}px`
+            });
+        }
+
+        if (bgColor != undefined) {
+
+          super.AddClass(`bg-${bgColor}`);
+        } else {
+          super.AddClass(`bg-${Color.Default}`);
+        }
+
+
+        this.hdr = new div().AddStyle({
+            width: '100%',
+            height: '50px',
+            position: 'relative',
+            cursor: 'move',
+            paddingLeft: '10px',
+            color: 'inherit'
+        });
+
+        this.hdr.AddEventListener('dragstart',  () => false);
+        this.hdr.AddEventListener('ondrop', () => false);
+
+        if (option.round != undefined && option.round) {
+            this.hdr.AddStyle({
+                borderTopRightRadius: '10px',
+                borderTopLeftRadius: '10px'
+            });
+
+            super.AddStyle({
+                borderRadius: '10px'
+            });
+        }
+
+        if (header != undefined && header.color != undefined) {
+            this.hdr.AddClass(`bg-${header.color}`);
+        } else {
+            // default
+            this.hdr.AddClass(`bg-${Color.Info}`);
+        }
+
+        if (header != undefined) {
+            this.hdr.AddStyle({ paddingTop: '13px' });
+
+            if (header.icon != undefined) {
+              this.hdr.Add(new Icon({icon: header.icon}).AddStyle({color: 'inherit'}));
+            }
+
+            if (header.title != undefined) {
+              this.hdr.Add(new Text({text: header.title}).AddStyle({color: 'inherit'}));
+            }
+        }
+
+
+        /*  close btn */
+        const btn = new button();
+        btn.AddStyle({
+            position: 'absolute',
+            right: '10px',
+            top: '10px',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+        });
+        btn.AddClass(`btn-${Color.Danger}`);
+        btn.Add(new Icon({icon: Icons.Remove}));
+
+        btn.AddEventListener('click', () => {
+            this.Close();
+        });
+
+        this.hdr.Add(btn);
+
+
+        this.mouse_pos = {x: 0, y: 0};
+        this.dialog_pos = {x: 0, y: 0};
+
+
+
+        // for mouse events
+        this.hdr.AddEventListener('mousedown', this.m_down);
+        this.hdr.AddEventListener('mouseup', this.m_up);
+        this.hdr.AddEventListener('mouseleave', this.m_leave);
+        this.hdr.AddEventListener('mousemove', this.m_move);
+
+
+        // Touch events
+        this.hdr.AddEventListener('touchstart', this.t_down);
+        this.hdr.AddEventListener('touchend', this.t_up);
+        this.hdr.AddEventListener('touchcancel', this.t_leave);
+        this.hdr.AddEventListener('touchmove', this.t_move);
+
+
+
+        this.is_mouse_down = false;
+
+        this.content = new div();
+
+        super.Add(this.hdr);        
+        super.Add(this.content);
+    }
+
+    public async Open() {
+        this.body.appendChild(this.control);
+        return new Promise((resolve, reject) => {
+            this.resolve = resolve;
+        });
+    }
+
+    public Close(resp:any = null) {
+        this.Delete();
+        
+        if (this.resolve != undefined) {
+            this.resolve(resp);
+        }
+    }
+    
+    public DeleteItem() {
+        this.content.Clear();
+        return this;
+    }
+
+    public AddItem(item: Widget|Widget[]) {
+
+        this.content.Add(item);        
+        return this;
+    }
+
+    private priority() {
+        super.AddStyle({
+            zIndex: '1001'
+        });
+    }
+
+    private removePriority() {
+        super.AddStyle({
+            zIndex: '1000'
+        });
+    }
+
+    private m_down = (e: any) => {
+        //console.log(e.clientY);
+        //console.log(e);
+    
+        this.mouse_pos.x = e.clientX;
+        this.mouse_pos.y = e.clientY;
+        
+        this.is_mouse_down = true;
+
+        this.priority();
+    }
+
+    private m_up = (e: any) => {
+        this.is_mouse_down = false;
+        this.removePriority();
+    }
+
+    private m_leave = (e: any) => {
+        this.is_mouse_down = false;
+        this.removePriority();
+    }
+
+    private m_move = (e: any) => {
+        if (this.is_mouse_down) {
+            this.dialog_pos.x = this.mouse_pos.x - e.clientX;
+            this.dialog_pos.y = this.mouse_pos.y - e.clientY;
+
+            this.mouse_pos.x = e.clientX;
+            this.mouse_pos.y = e.clientY;
+
+            super.AddStyle({
+                'top': `${this.control.offsetTop - this.dialog_pos.y}px`,
+                'left': `${this.control.offsetLeft - this.dialog_pos.x}px`
+            });
+
+            // pos1 = pos3 - e.clientX;
+            // pos2 = pos4 - e.clientY;
+            // pos3 = e.clientX;
+            // pos4 = e.clientY;
+            // // set the element's new position:
+            // elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            // elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+
+        }
+    }
+
+
+
+    private t_down = (e: any) => {
+        //console.log(e.clientY);
+        //console.log(e);
+        this.priority();
+        
+    
+        this.mouse_pos.x = e.touches[0].clientX;
+        this.mouse_pos.y = e.touches[0].clientY;
+        
+        this.is_mouse_down = true;
+    }
+
+    private t_up = (e: any) => {
+        this.is_mouse_down = false;
+        this.removePriority();
+    }
+
+    private t_leave = (e: any) => {
+        this.is_mouse_down = false;
+        this.removePriority();
+    }
+
+    private t_move = (e: any) => {
+        if (this.is_mouse_down) {
+            this.dialog_pos.x = this.mouse_pos.x - e.touches[0].clientX;
+            this.dialog_pos.y = this.mouse_pos.y - e.touches[0].clientY;
+
+            this.mouse_pos.x = e.touches[0].clientX;
+            this.mouse_pos.y = e.touches[0].clientY;
+
+            super.AddStyle({
+                'top': `${this.control.offsetTop - this.dialog_pos.y}px`,
+                'left': `${this.control.offsetLeft - this.dialog_pos.x}px`
+            });
+
+            // pos1 = pos3 - e.clientX;
+            // pos2 = pos4 - e.clientY;
+            // pos3 = e.clientX;
+            // pos4 = e.clientY;
+            // // set the element's new position:
+            // elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            // elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+
+        }
+    }
+
+
+
+    
+}
+
 
 export { Color, Size, Icons, InputType, Corner, GridSize }
 
 export {
+  Panel,
   Grid,
   Dialog,
   Navbar,
@@ -1387,7 +1690,7 @@ export {
   Pagination, 
   BreadCrumb, 
   ListGroup,
-  Panel,
+  Card,
   BasicTab,
   Textfield,
   TextBox,
