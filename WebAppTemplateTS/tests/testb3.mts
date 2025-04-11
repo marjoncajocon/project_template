@@ -127,6 +127,26 @@ class TestBootstrap3 extends div {
       body: new Text({text: 'About'})
     });
 
+    const tbl = new Table({
+      header: ['Id', 'Name', 'Age'],
+      striped: true,
+      bordered: true,
+      scrollable: true,
+      size: Size.Small
+    });
+
+    tbl.AddItem({
+      item: ['12', 'John Doe', '56']
+    });
+
+    tbl.AddItem({
+      item: ['1', 'Jack Ma', '30']
+    });
+
+    tbl.AddItem({
+      item: ['3', 'Rose Doe', '20']
+    });
+
     super.Add([bread, btn_primary, alert1, badge, progress, spin, pagination,
       list,
       card,
@@ -139,7 +159,8 @@ class TestBootstrap3 extends div {
       off, 
       on,
       select,
-      tab
+      tab,
+      tbl
     ]);
   }
 }

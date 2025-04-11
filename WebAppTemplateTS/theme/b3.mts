@@ -1115,16 +1115,21 @@ class Table extends div {
     striped?: boolean,
     bordered?: boolean,
     hover?: boolean,
-    condensed?: boolean
+    condensed?: boolean,
+    size?: Size
   }) {
 
     super();
-    const {scrollable, striped, bordered, hover, condensed, header} = option;
+    const {scrollable, striped, bordered, hover, condensed, header, size} = option;
     if (scrollable != undefined && scrollable)
       super.AddClass('table-responsive');
 
     this.table = new table();
     this.table.AddClass('table');
+
+
+    if (size != undefined)
+      this.table.AddClass(`table-${size}`);
 
 
     if (striped != undefined && striped)
