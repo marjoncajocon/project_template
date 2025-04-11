@@ -11,12 +11,14 @@ enum Color {
   Danger = 'danger',
   Link = 'link',
   Dark = 'dark',
-  Light = 'light'
+  Light = 'light',
+  Muted = 'Muted'
 }
 
 enum Size {
   Large = 'lg',
   Small = 'sm',
+  Medium = 'md',
   ExtraSmall = 'xs'
 }
 
@@ -370,7 +372,17 @@ enum GridSize {
   Desktop12 = 'col-lg-12'
 }
 
+enum ButtonVariant {
+  Outlined = 'outline'
+}
+
+enum SpinnerVariant {
+  Border = 'border',
+  Grow = 'grow'
+}
+
 class Button extends button {
+  private spin: span;
   constructor(option: {
     text?: string|Widget,
     color?: Color,
@@ -378,40 +390,51 @@ class Button extends button {
     active?: boolean,
     size?: Size,
     prefix_icon?: Icons,
-    suffix_icon?: Icons
+    suffix_icon?: Icons,
+    variant?: ButtonVariant,
+    spinner?: {
+      variant?: SpinnerVariant,
+      size?: Size
+    } 
   }) {
     super();
 
-    const { text, color, block, active, size, prefix_icon, suffix_icon } = option;
+    const { text, color, block, active, size, prefix_icon, suffix_icon, variant, spinner } = option;
     
-    if (prefix_icon != undefined) {
-      const ico = new Icon({icon: prefix_icon});
-      super.Add(ico);
+   
+    this.spin = new span();
+    if (spinner != undefined) {
+      
+      this.spin = new span();
+      this.spin.AddStyle({marginRight: '2px', marginLeft: '2px'});
+      if (spinner.variant != undefined) {
+        this.spin.AddClass(`spinner-${spinner.variant}`);
+      } else {
+        // default
+        this.spin.AddClass(`spinner-${SpinnerVariant.Border}`);
+      }
 
-      if (prefix_icon != undefined && text != undefined) 
-        ico.AddStyle({marginRight: '5px'});
+      if (spinner.size != undefined) {
+        this.spin.AddClass(`spinner-${spinner.variant}-${spinner.size}`);
+      } else {
+        this.spin.AddClass(`spinner-${SpinnerVariant.Border}-${Size.Small}`);
+      }
+
+      super.Add(this.spin);
     }
-
-
 
 
     if (text != undefined && typeof(text) == 'string')
       super.Add(new Text( {text: text }));
 
 
-    if (suffix_icon != undefined) {
-      const ico = new Icon({icon: suffix_icon});
-      super.Add(ico);
-
-      if (suffix_icon != undefined && text != undefined) 
-        ico.AddStyle({marginLeft: '5px'});
-    }
-
-
     super.AddClass('btn');
 
     if (color != undefined) 
-      super.AddClass(`btn-${color}`)
+      if (variant != undefined)
+        super.AddClass(`btn-${variant}-${color}`);
+      else
+        super.AddClass(`btn-${color}`)
 
     if (block != undefined && block)
       super.AddClass('btn-block')
@@ -424,9 +447,35 @@ class Button extends button {
     if (size != undefined)
       super.AddClass(`btn-${size}`)
 
-    
+  
+    this.HideLoader();
+  
 
+  }
 
+  ShowLoader() {
+    this.Disabled();
+    this.spin.Show();
+    return this;
+  }
+
+  HideLoader() {
+    this.Enabled();
+    this.spin.Hide();
+    return this;
+  }
+
+  Disabled() {
+    super.AddAttr({
+      disabled: ''
+    });
+
+    return this;
+  }
+
+  Enabled() {
+    super.DeleteAttr('disabled');
+    return this;
   }
 }
 
@@ -459,13 +508,19 @@ class ButtonGroup extends div {
 
 
 class Badge extends span {
-  constructor(option: {text: string|Widget}) {
+  constructor(option: {text: string|Widget, color?: Color, pill?: boolean}) {
     super();
 
-    const {text} = option;
+    const {text, color, pill} = option;
 
     if (typeof(text) == 'string')
       super.Text(text)
+
+    if (color != undefined)
+      super.AddClass(`badge-${color}`);
+
+    if (pill != undefined && pill)
+      super.AddClass(`badge-pill`)
     
   }
 }
@@ -523,14 +578,14 @@ class ProgressBar extends div {
 
     this.bar = new div();
     this.bar.AddClass('progress-bar');
-    this.bar.AddClass(`progress-bar-${color}`);
+    this.bar.AddClass(`bg-${color}`);
     this.bar.AddStyle({ width: '0%' });
 
     if (striped != undefined && striped) 
       this.bar.AddClass(`progress-bar-striped`);
 
     if (animate != undefined && animate)
-      this.bar.AddClass(`active`);
+      this.bar.AddClass(`progress-bar-animated`);
 
     super.Add(this.bar);
 
@@ -581,9 +636,11 @@ class Pagination extends ul {
     if (typeof(item) == 'number') {
       const link = new a()
       link.AddAttr({ href: '#' }).Text(item.toString());
+      link.AddClass(`page-link`);
       
       
       const ww = new li().Add(link);
+      ww.AddClass(`page-item`);
       
       ww.AddEventListener('click', (e) => {
         this.ClearActive();
@@ -600,10 +657,12 @@ class Pagination extends ul {
       for (const b of item) { 
         
         const link = new a();
-        link.AddAttr({ href: '#' }).Text(b.toString());
+        link.AddAttr({ href: '#' }).Text(b.toString()); 
+        link.AddClass(`page-link`);
 
         
         const ww = new li().Add(link);
+        ww.AddClass(`page-item`);
         ww.AddEventListener('click', (e) => {
           this.ClearActive();
           ww.AddClass('active');
@@ -643,6 +702,8 @@ class BreadCrumb extends ul {
     for (const item of menu) {
     
       const list = new li();
+      list.AddClass('breadcrumb-item');
+
       const aa = new a();
       aa.Html(item);
       list.Add(aa.AddAttr({ 
@@ -660,16 +721,19 @@ class BreadCrumb extends ul {
 }
 
 class ListGroup extends ul {
-  constructor(option: {list?: Widget[]}) {
+  constructor(option: {list?: Widget[], horizontal?: boolean}) {
     super();
     super.AddClass('list-group');
 
-    const { list } = option;
+    const { list, horizontal } = option;
 
     // if there is list of item then add it
     if (list != undefined) 
       for (const item of list)
         this.AddItem(item);
+
+    if (horizontal != undefined && horizontal)
+      super.AddClass('list-group-horizontal');
 
   }
 
@@ -684,20 +748,23 @@ class ListGroup extends ul {
 }
 
 class Card extends div {
-  constructor(option: { color?: Color, body?: Widget, footer?: Widget, title?: string }) {
+  constructor(option: { color?: Color, body?: Widget, footer?: Widget, title?: string, header_color?: Color }) {
     super();
-    const {color, body, footer, title} = option;
-    super.AddClass(`panel`);
+    const {color, body, footer, title, header_color} = option;
+    super.AddClass(`card`);
 
     
-    if (color != undefined) super.AddClass(`panel-${color}`);
+    if (color != undefined) super.AddClass(`bg-${color}`);
 
-    const head = new div().AddClass('panel-heading');
+    const head = new div().AddClass('card-header');
+
+    if (header_color != undefined) 
+      head.AddClass(`bg-${header_color}`);
     
     if (title != undefined) 
       head.Text(title);
 
-    const content = new div().AddClass('panel-body');
+    const content = new div().AddClass('card-body');
     if (body != undefined) 
       content.Add(body)
 
@@ -706,7 +773,9 @@ class Card extends div {
     super.Add(content);
 
     if (footer != undefined) {
-      const foot = new div().AddClass('panel-footer');
+      const foot = new div().AddClass('card-footer');
+
+      foot.Add(footer);
       super.Add(foot);
     }
 
@@ -786,36 +855,30 @@ class BasicTab extends div {
 
 
 class Textfield extends div {
-  input: input;
-  ico: Icon;
+  public input: input;
+  private msg: div
   constructor(option: { 
     title?: string,
     type?: InputType,
     size?: Size,
     placeholder?: string,
-    feedback?: boolean,
-    prefix_icon?: Icons
+    has_feedback?: boolean
   }) {
     super();
-    const {title, type, size, placeholder, feedback, prefix_icon} = option;
+    const {title, type, size, placeholder, has_feedback} = option;
 
-    if (feedback != undefined && feedback) {
-      super.AddClass('has-feedback');
-    }
+    if (has_feedback != undefined && has_feedback)
+      super.AddClass('has-success');
 
-    if (prefix_icon != undefined) {
-      super.AddClass('input-group');
-    } else {
-      super.AddClass('form-group');
-    }
+    super.AddClass('form-group');
 
-
+  
     this.input = new input();
 
     this.input.AddClass('form-control');
 
     if (size != undefined)
-      this.input.AddClass(`input-${size}`);
+      this.input.AddClass(`form-control-${size}`);
     
     if (type != undefined)
       this.input.AddAttr({type: type});
@@ -825,48 +888,58 @@ class Textfield extends div {
 
     if (title != undefined) {
       const lbl = new label();
+      lbl.AddClass('form-control-label');
       lbl.Text(title);
       super.Add(lbl);
     }
 
-    if (prefix_icon != undefined) {
-      const spn = new span();
-      spn.AddClass('input-group-addon');
-      spn.AddClass('text-danger');
-      spn.Add(new Icon({icon: prefix_icon}));
-      super.Add(spn);
-    }
-
-    super.Add(this.input);
     
-    if (feedback != undefined && feedback) {
-      this.ico = new Icon({ icon: Icons.Ok });
-      this.ico.AddClass('form-control-feedback');
-      this.ico.Hide();
-      super.Add(this.ico);
+
+  
+    super.Add(this.input);
+    this.msg = new div().Hide();
+
+    if (has_feedback != undefined && has_feedback) {
+    
+
+      super.Add(this.msg);
     }
     
   }
 
-  UpdateFeedBack(option: { msg?: string, status: Status }) {
-    const {msg, status} = option;
+  Update(okay: boolean, msg: string): boolean{
+    this.msg.Show();
+    this.msg.DeleteClass(['valid-feedback', 'invalid-feedback']);
+    super.DeleteClass(['has-success', 'has-danger']);
+    this.input.DeleteClass(['is-valid', 'is-invalid']);
 
-    super.DeleteClass(['has-success', 'has-error', 'has-warning' ]);
+    this.msg.Text(msg);
 
-    if (status == Status.Ok) {
+    if (okay) {
+      this.msg.AddClass('valid-feedback');
       super.AddClass('has-success');
-      this.ico.Show();
-      this.ico.Update({icon: Icons.Ok});
-    } else if (status == Status.Error) {
-      super.AddClass('has-error');
-      this.ico.Update({icon: Icons.Remove});
-      this.ico.Show();
-    } else if (status == Status.Warning) {
-      super.AddClass('has-warning');
-      this.ico.Update({icon: Icons.WarningSign});
-      this.ico.Show();
+      this.input.AddClass('is-valid');
+      return true;
     }
 
+    this.msg.AddClass('invalid-feedback');
+    super.AddClass('has-danger');
+    this.input.AddClass('is-invalid');
+    
+    return false;
+  }
+
+  ClearFeedBack() {
+    this.msg.DeleteClass(['valid-feedback', 'invalid-feedback']);
+    super.DeleteClass(['has-success', 'has-danger']);
+    this.input.DeleteClass(['is-valid', 'is-invalid']);
+    this.msg.Text('');
+    return this;
+  }
+
+  public AddEventListener(evt: string, fn: EventListenerOrEventListenerObject): Widget {
+    this.input.AddEventListener(evt, fn);
+    return this;
   }
 
   GetValue() {
@@ -1123,21 +1196,32 @@ class Table extends div {
   }
 }
 
-class CheckBox extends span {
+class CheckBox extends div {
   check: input
-  constructor(option: {title?: string}) {
+  constructor(option: {title?: string, key: string}) {
     super();
-    const {title} = option;
-    super.AddClass(`checkbox-inline`);
+    const {title, key} = option;
+    super.AddClass(`form-group`);
     this.check = new input();
+    this.check.AddClass('custom-control-input');
     this.check.AddAttr({ type: 'checkbox'});
-    
 
-    super.Add(this.check);
+    const lbl = new div();
+    lbl.AddClass(['custom-control', 'custom-checkbox']);
 
-    if (title != undefined) 
-      super.Add(new Text({ text: title }));
+    lbl.Add(this.check);
 
+    this.check.AddAttr({id: key});
+
+    super.Add(lbl);
+
+    if (title != undefined) {
+      const l = new label();
+      l.AddAttr({for: key});
+      l.Text(title);
+      l.AddClass('custom-control-label');
+      lbl.Add(l);
+    }
   }
 
   SetValue(v: boolean) {
@@ -1166,23 +1250,89 @@ class CheckBox extends span {
 }
 
 
-class Radio extends span {
+class Switch extends div {
   check: input
-  constructor(option: {title?: string, group: string}) {
+  constructor(option: {title?: string, key: string}) {
     super();
-    const {title, group} = option;
-    super.AddClass(`checkbox-inline`);
+    const {title, key} = option;
+    super.AddClass(`form-group`);
     this.check = new input();
+    this.check.AddClass('custom-control-input');
+    this.check.AddAttr({ type: 'checkbox'});
+
+    const lbl = new div();
+    lbl.AddClass(['custom-control', 'custom-switch']);
+
+    lbl.Add(this.check);
+
+    this.check.AddAttr({id: key});
+
+    super.Add(lbl);
+
+    if (title != undefined) {
+      const l = new label();
+      l.AddAttr({for: key});
+      l.Text(title);
+      l.AddClass('custom-control-label');
+      lbl.Add(l);
+    }
+  }
+
+  SetValue(v: boolean) {
+    if (this.check.control instanceof HTMLInputElement)
+      return this.check.control.checked = v;
+
+    return this;
+  }
+
+  GetValue() {
+    if (this.check.control instanceof HTMLInputElement)
+      return this.check.control.checked;
+
+    return false;
+  }
+
+  Disabled() {
+    this.check.AddAttr({disabled: ""});
+    return this;
+  }
+
+  Enabled() {
+    this.check.DeleteAttr("disabled");
+    return this;
+  }
+}
+
+
+class Radio extends div {
+  check: input
+  constructor(option: {title?: string, group: string, key: string}) {
+    super();
+    const {title, group, key} = option;
+    super.AddClass(`form-group`);
+    this.check = new input();
+    this.check.AddClass('custom-control-input');
     this.check.AddAttr({ type: 'radio'});
-    
+    this.check.AddAttr({id: key});
 
-    super.Add(this.check);
+    const dv = new div().AddClass(['custom-control', 'custom-radio']);
+    dv.Add(this.check);
+    super.Add(dv);
 
-    if (title != undefined) 
-      super.Add(new Text({ text: title }).AddStyle({ marginLeft: '5px' }));
+    if (title != undefined) {
+      const lbl = new label();
+      lbl.AddClass('custom-control-label');
+      lbl.Text(title);
+      lbl.AddAttr({
+        for: key
+      });
+      dv.Add(lbl);
+    }
 
     if (group != undefined) 
-      this.check.AddAttr({name: group});    
+      this.check.AddAttr({name: group}); 
+    
+    
 
   }
 
@@ -1221,7 +1371,7 @@ class SelectBox extends div {
     this.input = new select();
 
     
-    this.input.AddClass('form-control');
+    this.input.AddClass('custom-select');
 
     if (size != undefined)
       this.input.AddClass(`input-${size}`);
@@ -1665,10 +1815,27 @@ class Dialog extends div {
     
 }
 
+class Spinner extends div {
+  constructor(option: {variant: SpinnerVariant, size?: Size, color?: Color}) {
+    super();
+    const {variant, size, color} = option;
 
-export { Color, Size, Icons, InputType, Corner, GridSize }
+    super.AddClass(`spinner-${variant}`);
+    if (color != undefined)
+      super.AddClass(`text-${color}`);
+
+    if (size != undefined)
+      super.AddClass(`spinner-${variant}-${size}`);
+
+  }
+}
+
+
+export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant }
 
 export {
+  Switch,
+  Spinner,
   Panel,
   Grid,
   Dialog,
