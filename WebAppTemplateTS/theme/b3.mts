@@ -820,8 +820,10 @@ class BasicTab extends div {
     aa.AddAttr({ 
       href: '#'
     });
+    aa.AddClass('nav-link');
     aa.Text(title);
     lli.Add(aa);
+    lli.AddClass('nav-item');
 
     if (active != undefined && active) {
       lli.AddClass('active');

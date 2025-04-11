@@ -115,6 +115,18 @@ class TestBootstrap3 extends div {
       value: 'Not Active'
     });
 
+    const tab = new BasicTab({});
+    tab.AddItem({
+      title: 'Test Item',
+      active: true,
+      body: new Text({text: 'Home'})
+    });
+
+    tab.AddItem({
+      title: 'Test Item2',
+      body: new Text({text: 'About'})
+    });
+
     super.Add([bread, btn_primary, alert1, badge, progress, spin, pagination,
       list,
       card,
@@ -126,7 +138,8 @@ class TestBootstrap3 extends div {
       female,
       off, 
       on,
-      select
+      select,
+      tab
     ]);
   }
 }
