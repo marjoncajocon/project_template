@@ -162,7 +162,24 @@ class TestBootstrap3 extends div {
 
     class TestModal extends Modal {
       constructor() {
-        super({width: 600, title: 'User Information', icon: Icons.FloppyRemove});
+        super({width: 600, title: 'User Information', icon: Icons.FloppyRemove, padding: 20});
+
+        const username = new Textfield({title: 'Username', type: InputType.Text});
+
+        const password = new Textfield({title: 'Password', type: InputType.Password});
+
+        const signin = new Button({text: 'Sign In', color: Color.Primary});
+        
+        signin.AddEventListener('click', () => {
+          this.Close(true);
+        });
+
+        this.AddItem([
+          username,
+          password,
+          signin
+        ]);
+
       }
       public Dispose(): void {
         console.log('hellow closing the testmodal');

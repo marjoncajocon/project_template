@@ -1854,10 +1854,10 @@ class Modal extends div {
   private resolvefn;
   private promise;
 
-  constructor(option: {width?: number, icon?: Icons, title: string}) {
+  constructor(option: {width?: number, icon?: Icons, title: string, padding?: number}) {
     super();
     // make the super as a backdrop
-    const { width, icon, title } = option;
+    const { width, icon, title, padding } = option;
 
     super.AddStyle({
       width: '100%',
@@ -1874,7 +1874,7 @@ class Modal extends div {
 
     this.content.AddStyle({
       width: '750px',
-      maxWidth: '99%',
+      maxWidth: '98%',
       minHeight: '230px',
       margin: 'auto',
       marginTop: '10%',
@@ -1910,7 +1910,8 @@ class Modal extends div {
       borderTopLeftRadius: '5px',
       paddingTop: '10px',
       paddingBottom: '5px',
-      paddingLeft: '10px'
+      paddingLeft: '10px',
+      position: 'relative'
     });
 
     if (icon != undefined)
@@ -1919,6 +1920,25 @@ class Modal extends div {
     if(title != undefined)
       this.header_content.Add(new Text({text: title}));
     //end header properties
+
+    if (padding != null) 
+      this.body_content.AddStyle({
+        padding: `${padding}px`
+      });
+
+    const close = new Button({text: 'Close', color: Color.Danger, prefix_icon: Icons.RemoveCircle, size: Size.Small});
+    close.AddStyle({
+      position: 'absolute',
+      right: '5px',
+      top: '5px'
+    });
+    
+    close.AddEventListener('click', () => {
+      this.Close(null);
+    });
+
+    this.header_content.Add(close);
+    
 
 
     this.promise = new Promise((resolve) => {
@@ -1932,6 +1952,17 @@ class Modal extends div {
     /// creating the body
 
   
+  }
+
+  AddItem(obj: Widget|Widget[]) {
+    if (obj instanceof Widget) {
+      this.body_content.Add(obj);
+    } else if (obj instanceof Array) {
+      for (const item of obj) {
+        this.body_content.Add(item);
+      }
+    }
+    return this;
   }
 
   async Open() {
