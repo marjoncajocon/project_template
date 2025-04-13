@@ -1,5 +1,5 @@
 import { button, div } from "../plugin/core/core.mts";
-import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Grid, GridSize, Icon, Icons, InputType, Label, ListGroup, Navbar, Pagination, Card, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well, Panel, Html, Text, Dialog, ButtonVariant, SpinnerVariant, Spinner, Switch} from "../theme/b3.mts";
+import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Grid, GridSize, Icon, Icons, InputType, Label, ListGroup, Navbar, Pagination, Card, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well, Panel, Html, Text, Dialog, ButtonVariant, SpinnerVariant, Spinner, Switch, Modal} from "../theme/b3.mts";
 
 class TestBootstrap3 extends div {
   constructor() {
@@ -51,8 +51,7 @@ class TestBootstrap3 extends div {
         new Text({text: 'hellow'}),
         new Text({text: 'Word'}),
         new Text({text: 'Test Word'})
-      ],
-      horizontal: true
+      ]
     });
 
     const card = new Card({title: 'Test Card',header_color: Color.Success, footer: new Text({text: 'this is a footer'}), body: new Html({text: `this is a sample html<h1>hey</h1>`})});
@@ -109,6 +108,9 @@ class TestBootstrap3 extends div {
       key: 'a',
       value: 'Active'
     });
+    select.input.AddEventListener('change', () => {
+      alert(select.GetValue());
+    });
 
     select.AddItem({
       key: 'd',
@@ -147,6 +149,34 @@ class TestBootstrap3 extends div {
       item: ['3', 'Rose Doe', '20']
     });
 
+    const grid = new Grid({
+      item: [new Card({title: 'Left', header_color: Color.Danger, body: new Html({text: `
+          <H1>Sample Project</H1>
+        `})}), 
+        new Card({title: 'right', header_color: Color.Primary, body: new Html({text: `<h1>test</h1>`})})],
+      size: [GridSize.Desktop6, GridSize.Phone6]
+    });
+
+    const btn = new Button({text: 'Open Modal', color: Color.Danger});
+
+
+    class TestModal extends Modal {
+      constructor() {
+        super({width: 600, title: 'User Information', icon: Icons.FloppyRemove});
+      }
+      public Dispose(): void {
+        console.log('hellow closing the testmodal');
+      }
+    }
+
+
+    btn.AddEventListener('click', async () => {
+      const modal = new TestModal();
+      const res = await modal.Open();
+
+      console.log(res);
+    });
+
     super.Add([bread, btn_primary, alert1, badge, progress, spin, pagination,
       list,
       card,
@@ -160,7 +190,9 @@ class TestBootstrap3 extends div {
       on,
       select,
       tab,
-      tbl
+      tbl,
+      grid,
+      btn
     ]);
   }
 }

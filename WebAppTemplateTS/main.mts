@@ -18,9 +18,12 @@
 
 //import './theme/bootstrap4/css/bootstrap.css';
 import './theme/bootstrap4/css/theme-lumen.css';
+//import './theme/bootstrap4/css/theme-darkly.css';
 //import './theme/bootstrap4/css/theme-materia.css';
 //import './theme/bootstrap4/css/theme-cerulean.css';
 //import './theme/bootstrap4/css/theme-yeti.css';
+
+import './theme/bootstrap4/css/gicon.css';
 
 import { button, Widget, Window } from "./plugin/core/core.mts";
 import TestBootstrap3 from "./tests/testb3.mts";

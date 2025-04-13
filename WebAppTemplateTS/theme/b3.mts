@@ -1838,9 +1838,126 @@ class Spinner extends div {
 }
 
 
+class Toast extends div {
+  constructor() {
+    super();
+  }
+}
+
+
+class Modal extends div {
+
+
+  private content: div;
+  private header_content: div;
+  private body_content;
+  private resolvefn;
+  private promise;
+
+  constructor(option: {width?: number, icon?: Icons, title: string}) {
+    super();
+    // make the super as a backdrop
+    const { width, icon, title } = option;
+
+    super.AddStyle({
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'rgba(0, 0, 0, 0.3)',
+      zIndex: '1000',
+      position: 'fixed',
+      top: '0',
+      left: '0',
+      overflowY: 'auto'
+    });
+
+    this.content = new div();
+
+    this.content.AddStyle({
+      width: '750px',
+      maxWidth: '99%',
+      minHeight: '230px',
+      margin: 'auto',
+      marginTop: '10%',
+      marginBottom: '20px',
+      borderRadius: '5px'
+    });
+
+    if (width != undefined) 
+      this.content.AddStyle({ width: `${width}px` });
+
+    this.content.AddClass(`bg-${Color.Light}`);
+
+    super.Add(this.content);
+
+
+    this.content.AddEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+
+    this.AddEventListener('click', () => {
+      this.Close();
+    });
+
+    this.header_content = new div();
+    this.body_content = new div();
+    /// creating the header
+    // header properties
+    this.header_content.AddStyle({
+      borderBottom: '1px solid rgba(0, 0, 0, 0.3)',
+      width: '100%',
+      height: '40x',
+      borderTopRightRadius: '5px',
+      borderTopLeftRadius: '5px',
+      paddingTop: '10px',
+      paddingBottom: '5px',
+      paddingLeft: '10px'
+    });
+
+    if (icon != undefined)
+      this.header_content.Add(new Icon({icon: Icons.Apple}).AddStyle({marginRight: '5px'}));
+    
+    if(title != undefined)
+      this.header_content.Add(new Text({text: title}));
+    //end header properties
+
+
+    this.promise = new Promise((resolve) => {
+      this.resolvefn = resolve;
+    });
+    
+
+    this.content.Add(this.header_content);
+    this.content.Add(this.body_content);
+    
+    /// creating the body
+
+  
+  }
+
+  async Open() {
+    this.body.style.overflow = 'hidden';
+    this.body.appendChild(this.control);
+    return this.promise;
+  }
+
+  Close(resolve: boolean|string|null = null) {
+    this.Delete();
+    this.body.style.overflow = 'auto';
+
+    this.resolvefn(resolve);
+  }
+
+  public Dispose(): void {
+    
+  }
+  
+}
+
 export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant }
 
 export {
+  Modal,
+  Toast,
   Switch,
   Spinner,
   Panel,
