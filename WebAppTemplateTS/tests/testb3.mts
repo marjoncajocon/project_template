@@ -164,7 +164,7 @@ class TestBootstrap3 extends div {
       constructor() {
         super({width: 600, title: 'User Information', icon: Icons.FloppyRemove, padding: 20, dismissable: false});
 
-        const username = new Textfield({title: 'Username', type: InputType.Text, placeholder: 'Enter username'});
+        const username = new Textfield({title: 'Username', type: InputType.Text, placeholder: 'Enter username', size: Size.Small});
 
         const password = new Textfield({title: 'Password', type: InputType.Password, placeholder: 'Enter password'});
 
@@ -172,17 +172,14 @@ class TestBootstrap3 extends div {
 
         const rem = new Switch({title: 'Remember Password', key: 'rempass'});
 
+        const card = new Card({body: new Panel({}).Add([ username, password, signin, rem ])});
+
         signin.AddEventListener('click', () => {
           this.Close(rem.GetValue());
           
         });
 
-        this.AddItem([
-          username,
-          password,
-          rem,
-          signin
-        ]);
+        this.AddItem(card);
 
       }
       public Dispose(): void {

@@ -768,8 +768,8 @@ class Card extends div {
     if (body != undefined) 
       content.Add(body)
 
-    
-    super.Add(head);
+    if (title != undefined)
+      super.Add(head);
     super.Add(content);
 
     if (footer != undefined) {
@@ -880,7 +880,7 @@ class Textfield extends div {
     this.input.AddClass('form-control');
 
     if (size != undefined)
-      this.input.AddClass(`form-control-${size}`);
+      super.AddClass(`input-group-${size}`);
     
     if (type != undefined)
       this.input.AddAttr({type: type});
@@ -1053,13 +1053,9 @@ class Well extends div {
     super();
 
     const {size, content} = option;
-    super.AddClass('well');
+    super.AddClass(['jumbotron', 'jumbotron-fluid']);
+    
   
-    if (size != undefined) {
-      super.AddClass(`well-${size}`);
-    }
-
-
     if (content != undefined && typeof(content) == 'string') {
       super.Text(content);
     } else if (content != undefined && content instanceof Widget) {
