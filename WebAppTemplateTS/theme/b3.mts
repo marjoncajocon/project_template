@@ -1862,7 +1862,7 @@ class Modal extends div {
     super.AddStyle({
       width: '100%',
       height: '100%',
-      backgroundColor: 'rgba(0, 0, 0, 0.3)',
+      backgroundColor: 'rgba(0, 0, 0, 0.1)',
       zIndex: '1000',
       position: 'fixed',
       top: '0',
