@@ -381,6 +381,14 @@ enum SpinnerVariant {
   Grow = 'grow'
 }
 
+enum JustifyContent {
+  Start = 'start',
+  End  = 'end',
+  Center = 'center',
+  Between = 'between',
+  Around = 'around'
+}
+
 class Button extends button {
   private spin: span;
   constructor(option: {
@@ -1982,9 +1990,67 @@ class Modal extends div {
   
 }
 
-export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant }
+class Row extends div {
+  constructor(option: {
+    widgets: Widget[],
+    reverse?: boolean,
+    justify?: JustifyContent
+  }) {
+    super();
+    const {widgets, reverse, justify} = option;
+    super.AddClass(['d-flex', 'flex-row']);
+
+    if (justify != undefined) {
+      super.AddClass(`justify-content-${justify}`);
+    }
+
+    if (reverse != undefined && reverse == true) {
+      super.AddClass('flex-row-reverse');
+    }
+
+    for (const item of widgets) {
+      const d = new div().AddClass('p-2');
+      d.Add(item);
+      super.Add(d);
+    }
+    
+
+  }
+}
+
+
+class Column extends div {
+  constructor(option: {
+    widgets: Widget[],
+    reverse?: boolean,
+    justify?: JustifyContent
+  }) {
+    super();
+    const {widgets, reverse, justify} = option;
+    super.AddClass(['d-flex', 'flex-column']);
+
+    if (justify != undefined) {
+      super.AddClass(`justify-content-${justify}`);
+    }
+
+    if (reverse != undefined && reverse == true) {
+      super.AddClass('flex-column-reverse');
+    }
+
+    for (const item of widgets) {
+      const d = new div().AddClass('p-2');
+      d.Add(item);
+      super.Add(d);
+    }
+
+  }
+}
+
+export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant, JustifyContent }
 
 export {
+  Column,
+  Row,
   Modal,
   Toast,
   Switch,

@@ -1,5 +1,5 @@
 import { button, div } from "../plugin/core/core.mts";
-import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Grid, GridSize, Icon, Icons, InputType, Label, ListGroup, Navbar, Pagination, Card, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well, Panel, Html, Text, Dialog, ButtonVariant, SpinnerVariant, Spinner, Switch, Modal} from "../theme/b3.mts";
+import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Grid, GridSize, Icon, Icons, InputType, Label, ListGroup, Navbar, Pagination, Card, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well, Panel, Html, Text, Dialog, ButtonVariant, SpinnerVariant, Spinner, Switch, Modal, Row, Column, JustifyContent} from "../theme/b3.mts";
 
 class TestBootstrap3 extends div {
   constructor() {
@@ -210,7 +210,21 @@ class TestBootstrap3 extends div {
       tab,
       tbl,
       grid,
-      btn
+      btn,
+      new Row({
+        justify: JustifyContent.Start,
+        widgets: [
+        new Text({text: 'hellow'}),
+        new Icon({icon: Icons.Alert}),
+        new Button({text: 'hellow', color: Color.Dark}).AddStyle({width: '800px'}),
+        new Column({
+          justify: JustifyContent.Center,
+          widgets: [
+            new Text({text: 'Sample Column'}),
+            new Button({text: 'sample btn', color: Color.Primary})
+          ]
+        })
+      ]})
     ]);
   }
 }
