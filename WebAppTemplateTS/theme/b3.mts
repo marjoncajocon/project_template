@@ -1854,15 +1854,15 @@ class Modal extends div {
   private resolvefn;
   private promise;
 
-  constructor(option: {width?: number, icon?: Icons, title: string, padding?: number}) {
+  constructor(option: {width?: number, icon?: Icons, title: string, padding?: number, dismissable?: boolean}) {
     super();
     // make the super as a backdrop
-    const { width, icon, title, padding } = option;
+    const { width, icon, title, padding, dismissable } = option;
 
     super.AddStyle({
       width: '100%',
       height: '100%',
-      backgroundColor: 'rgba(0, 0, 0, 0.1)',
+      backgroundColor: 'rgba(0, 0, 0, 0.2)',
       zIndex: '1000',
       position: 'fixed',
       top: '0',
@@ -1879,7 +1879,8 @@ class Modal extends div {
       margin: 'auto',
       marginTop: '10%',
       marginBottom: '20px',
-      borderRadius: '5px'
+      borderRadius: '5px',
+      boxShadow: '0 0 3px rgba(0, 0, 0, 0.3)'
     });
 
     if (width != undefined) 
@@ -1894,9 +1895,10 @@ class Modal extends div {
       e.stopPropagation();
     });
 
-    this.AddEventListener('click', () => {
-      this.Close();
-    });
+    if (dismissable == undefined || dismissable == true)
+      this.AddEventListener('click', () => {
+        this.Close();
+      });
 
     this.header_content = new div();
     this.body_content = new div();
