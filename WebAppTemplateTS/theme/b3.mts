@@ -1,19 +1,24 @@
-import { a, button, div, img, input, label, li, nav, option, select, span, table, tbody, td, textarea, th, thead, tr, ul, Widget } from "../plugin/core/core.mts";
+import { a, button, col, div, head, img, input, label, li, nav, option, select, span, table, tbody, td, textarea, th, thead, tr, ul, Widget } from "../plugin/core/core.mts";
 
 
 enum Color {
   Default = 'default',
   Primary = 'primary',
+  Secondary = 'secondary',
   Success = 'success',
   Info = 'info',
   Warning = 'warning',
   Danger = 'danger',
-  Link = 'link'
+  Link = 'link',
+  Dark = 'dark',
+  Light = 'light',
+  Muted = 'Muted'
 }
 
 enum Size {
   Large = 'lg',
   Small = 'sm',
+  Medium = 'md',
   ExtraSmall = 'xs'
 }
 
@@ -313,36 +318,131 @@ enum Corner {
   Circle = 'circle'
 }
 
+enum GridSize {
+  Phone1 = 'col-xs-1',
+  Phone2 = 'col-xs-2',
+  Phone3 = 'col-xs-3',
+  Phone4 = 'col-xs-4',
+  Phone5 = 'col-xs-5',
+  Phone6 = 'col-xs-6',
+  Phone7 = 'col-xs-7',
+  Phone8 = 'col-xs-8',
+  Phone9 = 'col-xs-9',
+  Phone10 = 'col-xs-10',
+  Phone11 = 'col-xs-11',
+  Phone12 = 'col-xs-12',
+
+  Tablet1 = 'col-sm-1',
+  Tablet2 = 'col-sm-2',
+  Tablet3 = 'col-sm-3',
+  Tablet4 = 'col-sm-4',
+  Tablet5 = 'col-sm-5',
+  Tablet6 = 'col-sm-6',
+  Tablet7 = 'col-sm-7',
+  Tablet8 = 'col-sm-8',
+  Tablet9 = 'col-sm-9',
+  Tablet10 = 'col-sm-10',
+  Tablet11 = 'col-sm-11',
+  Tablet12 = 'col-sm-12',
+
+  Laptop1 = 'col-md-1',
+  Laptop2 = 'col-md-2',
+  Laptop3 = 'col-md-3',
+  Laptop4 = 'col-md-4',
+  Laptop5 = 'col-md-5',
+  Laptop6 = 'col-md-6',
+  Laptop7 = 'col-md-7',
+  Laptop8 = 'col-md-8',
+  Laptop9 = 'col-md-9',
+  Laptop10 = 'col-md-10',
+  Laptop11 = 'col-md-11',
+  Laptop12 = 'col-md-12',
+
+  Desktop1 = 'col-lg-1',
+  Desktop2 = 'col-lg-2',
+  Desktop3 = 'col-lg-3',
+  Desktop4 = 'col-lg-4',
+  Desktop5 = 'col-lg-5',
+  Desktop6 = 'col-lg-6',
+  Desktop7 = 'col-lg-7',
+  Desktop8 = 'col-lg-8',
+  Desktop9 = 'col-lg-9',
+  Desktop10 = 'col-lg-10',
+  Desktop11 = 'col-lg-11',
+  Desktop12 = 'col-lg-12'
+}
+
+enum ButtonVariant {
+  Outlined = 'outline'
+}
+
+enum SpinnerVariant {
+  Border = 'border',
+  Grow = 'grow'
+}
+
+enum JustifyContent {
+  Start = 'start',
+  End  = 'end',
+  Center = 'center',
+  Between = 'between',
+  Around = 'around'
+}
+
 class Button extends button {
+  private spin: span;
   constructor(option: {
     text?: string|Widget,
     color?: Color,
     block?: boolean,
     active?: boolean,
     size?: Size,
-    prefix_icon?: Icons
+    prefix_icon?: Icons,
+    suffix_icon?: Icons,
+    variant?: ButtonVariant,
+    spinner?: {
+      variant?: SpinnerVariant,
+      size?: Size
+    } 
   }) {
     super();
 
-    const { text, color, block, active, size, prefix_icon } = option;
+    const { text, color, block, active, size, prefix_icon, suffix_icon, variant, spinner } = option;
     
-    if (prefix_icon != undefined) {
-      const ico = new Icon({icon: prefix_icon});
-      super.Add(ico);
+   
+    this.spin = new span();
+    if (spinner != undefined) {
+      
+      this.spin = new span();
+      this.spin.AddStyle({marginRight: '2px', marginLeft: '2px'});
+      if (spinner.variant != undefined) {
+        this.spin.AddClass(`spinner-${spinner.variant}`);
+      } else {
+        // default
+        this.spin.AddClass(`spinner-${SpinnerVariant.Border}`);
+      }
 
-      if (prefix_icon != undefined && text != undefined) 
-        ico.AddStyle({marginRight: '5px'});
+      if (spinner.size != undefined) {
+        this.spin.AddClass(`spinner-${spinner.variant}-${spinner.size}`);
+      } else {
+        this.spin.AddClass(`spinner-${SpinnerVariant.Border}-${Size.Small}`);
+      }
+
+      super.Add(this.spin);
     }
-
 
 
     if (text != undefined && typeof(text) == 'string')
       super.Add(new Text( {text: text }));
 
+
     super.AddClass('btn');
 
     if (color != undefined) 
-      super.AddClass(`btn-${color}`)
+      if (variant != undefined)
+        super.AddClass(`btn-${variant}-${color}`);
+      else
+        super.AddClass(`btn-${color}`)
 
     if (block != undefined && block)
       super.AddClass('btn-block')
@@ -355,9 +455,35 @@ class Button extends button {
     if (size != undefined)
       super.AddClass(`btn-${size}`)
 
-    
+  
+    this.HideLoader();
+  
 
+  }
 
+  ShowLoader() {
+    this.Disabled();
+    this.spin.Show();
+    return this;
+  }
+
+  HideLoader() {
+    this.Enabled();
+    this.spin.Hide();
+    return this;
+  }
+
+  Disabled() {
+    super.AddAttr({
+      disabled: ''
+    });
+
+    return this;
+  }
+
+  Enabled() {
+    super.DeleteAttr('disabled');
+    return this;
   }
 }
 
@@ -390,13 +516,19 @@ class ButtonGroup extends div {
 
 
 class Badge extends span {
-  constructor(option: {text: string|Widget}) {
+  constructor(option: {text: string|Widget, color?: Color, pill?: boolean}) {
     super();
 
-    const {text} = option;
+    const {text, color, pill} = option;
 
     if (typeof(text) == 'string')
       super.Text(text)
+
+    if (color != undefined)
+      super.AddClass(`badge-${color}`);
+
+    if (pill != undefined && pill)
+      super.AddClass(`badge-pill`)
     
   }
 }
@@ -454,14 +586,14 @@ class ProgressBar extends div {
 
     this.bar = new div();
     this.bar.AddClass('progress-bar');
-    this.bar.AddClass(`progress-bar-${color}`);
+    this.bar.AddClass(`bg-${color}`);
     this.bar.AddStyle({ width: '0%' });
 
     if (striped != undefined && striped) 
       this.bar.AddClass(`progress-bar-striped`);
 
     if (animate != undefined && animate)
-      this.bar.AddClass(`active`);
+      this.bar.AddClass(`progress-bar-animated`);
 
     super.Add(this.bar);
 
@@ -512,9 +644,11 @@ class Pagination extends ul {
     if (typeof(item) == 'number') {
       const link = new a()
       link.AddAttr({ href: '#' }).Text(item.toString());
+      link.AddClass(`page-link`);
       
       
       const ww = new li().Add(link);
+      ww.AddClass(`page-item`);
       
       ww.AddEventListener('click', (e) => {
         this.ClearActive();
@@ -531,10 +665,12 @@ class Pagination extends ul {
       for (const b of item) { 
         
         const link = new a();
-        link.AddAttr({ href: '#' }).Text(b.toString());
+        link.AddAttr({ href: '#' }).Text(b.toString()); 
+        link.AddClass(`page-link`);
 
         
         const ww = new li().Add(link);
+        ww.AddClass(`page-item`);
         ww.AddEventListener('click', (e) => {
           this.ClearActive();
           ww.AddClass('active');
@@ -574,6 +710,8 @@ class BreadCrumb extends ul {
     for (const item of menu) {
     
       const list = new li();
+      list.AddClass('breadcrumb-item');
+
       const aa = new a();
       aa.Html(item);
       list.Add(aa.AddAttr({ 
@@ -591,13 +729,25 @@ class BreadCrumb extends ul {
 }
 
 class ListGroup extends ul {
-  constructor() {
+  constructor(option: {list?: Widget[], horizontal?: boolean}) {
     super();
     super.AddClass('list-group');
+
+    const { list, horizontal } = option;
+
+    // if there is list of item then add it
+    if (list != undefined) 
+      for (const item of list)
+        this.AddItem(item);
+
+    if (horizontal != undefined && horizontal)
+      super.AddClass('list-group-horizontal');
+
   }
 
   AddItem(item: Widget) {
     const _li = new li();
+    _li.AddClass('list-group-item');
     _li.Add(item);
     super.Add(_li);
 
@@ -605,30 +755,35 @@ class ListGroup extends ul {
   }
 }
 
-class Panel extends div {
-  constructor(option: { color?: Color, body?: Widget, footer?: Widget, title?: string }) {
+class Card extends div {
+  constructor(option: { color?: Color, body?: Widget, footer?: Widget, title?: string, header_color?: Color }) {
     super();
-    const {color, body, footer, title} = option;
-    super.AddClass(`panel`);
+    const {color, body, footer, title, header_color} = option;
+    super.AddClass(`card`);
 
     
-    if (color != undefined) super.AddClass(`panel-${color}`);
+    if (color != undefined) super.AddClass(`bg-${color}`);
 
-    const head = new div().AddClass('panel-heading');
+    const head = new div().AddClass('card-header');
+
+    if (header_color != undefined) 
+      head.AddClass(`bg-${header_color}`);
     
     if (title != undefined) 
       head.Text(title);
 
-    const content = new div().AddClass('panel-body');
+    const content = new div().AddClass('card-body');
     if (body != undefined) 
       content.Add(body)
 
-    
-    super.Add(head);
+    if (title != undefined)
+      super.Add(head);
     super.Add(content);
 
     if (footer != undefined) {
-      const foot = new div().AddClass('panel-footer');
+      const foot = new div().AddClass('card-footer');
+
+      foot.Add(footer);
       super.Add(foot);
     }
 
@@ -673,8 +828,10 @@ class BasicTab extends div {
     aa.AddAttr({ 
       href: '#'
     });
+    aa.AddClass('nav-link');
     aa.Text(title);
     lli.Add(aa);
+    lli.AddClass('nav-item');
 
     if (active != undefined && active) {
       lli.AddClass('active');
@@ -708,29 +865,30 @@ class BasicTab extends div {
 
 
 class Textfield extends div {
-  input: input;
-  ico: Icon;
+  public input: input;
+  private msg: div
   constructor(option: { 
     title?: string,
     type?: InputType,
     size?: Size,
     placeholder?: string,
-    feedback?: boolean
+    has_feedback?: boolean
   }) {
     super();
-    const {title, type, size, placeholder, feedback} = option;
+    const {title, type, size, placeholder, has_feedback} = option;
 
-    if (feedback != undefined && feedback) {
-      super.AddClass('has-feedback');
-    }
+    if (has_feedback != undefined && has_feedback)
+      super.AddClass('has-success');
 
     super.AddClass('form-group');
+
+  
     this.input = new input();
 
     this.input.AddClass('form-control');
 
     if (size != undefined)
-      this.input.AddClass(`input-${size}`);
+      super.AddClass(`input-group-${size}`);
     
     if (type != undefined)
       this.input.AddAttr({type: type});
@@ -740,40 +898,58 @@ class Textfield extends div {
 
     if (title != undefined) {
       const lbl = new label();
+      lbl.AddClass('form-control-label');
       lbl.Text(title);
       super.Add(lbl);
     }
 
-    super.Add(this.input);
     
-    if (feedback != undefined && feedback) {
-      this.ico = new Icon({ icon: Icons.Ok });
-      this.ico.AddClass('form-control-feedback');
-      this.ico.Hide();
-      super.Add(this.ico);
+
+  
+    super.Add(this.input);
+    this.msg = new div().Hide();
+
+    if (has_feedback != undefined && has_feedback) {
+    
+
+      super.Add(this.msg);
     }
     
   }
 
-  UpdateFeedBack(option: { msg?: string, status: Status }) {
-    const {msg, status} = option;
+  Update(okay: boolean, msg: string): boolean{
+    this.msg.Show();
+    this.msg.DeleteClass(['valid-feedback', 'invalid-feedback']);
+    super.DeleteClass(['has-success', 'has-danger']);
+    this.input.DeleteClass(['is-valid', 'is-invalid']);
 
-    super.DeleteClass(['has-success', 'has-error', 'has-warning' ]);
+    this.msg.Text(msg);
 
-    if (status == Status.Ok) {
+    if (okay) {
+      this.msg.AddClass('valid-feedback');
       super.AddClass('has-success');
-      this.ico.Show();
-      this.ico.Update({icon: Icons.Ok});
-    } else if (status == Status.Error) {
-      super.AddClass('has-error');
-      this.ico.Update({icon: Icons.Remove});
-      this.ico.Show();
-    } else if (status == Status.Warning) {
-      super.AddClass('has-warning');
-      this.ico.Update({icon: Icons.WarningSign});
-      this.ico.Show();
+      this.input.AddClass('is-valid');
+      return true;
     }
 
+    this.msg.AddClass('invalid-feedback');
+    super.AddClass('has-danger');
+    this.input.AddClass('is-invalid');
+    
+    return false;
+  }
+
+  ClearFeedBack() {
+    this.msg.DeleteClass(['valid-feedback', 'invalid-feedback']);
+    super.DeleteClass(['has-success', 'has-danger']);
+    this.input.DeleteClass(['is-valid', 'is-invalid']);
+    this.msg.Text('');
+    return this;
+  }
+
+  public AddEventListener(evt: string, fn: EventListenerOrEventListenerObject): Widget {
+    this.input.AddEventListener(evt, fn);
+    return this;
   }
 
   GetValue() {
@@ -885,13 +1061,9 @@ class Well extends div {
     super();
 
     const {size, content} = option;
-    super.AddClass('well');
+    super.AddClass(['jumbotron', 'jumbotron-fluid']);
+    
   
-    if (size != undefined) {
-      super.AddClass(`well-${size}`);
-    }
-
-
     if (content != undefined && typeof(content) == 'string') {
       super.Text(content);
     } else if (content != undefined && content instanceof Widget) {
@@ -947,16 +1119,21 @@ class Table extends div {
     striped?: boolean,
     bordered?: boolean,
     hover?: boolean,
-    condensed?: boolean
+    condensed?: boolean,
+    size?: Size
   }) {
 
     super();
-    const {scrollable, striped, bordered, hover, condensed, header} = option;
+    const {scrollable, striped, bordered, hover, condensed, header, size} = option;
     if (scrollable != undefined && scrollable)
       super.AddClass('table-responsive');
 
     this.table = new table();
     this.table.AddClass('table');
+
+
+    if (size != undefined)
+      this.table.AddClass(`table-${size}`);
 
 
     if (striped != undefined && striped)
@@ -1030,21 +1207,32 @@ class Table extends div {
   }
 }
 
-class CheckBox extends span {
+class CheckBox extends div {
   check: input
-  constructor(option: {title?: string}) {
+  constructor(option: {title?: string, key: string}) {
     super();
-    const {title} = option;
-    super.AddClass(`checkbox-inline`);
+    const {title, key} = option;
+    super.AddClass(`form-group`);
     this.check = new input();
+    this.check.AddClass('custom-control-input');
     this.check.AddAttr({ type: 'checkbox'});
-    
 
-    super.Add(this.check);
+    const lbl = new div();
+    lbl.AddClass(['custom-control', 'custom-checkbox']);
 
-    if (title != undefined) 
-      super.Add(new Text({ text: title }));
+    lbl.Add(this.check);
 
+    this.check.AddAttr({id: key});
+
+    super.Add(lbl);
+
+    if (title != undefined) {
+      const l = new label();
+      l.AddAttr({for: key});
+      l.Text(title);
+      l.AddClass('custom-control-label');
+      lbl.Add(l);
+    }
   }
 
   SetValue(v: boolean) {
@@ -1073,23 +1261,89 @@ class CheckBox extends span {
 }
 
 
-class Radio extends span {
+class Switch extends div {
   check: input
-  constructor(option: {title?: string, group: string}) {
+  constructor(option: {title?: string, key: string}) {
     super();
-    const {title, group} = option;
-    super.AddClass(`checkbox-inline`);
+    const {title, key} = option;
+    super.AddClass(`form-group`);
     this.check = new input();
+    this.check.AddClass('custom-control-input');
+    this.check.AddAttr({ type: 'checkbox'});
+
+    const lbl = new div();
+    lbl.AddClass(['custom-control', 'custom-switch']);
+
+    lbl.Add(this.check);
+
+    this.check.AddAttr({id: key});
+
+    super.Add(lbl);
+
+    if (title != undefined) {
+      const l = new label();
+      l.AddAttr({for: key});
+      l.Text(title);
+      l.AddClass('custom-control-label');
+      lbl.Add(l);
+    }
+  }
+
+  SetValue(v: boolean) {
+    if (this.check.control instanceof HTMLInputElement)
+      return this.check.control.checked = v;
+
+    return this;
+  }
+
+  GetValue() {
+    if (this.check.control instanceof HTMLInputElement)
+      return this.check.control.checked;
+
+    return false;
+  }
+
+  Disabled() {
+    this.check.AddAttr({disabled: ""});
+    return this;
+  }
+
+  Enabled() {
+    this.check.DeleteAttr("disabled");
+    return this;
+  }
+}
+
+
+class Radio extends div {
+  check: input
+  constructor(option: {title?: string, group: string, key: string}) {
+    super();
+    const {title, group, key} = option;
+    super.AddClass(`form-group`);
+    this.check = new input();
+    this.check.AddClass('custom-control-input');
     this.check.AddAttr({ type: 'radio'});
-    
+    this.check.AddAttr({id: key});
 
-    super.Add(this.check);
+    const dv = new div().AddClass(['custom-control', 'custom-radio']);
+    dv.Add(this.check);
+    super.Add(dv);
 
-    if (title != undefined) 
-      super.Add(new Text({ text: title }).AddStyle({ marginLeft: '5px' }));
+    if (title != undefined) {
+      const lbl = new label();
+      lbl.AddClass('custom-control-label');
+      lbl.Text(title);
+      lbl.AddAttr({
+        for: key
+      });
+      dv.Add(lbl);
+    }
 
     if (group != undefined) 
-      this.check.AddAttr({name: group});    
+      this.check.AddAttr({name: group}); 
+    
+    
 
   }
 
@@ -1128,7 +1382,7 @@ class SelectBox extends div {
     this.input = new select();
 
     
-    this.input.AddClass('form-control');
+    this.input.AddClass('custom-select');
 
     if (size != undefined)
       this.input.AddClass(`input-${size}`);
@@ -1189,13 +1443,7 @@ class SelectBox extends div {
   }
 }
 
-class Row extends span{
-  constructor() {
-    super();
 
-
-  }
-}
 
 class Navbar extends nav {
   constructor(option: { title?: string|Widget, right_menu?: Widget[], fixed?: boolean }) {
@@ -1248,11 +1496,569 @@ class Navbar extends nav {
   }
 }
 
-export { Color, Size, Icons, InputType, Corner }
+class Grid extends div {
+  row: div
+  constructor(option: { 
+    item: Widget[],
+    size: GridSize[]
+  }) {
+    super();
+    super.AddClass('container-fluid');
+
+    this.row = new div();
+    this.row.AddClass('row');
+
+   
+    const {item, size} = option;
+    
+    for (const item1 of item) {
+      const cell = new div();
+      cell.AddClass(size);
+
+      cell.Add(item1);
+
+      this.row.Add(cell);
+    }
+
+
+    super.Add(this.row);
+
+
+  }
+
+  
+}
+
+
+class Panel extends div {
+  constructor(option: {
+    color?: Color,
+    image?: string,
+    network_image?: string,
+    width?: number,
+    height?: number
+  }) {
+    super();
+
+    const {color, network_image, image, width, height} = option;
+
+    if (color != undefined)
+      super.AddClass(`bg-${color}`);
+
+    if (width != undefined)
+      super.AddStyle({width: `${width}px`});
+
+    if (height != undefined)
+      super.AddStyle({height: `${height}px`});
+
+  }
+}
+
+
+class Dialog extends div {
+    is_mouse_down: boolean;
+    mouse_pos: {x: number, y: number};
+    dialog_pos: {x: number, y: number};
+    content: div;
+    hdr: div;
+
+    resolve: Function
+
+    constructor(option: { position?: {
+        left: number,
+        top: number
+    }, width: number, height: number, bgColor?: Color, round?:boolean, header?: { color?: Color, icon?: Icons, title?: string } }) {
+        super();
+        
+        const { position, width, height, header, bgColor, round } = option;
+
+        super.AddStyle({
+            width: `${width}px`,
+            height: `${height}px`,
+            position: 'fixed',
+            left: `calc((100% / 2) - (${width}px / 2))`,
+            top: `15%`,
+            zIndex: '1000',
+            boxShadow: '0 0 3px rgba(0, 0, 0, 0.2)',
+            border: '1px solid white'
+        });
+
+        if (position != undefined) {
+            super.AddStyle({
+                left: `${position.left}px`,
+                top: `${position.top}px`
+            });
+        }
+
+        if (bgColor != undefined) {
+
+          super.AddClass(`bg-${bgColor}`);
+        } else {
+          super.AddClass(`bg-${Color.Default}`);
+        }
+
+
+        this.hdr = new div().AddStyle({
+            width: '100%',
+            height: '50px',
+            position: 'relative',
+            cursor: 'move',
+            paddingLeft: '10px',
+            color: 'inherit'
+        });
+
+        this.hdr.AddEventListener('dragstart',  () => false);
+        this.hdr.AddEventListener('ondrop', () => false);
+
+        if (option.round != undefined && option.round) {
+            this.hdr.AddStyle({
+                borderTopRightRadius: '10px',
+                borderTopLeftRadius: '10px'
+            });
+
+            super.AddStyle({
+                borderRadius: '10px'
+            });
+        }
+
+        if (header != undefined && header.color != undefined) {
+            this.hdr.AddClass(`bg-${header.color}`);
+        } else {
+            // default
+            this.hdr.AddClass(`bg-${Color.Info}`);
+        }
+
+        if (header != undefined) {
+            this.hdr.AddStyle({ paddingTop: '13px' });
+
+            if (header.icon != undefined) {
+              this.hdr.Add(new Icon({icon: header.icon}).AddStyle({color: 'inherit'}));
+            }
+
+            if (header.title != undefined) {
+              this.hdr.Add(new Text({text: header.title}).AddStyle({color: 'inherit'}));
+            }
+        }
+
+
+        /*  close btn */
+        const btn = new button();
+        btn.AddStyle({
+            position: 'absolute',
+            right: '10px',
+            top: '10px',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: 'pointer'
+        });
+        btn.AddClass(`btn-${Color.Danger}`);
+        btn.Add(new Icon({icon: Icons.Remove}));
+
+        btn.AddEventListener('click', () => {
+            this.Close();
+        });
+
+        this.hdr.Add(btn);
+
+
+        this.mouse_pos = {x: 0, y: 0};
+        this.dialog_pos = {x: 0, y: 0};
+
+
+
+        // for mouse events
+        this.hdr.AddEventListener('mousedown', this.m_down);
+        this.hdr.AddEventListener('mouseup', this.m_up);
+        this.hdr.AddEventListener('mouseleave', this.m_leave);
+        this.hdr.AddEventListener('mousemove', this.m_move);
+
+
+        // Touch events
+        this.hdr.AddEventListener('touchstart', this.t_down);
+        this.hdr.AddEventListener('touchend', this.t_up);
+        this.hdr.AddEventListener('touchcancel', this.t_leave);
+        this.hdr.AddEventListener('touchmove', this.t_move);
+
+
+
+        this.is_mouse_down = false;
+
+        this.content = new div();
+
+        super.Add(this.hdr);        
+        super.Add(this.content);
+    }
+
+    public async Open() {
+        this.body.appendChild(this.control);
+        return new Promise((resolve, reject) => {
+            this.resolve = resolve;
+        });
+    }
+
+    public Close(resp:any = null) {
+        this.Delete();
+        
+        if (this.resolve != undefined) {
+            this.resolve(resp);
+        }
+    }
+    
+    public DeleteItem() {
+        this.content.Clear();
+        return this;
+    }
+
+    public AddItem(item: Widget|Widget[]) {
+
+        this.content.Add(item);        
+        return this;
+    }
+
+    private priority() {
+        super.AddStyle({
+            zIndex: '1001'
+        });
+    }
+
+    private removePriority() {
+        super.AddStyle({
+            zIndex: '1000'
+        });
+    }
+
+    private m_down = (e: any) => {
+        //console.log(e.clientY);
+        //console.log(e);
+    
+        this.mouse_pos.x = e.clientX;
+        this.mouse_pos.y = e.clientY;
+        
+        this.is_mouse_down = true;
+
+        this.priority();
+    }
+
+    private m_up = (e: any) => {
+        this.is_mouse_down = false;
+        this.removePriority();
+    }
+
+    private m_leave = (e: any) => {
+        this.is_mouse_down = false;
+        this.removePriority();
+    }
+
+    private m_move = (e: any) => {
+        if (this.is_mouse_down) {
+            this.dialog_pos.x = this.mouse_pos.x - e.clientX;
+            this.dialog_pos.y = this.mouse_pos.y - e.clientY;
+
+            this.mouse_pos.x = e.clientX;
+            this.mouse_pos.y = e.clientY;
+
+            super.AddStyle({
+                'top': `${this.control.offsetTop - this.dialog_pos.y}px`,
+                'left': `${this.control.offsetLeft - this.dialog_pos.x}px`
+            });
+
+            // pos1 = pos3 - e.clientX;
+            // pos2 = pos4 - e.clientY;
+            // pos3 = e.clientX;
+            // pos4 = e.clientY;
+            // // set the element's new position:
+            // elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            // elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+
+        }
+    }
+
+
+
+    private t_down = (e: any) => {
+        //console.log(e.clientY);
+        //console.log(e);
+        this.priority();
+        
+    
+        this.mouse_pos.x = e.touches[0].clientX;
+        this.mouse_pos.y = e.touches[0].clientY;
+        
+        this.is_mouse_down = true;
+    }
+
+    private t_up = (e: any) => {
+        this.is_mouse_down = false;
+        this.removePriority();
+    }
+
+    private t_leave = (e: any) => {
+        this.is_mouse_down = false;
+        this.removePriority();
+    }
+
+    private t_move = (e: any) => {
+        if (this.is_mouse_down) {
+            this.dialog_pos.x = this.mouse_pos.x - e.touches[0].clientX;
+            this.dialog_pos.y = this.mouse_pos.y - e.touches[0].clientY;
+
+            this.mouse_pos.x = e.touches[0].clientX;
+            this.mouse_pos.y = e.touches[0].clientY;
+
+            super.AddStyle({
+                'top': `${this.control.offsetTop - this.dialog_pos.y}px`,
+                'left': `${this.control.offsetLeft - this.dialog_pos.x}px`
+            });
+
+            // pos1 = pos3 - e.clientX;
+            // pos2 = pos4 - e.clientY;
+            // pos3 = e.clientX;
+            // pos4 = e.clientY;
+            // // set the element's new position:
+            // elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            // elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+
+        }
+    }
+
+
+
+    
+}
+
+class Spinner extends div {
+  constructor(option: {variant: SpinnerVariant, size?: Size, color?: Color}) {
+    super();
+    const {variant, size, color} = option;
+
+    super.AddClass(`spinner-${variant}`);
+    if (color != undefined)
+      super.AddClass(`text-${color}`);
+
+    if (size != undefined)
+      super.AddClass(`spinner-${variant}-${size}`);
+
+  }
+}
+
+
+class Toast extends div {
+  constructor() {
+    super();
+  }
+}
+
+
+class Modal extends div {
+
+
+  private content: div;
+  private header_content: div;
+  private body_content;
+  private resolvefn;
+  private promise;
+
+  constructor(option: {width?: number, icon?: Icons, title: string, padding?: number, dismissable?: boolean}) {
+    super();
+    // make the super as a backdrop
+    const { width, icon, title, padding, dismissable } = option;
+
+    super.AddStyle({
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'rgba(0, 0, 0, 0.2)',
+      zIndex: '1000',
+      position: 'fixed',
+      top: '0',
+      left: '0',
+      overflowY: 'auto'
+    });
+
+    this.content = new div();
+
+    this.content.AddStyle({
+      width: '750px',
+      maxWidth: '98%',
+      minHeight: '230px',
+      margin: 'auto',
+      marginTop: '10%',
+      marginBottom: '20px',
+      borderRadius: '5px',
+      boxShadow: '0 0 3px rgba(0, 0, 0, 0.3)'
+    });
+
+    if (width != undefined) 
+      this.content.AddStyle({ width: `${width}px` });
+
+    this.content.AddClass(`bg-${Color.Light}`);
+
+    super.Add(this.content);
+
+
+    this.content.AddEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+
+    if (dismissable == undefined || dismissable == true)
+      this.AddEventListener('click', () => {
+        this.Close();
+      });
+
+    this.header_content = new div();
+    this.body_content = new div();
+    /// creating the header
+    // header properties
+    this.header_content.AddStyle({
+      borderBottom: '1px solid rgba(0, 0, 0, 0.3)',
+      width: '100%',
+      height: '40x',
+      borderTopRightRadius: '5px',
+      borderTopLeftRadius: '5px',
+      paddingTop: '10px',
+      paddingBottom: '5px',
+      paddingLeft: '10px',
+      position: 'relative'
+    });
+
+    if (icon != undefined)
+      this.header_content.Add(new Icon({icon: Icons.Apple}).AddStyle({marginRight: '5px'}));
+    
+    if(title != undefined)
+      this.header_content.Add(new Text({text: title}));
+    //end header properties
+
+    if (padding != null) 
+      this.body_content.AddStyle({
+        padding: `${padding}px`
+      });
+
+    const close = new Button({text: 'Close', color: Color.Danger, prefix_icon: Icons.RemoveCircle, size: Size.Small});
+    close.AddStyle({
+      position: 'absolute',
+      right: '5px',
+      top: '5px'
+    });
+    
+    close.AddEventListener('click', () => {
+      this.Close(null);
+    });
+
+    this.header_content.Add(close);
+    
+
+
+    this.promise = new Promise((resolve) => {
+      this.resolvefn = resolve;
+    });
+    
+
+    this.content.Add(this.header_content);
+    this.content.Add(this.body_content);
+    
+    /// creating the body
+
+  
+  }
+
+  AddItem(obj: Widget|Widget[]) {
+    if (obj instanceof Widget) {
+      this.body_content.Add(obj);
+    } else if (obj instanceof Array) {
+      for (const item of obj) {
+        this.body_content.Add(item);
+      }
+    }
+    return this;
+  }
+
+  async Open() {
+    this.body.style.overflow = 'hidden';
+    this.body.appendChild(this.control);
+    return this.promise;
+  }
+
+  Close(resolve: boolean|string|null = null) {
+    this.Delete();
+    this.body.style.overflow = '';
+
+    this.resolvefn(resolve);
+  }
+
+  public Dispose(): void {
+    
+  }
+  
+}
+
+class Row extends div {
+  constructor(option: {
+    widgets: Widget[],
+    reverse?: boolean,
+    justify?: JustifyContent
+  }) {
+    super();
+    const {widgets, reverse, justify} = option;
+    super.AddClass(['d-flex', 'flex-row']);
+
+    if (justify != undefined) {
+      super.AddClass(`justify-content-${justify}`);
+    }
+
+    if (reverse != undefined && reverse == true) {
+      super.AddClass('flex-row-reverse');
+    }
+
+    for (const item of widgets) {
+      const d = new div().AddClass('p-2');
+      d.Add(item);
+      super.Add(d);
+    }
+    
+
+  }
+}
+
+
+class Column extends div {
+  constructor(option: {
+    widgets: Widget[],
+    reverse?: boolean,
+    justify?: JustifyContent
+  }) {
+    super();
+    const {widgets, reverse, justify} = option;
+    super.AddClass(['d-flex', 'flex-column']);
+
+    if (justify != undefined) {
+      super.AddClass(`justify-content-${justify}`);
+    }
+
+    if (reverse != undefined && reverse == true) {
+      super.AddClass('flex-column-reverse');
+    }
+
+    for (const item of widgets) {
+      const d = new div().AddClass('p-2');
+      d.Add(item);
+      super.Add(d);
+    }
+
+  }
+}
+
+export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant, JustifyContent }
 
 export {
-  Navbar,
+  Column,
   Row,
+  Modal,
+  Toast,
+  Switch,
+  Spinner,
+  Panel,
+  Grid,
+  Dialog,
+  Navbar,
   SelectBox,
   Radio,
   CheckBox,
@@ -1270,10 +2076,43 @@ export {
   Pagination, 
   BreadCrumb, 
   ListGroup,
-  Panel,
+  Card,
   BasicTab,
   Textfield,
   TextBox,
   Status,
   Alerts
 };
+
+
+// for row implementation
+// .row {
+//   display: flex;                /* Enables flex context for all its children */
+//   justify-content: space-between; /* Align children with space between them */
+//   align-items: center;         /* Center content vertically */
+//   padding: 10px;              /* Add some padding */
+//   background-color: #f2f2f2;  /* Background color for the row */
+// }
+// .item {
+//   padding: 20px;              /* Padding around items */
+//   background-color: #4CAF50;  /* Background color for items */
+//   color: white;               /* Text color */
+//   border-radius: 5px;        /* Rounded corners */
+// }
+
+// for columen implementation
+
+// .column {
+//   display: flex;                /* Enables flex context for all its children */
+//   flex-direction: column;      /* Align items vertically */
+//   align-items: center;         /* Center items horizontally */
+//   padding: 10px;              /* Add some padding */
+//   background-color: #e7e7e7;  /* Background color for the column */
+// }
+// .item {
+//   padding: 20px;              /* Padding around items */
+//   background-color: #4CAF50;  /* Background color for items */
+//   color: white;               /* Text color */
+//   border-radius: 5px;        /* Rounded corners */
+//   margin: 10px 0;            /* Margin between items */
+// }
