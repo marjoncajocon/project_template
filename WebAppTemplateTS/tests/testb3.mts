@@ -164,9 +164,9 @@ class TestBootstrap3 extends div {
       constructor() {
         super({width: 600, title: 'User Information', icon: Icons.FloppyRemove, padding: 20, dismissable: false});
 
-        const username = new Textfield({title: 'Username', type: InputType.Text});
+        const username = new Textfield({title: 'Username', type: InputType.Text, placeholder: 'Enter username'});
 
-        const password = new Textfield({title: 'Password', type: InputType.Password});
+        const password = new Textfield({title: 'Password', type: InputType.Password, placeholder: 'Enter password'});
 
         const signin = new Button({text: 'Sign In', color: Color.Primary});
 
