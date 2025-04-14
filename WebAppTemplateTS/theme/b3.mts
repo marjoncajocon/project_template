@@ -1971,7 +1971,7 @@ class Modal extends div {
 
   Close(resolve: boolean|string|null = null) {
     this.Delete();
-    this.body.style.overflow = 'auto';
+    this.body.style.overflow = '';
 
     this.resolvefn(resolve);
   }
