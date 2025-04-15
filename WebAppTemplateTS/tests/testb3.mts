@@ -231,7 +231,8 @@ class TestBootstrap3 extends div {
             new Button({text: 'sample btn', color: Color.Primary})
           ]
         })
-      ]})
+      ]}),
+      new Well({content: new Html({text: `<h5>Powered by: Bootstrap 4</h5>`})})
     ]);
   }
 }
