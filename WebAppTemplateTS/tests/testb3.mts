@@ -222,7 +222,7 @@ class TestBootstrap3 extends div {
         widgets: [
         new Text({text: 'hellow'}),
         new Icon({icon: Icons.Alert}),
-        new Button({text: 'hellow', color: Color.Dark}).AddStyle({width: '800px'}),
+        new Button({text: 'hellow', color: Color.Dark}),
         new Column({
           padding: 2,
           justify: JustifyContent.Center,
