@@ -1994,10 +1994,11 @@ class Row extends div {
   constructor(option: {
     widgets: Widget[],
     reverse?: boolean,
-    justify?: JustifyContent
+    justify?: JustifyContent,
+    padding?: number
   }) {
     super();
-    const {widgets, reverse, justify} = option;
+    const {widgets, reverse, justify, padding} = option;
     super.AddClass(['d-flex', 'flex-row']);
 
     if (justify != undefined) {
@@ -2009,7 +2010,10 @@ class Row extends div {
     }
 
     for (const item of widgets) {
-      const d = new div().AddClass('p-2');
+      const d = new div();
+      if (padding != undefined && padding > 0)
+        d.AddClass(`p-${padding}`);
+      
       d.Add(item);
       super.Add(d);
     }
@@ -2023,10 +2027,11 @@ class Column extends div {
   constructor(option: {
     widgets: Widget[],
     reverse?: boolean,
-    justify?: JustifyContent
+    justify?: JustifyContent,
+    padding?: number
   }) {
     super();
-    const {widgets, reverse, justify} = option;
+    const {widgets, reverse, justify, padding} = option;
     super.AddClass(['d-flex', 'flex-column']);
 
     if (justify != undefined) {
@@ -2038,7 +2043,9 @@ class Column extends div {
     }
 
     for (const item of widgets) {
-      const d = new div().AddClass('p-2');
+      const d = new div();
+      if (padding != undefined && padding > 0)
+        d.AddClass(`p-${padding}`);
       d.Add(item);
       super.Add(d);
     }

@@ -212,12 +212,14 @@ class TestBootstrap3 extends div {
       grid,
       btn,
       new Row({
+        padding: 2,
         justify: JustifyContent.Start,
         widgets: [
         new Text({text: 'hellow'}),
         new Icon({icon: Icons.Alert}),
         new Button({text: 'hellow', color: Color.Dark}).AddStyle({width: '800px'}),
         new Column({
+          padding: 2,
           justify: JustifyContent.Center,
           widgets: [
             new Text({text: 'Sample Column'}),
