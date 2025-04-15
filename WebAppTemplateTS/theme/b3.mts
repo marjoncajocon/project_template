@@ -1243,7 +1243,13 @@ class Table extends div {
       select.AddItem({key: '100', value: '100'});
       select.AddItem({key: '500', value: '500'});
 
-      const search = new Textfield({placeholder: 'Search...'}).AddStyle({width: '150px'});
+      const search = new Textfield({
+        placeholder: 'Search...',
+        InputGroup: {
+          prepend: false,
+          group: new Icon({icon: Icons.Search})
+        }
+      }).AddStyle({width: '150px'});
 
       
 
