@@ -1175,6 +1175,10 @@ class Table extends div {
 
   private table: table;
   private tbody: tbody;
+
+  private search: Textfield;
+  private selectlimit: SelectBox;
+
   constructor(option: {
     header: (Widget|string)[],
     scrollable?: boolean,
@@ -1186,17 +1190,22 @@ class Table extends div {
     filter?: {
       type: Resource,
       limit: number
-    }
+    }, 
+    item?: (string|Widget)[][]
   }) {
 
     super();
-    const {scrollable, striped, bordered, hover, condensed, header, size, filter} = option;
+    const {scrollable, striped, bordered, hover, condensed, header, size, item, filter} = option;
     if (scrollable != undefined && scrollable)
       super.AddClass('table-responsive');
 
     this.table = new table();
     this.table.AddClass('table');
 
+    this.search = new Textfield({placeholder: 'Search...', InputGroup: {
+      prepend: false,
+      group: new Icon({icon: Icons.Search})
+    }});
 
     if (size != undefined)
       this.table.AddClass(`table-${size}`);
@@ -1233,96 +1242,24 @@ class Table extends div {
     this.tbody = new tbody();
 
     this.table.Add(this.tbody);
-    
-    
-    /// for the filter
-    if (filter != undefined) {
-      const select = new SelectBox({}); 
-      select.AddStyle({width: '70px'}); 
-      select.AddItem({key: '10', value: '10'});
-      select.AddItem({key: '100', value: '100'});
-      select.AddItem({key: '500', value: '500'});
-
-      const search = new Textfield({
-        placeholder: 'Search...',
-        InputGroup: {
-          prepend: false,
-          group: new Icon({icon: Icons.Search})
-        }
-      }).AddStyle({width: '150px'});
-
-      
-
-      if (filter != undefined && filter.type == Resource.Local) {
-        
-        const local_change = () => {
-          const s = search.GetValue().toString().toLowerCase();  // to optimized the search
-          const rev_s = s.split('').reverse().join(''); // check also the reverse
-
-          const tr = this.tbody.control.children;
-          for (const item of tr) {
-            item['style'].display = 'none';
-          }
-
-          const len = tr.length;
-
-          for (let i = 0; i < len; i++) {
-            
-            const item = tr[i];
-            if (item.textContent != undefined) {
-              
-              const txt_content = item.textContent?.toLowerCase();
-
-              if (txt_content.indexOf(s) > -1 || txt_content.indexOf(rev_s) > -1) {
-                item['style'].display = '';
-              }
-
-            }
-
-            if (i + 1 >= filter.limit) break; // break if limit reached!
-
-          }
-
-
-        }
-
-        search.AddEventListener('keyup', () => {
-          local_change();
-        });
-
-      } else if (filter != undefined && filter.type == Resource.Network) {
-
+    if (item != undefined) {
+      const len = item.length;
+      for (let i = 0; i < len; i++ ){
+        const jitem = item[i];
+        this.AddItem({item: jitem});
       }
-
-      super.Add(new Row({
-        widgets: [
-          select,
-          search
-        ],
-        reverse: true,
-        padding: 1
-      }));
-
-      super.Add(this.table);
-
-      const paginate = new Pagination({
-        onchange: (n) => {
-
-        }
-      });
-      paginate.AddItem([1, 2, 3, 4]);
-      super.Add(
-        new Row({
-          widgets: [paginate],
-          reverse: true
-        })
-      );
-
-
-    } else {
-
-      super.Add(this.table);
     }
+
+    if (filter != undefined) {
+      this.search.AddStyle({width: '150px'})
+      super.Add(new Row({
+        reverse: true,
+        padding: 2,
+        widgets: [this.search]
+      }));
+    }
+
+    super.Add(this.table);
   }
 
   ClearItem() {
