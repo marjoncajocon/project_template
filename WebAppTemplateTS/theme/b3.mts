@@ -904,9 +904,14 @@ class Textfield extends div {
 
       this.input.AddAttr({
         type: 'text',
-        class: 'form-control',
-        placeholder: ''
+        class: 'form-control'
       });
+
+      if (type != undefined)
+        this.input.AddAttr({type: type});
+  
+      if (placeholder != undefined)
+        this.input.AddAttr({placeholder: placeholder});
 
       
       const group_append = new div().AddClass('input-group-append');
