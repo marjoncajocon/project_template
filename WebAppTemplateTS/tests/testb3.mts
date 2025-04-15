@@ -165,8 +165,8 @@ class TestBootstrap3 extends div {
         super({width: 600, title: 'User Information', icon: Icons.FloppyRemove, padding: 20, dismissable: false});
 
         const username = new Textfield({title: 'Username', type: InputType.Text, placeholder: 'Enter username', size: Size.Small, InputGroup: {
-          prepend: true,
-          group: new Switch({title: '', key: 'kdkdkd'})
+          prepend: false,
+          group: new Icon({icon: Icons.Apple})
         }});
 
         // new Button({text: 'hellow', color: Color.Info, variant: ButtonVariant.Outlined})

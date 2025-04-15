@@ -911,7 +911,7 @@ class Textfield extends div {
       
       const group_append = new div().AddClass('input-group-append');
 
-      if (InputGroup.group instanceof Text || InputGroup.group instanceof CheckBox || InputGroup.group instanceof Radio || InputGroup.group instanceof Switch) {
+      if (InputGroup.group instanceof Text || InputGroup.group instanceof CheckBox || InputGroup.group instanceof Radio || InputGroup.group instanceof Switch || InputGroup.group instanceof Icon) {
         group_append.Add(new span().AddClass('input-group-text').Add(InputGroup.group));
       } else {
         group_append.Add(InputGroup.group);
