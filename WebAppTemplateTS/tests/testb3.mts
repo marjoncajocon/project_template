@@ -166,7 +166,7 @@ class TestBootstrap3 extends div {
 
         const username = new Textfield({title: 'Username', type: InputType.Text, placeholder: 'Enter username', size: Size.Small, InputGroup: {
           prepend: true,
-          group: new Switch({title: '', key: 'kdkdkd'})
+          group: new Icon({icon: Icons.Apple})
         }});
 
         // new Button({text: 'hellow', color: Color.Info, variant: ButtonVariant.Outlined})
@@ -222,7 +222,7 @@ class TestBootstrap3 extends div {
         widgets: [
         new Text({text: 'hellow'}),
         new Icon({icon: Icons.Alert}),
-        new Button({text: 'hellow', color: Color.Dark}).AddStyle({width: '800px'}),
+        new Button({text: 'hellow', color: Color.Dark}),
         new Column({
           padding: 2,
           justify: JustifyContent.Center,
@@ -231,7 +231,8 @@ class TestBootstrap3 extends div {
             new Button({text: 'sample btn', color: Color.Primary})
           ]
         })
-      ]})
+      ]}),
+      new Well({content: new Html({text: `<h5>Powered by: Bootstrap 4</h5>`})})
     ]);
   }
 }
