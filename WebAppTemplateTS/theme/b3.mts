@@ -1184,7 +1184,8 @@ class Table extends div {
     condensed?: boolean,
     size?: Size,
     filter?: {
-      type: Resource 
+      type: Resource,
+      limit: number
     }
   }) {
 
@@ -1233,15 +1234,59 @@ class Table extends div {
 
     this.table.Add(this.tbody);
     
+    
     /// for the filter
     if (filter != undefined) {
       const select = new SelectBox({}); 
-      select.AddStyle({width: '50px'}); 
+      select.AddStyle({width: '70px'}); 
       select.AddItem({key: '10', value: '10'});
       select.AddItem({key: '100', value: '100'});
       select.AddItem({key: '500', value: '500'});
 
       const search = new Textfield({placeholder: 'Search...'}).AddStyle({width: '150px'});
+
+      
+
+      if (filter != undefined && filter.type == Resource.Local) {
+        
+        const local_change = () => {
+          const s = search.GetValue().toString().toLowerCase();  // to optimized the search
+          const rev_s = s.split('').reverse().join(''); // check also the reverse
+
+          const tr = this.tbody.control.children;
+          for (const item of tr) {
+            item['style'].display = 'none';
+          }
+
+          const len = tr.length;
+
+          for (let i = 0; i < len; i++) {
+            
+            const item = tr[i];
+            if (item.textContent != undefined) {
+              
+              const txt_content = item.textContent?.toLowerCase();
+
+              if (txt_content.indexOf(s) > -1 || txt_content.indexOf(rev_s) > -1) {
+                item['style'].display = '';
+              }
+
+            }
+
+            if (i + 1 >= filter.limit) break; // break if limit reached!
+
+          }
+
+
+        }
+
+        search.AddEventListener('keyup', () => {
+          local_change();
+        });
+
+      } else if (filter != undefined && filter.type == Resource.Network) {
+
+      }
 
       super.Add(new Row({
         widgets: [

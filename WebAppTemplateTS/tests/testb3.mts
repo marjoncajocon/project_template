@@ -191,21 +191,115 @@ class TestBootstrap3 extends div {
       scrollable: true,
       size: Size.Small,
       filter: {
-        type: Resource.Network
+        type: Resource.Local,
+        limit: 10
       }
     });
 
-    tbl.AddItem({
-      item: ['12', 'John Doe', '56']
-    });
+    
+    tbl.AddItem({ item: ['1', 'John Smith', '25'] });
+    tbl.AddItem({ item: ['2', 'Alice Johnson', '30'] });
+    tbl.AddItem({ item: ['3', 'Robert Brown', '27'] });
+    tbl.AddItem({ item: ['4', 'Emily Davis', '22'] });
+    tbl.AddItem({ item: ['5', 'Michael Wilson', '35'] });
+    tbl.AddItem({ item: ['6', 'Sarah Miller', '28'] });
+    tbl.AddItem({ item: ['7', 'David Garcia', '33'] });
+    tbl.AddItem({ item: ['8', 'Jessica Rodriguez', '26'] });
+    tbl.AddItem({ item: ['9', 'Daniel Martinez', '31'] });
+    tbl.AddItem({ item: ['10', 'Laura Hernandez', '29'] });
+    tbl.AddItem({ item: ['11', 'James Lee', '23'] });
+    tbl.AddItem({ item: ['12', 'Kimberly Gonzalez', '27'] });
+    tbl.AddItem({ item: ['13', 'William Perez', '32'] });
+    tbl.AddItem({ item: ['14', 'Linda Thompson', '30'] });
+    tbl.AddItem({ item: ['15', 'Charles White', '34'] });
+    tbl.AddItem({ item: ['16', 'Patricia Harris', '24'] });
+    tbl.AddItem({ item: ['17', 'Thomas Clark', '26'] });
+    tbl.AddItem({ item: ['18', 'Angela Hall', '29'] });
+    tbl.AddItem({ item: ['19', 'Christopher Young', '31'] });
+    tbl.AddItem({ item: ['20', 'Barbara Allen', '28'] });
+    tbl.AddItem({ item: ['21', 'Matthew Scott', '35'] });
+    tbl.AddItem({ item: ['22', 'Elizabeth King', '25'] });
+    tbl.AddItem({ item: ['23', 'Joshua Wright', '33'] });
+    tbl.AddItem({ item: ['24', 'Megan Lopez', '22'] });
+    tbl.AddItem({ item: ['25', 'Ryan Hill', '20'] });
+    tbl.AddItem({ item: ['26', 'Michelle Green', '39'] });
+    tbl.AddItem({ item: ['27', 'David Adams', '29'] });
+    tbl.AddItem({ item: ['28', 'Emma Baker', '34'] });
+    tbl.AddItem({ item: ['29', 'Kevin Gonzalez', '21'] });
+    tbl.AddItem({ item: ['30', 'Samantha Nelson', '36'] });
+    tbl.AddItem({ item: ['31', 'Steven Carter', '24'] });
+    tbl.AddItem({ item: ['32', 'Rachel Mitchell', '27'] });
+    tbl.AddItem({ item: ['33', 'Andrew Perez', '32'] });
+    tbl.AddItem({ item: ['34', 'Laura Roberts', '30'] });
+    tbl.AddItem({ item: ['35', 'Daniel Turner', '28'] });
+    tbl.AddItem({ item: ['36', 'Chloe Phillips', '25'] });
+    tbl.AddItem({ item: ['37', 'Matthew Campbell', '31'] });
+    tbl.AddItem({ item: ['38', 'Sophie Parker', '24'] });
+    tbl.AddItem({ item: ['39', 'Nathan Evans', '36'] });
+    tbl.AddItem({ item: ['40', 'Katie Edwards', '29'] });
+    tbl.AddItem({ item: ['41', 'George Collins', '23'] });
+    tbl.AddItem({ item: ['42', 'Diane Stewart', '38'] });
+    tbl.AddItem({ item: ['43', 'Jack Sanchez', '26'] });
+    tbl.AddItem({ item: ['44', 'Julia Morris', '30'] });
+    tbl.AddItem({ item: ['45', 'Eric Rivera', '35'] });
+    tbl.AddItem({ item: ['46', 'Anna Cooper', '31'] });
+    tbl.AddItem({ item: ['47', 'Brandon Cox', '27'] });
+    tbl.AddItem({ item: ['48', 'Sara Ward', '22'] });
+    tbl.AddItem({ item: ['49', 'Samuel Torres', '24'] });
+    tbl.AddItem({ item: ['50', 'Olivia Peterson', '29'] });
+    tbl.AddItem({ item: ['51', 'Thomas Reed', '33'] });
+    tbl.AddItem({ item: ['52', 'Cynthia Johnson', '30'] });
+    tbl.AddItem({ item: ['53', 'Isaac Wood', '28'] });
+    tbl.AddItem({ item: ['54', 'Grace Bennett', '25'] });
+    tbl.AddItem({ item: ['55', 'Mason Hughes', '21'] });
+    tbl.AddItem({ item: ['56', 'Lily Ramirez', '35'] });
+    tbl.AddItem({ item: ['57', 'Jason Price', '34'] });
+    tbl.AddItem({ item: ['58', 'Ella Sanders', '22'] });
+    tbl.AddItem({ item: ['59', 'Justin Powell', '31'] });
+    tbl.AddItem({ item: ['60', 'Hannah Murphy', '29'] });
+    tbl.AddItem({ item: ['61', 'Benjamin Ross', '28'] });
+    tbl.AddItem({ item: ['62', 'Samantha Diaz', '27'] });
+    tbl.AddItem({ item: ['63', 'Noah Martinez', '23'] });
+    tbl.AddItem({ item: ['64', 'Victoria Reyes', '37'] });
+    tbl.AddItem({ item: ['65', 'Gavin Rivera', '38'] });
+    tbl.AddItem({ item: ['66', 'Zoe Bell', '29'] });
+    tbl.AddItem({ item: ['67', 'Ethan Wright', '32'] });
+    tbl.AddItem({ item: ['68', 'Hannah Lee', '28'] });
+    tbl.AddItem({ item: ['69', 'Miguel Martinez', '30'] });
+    tbl.AddItem({ item: ['70', 'Amelia King', '25'] });
+    tbl.AddItem({ item: ['71', 'Alexis Moore', '22'] });
+    tbl.AddItem({ item: ['72', 'Gabriel Henderson', '34'] });
+    tbl.AddItem({ item: ['73', 'Liam Young', '31'] });
+    tbl.AddItem({ item: ['74', 'Claire Wilson', '27'] });
+    tbl.AddItem({ item: ['75', 'Willow Harper', '23'] });
+    tbl.AddItem({ item: ['76', 'Matthew Wood', '24'] });
+    tbl.AddItem({ item: ['77', 'Ruby Jenkins', '30'] });
+    tbl.AddItem({ item: ['78', 'Carter Hughes', '29'] });
+    tbl.AddItem({ item: ['79', 'Lucas Campbell', '35'] });
+    tbl.AddItem({ item: ['80', 'Mia Johnson', '28'] });
+    tbl.AddItem({ item: ['81', 'Evelyn Ramirez', '26'] });
+    tbl.AddItem({ item: ['82', 'Josiah Parker', '36'] });
+    tbl.AddItem({ item: ['83', 'Autumn Scott', '30'] });
+    tbl.AddItem({ item: ['84', 'Abigail Stewart', '22'] });
+    tbl.AddItem({ item: ['85', 'Liam Hall', '31'] });
+    tbl.AddItem({ item: ['86', 'Wyatt Harper', '38'] });
+    tbl.AddItem({ item: ['87', 'Ava Nelson', '29'] });
+    tbl.AddItem({ item: ['88', 'Henry King', '26'] });
+    tbl.AddItem({ item: ['89', 'Scarlett Edwards', '32'] });
+    tbl.AddItem({ item: ['90', 'Sofia Thompson', '28'] });
+    tbl.AddItem({ item: ['91', 'Caleb Carter', '24'] });
+    tbl.AddItem({ item: ['92', 'Khloe Simmons', '27'] });
+    tbl.AddItem({ item: ['93', 'Victoria Wood', '30'] });
+    tbl.AddItem({ item: ['94', 'Logan Clark', '33'] });
+    tbl.AddItem({ item: ['95', 'Ellie Myers', '25'] });
+    tbl.AddItem({ item: ['96', 'Owen Phillips', '29'] });
+    tbl.AddItem({ item: ['97', 'Jaxon Rivera', '22'] });
+    tbl.AddItem({ item: ['98', 'Maverick Mills', '34'] });
+    tbl.AddItem({ item: ['99', 'Paisley Bryant', '36'] });
+    tbl.AddItem({ item: ['100', 'Landon Wilkins', '30'] });
 
-    tbl.AddItem({
-      item: ['1', 'Jack Ma', '30']
-    });
+    
 
-    tbl.AddItem({
-      item: ['3', 'Rose Doe', '20']
-    });
 
     super.Add([bread, btn_primary, alert1, badge, progress, spin, pagination,
       list,
