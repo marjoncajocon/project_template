@@ -431,10 +431,21 @@ class Button extends button {
       super.Add(this.spin);
     }
 
+    if (prefix_icon != undefined) {
+      const icon = new Icon({icon: prefix_icon});
+      super.Add(icon);
+      if (text != undefined) icon.AddStyle({marginRight: '5px'});
+    }
 
     if (text != undefined && typeof(text) == 'string')
       super.Add(new Text( {text: text }));
 
+
+    if (suffix_icon != undefined) {
+      const icon = new Icon({icon: suffix_icon});
+      super.Add(icon);
+      if (text != undefined) icon.AddStyle({marginLeft: '5px'});
+    }
 
     super.AddClass('btn');
 
@@ -872,47 +883,88 @@ class Textfield extends div {
     type?: InputType,
     size?: Size,
     placeholder?: string,
-    has_feedback?: boolean
+    has_feedback?: boolean,
+    InputGroup?: {
+      prepend: boolean,
+      group: Widget,
+      size?: Size
+    }
   }) {
     super();
-    const {title, type, size, placeholder, has_feedback} = option;
+    const {title, type, size, placeholder, has_feedback, InputGroup} = option;
 
-    if (has_feedback != undefined && has_feedback)
-      super.AddClass('has-success');
-
-    super.AddClass('form-group');
-
-  
     this.input = new input();
 
-    this.input.AddClass('form-control');
+    if (InputGroup != undefined) {
+      // here is for input group
+      super.AddClass('input-group');
+      
+      if (InputGroup.size != undefined) 
+        super.AddClass(`input-group-${InputGroup.size}`);
 
-    if (size != undefined)
-      super.AddClass(`input-group-${size}`);
+      this.input.AddAttr({
+        type: 'text',
+        class: 'form-control',
+        placeholder: ''
+      });
+
+      
+      const group_append = new div().AddClass('input-group-append');
+
+      if (InputGroup.group instanceof Text || InputGroup.group instanceof CheckBox || InputGroup.group instanceof Radio || InputGroup.group instanceof Switch) {
+        group_append.Add(new span().AddClass('input-group-text').Add(InputGroup.group));
+      } else {
+        group_append.Add(InputGroup.group);
+      }
+      if (InputGroup.prepend) {
+        
+        super.Add(group_append);
+        super.Add(this.input);
+      } else {
     
-    if (type != undefined)
-      this.input.AddAttr({type: type});
+        super.Add(this.input);
+        super.Add(group_append);
+      }
 
-    if (placeholder != undefined)
-      this.input.AddAttr({placeholder: placeholder});
-
-    if (title != undefined) {
-      const lbl = new label();
-      lbl.AddClass('form-control-label');
-      lbl.Text(title);
-      super.Add(lbl);
-    }
+      
+      
 
     
-
+    } else {
+      if (has_feedback != undefined && has_feedback)
+        super.AddClass('has-success');
   
-    super.Add(this.input);
-    this.msg = new div().Hide();
-
-    if (has_feedback != undefined && has_feedback) {
+      super.AddClass('form-group');
+  
+      this.input.AddClass('form-control');
+  
+      if (size != undefined)
+        super.AddClass(`input-group-${size}`);
+      
+      if (type != undefined)
+        this.input.AddAttr({type: type});
+  
+      if (placeholder != undefined)
+        this.input.AddAttr({placeholder: placeholder});
+  
+      if (title != undefined) {
+        const lbl = new label();
+        lbl.AddClass('form-control-label');
+        lbl.Text(title);
+        super.Add(lbl);
+      }
+  
+      
+  
     
-
-      super.Add(this.msg);
+      super.Add(this.input);
+      this.msg = new div().Hide();
+  
+      if (has_feedback != undefined && has_feedback) {
+      
+  
+        super.Add(this.msg);
+      }
     }
     
   }
@@ -1212,7 +1264,9 @@ class CheckBox extends div {
   constructor(option: {title?: string, key: string}) {
     super();
     const {title, key} = option;
-    super.AddClass(`form-group`);
+    
+    //super.AddClass(`form-group`);
+
     this.check = new input();
     this.check.AddClass('custom-control-input');
     this.check.AddAttr({ type: 'checkbox'});
@@ -1266,7 +1320,7 @@ class Switch extends div {
   constructor(option: {title?: string, key: string}) {
     super();
     const {title, key} = option;
-    super.AddClass(`form-group`);
+    //super.AddClass(`form-group`);
     this.check = new input();
     this.check.AddClass('custom-control-input');
     this.check.AddAttr({ type: 'checkbox'});
@@ -1320,7 +1374,7 @@ class Radio extends div {
   constructor(option: {title?: string, group: string, key: string}) {
     super();
     const {title, group, key} = option;
-    super.AddClass(`form-group`);
+    //super.AddClass(`form-group`);
     this.check = new input();
     this.check.AddClass('custom-control-input');
     this.check.AddAttr({ type: 'radio'});
@@ -1994,10 +2048,11 @@ class Row extends div {
   constructor(option: {
     widgets: Widget[],
     reverse?: boolean,
-    justify?: JustifyContent
+    justify?: JustifyContent,
+    padding?: number
   }) {
     super();
-    const {widgets, reverse, justify} = option;
+    const {widgets, reverse, justify, padding} = option;
     super.AddClass(['d-flex', 'flex-row']);
 
     if (justify != undefined) {
@@ -2009,7 +2064,10 @@ class Row extends div {
     }
 
     for (const item of widgets) {
-      const d = new div().AddClass('p-2');
+      const d = new div();
+      if (padding != undefined && padding > 0)
+        d.AddClass(`p-${padding}`);
+      
       d.Add(item);
       super.Add(d);
     }
@@ -2023,10 +2081,11 @@ class Column extends div {
   constructor(option: {
     widgets: Widget[],
     reverse?: boolean,
-    justify?: JustifyContent
+    justify?: JustifyContent,
+    padding?: number
   }) {
     super();
-    const {widgets, reverse, justify} = option;
+    const {widgets, reverse, justify, padding} = option;
     super.AddClass(['d-flex', 'flex-column']);
 
     if (justify != undefined) {
@@ -2038,7 +2097,9 @@ class Column extends div {
     }
 
     for (const item of widgets) {
-      const d = new div().AddClass('p-2');
+      const d = new div();
+      if (padding != undefined && padding > 0)
+        d.AddClass(`p-${padding}`);
       d.Add(item);
       super.Add(d);
     }
