@@ -129,25 +129,7 @@ class TestBootstrap3 extends div {
       body: new Text({text: 'About'})
     });
 
-    const tbl = new Table({
-      header: ['Id', 'Name', 'Age'],
-      striped: true,
-      bordered: true,
-      scrollable: true,
-      size: Size.Small
-    });
-
-    tbl.AddItem({
-      item: ['12', 'John Doe', '56']
-    });
-
-    tbl.AddItem({
-      item: ['1', 'Jack Ma', '30']
-    });
-
-    tbl.AddItem({
-      item: ['3', 'Rose Doe', '20']
-    });
+    
 
     const grid = new Grid({
       item: [new Card({title: 'Left', header_color: Color.Danger, body: new Html({text: `
@@ -200,6 +182,29 @@ class TestBootstrap3 extends div {
       console.log(res);
     });
 
+
+
+    const tbl = new Table({
+      header: ['Id', 'Name', 'Age'],
+      striped: true,
+      bordered: true,
+      scrollable: true,
+      size: Size.Small,
+      filter: {}
+    });
+
+    tbl.AddItem({
+      item: ['12', 'John Doe', '56']
+    });
+
+    tbl.AddItem({
+      item: ['1', 'Jack Ma', '30']
+    });
+
+    tbl.AddItem({
+      item: ['3', 'Rose Doe', '20']
+    });
+
     super.Add([bread, btn_primary, alert1, badge, progress, spin, pagination,
       list,
       card,
@@ -213,7 +218,6 @@ class TestBootstrap3 extends div {
       on,
       select,
       tab,
-      tbl,
       grid,
       btn,
       new Row({
@@ -232,7 +236,8 @@ class TestBootstrap3 extends div {
           ]
         })
       ]}),
-      new Well({content: new Html({text: `<h5>Powered by: Bootstrap 4</h5>`})})
+      new Well({content: new Html({text: `<h5>Powered by: Bootstrap 4</h5>`})}),
+      new Card({body: tbl})
     ]);
   }
 }

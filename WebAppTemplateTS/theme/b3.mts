@@ -1177,11 +1177,14 @@ class Table extends div {
     bordered?: boolean,
     hover?: boolean,
     condensed?: boolean,
-    size?: Size
+    size?: Size,
+    filter?: {
+      
+    }
   }) {
 
     super();
-    const {scrollable, striped, bordered, hover, condensed, header, size} = option;
+    const {scrollable, striped, bordered, hover, condensed, header, size, filter} = option;
     if (scrollable != undefined && scrollable)
       super.AddClass('table-responsive');
 
@@ -1224,7 +1227,26 @@ class Table extends div {
     this.tbody = new tbody();
 
     this.table.Add(this.tbody);
-  
+    
+    /// for the filter
+    if (filter != undefined) {
+      const select = new SelectBox({}); 
+      select.AddStyle({width: '50px'}); 
+      select.AddItem({key: '10', value: '10'});
+      select.AddItem({key: '100', value: '100'});
+      select.AddItem({key: '500', value: '500'});
+
+      const search = new Textfield({placeholder: 'Search...'}).AddStyle({width: '150px'});
+
+      super.Add(new Row({
+        widgets: [
+          select,
+          search
+        ],
+        reverse: true,
+        padding: 1
+      }));
+    }
 
     super.Add(this.table);
   }
