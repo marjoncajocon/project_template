@@ -318,6 +318,11 @@ enum Corner {
   Circle = 'circle'
 }
 
+enum Resource {
+  Network = 1,
+  Local = 2
+}
+
 enum GridSize {
   Phone1 = 'col-xs-1',
   Phone2 = 'col-xs-2',
@@ -1179,7 +1184,7 @@ class Table extends div {
     condensed?: boolean,
     size?: Size,
     filter?: {
-      
+      type: Resource 
     }
   }) {
 
@@ -1246,9 +1251,27 @@ class Table extends div {
         reverse: true,
         padding: 1
       }));
-    }
 
-    super.Add(this.table);
+      super.Add(this.table);
+
+      const paginate = new Pagination({
+        onchange: (n) => {
+
+        }
+      });
+      paginate.AddItem([1, 2, 3, 4]);
+      super.Add(
+        new Row({
+          widgets: [paginate],
+          reverse: true
+        })
+      );
+
+
+    } else {
+
+      super.Add(this.table);
+    }
   }
 
   ClearItem() {
@@ -2134,7 +2157,7 @@ class Column extends div {
   }
 }
 
-export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant, JustifyContent }
+export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant, JustifyContent, Resource }
 
 export {
   Column,
