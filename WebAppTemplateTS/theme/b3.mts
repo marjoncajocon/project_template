@@ -36,6 +36,7 @@ enum Position {
 
 enum Size {
   Large = 'lg',
+  ExtraLarge = 'xl',
   Small = 'sm',
   Medium = 'md',
   ExtraSmall = 'xs'
