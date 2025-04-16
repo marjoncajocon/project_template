@@ -1,5 +1,5 @@
 import { button, div } from "../plugin/core/core.mts";
-import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Grid, GridSize, Icon, Icons, InputType, Label, ListGroup, Navbar, Pagination, Card, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well, Panel, Html, Text, Dialog, ButtonVariant, SpinnerVariant, Spinner, Switch, Modal, Row, Column, JustifyContent, Resource, Box} from "../theme/b3.mts";
+import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Grid, GridSize, Icon, Icons, InputType, Label, ListGroup, Navbar, Pagination, Card, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well, Panel, Html, Text, Dialog, ButtonVariant, SpinnerVariant, Spinner, Switch, Modal, Row, Column, JustifyContent, Resource, Box, Position} from "../theme/b3.mts";
 
 class TestBootstrap3 extends div {
   constructor() {
@@ -295,7 +295,20 @@ class TestBootstrap3 extends div {
       ]
     });
 
-  
+    
+    const testpanel = new Panel({
+      width: 500,
+      height: 200,
+      color: Color.White,
+      shadow: Size.Large,
+      text_align: Position.Bottom
+    }).AddStyle({
+      margin: '20px'
+    });
+
+    testpanel.Add(new Html({text: `
+        <h1>sample</h1><p>Sub sample</p>
+      `, textColor: Color.Dark}));
 
     super.Add([bread, btn_primary, alert1, badge, progress, spin, pagination,
       list,
@@ -329,6 +342,7 @@ class TestBootstrap3 extends div {
         })
       ]}),
       new Well({content: new Html({text: `<h5>Powered by: Bootstrap 4</h5>`})}),
+      testpanel,
       new Card({body: tbl})
     ]);
   }

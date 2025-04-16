@@ -12,7 +12,17 @@ enum Color {
   Link = 'link',
   Dark = 'dark',
   Light = 'light',
-  Muted = 'Muted'
+  Muted = 'Muted',
+  White = 'white'
+}
+
+enum Position {
+  Top = 'top',
+  Left = 'left',
+  Bottom = 'bottom',
+  Right = 'right',
+  BaseLine = 'baseline',
+  Middle = 'middle'
 }
 
 enum Size {
@@ -643,6 +653,7 @@ class Pagination extends ul {
     const {onchange, size} = option;
 
     super.AddClass(`pagination`);
+    super.AddStyle({marginBottom: '0px'});
 
     if (size != undefined) 
       this.AddClass(`pagination-${size}`);
@@ -1137,19 +1148,27 @@ class Well extends div {
 }
 
 class Text extends span {
-  constructor(option: {text: string}) {
+  constructor(option: {text: string, textColor?: Color}) {
     super();
-    const {text} = option;
+    const {text, textColor} = option;
     super.Text(text);
+
+    if (textColor != undefined) {
+      super.AddClass(`text-${textColor}`);
+    }
   }
 }
 
 
 class Html extends span {
-  constructor(option: {text: string}) {
+  constructor(option: {text: string, textColor?: Color}) {
     super();
-    const {text} = option;
+    const {text, textColor} = option;
     super.Html(text);
+    if (textColor != undefined) {
+      super.AddClass(`text-${textColor}`);
+    }
+  
   }
 }
 
@@ -1223,6 +1242,15 @@ class Table extends div {
     this.selectlimit.AddItem({key: '500', value: '500'});
     this.selectlimit.AddItem({key: '1000', value: '1000'});
 
+
+    /// pagination init
+    this.pagination = new Pagination({
+      onchange: (n) => { 
+        console.log(n);
+      }
+    });
+    this.pagination.AddItem([1, 2, 3])
+
     if (size != undefined)
       this.table.AddClass(`table-${size}`);
 
@@ -1286,6 +1314,11 @@ class Table extends div {
       super.Add([new Row({
         reverse: true,
         widgets: [this.selectlimit, new Box({width: 5}), this.search]
+      }),
+      new Box({height: 5}),
+      new Row({
+        reverse: true,
+        widgets: [ this.pagination ]
       }),
       new Box({height: 5})
     ]);
@@ -1697,11 +1730,13 @@ class Panel extends div {
     image?: string,
     network_image?: string,
     width?: number,
-    height?: number
+    height?: number,
+    shadow?: Size,
+    text_align?: Position
   }) {
     super();
 
-    const {color, network_image, image, width, height} = option;
+    const {color, network_image, image, width, height, shadow, text_align} = option;
 
     if (color != undefined)
       super.AddClass(`bg-${color}`);
@@ -1712,6 +1747,15 @@ class Panel extends div {
     if (height != undefined)
       super.AddStyle({height: `${height}px`});
 
+    if (shadow != undefined)
+      this.AddClass(`shadow-${shadow}`)
+
+    if (text_align != undefined) {
+      super.AddStyle({
+        display: 'inline-block'
+      });
+      this.AddClass(`align-text-${text_align}`);
+    }
   }
 }
 
@@ -2231,7 +2275,7 @@ class Box extends div {
   }
 }
 
-export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant, JustifyContent, Resource }
+export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant, JustifyContent, Resource, Position }
 
 export {
   Box,
