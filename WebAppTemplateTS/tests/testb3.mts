@@ -1,5 +1,5 @@
 import { button, div } from "../plugin/core/core.mts";
-import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Grid, GridSize, Icon, Icons, InputType, Label, ListGroup, Navbar, Pagination, Card, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well, Panel, Html, Text, Dialog, ButtonVariant, SpinnerVariant, Spinner, Switch, Modal, Row, Column, JustifyContent, Resource, Box, Position} from "../theme/b3.mts";
+import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Grid, GridSize, Icon, Icons, InputType, Label, ListGroup, Navbar, Pagination, Card, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well, Panel, Html, Text, Dialog, ButtonVariant, SpinnerVariant, Spinner, Switch, Modal, Row, Column, JustifyContent, Resource, Box, Position, ValueRange} from "../theme/b3.mts";
 
 class TestBootstrap3 extends div {
   constructor() {
@@ -299,11 +299,15 @@ class TestBootstrap3 extends div {
     const testpanel = new Panel({
       width: 500,
       height: 200,
-      color: Color.White,
+      color: Color.Danger,
       shadow: Size.Large,
-      text_align: Position.Bottom
-    }).AddStyle({
-      margin: '20px'
+      text_align: Position.Bottom,
+      padding: {
+        right: ValueRange.Five
+      },
+      margin: {
+        top: ValueRange.Five
+      }
     });
 
     testpanel.Add(new Html({text: `

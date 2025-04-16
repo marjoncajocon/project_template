@@ -16,6 +16,15 @@ enum Color {
   White = 'white'
 }
 
+enum ValueRange {
+  Zero = 0,
+  One = 1,
+  Two = 2,
+  Three = 3,
+  Four = 4,
+  Five = 5
+}
+
 enum Position {
   Top = 'top',
   Left = 'left',
@@ -1222,6 +1231,11 @@ class Table extends div {
 
     this.table = new table();
     this.table.AddClass('table');
+    
+    this.table.AddStyle({
+      marginTop: '0px',
+      marginBottom: '0px'
+    });
 
     // initialized the limit
     this.search = new Textfield({placeholder: 'Search...', InputGroup: {
@@ -1312,19 +1326,26 @@ class Table extends div {
     if (filter != undefined) {
       this.search.AddStyle({width: '150px'})
       super.Add([new Row({
-        reverse: true,
-        widgets: [this.selectlimit, new Box({width: 5}), this.search]
-      }),
-      new Box({height: 5}),
-      new Row({
-        reverse: true,
-        widgets: [ this.pagination ]
-      }),
-      new Box({height: 5})
-    ]);
-    }
+          reverse: true,
+          widgets: [this.selectlimit, new Box({width: 5}), this.search]
+        }),
+        new Box({height: 1})
+      ]);
 
-    super.Add(this.table);
+      super.Add(this.table);
+
+      super.Add([
+        new Box({height: 1}),
+        new Row({
+          reverse: true,
+          widgets: [ this.pagination ]
+        })
+      ]);
+
+    } else {
+
+      super.Add(this.table);
+    }
   }
 
 
@@ -1732,11 +1753,25 @@ class Panel extends div {
     width?: number,
     height?: number,
     shadow?: Size,
-    text_align?: Position
+    text_align?: Position,
+    padding?: {
+      all?: ValueRange,
+      top?: ValueRange,
+      left?: ValueRange,
+      bottom?: ValueRange,
+      right?: ValueRange
+    },
+    margin?: {
+      all?: ValueRange,
+      top?: ValueRange,
+      left?: ValueRange,
+      bottom?: ValueRange,
+      right?: ValueRange
+    }
   }) {
     super();
 
-    const {color, network_image, image, width, height, shadow, text_align} = option;
+    const {color, network_image, image, width, height, shadow, text_align, padding, margin} = option;
 
     if (color != undefined)
       super.AddClass(`bg-${color}`);
@@ -1749,6 +1784,28 @@ class Panel extends div {
 
     if (shadow != undefined)
       this.AddClass(`shadow-${shadow}`)
+
+    if (padding != undefined) {
+      if (padding.all != undefined) {
+        this.AddClass(`p-${padding.all}`); 
+      } else {
+        if (padding.top != undefined) this.AddClass(`pt-${padding.top}`);
+        if (padding.bottom != undefined) this.AddClass(`pb-${padding.bottom}`);
+        if (padding.left != undefined) this.AddClass(`pl-${padding.left}`);
+        if (padding.right != undefined) this.AddClass(`pr-${padding.right}`);
+      }
+    }
+    
+    if (margin != undefined) {
+      if (margin.all != undefined) {
+        this.AddClass(`m-${margin.all}`); 
+      } else {
+        if (margin.top != undefined) this.AddClass(`mt-${margin.top}`);
+        if (margin.bottom != undefined) this.AddClass(`mb-${margin.bottom}`);
+        if (margin.left != undefined) this.AddClass(`ml-${margin.left}`);
+        if (margin.right != undefined) this.AddClass(`mr-${margin.right}`);
+      }
+    }
 
     if (text_align != undefined) {
       super.AddStyle({
@@ -2275,8 +2332,11 @@ class Box extends div {
   }
 }
 
-export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant, JustifyContent, Resource, Position }
+// Enumeration
+export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant, JustifyContent, Resource, Position, ValueRange }
 
+
+// Classes
 export {
   Box,
   Column,
