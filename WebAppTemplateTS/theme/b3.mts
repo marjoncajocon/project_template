@@ -1769,11 +1769,12 @@ class Panel extends div {
       left?: ValueRange,
       bottom?: ValueRange,
       right?: ValueRange
-    }
+    },
+    hide?: Size[]
   }) {
     super();
 
-    const {backgroundcolor, network_image, image, width, height, shadow, textAlign, padding, margin} = option;
+    const {backgroundcolor, network_image, image, width, height, shadow, textAlign, padding, margin, hide} = option;
 
     if (backgroundcolor != undefined)
       super.AddClass(`bg-${backgroundcolor}`);
@@ -1814,6 +1815,13 @@ class Panel extends div {
         display: 'inline-block'
       });
       this.AddClass(`align-text-${textAlign}`);
+    }
+
+    if (hide != undefined) {
+      const len = hide.length;
+      for (let i = 0; i < len; i++) {
+        super.AddClass(`d-${hide[i]}-none`);
+      }
     }
   }
 }
