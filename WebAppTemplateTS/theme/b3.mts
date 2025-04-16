@@ -17,12 +17,13 @@ enum Color {
 }
 
 enum ValueRange {
-  Zero = 0,
-  One = 1,
-  Two = 2,
-  Three = 3,
-  Four = 4,
-  Five = 5
+  Auto = 'auto',
+  Zero = '0',
+  One = '1',
+  Two = '2',
+  Three = '3',
+  Four = '4',
+  Five = '5'
 }
 
 enum Position {
@@ -1748,13 +1749,13 @@ class Grid extends div {
 
 class Panel extends div {
   constructor(option: {
-    color?: Color,
+    backgroundcolor?: Color,
     image?: string,
     network_image?: string,
     width?: number,
     height?: number,
     shadow?: Size,
-    text_align?: Position,
+    textAlign?: Position,
     padding?: {
       all?: ValueRange,
       top?: ValueRange,
@@ -1772,10 +1773,10 @@ class Panel extends div {
   }) {
     super();
 
-    const {color, network_image, image, width, height, shadow, text_align, padding, margin} = option;
+    const {backgroundcolor, network_image, image, width, height, shadow, textAlign, padding, margin} = option;
 
-    if (color != undefined)
-      super.AddClass(`bg-${color}`);
+    if (backgroundcolor != undefined)
+      super.AddClass(`bg-${backgroundcolor}`);
 
     if (width != undefined)
       super.AddStyle({width: `${width}px`});
@@ -1808,11 +1809,11 @@ class Panel extends div {
       }
     }
 
-    if (text_align != undefined) {
+    if (textAlign != undefined) {
       super.AddStyle({
         display: 'inline-block'
       });
-      this.AddClass(`align-text-${text_align}`);
+      this.AddClass(`align-text-${textAlign}`);
     }
   }
 }

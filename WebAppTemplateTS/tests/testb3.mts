@@ -299,9 +299,9 @@ class TestBootstrap3 extends div {
     const testpanel = new Panel({
       width: 500,
       height: 200,
-      color: Color.Danger,
+      backgroundcolor: Color.Danger,
       shadow: Size.Large,
-      text_align: Position.Bottom,
+      textAlign: Position.Bottom,
       padding: {
         right: ValueRange.Five
       },
