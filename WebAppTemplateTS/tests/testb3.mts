@@ -1,5 +1,5 @@
 import { button, div } from "../plugin/core/core.mts";
-import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Grid, GridSize, Icon, Icons, InputType, Label, ListGroup, Navbar, Pagination, Card, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well, Panel, Html, Text, Dialog, ButtonVariant, SpinnerVariant, Spinner, Switch, Modal, Row, Column, JustifyContent, Resource} from "../theme/b3.mts";
+import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Grid, GridSize, Icon, Icons, InputType, Label, ListGroup, Navbar, Pagination, Card, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well, Panel, Html, Text, Dialog, ButtonVariant, SpinnerVariant, Spinner, Switch, Modal, Row, Column, JustifyContent, Resource, Box} from "../theme/b3.mts";
 
 class TestBootstrap3 extends div {
   constructor() {
@@ -146,10 +146,7 @@ class TestBootstrap3 extends div {
       constructor() {
         super({width: 600, title: 'User Information', icon: Icons.FloppyRemove, padding: 20, dismissable: false});
 
-        const username = new Textfield({title: 'Username', type: InputType.Text, placeholder: 'Enter username', size: Size.Small, InputGroup: {
-          prepend: true,
-          group: new Icon({icon: Icons.Apple})
-        }});
+        const username = new Textfield({title: 'Username', type: InputType.Text, placeholder: 'Enter username'});
 
         // new Button({text: 'hellow', color: Color.Info, variant: ButtonVariant.Outlined})
         const password = new Textfield({title: 'Password', type: InputType.Password, placeholder: 'Enter password'});
@@ -158,7 +155,7 @@ class TestBootstrap3 extends div {
 
         const rem = new Switch({title: 'Remember Password', key: 'rempass'});
 
-        const card = new Card({body: new Panel({}).Add([ username, password, signin, rem ])});
+        const card = new Card({body: new Panel({}).Add([ username, password, new Box({height: 5}), rem, new Box({height: 5}), signin ])});
 
         
         signin.AddEventListener('click', () => {

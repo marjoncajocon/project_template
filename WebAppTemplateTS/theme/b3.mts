@@ -945,6 +945,7 @@ class Textfield extends div {
         super.AddClass('has-success');
   
       super.AddClass('form-group');
+      super.AddStyle({marginBottom: '0px'});
   
       this.input.AddClass('form-control');
   
@@ -1178,6 +1179,7 @@ class Table extends div {
 
   private search: Textfield;
   private selectlimit: SelectBox;
+  private pagination: Pagination;
 
   constructor(option: {
     header: (Widget|string)[],
@@ -1202,10 +1204,24 @@ class Table extends div {
     this.table = new table();
     this.table.AddClass('table');
 
+    // initialized the limit
     this.search = new Textfield({placeholder: 'Search...', InputGroup: {
       prepend: false,
       group: new Icon({icon: Icons.Search})
     }});
+
+    // initialized the limit
+    this.selectlimit = new SelectBox({
+      
+    });
+    
+    this.selectlimit.AddStyle({width: '75px'});
+
+    this.selectlimit.AddItem({key: '10', value: '10'});
+    this.selectlimit.AddItem({key: '50', value: '50'});
+    this.selectlimit.AddItem({key: '100', value: '100'});
+    this.selectlimit.AddItem({key: '500', value: '500'});
+    this.selectlimit.AddItem({key: '1000', value: '1000'});
 
     if (size != undefined)
       this.table.AddClass(`table-${size}`);
@@ -1242,24 +1258,76 @@ class Table extends div {
     this.tbody = new tbody();
 
     this.table.Add(this.tbody);
+
+    // initialized! 
+
     if (item != undefined) {
+      
       const len = item.length;
       for (let i = 0; i < len; i++ ){
         const jitem = item[i];
         this.AddItem({item: jitem});
       }
+
+      this.Update();
+
+      this.search.AddEventListener('keyup', () => {
+        this.Update();
+      });
+
+      this.selectlimit.AddEventListener('change', () => {
+        this.Update();
+      });
+
     }
 
     if (filter != undefined) {
       this.search.AddStyle({width: '150px'})
-      super.Add(new Row({
+      super.Add([new Row({
         reverse: true,
-        padding: 2,
-        widgets: [this.search]
-      }));
+        widgets: [this.selectlimit, new Box({width: 5}), this.search]
+      }),
+      new Box({height: 5})
+    ]);
     }
 
     super.Add(this.table);
+  }
+
+
+
+  Update() {
+    const tr = this.tbody.control.children;
+    const tr_len = tr.length;
+
+
+    // get the current limit
+    let limit = 0;
+    const cur_limit = this.selectlimit.GetValue();
+    if (typeof(cur_limit) == 'string')
+      limit = parseInt(cur_limit);
+
+    // temporary hide all the tr    
+    for (let i = 0; i < tr_len; i++) {
+      const item = tr[i];
+      item['style'].display = 'none';
+    }
+
+    /// searching
+    for (let i = 0; i < tr_len; i++) {
+      const item = tr[i];
+      const content = item.textContent?.toLowerCase();
+      const search = this.search.GetValue().toString().toLowerCase();
+
+      if (content != undefined) {
+        if (content.indexOf(search) > -1) {
+          item['style'].display = '';
+          if (i + 1 >= limit) break; // break the loop 
+        }
+      }
+
+    }
+    
   }
 
   ClearItem() {
@@ -1471,6 +1539,7 @@ class SelectBox extends div {
     const {size, title, multiple} = option;
 
     super.AddClass('form-group');
+    super.AddStyle({marginBottom: '0px'});
     this.input = new select();
 
     
@@ -2145,9 +2214,27 @@ class Column extends div {
   }
 }
 
+class Box extends div {
+  constructor(option: {height?: number, width?: number}) {
+    super();
+    super.AddStyle({ display: 'block' });
+    const {width, height} = option;
+
+    if (width != undefined) {
+      super.AddStyle({width: `${width}px`});
+    }
+
+    if (height != undefined) {
+      super.AddStyle({height: `${height}px`});
+    }
+
+  }
+}
+
 export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant, JustifyContent, Resource }
 
 export {
+  Box,
   Column,
   Row,
   Modal,
