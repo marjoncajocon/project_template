@@ -12,11 +12,32 @@ enum Color {
   Link = 'link',
   Dark = 'dark',
   Light = 'light',
-  Muted = 'Muted'
+  Muted = 'Muted',
+  White = 'white'
+}
+
+enum ValueRange {
+  Auto = 'auto',
+  Zero = '0',
+  One = '1',
+  Two = '2',
+  Three = '3',
+  Four = '4',
+  Five = '5'
+}
+
+enum Position {
+  Top = 'top',
+  Left = 'left',
+  Bottom = 'bottom',
+  Right = 'right',
+  BaseLine = 'baseline',
+  Middle = 'middle'
 }
 
 enum Size {
   Large = 'lg',
+  ExtraLarge = 'xl',
   Small = 'sm',
   Medium = 'md',
   ExtraSmall = 'xs'
@@ -316,6 +337,11 @@ enum Corner {
   Rounded = 'rounded',
   Thumbnail = 'thumbnail',
   Circle = 'circle'
+}
+
+enum Resource {
+  Network = 1,
+  Local = 2
 }
 
 enum GridSize {
@@ -638,6 +664,7 @@ class Pagination extends ul {
     const {onchange, size} = option;
 
     super.AddClass(`pagination`);
+    super.AddStyle({marginBottom: '0px'});
 
     if (size != undefined) 
       this.AddClass(`pagination-${size}`);
@@ -940,6 +967,7 @@ class Textfield extends div {
         super.AddClass('has-success');
   
       super.AddClass('form-group');
+      super.AddStyle({marginBottom: '0px'});
   
       this.input.AddClass('form-control');
   
@@ -1131,19 +1159,27 @@ class Well extends div {
 }
 
 class Text extends span {
-  constructor(option: {text: string}) {
+  constructor(option: {text: string, textColor?: Color}) {
     super();
-    const {text} = option;
+    const {text, textColor} = option;
     super.Text(text);
+
+    if (textColor != undefined) {
+      super.AddClass(`text-${textColor}`);
+    }
   }
 }
 
 
 class Html extends span {
-  constructor(option: {text: string}) {
+  constructor(option: {text: string, textColor?: Color}) {
     super();
-    const {text} = option;
+    const {text, textColor} = option;
     super.Html(text);
+    if (textColor != undefined) {
+      super.AddClass(`text-${textColor}`);
+    }
+  
   }
 }
 
@@ -1170,6 +1206,11 @@ class Table extends div {
 
   private table: table;
   private tbody: tbody;
+
+  private search: Textfield;
+  private selectlimit: SelectBox;
+  private pagination: Pagination;
+
   constructor(option: {
     header: (Widget|string)[],
     scrollable?: boolean,
@@ -1177,17 +1218,54 @@ class Table extends div {
     bordered?: boolean,
     hover?: boolean,
     condensed?: boolean,
-    size?: Size
+    size?: Size,
+    filter?: {
+      type: Resource,
+      limit: number
+    }, 
+    item?: (string|Widget)[][]
   }) {
 
     super();
-    const {scrollable, striped, bordered, hover, condensed, header, size} = option;
+    const {scrollable, striped, bordered, hover, condensed, header, size, item, filter} = option;
     if (scrollable != undefined && scrollable)
       super.AddClass('table-responsive');
 
     this.table = new table();
     this.table.AddClass('table');
+    
+    this.table.AddStyle({
+      marginTop: '0px',
+      marginBottom: '0px'
+    });
 
+    // initialized the limit
+    this.search = new Textfield({placeholder: 'Search...', InputGroup: {
+      prepend: false,
+      group: new Icon({icon: Icons.Search})
+    }});
+
+    // initialized the limit
+    this.selectlimit = new SelectBox({
+      
+    });
+    
+    this.selectlimit.AddStyle({width: '75px'});
+
+    this.selectlimit.AddItem({key: '10', value: '10'});
+    this.selectlimit.AddItem({key: '50', value: '50'});
+    this.selectlimit.AddItem({key: '100', value: '100'});
+    this.selectlimit.AddItem({key: '500', value: '500'});
+    this.selectlimit.AddItem({key: '1000', value: '1000'});
+
+
+    /// pagination init
+    this.pagination = new Pagination({
+      onchange: (n) => { 
+        console.log(n);
+      }
+    });
+    this.pagination.AddItem([1, 2, 3])
 
     if (size != undefined)
       this.table.AddClass(`table-${size}`);
@@ -1224,9 +1302,88 @@ class Table extends div {
     this.tbody = new tbody();
 
     this.table.Add(this.tbody);
-  
 
-    super.Add(this.table);
+    // initialized! 
+
+    if (item != undefined) {
+      
+      const len = item.length;
+      for (let i = 0; i < len; i++ ){
+        const jitem = item[i];
+        this.AddItem({item: jitem});
+      }
+
+      this.Update();
+
+      this.search.AddEventListener('keyup', () => {
+        this.Update();
+      });
+
+      this.selectlimit.AddEventListener('change', () => {
+        this.Update();
+      });
+
+    }
+
+    if (filter != undefined) {
+      this.search.AddStyle({width: '150px'})
+      super.Add([new Row({
+          reverse: true,
+          widgets: [this.selectlimit, new Box({width: 5}), this.search]
+        }),
+        new Box({height: 1})
+      ]);
+
+      super.Add(this.table);
+
+      super.Add([
+        new Box({height: 1}),
+        new Row({
+          reverse: true,
+          widgets: [ this.pagination ]
+        })
+      ]);
+
+    } else {
+
+      super.Add(this.table);
+    }
+  }
+
+
+
+  Update() {
+    const tr = this.tbody.control.children;
+    const tr_len = tr.length;
+
+
+    // get the current limit
+    let limit = 0;
+    const cur_limit = this.selectlimit.GetValue();
+    if (typeof(cur_limit) == 'string')
+      limit = parseInt(cur_limit);
+
+    // temporary hide all the tr    
+    for (let i = 0; i < tr_len; i++) {
+      const item = tr[i];
+      item['style'].display = 'none';
+    }
+
+    /// searching
+    for (let i = 0; i < tr_len; i++) {
+      const item = tr[i];
+      const content = item.textContent?.toLowerCase();
+      const search = this.search.GetValue().toString().toLowerCase();
+
+      if (content != undefined) {
+        if (content.indexOf(search) > -1) {
+          item['style'].display = '';
+          if (i + 1 >= limit) break; // break the loop 
+        }
+      }
+
+    }
+    
   }
 
   ClearItem() {
@@ -1438,6 +1595,7 @@ class SelectBox extends div {
     const {size, title, multiple} = option;
 
     super.AddClass('form-group');
+    super.AddStyle({marginBottom: '0px'});
     this.input = new select();
 
     
@@ -1591,18 +1749,35 @@ class Grid extends div {
 
 class Panel extends div {
   constructor(option: {
-    color?: Color,
+    backgroundcolor?: Color,
     image?: string,
     network_image?: string,
     width?: number,
-    height?: number
+    height?: number,
+    shadow?: Size,
+    textAlign?: Position,
+    padding?: {
+      all?: ValueRange,
+      top?: ValueRange,
+      left?: ValueRange,
+      bottom?: ValueRange,
+      right?: ValueRange
+    },
+    margin?: {
+      all?: ValueRange,
+      top?: ValueRange,
+      left?: ValueRange,
+      bottom?: ValueRange,
+      right?: ValueRange
+    },
+    hide?: Size[]
   }) {
     super();
 
-    const {color, network_image, image, width, height} = option;
+    const {backgroundcolor, network_image, image, width, height, shadow, textAlign, padding, margin, hide} = option;
 
-    if (color != undefined)
-      super.AddClass(`bg-${color}`);
+    if (backgroundcolor != undefined)
+      super.AddClass(`bg-${backgroundcolor}`);
 
     if (width != undefined)
       super.AddStyle({width: `${width}px`});
@@ -1610,6 +1785,44 @@ class Panel extends div {
     if (height != undefined)
       super.AddStyle({height: `${height}px`});
 
+    if (shadow != undefined)
+      this.AddClass(`shadow-${shadow}`)
+
+    if (padding != undefined) {
+      if (padding.all != undefined) {
+        this.AddClass(`p-${padding.all}`); 
+      } else {
+        if (padding.top != undefined) this.AddClass(`pt-${padding.top}`);
+        if (padding.bottom != undefined) this.AddClass(`pb-${padding.bottom}`);
+        if (padding.left != undefined) this.AddClass(`pl-${padding.left}`);
+        if (padding.right != undefined) this.AddClass(`pr-${padding.right}`);
+      }
+    }
+    
+    if (margin != undefined) {
+      if (margin.all != undefined) {
+        this.AddClass(`m-${margin.all}`); 
+      } else {
+        if (margin.top != undefined) this.AddClass(`mt-${margin.top}`);
+        if (margin.bottom != undefined) this.AddClass(`mb-${margin.bottom}`);
+        if (margin.left != undefined) this.AddClass(`ml-${margin.left}`);
+        if (margin.right != undefined) this.AddClass(`mr-${margin.right}`);
+      }
+    }
+
+    if (textAlign != undefined) {
+      super.AddStyle({
+        display: 'inline-block'
+      });
+      this.AddClass(`align-text-${textAlign}`);
+    }
+
+    if (hide != undefined) {
+      const len = hide.length;
+      for (let i = 0; i < len; i++) {
+        super.AddClass(`d-${hide[i]}-none`);
+      }
+    }
   }
 }
 
@@ -2112,9 +2325,30 @@ class Column extends div {
   }
 }
 
-export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant, JustifyContent }
+class Box extends div {
+  constructor(option: {height?: number, width?: number}) {
+    super();
+    super.AddStyle({ display: 'block' });
+    const {width, height} = option;
 
+    if (width != undefined) {
+      super.AddStyle({width: `${width}px`});
+    }
+
+    if (height != undefined) {
+      super.AddStyle({height: `${height}px`});
+    }
+
+  }
+}
+
+// Enumeration
+export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant, JustifyContent, Resource, Position, ValueRange }
+
+
+// Classes
 export {
+  Box,
   Column,
   Row,
   Modal,

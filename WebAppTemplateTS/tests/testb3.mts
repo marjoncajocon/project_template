@@ -1,5 +1,5 @@
 import { button, div } from "../plugin/core/core.mts";
-import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Grid, GridSize, Icon, Icons, InputType, Label, ListGroup, Navbar, Pagination, Card, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well, Panel, Html, Text, Dialog, ButtonVariant, SpinnerVariant, Spinner, Switch, Modal, Row, Column, JustifyContent} from "../theme/b3.mts";
+import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Grid, GridSize, Icon, Icons, InputType, Label, ListGroup, Navbar, Pagination, Card, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well, Panel, Html, Text, Dialog, ButtonVariant, SpinnerVariant, Spinner, Switch, Modal, Row, Column, JustifyContent, Resource, Box, Position, ValueRange} from "../theme/b3.mts";
 
 class TestBootstrap3 extends div {
   constructor() {
@@ -129,25 +129,7 @@ class TestBootstrap3 extends div {
       body: new Text({text: 'About'})
     });
 
-    const tbl = new Table({
-      header: ['Id', 'Name', 'Age'],
-      striped: true,
-      bordered: true,
-      scrollable: true,
-      size: Size.Small
-    });
-
-    tbl.AddItem({
-      item: ['12', 'John Doe', '56']
-    });
-
-    tbl.AddItem({
-      item: ['1', 'Jack Ma', '30']
-    });
-
-    tbl.AddItem({
-      item: ['3', 'Rose Doe', '20']
-    });
+    
 
     const grid = new Grid({
       item: [new Card({title: 'Left', header_color: Color.Danger, body: new Html({text: `
@@ -164,10 +146,7 @@ class TestBootstrap3 extends div {
       constructor() {
         super({width: 600, title: 'User Information', icon: Icons.FloppyRemove, padding: 20, dismissable: false});
 
-        const username = new Textfield({title: 'Username', type: InputType.Text, placeholder: 'Enter username', size: Size.Small, InputGroup: {
-          prepend: true,
-          group: new Icon({icon: Icons.Apple})
-        }});
+        const username = new Textfield({title: 'Username', type: InputType.Text, placeholder: 'Enter username'});
 
         // new Button({text: 'hellow', color: Color.Info, variant: ButtonVariant.Outlined})
         const password = new Textfield({title: 'Password', type: InputType.Password, placeholder: 'Enter password'});
@@ -176,7 +155,7 @@ class TestBootstrap3 extends div {
 
         const rem = new Switch({title: 'Remember Password', key: 'rempass'});
 
-        const card = new Card({body: new Panel({}).Add([ username, password, signin, rem ])});
+        const card = new Card({body: new Panel({}).Add([ username, password, new Box({height: 5}), rem, new Box({height: 5}), signin ])});
 
         
         signin.AddEventListener('click', () => {
@@ -200,6 +179,141 @@ class TestBootstrap3 extends div {
       console.log(res);
     });
 
+
+
+    const tbl = new Table({
+      header: ['Id', 'Name', 'Age'],
+      striped: true,
+      bordered: true,
+      scrollable: true,
+      size: Size.Small,
+      filter: {
+        type: Resource.Local,
+        limit: 10
+      },
+      item: [
+          ['1', 'John Doe', '12'],
+          ['2', 'Jane Smith', '22'],
+          ['3', 'Michael Johnson', '32'],
+          ['4', 'Emily Davis', '25'],
+          ['5', 'Matthew Brown', '18'],
+          ['6', 'Ashley Wilson', '29'],
+          ['7', 'James Jones', '40'],
+          ['8', 'Linda Garcia', '31'],
+          ['9', 'Robert Martinez', '27'],
+          ['10', 'Patricia Rodriguez', '35'],
+          ['11', 'David Anderson', '45'],
+          ['12', 'Barbara Thomas', '50'],
+          ['13', 'Joseph Taylor', '28'],
+          ['14', 'Charles Hernandez', '33'],
+          ['15', 'Jessica Moore', '24'],
+          ['16', 'Thomas Lee', '38'],
+          ['17', 'Sarah White', '19'],
+          ['18', 'Daniel Harris', '26'],
+          ['19', 'Laura Clark', '36'],
+          ['20', 'Kevin Lewis', '44'],
+          ['21', 'Maria Hall', '23'],
+          ['22', 'William Allen', '30'],
+          ['23', 'Debra Young', '34'],
+          ['24', 'Brian King', '20'],
+          ['25', 'Nancy Wright', '42'],
+          ['26', 'Andrew Scott', '48'],
+          ['27', 'Samantha Green', '39'],
+          ['28', 'Joshua Adams', '29'],
+          ['29', 'Megan Baker', '37'],
+          ['30', 'Barbara Nelson', '22'],
+          ['31', 'Jennifer Carter', '18'],
+          ['32', 'William Mitchell', '33'],
+          ['33', 'Patricia Perez', '30'],
+          ['34', 'Bryan Roberts', '41'],
+          ['35', 'Linda Turner', '36'],
+          ['36', 'Richard Phillips', '34'],
+          ['37', 'Show Tan', '47'],
+          ['38', 'Rachel Hall', '50'],
+          ['39', 'Rebecca Wilson', '29'],
+          ['40', 'Charles Clarke', '38'],
+          ['41', 'Kate Hughes', '59'],
+          ['42', 'Julia Miles', '20'],
+          ['43', 'Graham Simmons', '44'],
+          ['44', 'Melanie Campbell', '31'],
+          ['45', 'Miles Johnson', '35'],
+          ['46', 'Stewart Young', '26'],
+          ['47', 'Jessica James', '25'],
+          ['48', 'Samuel Brooks', '39'],
+          ['49', 'Kyle Morgan', '28'],
+          ['50', 'Danielle Perry', '24'],
+          ['51', 'Shane Long', '30'],
+          ['52', 'Elaine Kelly', '32'],
+          ['53', 'Brandon Price', '45'],
+          ['54', 'Tracy Griffin', '27'],
+          ['55', 'Rick Medd', '33'],
+          ['56', 'Keith Rivera', '37'],
+          ['57', 'Fred Sanders', '21'],
+          ['58', 'Cynthia Phillips', '48'],
+          ['59', 'Johnny Coleman', '40'],
+          ['60', 'Bill Reed', '50'],
+          ['61', 'Emily Simpson', '42'],
+          ['62', 'Evelyn Rose', '35'],
+          ['63', 'Alicia Lewis', '26'],
+          ['64', 'Curtis Adams', '22'],
+          ['65', 'Bradley Cox', '29'],
+          ['66', 'Laura Brooks', '43'],
+          ['67', 'Mandy Alexander', '31'],
+          ['68', 'Colin Hughes', '29'],
+          ['69', 'Paula Jenkins', '24'],
+          ['70', 'Victor Stone', '22'],
+          ['71', 'Carl Holt', '25'],
+          ['72', 'Elena Ford', '38'],
+          ['73', 'Aria Bennett', '36'],
+          ['74', 'Thomas Sue', '57'],
+          ['75', 'Kathy Johnson', '33'],
+          ['76', 'Jessie Clark', '45'],
+          ['77', 'Jerry Martin', '42'],
+          ['78', 'Ronald Roberts', '49'],
+          ['79', 'Lucy Ramirez', '39'],
+          ['80', 'Lisa Murphy', '54'],
+          ['81', 'Danny Turner', '41'],
+          ['82', 'Kevin Rivera', '26'],
+          ['83', 'Jane Holt', '35'],
+          ['84', 'Raymond Morales', '44'],
+          ['85', 'Scott Turner', '23'],
+          ['86', 'Terry Reed', '30'],
+          ['87', 'Madison Williams', '28'],
+          ['88', 'Lillian Anderson', '32'],
+          ['89', 'Sara Edwards', '26'],
+          ['90', 'Marlon Gomez', '20'],
+          ['91', 'Danny Diaz', '43'],
+          ['92', 'Sonia Wong', '36'],
+          ['93', 'Martha Robbins', '22'],
+          ['94', 'Jacob Foster', '49'],
+          ['95', 'Ryder Lewis', '34'],
+          ['96', 'Madeline White', '30'],
+          ['97', 'Nicholas Martin', '50'],
+          ['98', 'Stephen Walker', '38'],
+          ['99', 'Natalie Thompson', '21'],
+          ['10', 'Victoria Hall', '28'],
+      ]
+    });
+
+    
+    const testpanel = new Panel({
+      width: 500,
+      height: 200,
+      backgroundcolor: Color.Danger,
+      shadow: Size.Large,
+      textAlign: Position.Bottom,
+      padding: {
+        right: ValueRange.Five
+      },
+      margin: {
+        top: ValueRange.Five
+      }
+    });
+
+    testpanel.Add(new Html({text: `
+        <h1>sample</h1><p>Sub sample</p>
+      `, textColor: Color.Dark}));
+
     super.Add([bread, btn_primary, alert1, badge, progress, spin, pagination,
       list,
       card,
@@ -213,7 +327,6 @@ class TestBootstrap3 extends div {
       on,
       select,
       tab,
-      tbl,
       grid,
       btn,
       new Row({
@@ -232,7 +345,9 @@ class TestBootstrap3 extends div {
           ]
         })
       ]}),
-      new Well({content: new Html({text: `<h5>Powered by: Bootstrap 4</h5>`})})
+      new Well({content: new Html({text: `<h5>Powered by: Bootstrap 4</h5>`})}),
+      testpanel,
+      new Card({body: tbl})
     ]);
   }
 }
