@@ -314,6 +314,16 @@ class TestBootstrap3 extends div {
         <h1>sample</h1><p>Sub sample</p>
       `, textColor: Color.Dark}));
 
+
+    const testselect = new SelectBox({
+      title: 'Sample Text',
+      search: {
+        type: Resource.Local
+      }
+    });
+
+    testselect.AddItem({key: 'a', value: 'value1'});
+
     super.Add([bread, btn_primary, alert1, badge, progress, spin, pagination,
       list,
       card,
@@ -347,7 +357,10 @@ class TestBootstrap3 extends div {
       ]}),
       new Well({content: new Html({text: `<h5>Powered by: Bootstrap 4</h5>`})}),
       testpanel,
-      new Card({body: tbl})
+      new Card({body: tbl}),
+      new Text({text: `sample overflow, hellow marjon cajocon the greatest`, textOverflow: true, width: 100}),
+      testselect,
+      new Box({height: 500})
     ]);
   }
 }
