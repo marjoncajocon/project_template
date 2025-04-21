@@ -16,6 +16,11 @@ enum Color {
   White = 'white'
 }
 
+enum Theme {
+  Light = 'light',
+  Dark = 'dark'
+}
+
 enum ValueRange {
   Auto = 'auto',
   Zero = '0',
@@ -1861,59 +1866,6 @@ class SelectBox extends div {
   }
 }
 
-
-
-class Navbar extends nav {
-  constructor(option: { title?: string|Widget, right_menu?: Widget[], fixed?: boolean }) {
-    super();
-
-    const {title, right_menu, fixed} = option;
-
-
-
-    super.AddClass(['navbar', 'navbar-default']);
-
-
-    const container = new div().AddClass('container-fluid');
-
-    if (title != undefined) {
-      /// draw the title
-      const header = new div().AddClass('navbar-header');
-      const haa = new a();
-      haa.AddClass('navbar-brand');
-      haa.AddAttr({ href: '#' });
-      if (typeof(title) == 'string')
-        haa.Html(title);
-      else if (title instanceof Widget)
-        haa.Add(title);
-      
-      header.Add(haa);
-      container.Add(header);
-    }
-
-
-    if (right_menu != undefined) {
-      /// drawing the right page
-      // example button like sign out or notifications
-      const uul = new ul();
-
-      for (const item of right_menu) {
-        const lli = new li(); 
-        
-        lli.Add(item);
-
-        uul.Add(lli);
-      }    
-
-      uul.AddClass(['nav', 'navbar-nav', 'navbar-right']);
-      container.Add(uul);
-    }
-    
-
-    super.Add(container);
-  }
-}
-
 class Grid extends div {
   row: div
   constructor(option: { 
@@ -2682,12 +2634,50 @@ class ButtonDropDown extends div {
 }
 
 
+// create a full navigation Widget
+class Navbar extends nav {
+  constructor(option: {
+    theme?: Theme,
+    bgColor?: Color,
+    brand?: string|Widget
+  }) {
+    super();
+    const { brand, bgColor, theme } = option;
+
+    super.AddClass(['navbar', 'navbar-expand-lg']);
+    
+    if (theme != undefined) {
+      super.AddClass(`navbar-${theme}`);
+    } else {
+      super.AddClass('navbar-dark');
+    }
+
+    if (bgColor != undefined) {
+      super.AddClass(`bg-${bgColor}`);
+    }
+
+    if (typeof(brand) == 'string') {
+      const aa = new a().AddClass('navbar-brand');
+      aa.AddAttr({href: '#'});
+      aa.Add(new Text({text: brand}));
+
+      super.Add(aa);
+    } else if (brand instanceof Widget) {
+      // 
+
+    }
+
+  }
+}
+
+
 // Enumeration
-export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant, JustifyContent, Resource, Position, ValueRange, Direction }
+export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant, JustifyContent, Resource, Position, ValueRange, Direction, Theme }
 
 
 // Classes
 export {
+  Navbar,
   ButtonDropDown,
   Box,
   Column,
@@ -2699,7 +2689,6 @@ export {
   Panel,
   Grid,
   Dialog,
-  Navbar,
   SelectBox,
   Radio,
   CheckBox,

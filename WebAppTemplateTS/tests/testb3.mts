@@ -1,5 +1,5 @@
 import { button, div } from "../plugin/core/core.mts";
-import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Grid, GridSize, Icon, Icons, InputType, Label, ListGroup, Navbar, Pagination, Card, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well, Panel, Html, Text, Dialog, ButtonVariant, SpinnerVariant, Spinner, Switch, Modal, Row, Column, JustifyContent, Resource, Box, Position, ValueRange, ButtonDropDown, Direction} from "../theme/b3.mts";
+import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Grid, GridSize, Icon, Icons, InputType, Label, ListGroup, Pagination, Card, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well, Panel, Html, Text, Dialog, ButtonVariant, SpinnerVariant, Spinner, Switch, Modal, Row, Column, JustifyContent, Resource, Box, Position, ValueRange, ButtonDropDown, Direction, Navbar, Theme} from "../theme/b3.mts";
 
 class TestBootstrap3 extends div {
   constructor() {
@@ -418,8 +418,16 @@ class TestBootstrap3 extends div {
       },
       type: ''
     });
+
+    const nav = new Navbar({
+      brand: 'Navbar',
+      bgColor: Color.Primary
+    });
     
-    super.Add([bread, btn_primary, alert1, badge, progress, spin, pagination,
+    super.Add([
+      nav,
+      bread, 
+      btn_primary, alert1, badge, progress, spin, pagination,
       list,
       card,
       tf,
