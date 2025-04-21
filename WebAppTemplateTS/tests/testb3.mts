@@ -297,7 +297,7 @@ class TestBootstrap3 extends div {
 
     
     const testpanel = new Panel({
-      width: 500,
+      width: 200,
       height: 200,
       backgroundcolor: Color.Danger,
       shadow: Size.Large,
@@ -313,6 +313,78 @@ class TestBootstrap3 extends div {
     testpanel.Add(new Html({text: `
         <h1>sample</h1><p>Sub sample</p>
       `, textColor: Color.Dark}));
+
+
+    const testselect = new SelectBox({
+      title: 'Sample Text',
+      search: {
+        type: Resource.Local,
+        icon: Icons.Phone,
+        maxHeight: 400
+      }
+    });
+
+    testselect.AddItem({key: '001', value: 'John Doe'});
+    testselect.AddItem({key: '002', value: 'Jane Smith'});
+    testselect.AddItem({key: '003', value: 'Alice Johnson'});
+    testselect.AddItem({key: '004', value: 'Michael Brown'});
+    testselect.AddItem({key: '005', value: 'Emily Davis'});
+    testselect.AddItem({key: '006', value: 'Chris Wilson'});
+    testselect.AddItem({key: '007', value: 'Jessica Garcia'});
+    testselect.AddItem({key: '008', value: 'David Martinez'});
+    testselect.AddItem({key: '009', value: 'Sarah Rodriguez'});
+    testselect.AddItem({key: '010', value: 'James Thompson'});
+    testselect.AddItem({key: '011', value: 'Jennifer Anderson'});
+    testselect.AddItem({key: '012', value: 'Robert Lee'});
+    testselect.AddItem({key: '013', value: 'Linda Walker'});
+    testselect.AddItem({key: '014', value: 'William Hall'});
+    testselect.AddItem({key: '015', value: 'Elizabeth Allen'});
+    testselect.AddItem({key: '016', value: 'Joseph Young'});
+    testselect.AddItem({key: '017', value: 'Maria King'});
+    testselect.AddItem({key: '018', value: 'Charles Wright'});
+    testselect.AddItem({key: '019', value: 'Patricia Scott'});
+    testselect.AddItem({key: '020', value: 'Thomas Green'});
+    testselect.AddItem({key: '021', value: 'Barbara Adams'});
+    testselect.AddItem({key: '022', value: 'Matthew Baker'});
+    testselect.AddItem({key: '023', value: 'Susan Gonzalez'});
+    testselect.AddItem({key: '024', value: 'Anthony Nelson'});
+    testselect.AddItem({key: '025', value: 'Karen Carter'});
+    testselect.AddItem({key: '026', value: 'Daniel Mitchell'});
+    testselect.AddItem({key: '027', value: 'Nancy Perez'});
+    testselect.AddItem({key: '028', value: 'Mark Roberts'});
+    testselect.AddItem({key: '029', value: 'Lisa Turner'});
+    testselect.AddItem({key: '030', value: 'Paul Phillips'});
+    testselect.AddItem({key: '031', value: 'Laura Campbell'});
+    testselect.AddItem({key: '032', value: 'Steven Parker'});
+    testselect.AddItem({key: '033', value: 'Margaret Evans'});
+    testselect.AddItem({key: '034', value: 'Kevin Edwards'});
+    testselect.AddItem({key: '035', value: 'Dorothy Edwards'});
+    testselect.AddItem({key: '036', value: 'George Collins'});
+    testselect.AddItem({key: '037', value: 'Brenda Smith'});
+    testselect.AddItem({key: '038', value: 'Jason Stewart'});
+    testselect.AddItem({key: '039', value: 'Kathy Sanchez'});
+    testselect.AddItem({key: '040', value: 'Charles Morris'});
+    testselect.AddItem({key: '041', value: 'Rebecca Rogers'});
+    testselect.AddItem({key: '042', value: 'Adam Reed'});
+    testselect.AddItem({key: '043', value: 'Sarah Cook'});
+    testselect.AddItem({key: '044', value: 'Shawn Morgan'});
+    testselect.AddItem({key: '045', value: 'Michelle Bell'});
+    testselect.AddItem({key: '046', value: 'Brian Cooper'});
+    testselect.AddItem({key: '047', value: 'Amy Richardson'});
+    testselect.AddItem({key: '048', value: 'Melanie Cox'});
+    testselect.AddItem({key: '049', value: 'Harold Howard'});
+    testselect.AddItem({key: '050', value: 'Rachel Ward'});
+
+    const testselect5 = new SelectBox({
+      search: {
+        type: Resource.Local,
+        icon: Icons.Apple
+      }
+    });
+
+    testselect5.AddItem({ key: 'm', value: 'Male'});
+    testselect5.AddItem({ key: 'f', value: 'Female'});
+    testselect5.AddItem({ key: 'o', value: 'Other'});
 
     super.Add([bread, btn_primary, alert1, badge, progress, spin, pagination,
       list,
@@ -347,7 +419,13 @@ class TestBootstrap3 extends div {
       ]}),
       new Well({content: new Html({text: `<h5>Powered by: Bootstrap 4</h5>`})}),
       testpanel,
-      new Card({body: tbl})
+      new Card({body: tbl}),
+      new Text({text: `sample overflow, hellow marjon cajocon the greatest`, textOverflow: true, width: 100}),
+      new Panel({padding: { all: ValueRange.Three } }).Add([
+        testselect,
+        testselect5
+      ]),
+      new Box({height: 500})
     ]);
   }
 }

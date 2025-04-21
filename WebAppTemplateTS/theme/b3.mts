@@ -1158,15 +1158,33 @@ class Well extends div {
   }
 }
 
-class Text extends span {
-  constructor(option: {text: string, textColor?: Color}) {
+class Text extends div {
+  constructor(option: {text: string, textColor?: Color, textOverflow?: boolean, width?: number }) {
     super();
-    const {text, textColor} = option;
+    const {text, textColor, textOverflow, width} = option;
     super.Text(text);
 
     if (textColor != undefined) {
       super.AddClass(`text-${textColor}`);
     }
+
+    super.AddStyle({display: 'inline-block'});
+
+    if (textOverflow != undefined && textOverflow) {
+      super.AddStyle({
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis'
+      });
+
+    }
+
+    if (width != undefined) {
+      super.AddStyle({
+        width: `${width}px`
+      });
+    }
+    
   }
 }
 
@@ -1590,12 +1608,19 @@ class Radio extends div {
 
 class SelectBox extends div {
   input: select
-  constructor(option: { size?: Size, title?: string, multiple?: boolean }) {
+  search_container: Panel
+  items: {key: string, value:string }[]
+  item_panel: Panel
+  constructor(option: { size?: Size, title?: string, multiple?: boolean, search?: {
+    type: Resource,
+    icon?: Icons,
+    maxHeight?: number
+  } }) {
     super();
-    const {size, title, multiple} = option;
+    const {size, title, multiple, search} = option;
 
     super.AddClass('form-group');
-    super.AddStyle({marginBottom: '0px'});
+    super.AddStyle({marginBottom: '0px', position: 'relative'});
     this.input = new select();
 
     
@@ -1612,14 +1637,152 @@ class SelectBox extends div {
       super.Add(lbl);
 
     }
+
+    this.items = [];
       
 
     if (multiple != undefined && multiple) 
       this.input.AddAttr({multiple: ''});
 
     super.Add(this.input);
-    
+
+
+    /// for search logic
+    if (search != undefined) {
+
+
+      
+
+      this.search_container = new Panel({
+        shadow: Size.Small,
+        padding: {
+          all: ValueRange.Two
+        }
+      }).AddStyle({
+        width: '100%',
+        minHeight: '50px',
+        position: 'absolute',
+        left: '0',
+        zIndex: '20',
+        border: '1px solid rgb(92 92 92 / 18%)',
+        borderRadius: '5px'
+      });
+      /// positioning the search_container
+      if (title != undefined) {
+        this.search_container.AddStyle({ top: '5px' });
+      } else {
+        this.search_container.AddStyle({ top: '0px' });
+      }
+
+      this.search_container.AddClass(`bg-${Color.Light}`);
+
+      super.Add(this.search_container);
+
+      this.search_container.Hide();
+
+      // create a search
+
+      const search_item = new Textfield({ 
+        title: 'Search', type: InputType.Text
+      });
+      this.search_container.Add(search_item);
+
+      this.item_panel = new Panel({ margin: {
+        top: ValueRange.One
+      }});
+
+      this.item_panel.AddStyle({
+        overflowY: 'auto'
+      });
+
+      if (search.maxHeight != undefined) {
+        this.item_panel.AddStyle({
+          maxHeight: `${search.maxHeight}px`
+        });
+      } else {
+        this.item_panel.AddStyle({
+          maxHeight: `150px`
+        });
+      }
+
+      this.search_container.Add(this.item_panel);
+
+      search_item.AddEventListener('keyup', () => {
+        const s = search_item.GetValue().toString().toLowerCase();
+        
+        const children = this.item_panel.control.children;
+
+        for (const child of children) {
+          child['style'].display = 'none';
+        }
+
+
+        for (const child of children) {
+          if (child.textContent != undefined)
+            if (child.textContent.toString().toLowerCase().indexOf(s) > -1) {
+              child['style'].display = '';
+            }
+  
+        }
+
+      });
+
+      this.input.AddEventListener('click', (e) => {
+        e.stopPropagation();
+        this.input.AddAttr({
+          disabled: ''
+        });
+
+        for (const item of this.items) {
+          const pane = new Panel({padding: {all: ValueRange.One}});
+
+          const row = new Row({});
+
+          if (search.icon != undefined) {
+            row.AddWidget({widget: new Icon({icon: search.icon}) });
+            row.AddWidget({widget: new Box({width: 5}) });
+          }
+            
+          row.AddWidget({widget: new Text({text: item.value})});
+
+
+          pane.Add(row);
+
+
+          pane.AddStyle({
+            cursor: 'pointer'
+          });
+
+          this.item_panel.Add(pane);
+
+          pane.AddEventListener('click', () => {
+            this.input.AddValue(item.key);
+            this.bodyEvent(undefined);
+          });
+
+        }
+
+        this.search_container.Show();
+        
+      });
+
+      this.body.addEventListener('click', this.bodyEvent);
+
+      this.search_container.AddEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+    } // end of search
+
   }
+
+  private bodyEvent = (e)=> {
+
+    this.search_container.Hide();
+    this.item_panel.Clear();
+
+    this.input.DeleteAttr('disabled');
+  }
+
 
   ClearItem() {
     this.input.Clear();
@@ -1634,6 +1797,8 @@ class SelectBox extends div {
     opt.AddAttr({value: key});
 
     this.input.Add(opt);
+
+    this.items.push({ key: key, value: value });
     return this;
   }
 
@@ -2263,8 +2428,9 @@ class Modal extends div {
 }
 
 class Row extends div {
+  pad?: number
   constructor(option: {
-    widgets: Widget[],
+    widgets?: Widget[],
     reverse?: boolean,
     justify?: JustifyContent,
     padding?: number
@@ -2281,16 +2447,27 @@ class Row extends div {
       super.AddClass('flex-row-reverse');
     }
 
-    for (const item of widgets) {
-      const d = new div();
-      if (padding != undefined && padding > 0)
-        d.AddClass(`p-${padding}`);
-      
-      d.Add(item);
-      super.Add(d);
-    }
+    this.pad = padding;
+
+    if (widgets != undefined)
+      for (const item of widgets) {
+        this.AddWidget({widget: item});
+      }
     
 
+  }
+
+  AddWidget(option: {widget: Widget}) {
+    const {widget} = option;
+
+    const d = new div();
+    if (this.pad != undefined && this.pad > 0)
+      d.AddClass(`p-${this.pad}`);
+    
+    d.Add(widget);
+    super.Add(d);
+
+    return this;
   }
 }
 
