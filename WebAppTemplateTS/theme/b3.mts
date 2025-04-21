@@ -16,6 +16,11 @@ enum Color {
   White = 'white'
 }
 
+enum Theme {
+  Light = 'light',
+  Dark = 'dark'
+}
+
 enum ValueRange {
   Auto = 'auto',
   Zero = '0',
@@ -24,6 +29,13 @@ enum ValueRange {
   Three = '3',
   Four = '4',
   Five = '5'
+}
+
+enum Direction {
+  Up = 'up',
+  Down = 'down',
+  Right = 'right',
+  Left = 'left'
 }
 
 enum Position {
@@ -1854,59 +1866,6 @@ class SelectBox extends div {
   }
 }
 
-
-
-class Navbar extends nav {
-  constructor(option: { title?: string|Widget, right_menu?: Widget[], fixed?: boolean }) {
-    super();
-
-    const {title, right_menu, fixed} = option;
-
-
-
-    super.AddClass(['navbar', 'navbar-default']);
-
-
-    const container = new div().AddClass('container-fluid');
-
-    if (title != undefined) {
-      /// draw the title
-      const header = new div().AddClass('navbar-header');
-      const haa = new a();
-      haa.AddClass('navbar-brand');
-      haa.AddAttr({ href: '#' });
-      if (typeof(title) == 'string')
-        haa.Html(title);
-      else if (title instanceof Widget)
-        haa.Add(title);
-      
-      header.Add(haa);
-      container.Add(header);
-    }
-
-
-    if (right_menu != undefined) {
-      /// drawing the right page
-      // example button like sign out or notifications
-      const uul = new ul();
-
-      for (const item of right_menu) {
-        const lli = new li(); 
-        
-        lli.Add(item);
-
-        uul.Add(lli);
-      }    
-
-      uul.AddClass(['nav', 'navbar-nav', 'navbar-right']);
-      container.Add(uul);
-    }
-    
-
-    super.Add(container);
-  }
-}
-
 class Grid extends div {
   row: div
   constructor(option: { 
@@ -2548,12 +2507,178 @@ class Box extends div {
   }
 }
 
+class ButtonDropDown extends div {
+  dropmenu: div
+  toggle: boolean
+  constructor(option: {
+    bgColor?: Color
+    title?: string|Widget,
+    dropDirection?: Direction,
+    isNav?: boolean,
+    items?: {
+      key: string|Widget,
+      fn: (obj: ButtonDropDown) => void,
+      type: string 
+    }[]
+  }) {
+    super();
+    const {bgColor, title, dropDirection, items, isNav} = option;
+    if(dropDirection != undefined) 
+      super.AddClass(`drop${dropDirection}`);
+    else 
+      super.AddClass('dropdown');
+
+    let btn: Widget;
+
+    if (isNav != undefined && isNav) {
+      btn = new a().AddClass(['nav-link', 'dropdown-toggle']);
+    } else {
+      btn = new button().AddClass(['btn', 'dropdown-toggle']);
+      
+      /// it must be added in the button
+      if (bgColor != undefined) 
+        btn.AddClass(`btn-${bgColor}`);
+    }
+
+    btn.AddAttr({ariaExpanded: 'false'});
+
+    if (typeof(title) == 'string')
+      btn.Add(new Text({text: title}));
+    else if (title instanceof Widget)
+      btn.Add(title);
+
+
+    
+
+    
+    this.dropmenu = new div().AddClass('dropdown-menu');
+
+    this.toggle = false;
+
+    btn.AddEventListener('click', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      this.toggle = !this.toggle;
+      if (this.toggle) {
+        super.AddClass('show');
+        this.dropmenu.AddClass('show');
+      } else {
+        // super.DeleteClass('show');
+        // this.dropmenu.DeleteClass('show');
+        // this.dropmenu.DeleteAttr('style');
+        this.bodyClick(null);
+      }
+    });
+
+    this.body.addEventListener('click', this.bodyClick);
+
+    super.Add(btn);
+    super.Add(this.dropmenu);
+
+    if (items != undefined) {
+      for (const item of items) {
+        this.AddItem(item);
+      }
+    }
+
+  }
+
+  public AddItem(option: {
+    key: string|Widget,
+    fn: (obj: ButtonDropDown) => void,
+    type: string 
+  }) {
+
+    const {key, fn, type} = option;
+
+    const aa = new a().AddClass('dropdown-item');
+    aa.AddAttr({href: '#'});
+    this.dropmenu.Add(aa);
+    
+    if (typeof(key) == 'string') {
+      aa.Add(new Text({text: key}));
+    }
+    else if (key instanceof Widget) {
+      aa.Add(key);
+    }
+
+    if (fn != undefined) {
+      aa.AddEventListener('click', () => {
+        fn(this);
+      });
+    }
+
+
+    aa.AddEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+    });
+  }
+
+  public Close() {
+    super.DeleteClass('show');
+    this.dropmenu.DeleteClass('show');
+    this.dropmenu.DeleteAttr('style');
+    this.toggle = false;
+  }
+
+  private bodyClick = (e) => {
+    this.Close();
+  }
+
+  public Dispose(): void {
+    console.log('dropdown disposed!');
+    this.body.removeEventListener('click', this.bodyClick);
+  }
+}
+
+
+// create a full navigation Widget
+class Navbar extends nav {
+  constructor(option: {
+    theme?: Theme,
+    bgColor?: Color,
+    brand?: string|Widget
+  }) {
+    super();
+    const { brand, bgColor, theme } = option;
+
+    super.AddClass(['navbar', 'navbar-expand-lg']);
+    
+    if (theme != undefined) {
+      super.AddClass(`navbar-${theme}`);
+    } else {
+      super.AddClass('navbar-dark');
+    }
+
+    if (bgColor != undefined) {
+      super.AddClass(`bg-${bgColor}`);
+    }
+
+    if (typeof(brand) == 'string') {
+      const aa = new a().AddClass('navbar-brand');
+      aa.AddAttr({href: '#'});
+      aa.Add(new Text({text: brand}));
+
+      super.Add(aa);
+    } else if (brand instanceof Widget) {
+      // 
+
+    }
+
+  }
+}
+
+
 // Enumeration
-export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant, JustifyContent, Resource, Position, ValueRange }
+export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant, JustifyContent, Resource, Position, ValueRange, Direction, Theme }
 
 
 // Classes
 export {
+  Navbar,
+  ButtonDropDown,
   Box,
   Column,
   Row,
@@ -2564,7 +2689,6 @@ export {
   Panel,
   Grid,
   Dialog,
-  Navbar,
   SelectBox,
   Radio,
   CheckBox,

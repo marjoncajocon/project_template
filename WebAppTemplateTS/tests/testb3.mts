@@ -1,5 +1,5 @@
 import { button, div } from "../plugin/core/core.mts";
-import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Grid, GridSize, Icon, Icons, InputType, Label, ListGroup, Navbar, Pagination, Card, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well, Panel, Html, Text, Dialog, ButtonVariant, SpinnerVariant, Spinner, Switch, Modal, Row, Column, JustifyContent, Resource, Box, Position, ValueRange} from "../theme/b3.mts";
+import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Grid, GridSize, Icon, Icons, InputType, Label, ListGroup, Pagination, Card, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well, Panel, Html, Text, Dialog, ButtonVariant, SpinnerVariant, Spinner, Switch, Modal, Row, Column, JustifyContent, Resource, Box, Position, ValueRange, ButtonDropDown, Direction, Navbar, Theme} from "../theme/b3.mts";
 
 class TestBootstrap3 extends div {
   constructor() {
@@ -388,7 +388,46 @@ class TestBootstrap3 extends div {
     testselect5.AddItem({ key: 'o', value: 'Other'});
 
     const fp = new Textfield({type: InputType.File});
-    super.Add([bread, btn_primary, alert1, badge, progress, spin, pagination,
+
+    const dropdown = new ButtonDropDown({
+      bgColor: Color.Primary,
+      title: 'Drop Me'
+    });
+
+    dropdown.AddItem({
+      key: 'Link 1',
+      fn: (o) => {
+        console.log(1);
+        o.Close();
+      },
+      type: ''
+    });
+
+    dropdown.AddItem({
+      key: 'Link 2',
+      fn: () => {
+        console.log(2);
+      },
+      type: ''
+    });
+
+    dropdown.AddItem({
+      key: 'Link 3',
+      fn: () => {
+        console.log(3);
+      },
+      type: ''
+    });
+
+    const nav = new Navbar({
+      brand: 'Navbar',
+      bgColor: Color.Primary
+    });
+    
+    super.Add([
+      nav,
+      bread, 
+      btn_primary, alert1, badge, progress, spin, pagination,
       list,
       card,
       tf,
@@ -427,7 +466,8 @@ class TestBootstrap3 extends div {
         testselect,
         testselect5,
         new Box({height: 20}),
-        fp
+        fp,
+        dropdown
       ])
     ]);
   }
