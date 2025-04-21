@@ -1611,13 +1611,13 @@ class SelectBox extends div {
   search_container: Panel
   items: {key: string, value:string }[]
   item_panel: Panel
-  constructor(option: { size?: Size, title?: string, multiple?: boolean, search?: {
+  constructor(option: { size?: Size, title?: string, multiple?: boolean, placeholder?: string, search?: {
     type: Resource,
     icon?: Icons,
     maxHeight?: number
   } }) {
     super();
-    const {size, title, multiple, search} = option;
+    const {size, title, multiple, search, placeholder} = option;
 
     super.AddClass('form-group');
     super.AddStyle({marginBottom: '0px', position: 'relative'});
@@ -1650,6 +1650,9 @@ class SelectBox extends div {
     /// for search logic
     if (search != undefined) {
 
+      super.AddStyle({
+        position: 'relative'
+      });
 
       
 
@@ -1669,9 +1672,9 @@ class SelectBox extends div {
       });
       /// positioning the search_container
       if (title != undefined) {
-        this.search_container.AddStyle({ top: '5px' });
+        this.search_container.AddStyle({ top: '65px' });
       } else {
-        this.search_container.AddStyle({ top: '0px' });
+        this.search_container.AddStyle({ top: '35px' });
       }
 
       this.search_container.AddClass(`bg-${Color.Light}`);
@@ -1683,8 +1686,19 @@ class SelectBox extends div {
       // create a search
 
       const search_item = new Textfield({ 
-        title: 'Search', type: InputType.Text
+        title: 'Search', type: InputType.Text,
+        InputGroup: {
+          prepend: false,
+          group: new Icon({icon: Icons.Search})
+        }
       });
+
+      if (placeholder != undefined) {
+        search_item.input.AddAttr({
+          placeholder: placeholder
+        });
+      }
+
       this.search_container.Add(search_item);
 
       this.item_panel = new Panel({ margin: {
@@ -1727,14 +1741,27 @@ class SelectBox extends div {
 
       });
 
+      this.input.AddEventListener('mousedown', (e) => {
+        e.preventDefault();
+      });
+
       this.input.AddEventListener('click', (e) => {
         e.stopPropagation();
+        e.preventDefault();
         this.input.AddAttr({
           disabled: ''
         });
 
         for (const item of this.items) {
           const pane = new Panel({padding: {all: ValueRange.One}});
+
+          pane.AddEventListener('mouseover', () => {
+            pane.AddClass('bg-info');
+          });
+
+          pane.AddEventListener('mouseout', () => {
+            pane.DeleteClass('bg-info');
+          });
 
           const row = new Row({});
 
@@ -1756,6 +1783,8 @@ class SelectBox extends div {
           this.item_panel.Add(pane);
 
           pane.AddEventListener('click', () => {
+            //search_item.AddValue(item.value);
+            search_item.SetValue(item.value);
             this.input.AddValue(item.key);
             this.bodyEvent(undefined);
           });

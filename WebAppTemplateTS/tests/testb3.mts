@@ -317,6 +317,7 @@ class TestBootstrap3 extends div {
 
     const testselect = new SelectBox({
       title: 'Sample Text',
+      placeholder: 'Please Select People',
       search: {
         type: Resource.Local,
         icon: Icons.Phone,
@@ -424,8 +425,7 @@ class TestBootstrap3 extends div {
       new Panel({padding: { all: ValueRange.Three } }).Add([
         testselect,
         testselect5
-      ]),
-      new Box({height: 500})
+      ])
     ]);
   }
 }
