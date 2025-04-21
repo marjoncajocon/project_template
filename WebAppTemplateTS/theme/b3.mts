@@ -1672,9 +1672,9 @@ class SelectBox extends div {
       });
       /// positioning the search_container
       if (title != undefined) {
-        this.search_container.AddStyle({ top: '65px' });
+        this.search_container.AddStyle({ top: '21px' });
       } else {
-        this.search_container.AddStyle({ top: '35px' });
+        this.search_container.AddStyle({ top: '0px' });
       }
 
       this.search_container.AddClass(`bg-${Color.Light}`);

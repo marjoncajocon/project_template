@@ -387,6 +387,7 @@ class TestBootstrap3 extends div {
     testselect5.AddItem({ key: 'f', value: 'Female'});
     testselect5.AddItem({ key: 'o', value: 'Other'});
 
+    const fp = new Textfield({type: InputType.File});
     super.Add([bread, btn_primary, alert1, badge, progress, spin, pagination,
       list,
       card,
@@ -424,7 +425,9 @@ class TestBootstrap3 extends div {
       new Text({text: `sample overflow, hellow marjon cajocon the greatest`, textOverflow: true, width: 100}),
       new Panel({padding: { all: ValueRange.Three } }).Add([
         testselect,
-        testselect5
+        testselect5,
+        new Box({height: 20}),
+        fp
       ])
     ]);
   }
