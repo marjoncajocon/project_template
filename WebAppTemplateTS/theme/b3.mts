@@ -26,6 +26,13 @@ enum ValueRange {
   Five = '5'
 }
 
+enum Direction {
+  Up = 'up',
+  Down = 'down',
+  Right = 'right',
+  Left = 'left'
+}
+
 enum Position {
   Top = 'top',
   Left = 'left',
@@ -2548,12 +2555,140 @@ class Box extends div {
   }
 }
 
+class ButtonDropDown extends div {
+  dropmenu: div
+  toggle: boolean
+  constructor(option: {
+    bgColor?: Color
+    title?: string|Widget,
+    dropDirection?: Direction,
+    isNav?: boolean,
+    items?: {
+      key: string|Widget,
+      fn: (obj: ButtonDropDown) => void,
+      type: string 
+    }[]
+  }) {
+    super();
+    const {bgColor, title, dropDirection, items, isNav} = option;
+    if(dropDirection != undefined) 
+      super.AddClass(`drop${dropDirection}`);
+    else 
+      super.AddClass('dropdown');
+
+    let btn: Widget;
+
+    if (isNav != undefined && isNav) {
+      btn = new a().AddClass(['nav-link', 'dropdown-toggle']);
+    } else {
+      btn = new button().AddClass(['btn', 'dropdown-toggle']);
+      
+      /// it must be added in the button
+      if (bgColor != undefined) 
+        btn.AddClass(`btn-${bgColor}`);
+    }
+
+    btn.AddAttr({ariaExpanded: 'false'});
+
+    if (typeof(title) == 'string')
+      btn.Add(new Text({text: title}));
+    else if (title instanceof Widget)
+      btn.Add(title);
+
+
+    
+
+    
+    this.dropmenu = new div().AddClass('dropdown-menu');
+
+    this.toggle = false;
+
+    btn.AddEventListener('click', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      this.toggle = !this.toggle;
+      if (this.toggle) {
+        super.AddClass('show');
+        this.dropmenu.AddClass('show');
+      } else {
+        // super.DeleteClass('show');
+        // this.dropmenu.DeleteClass('show');
+        // this.dropmenu.DeleteAttr('style');
+        this.bodyClick(null);
+      }
+    });
+
+    this.body.addEventListener('click', this.bodyClick);
+
+    super.Add(btn);
+    super.Add(this.dropmenu);
+
+    if (items != undefined) {
+      for (const item of items) {
+        this.AddItem(item);
+      }
+    }
+
+  }
+
+  public AddItem(option: {
+    key: string|Widget,
+    fn: (obj: ButtonDropDown) => void,
+    type: string 
+  }) {
+
+    const {key, fn, type} = option;
+
+    const aa = new a().AddClass('dropdown-item');
+    aa.AddAttr({href: '#'});
+    this.dropmenu.Add(aa);
+    
+    if (typeof(key) == 'string') {
+      aa.Add(new Text({text: key}));
+    }
+    else if (key instanceof Widget) {
+      aa.Add(key);
+    }
+
+    if (fn != undefined) {
+      aa.AddEventListener('click', () => {
+        fn(this);
+      });
+    }
+
+
+    aa.AddEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+    });
+  }
+
+  public Close() {
+    super.DeleteClass('show');
+    this.dropmenu.DeleteClass('show');
+    this.dropmenu.DeleteAttr('style');
+    this.toggle = false;
+  }
+
+  private bodyClick = (e) => {
+    this.Close();
+  }
+
+  public Dispose(): void {
+    console.log('dropdown disposed!');
+    this.body.removeEventListener('click', this.bodyClick);
+  }
+}
+
+
 // Enumeration
-export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant, JustifyContent, Resource, Position, ValueRange }
+export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant, JustifyContent, Resource, Position, ValueRange, Direction }
 
 
 // Classes
 export {
+  ButtonDropDown,
   Box,
   Column,
   Row,
