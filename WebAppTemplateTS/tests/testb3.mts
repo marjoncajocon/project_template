@@ -421,7 +421,8 @@ class TestBootstrap3 extends div {
 
     const nav = new Navbar({
       brand: 'Navbar',
-      bgColor: Color.Primary
+      bgColor: Color.Primary,
+      isStickyTop: true
     });
 
     nav.AddLink({
@@ -492,11 +493,11 @@ class TestBootstrap3 extends div {
     testbtn.PopOver({header: '', body: ''});
     
     super.Add([
-      nav,
       bread, 
       btn_primary, alert1, badge, progress, spin, pagination,
       list,
       card,
+      nav,
       tf,
       area,
       checkb,
