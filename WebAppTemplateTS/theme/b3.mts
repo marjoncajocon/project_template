@@ -2539,7 +2539,6 @@ class Box extends div {
 
 class ButtonDropDown extends div {
   dropmenu: div
-  toggle: boolean
   constructor(option: {
     bgColor?: Color
     title?: string|Widget,
@@ -2586,13 +2585,14 @@ class ButtonDropDown extends div {
     
     this.dropmenu = new div().AddClass('dropdown-menu');
 
-    this.toggle = false;
+
 
     btn.AddEventListener('click', (e) => {
       e.stopPropagation();
       e.preventDefault();
-      this.toggle = !this.toggle;
-      if (this.toggle) {
+
+
+      if (!super.HasClass('show')) {
         super.AddClass('show');
         this.dropmenu.AddClass('show');
       } else {
@@ -2653,7 +2653,7 @@ class ButtonDropDown extends div {
     super.DeleteClass('show');
     this.dropmenu.DeleteClass('show');
     this.dropmenu.DeleteAttr('style');
-    this.toggle = false;
+  
   }
 
   private bodyClick = (e) => {
