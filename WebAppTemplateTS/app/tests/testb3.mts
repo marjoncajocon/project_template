@@ -466,7 +466,17 @@ class TestBootstrap3 extends div {
             fn: () => {}
           },
           {
-            key: 'Menu4',
+            key: new ButtonDropDown({
+              title: 'Menu4',
+              isNav: false,
+              dropDirection: Direction.Right,
+              items: [
+                { key: 'Sample 1', fn: () => {} },
+                { key: 'Sample 2', fn: () => {} },
+                { key: 'Sample 3', fn: () => {} },
+                { key: 'Sample 4', fn: () => {} }
+              ]
+            }),
             fn: () => {}
           }
         ]
