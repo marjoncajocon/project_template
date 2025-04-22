@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"web/db"
 )
 
 /* sample middleware */
@@ -25,8 +26,25 @@ func main() {
 
 	mux.HandleFunc("/hellow", func(rw http.ResponseWriter, r *http.Request) {
 
-		fmt.Println(r.Method)
-		fmt.Println(r.Body)
+		func() {
+
+			con := db.GetConnection()
+
+			rows, err := con.Query("select fund_json from check_lists limit 1")
+
+			if err == nil {
+				defer rows.Close()
+				for rows.Next() {
+					var fund string
+					rows.Scan(&fund)
+					fmt.Println(fund)
+				}
+			}
+
+		}()
+
+		// fmt.Println(r.Method)
+		// fmt.Println(r.Body)
 
 		rw.Write([]byte("Hello World"))
 	})
