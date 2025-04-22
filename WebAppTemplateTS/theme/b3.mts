@@ -545,30 +545,16 @@ class Button extends button {
 
     // const {header, body} = option;
 
-    // super.AddEventListener('click', (e) => {
+    super.AddEventListener('click', (e) => {
 
-    //   const pop = new div().AddClass(['popover', 'fade', 'bs-popover-left', 'show']);;
-
-    //   pop.AddAttr({
-    //     style: 'position: absolute; transform: translate3d(684px, 8821px, 0px); top: 0px; left: 0px; will-change: transform;'
-    //   });
-
-    //   const arrow = new div().AddStyle({top: '31px'}).AddClass('arrow');
-
+      // this is use for debugging purpose only
+      // we will try to create a popover or tooltip in the future
+      // using this will help us to build dynamic tooltip position and 
+      // popover positioning
       
-    //   const h = new h3().AddClass('popover-header');
-
-    //   h.Text('hellow header');
-
-    //   const b = new div().AddClass('popover-body');
-    //   pop.Add(arrow);
-    //   pop.Add(h);
-    //   pop.Add(b);
-
-    //   this.body.appendChild(pop.control);
-
-
-    // });
+      console.dir(`TOP:${this.control.offsetTop} - LEFT: ${this.control.offsetLeft} - WIDTH:${this.control.clientWidth} - HEIGHT:${this.control.clientHeight}`);
+    
+    });
 
 
 

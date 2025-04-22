@@ -547,7 +547,7 @@ class TestBootstrap3 extends div {
         body: 'title',
         open: true
       }),
-      testbtn
+      new Panel({padding: {all: ValueRange.Five}}).Add(testbtn)
     ]);
   }
 }
