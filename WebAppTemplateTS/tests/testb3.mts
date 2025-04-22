@@ -1,5 +1,5 @@
 import { button, div } from "../plugin/core/core.mts";
-import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Grid, GridSize, Icon, Icons, InputType, Label, ListGroup, Pagination, Card, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well, Panel, Html, Text, Dialog, ButtonVariant, SpinnerVariant, Spinner, Switch, Modal, Row, Column, JustifyContent, Resource, Box, Position, ValueRange, ButtonDropDown, Direction, Navbar, Theme} from "../theme/b3.mts";
+import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Grid, GridSize, Icon, Icons, InputType, Label, ListGroup, Pagination, Card, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well, Panel, Html, Text, Dialog, ButtonVariant, SpinnerVariant, Spinner, Switch, Modal, Row, Column, JustifyContent, Resource, Box, Position, ValueRange, ButtonDropDown, Direction, Navbar, Theme, Toast} from "../theme/b3.mts";
 
 class TestBootstrap3 extends div {
   constructor() {
@@ -423,6 +423,70 @@ class TestBootstrap3 extends div {
       brand: 'Navbar',
       bgColor: Color.Primary
     });
+
+    nav.AddLink({
+      title: 'Home',
+      fn: () => {
+        console.log('Home is clicked!');
+      }
+    });
+
+    nav.AddLink({
+      title: 'Features',
+      fn: (o) => {
+        console.log(`Featured is clicked!`);
+        o.Close();
+      }
+    });
+
+    nav.AddLink({
+      title: 'Pricing'
+    });
+
+    nav.AddLink({
+      title: 'About'
+    });
+
+    nav.AddLink({
+      title: new ButtonDropDown({
+        isNav: true,
+        title: 'Dropdown',
+        items: [
+          {
+            key: 'Menu1',
+            fn: (o) => {o.Close();}
+          },
+          {
+            key: 'Menu2',
+            fn: () => {}
+          },
+          {
+            key: 'Menu3',
+            fn: () => {}
+          },
+          {
+            key: 'Menu4',
+            fn: () => {}
+          }
+        ]
+      })
+    });
+
+    nav.AddAction({
+      widget: new Row({widgets:[
+        new Textfield({
+          placeholder: 'Search',
+          InputGroup: {prepend: false, group: new Icon({icon: Icons.Search})}
+        }),
+        new Box({width: 10}),
+        new Button({text: new Icon({icon: Icons.LogIn}), color: Color.Primary})
+      ]
+    })
+    });
+
+   
+
+
     
     super.Add([
       nav,
@@ -468,7 +532,18 @@ class TestBootstrap3 extends div {
         new Box({height: 20}),
         fp,
         dropdown
-      ])
+      ]),
+      new Toast({
+        header: new Row({
+          widgets: [
+            new Icon({icon: Icons.Save}),
+            new Box({width: 5}),
+            new Text({text: 'test'})
+          ]
+        }),
+        body: 'title',
+        open: true
+      })
     ]);
   }
 }
