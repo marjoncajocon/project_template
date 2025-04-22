@@ -2677,10 +2677,12 @@ class Navbar extends nav {
   constructor(option: {
     theme?: Theme,
     bgColor?: Color,
-    brand?: string|Widget
+    brand?: string|Widget,
+    isFixedTop?: boolean,
+    isStickyTop?: boolean
   }) {
     super();
-    const { brand, bgColor, theme } = option;
+    const { brand, bgColor, theme, isFixedTop, isStickyTop } = option;
 
     super.AddClass(['navbar', 'navbar-expand-lg']);
     
@@ -2705,6 +2707,13 @@ class Navbar extends nav {
       super.Add(brand);
     }
 
+    if (isFixedTop != undefined && isFixedTop) {
+      super.AddClass(`fixed-top`);
+    }
+
+    if (isStickyTop != undefined && isStickyTop) {
+      super.AddClass(`sticky-top`);
+    }
     // add the toggler button 
 
     const bar = new button();
