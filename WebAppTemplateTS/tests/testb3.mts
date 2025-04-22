@@ -117,7 +117,7 @@ class TestBootstrap3 extends div {
       value: 'Not Active'
     });
 
-    const tab = new BasicTab({});
+    const tab = new BasicTab({pill: true});
     tab.AddItem({
       title: 'Test Item',
       active: true,
@@ -487,6 +487,9 @@ class TestBootstrap3 extends div {
    
 
 
+    const testbtn = new Button({text: 'Test Pop Over Left'});
+
+    testbtn.PopOver({header: '', body: ''});
     
     super.Add([
       nav,
@@ -543,7 +546,8 @@ class TestBootstrap3 extends div {
         }),
         body: 'title',
         open: true
-      })
+      }),
+      testbtn
     ]);
   }
 }

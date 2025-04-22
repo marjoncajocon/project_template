@@ -1,4 +1,4 @@
-import { a, button, col, div, head, header, img, input, label, li, nav, option, select, span, table, tbody, td, textarea, th, thead, tr, ul, Widget } from "../plugin/core/core.mts";
+import { a, button, col, div, h3, head, header, img, input, label, li, nav, option, select, span, table, tbody, td, textarea, th, thead, tr, ul, Widget } from "../plugin/core/core.mts";
 
 
 enum Color {
@@ -537,6 +537,44 @@ class Button extends button {
     super.DeleteAttr('disabled');
     return this;
   }
+
+  PopOver(option: {
+    header: string|Widget,
+    body: string|Widget
+  }) {
+
+    // const {header, body} = option;
+
+    // super.AddEventListener('click', (e) => {
+
+    //   const pop = new div().AddClass(['popover', 'fade', 'bs-popover-left', 'show']);;
+
+    //   pop.AddAttr({
+    //     style: 'position: absolute; transform: translate3d(684px, 8821px, 0px); top: 0px; left: 0px; will-change: transform;'
+    //   });
+
+    //   const arrow = new div().AddStyle({top: '31px'}).AddClass('arrow');
+
+      
+    //   const h = new h3().AddClass('popover-header');
+
+    //   h.Text('hellow header');
+
+    //   const b = new div().AddClass('popover-body');
+    //   pop.Add(arrow);
+    //   pop.Add(h);
+    //   pop.Add(b);
+
+    //   this.body.appendChild(pop.control);
+
+
+    // });
+
+
+
+    return this;
+  }
+
 }
 
 
@@ -845,16 +883,23 @@ class Card extends div {
 
 class BasicTab extends div {
   private menu: ul;
-  private list: li[];
+  private list: a[];
   private content: Widget;
 
-  constructor(option: { }) {
+  constructor(option: { pill?:boolean }) {
     super();
     
+    const {pill} = option;
     this.list = [];
 
     this.menu = new ul();
-    this.menu.AddClass(['nav', 'nav-tabs']);
+    this.menu.AddClass('nav');
+
+    if(pill != undefined && pill) {
+      this.menu.AddClass('nav-pills');
+    } else {
+      this.menu.AddClass('nav-tabs');
+    }
 
     this.content = new div();
 
@@ -887,7 +932,7 @@ class BasicTab extends div {
     lli.AddClass('nav-item');
 
     if (active != undefined && active) {
-      lli.AddClass('active');
+      aa.AddClass('active');
       
       if (body != undefined) {
         this.content.Clear();
@@ -899,7 +944,7 @@ class BasicTab extends div {
 
     lli.AddEventListener('click', (e) => {
       this.ClearActive();
-      lli.AddClass('active');
+      aa.AddClass('active');
 
       if (body != undefined) {
         this.content.Clear();
@@ -911,7 +956,7 @@ class BasicTab extends div {
     this.menu.Add(lli);
 
 
-    this.list.push(lli);
+    this.list.push(aa);
     return this;
   }
 }
