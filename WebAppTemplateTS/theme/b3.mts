@@ -2564,6 +2564,7 @@ class ButtonDropDown extends div {
 
     if (isNav != undefined && isNav) {
       btn = new a().AddClass(['nav-link', 'dropdown-toggle']);
+      btn.AddStyle({cursor: 'pointer'});
     } else {
       btn = new button().AddClass(['btn', 'dropdown-toggle']);
       
