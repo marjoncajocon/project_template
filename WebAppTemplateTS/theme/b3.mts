@@ -1,4 +1,4 @@
-import { a, button, col, div, head, img, input, label, li, nav, option, select, span, table, tbody, td, textarea, th, thead, tr, ul, Widget } from "../plugin/core/core.mts";
+import { a, button, col, div, head, header, img, input, label, li, nav, option, select, span, table, tbody, td, textarea, th, thead, tr, ul, Widget } from "../plugin/core/core.mts";
 
 
 enum Color {
@@ -477,6 +477,9 @@ class Button extends button {
 
     if (text != undefined && typeof(text) == 'string')
       super.Add(new Text( {text: text }));
+    
+    if (text != undefined && text instanceof Widget)
+      super.Add(text);
 
 
     if (suffix_icon != undefined) {
@@ -2267,11 +2270,7 @@ class Spinner extends div {
 }
 
 
-class Toast extends div {
-  constructor() {
-    super();
-  }
-}
+
 
 
 class Modal extends div {
@@ -2518,10 +2517,13 @@ class ButtonDropDown extends div {
     items?: {
       key: string|Widget,
       fn: (obj: ButtonDropDown) => void,
-      type: string 
+      type?: string 
     }[]
   }) {
     super();
+    super.AddStyle({
+      display: 'inline-block'
+    });
     const {bgColor, title, dropDirection, items, isNav} = option;
     if(dropDirection != undefined) 
       super.AddClass(`drop${dropDirection}`);
@@ -2586,7 +2588,7 @@ class ButtonDropDown extends div {
   public AddItem(option: {
     key: string|Widget,
     fn: (obj: ButtonDropDown) => void,
-    type: string 
+    type?: string 
   }) {
 
     const {key, fn, type} = option;
@@ -2636,6 +2638,10 @@ class ButtonDropDown extends div {
 
 // create a full navigation Widget
 class Navbar extends nav {
+  nav_content: div;
+  nav_list: ul;
+  link_list: li[];
+  action: div;
   constructor(option: {
     theme?: Theme,
     bgColor?: Color,
@@ -2664,9 +2670,143 @@ class Navbar extends nav {
       super.Add(aa);
     } else if (brand instanceof Widget) {
       // 
-
+      super.Add(brand);
     }
 
+    // add the toggler button 
+
+    const bar = new button();
+    bar.AddClass('navbar-toggler');
+    bar.Html(`<span class="navbar-toggler-icon"></span>`);
+    super.Add(bar);
+    // end toggler button
+    this.link_list = [];
+    this.nav_content = new div().AddClass([
+      'collapse', 'navbar-collapse'
+    ]);
+
+    this.nav_list = new ul().AddClass(['navbar-nav', 'mr-auto']);
+    this.nav_content.Add(this.nav_list);
+
+    super.Add(this.nav_content);
+
+    this.action = new div().AddClass(['form-inline']);
+
+    this.nav_content.Add(this.action);
+
+    bar.AddEventListener('click', () => {
+      
+      if (!this.nav_content.HasClass('show'))
+        this.nav_content.AddClass('show');
+      else
+        this.nav_content.DeleteClass('show');
+
+    });
+  }
+  public Close() {
+    this.nav_content.DeleteClass('show');
+    return this;
+  }
+  private clearActive() {
+    for (const item of this.link_list) {
+      item.DeleteClass('active');
+    }
+  }
+
+  AddLink(option: {
+    title: string|Widget,
+    fn?: (o: Navbar) => void
+  }) {
+    const {title, fn} = option;
+
+    const li1 = new li().AddClass('nav-item');
+    const a1 = new a().AddClass('nav-link');
+    a1.AddAttr({
+      href: '#'
+    });
+
+    
+    if (fn != undefined) {
+      a1.AddEventListener('click', (e) => { 
+        this.clearActive();
+        li1.AddClass('active');
+        e.preventDefault();
+        fn(this);
+      });
+    } 
+
+    // add the content title
+    if (typeof(title) == 'string') {
+      a1.Text(title);
+      li1.Add(a1);
+    } else if (title instanceof Widget) {
+      li1.Add(title);
+    }
+    // end add the content title
+   
+    
+    this.nav_list.Add(li1);
+
+    this.link_list.push(li1); 
+
+    return this;
+  }
+
+  AddAction(option: {widget: Widget}) {
+    const {widget} = option;
+
+    this.action.Add(widget);
+    return this;
+  }
+}
+
+
+class Toast extends div {
+  cheader: div;
+  cbody: div;
+  constructor(option: {
+    header: string|Widget,
+    body: string|Widget,
+    open?: boolean
+  }) {
+    super();
+    const {header, body, open} = option;
+
+    super.AddClass(['toast', 'fade']);
+    if (open != undefined && open) {
+      super.AddClass('show');
+    }
+
+
+    this.cheader = new div().AddClass('toast-header');
+
+    this.cbody = new div().AddClass('toast-body');
+
+    super.Add([ this.cheader, this.cbody ]);
+
+
+    if (typeof(header) == 'string') {
+      this.cheader.Text(header);
+    } else if (header instanceof Widget) {
+      this.cheader.Add(header);
+    }
+
+    if (typeof(body) == 'string') {
+      this.cbody.Text(body);
+    } else if (body instanceof Widget) {
+      this.cbody.Add(body);
+    }
+
+  }
+
+  Open() {
+    super.AddClass('show');
+    return this;
+  }
+
+  Close() {
+    super.DeleteClass('show');
+    return this;
   }
 }
 
@@ -2713,36 +2853,3 @@ export {
   Status,
   Alerts
 };
-
-
-// for row implementation
-// .row {
-//   display: flex;                /* Enables flex context for all its children */
-//   justify-content: space-between; /* Align children with space between them */
-//   align-items: center;         /* Center content vertically */
-//   padding: 10px;              /* Add some padding */
-//   background-color: #f2f2f2;  /* Background color for the row */
-// }
-// .item {
-//   padding: 20px;              /* Padding around items */
-//   background-color: #4CAF50;  /* Background color for items */
-//   color: white;               /* Text color */
-//   border-radius: 5px;        /* Rounded corners */
-// }
-
-// for columen implementation
-
-// .column {
-//   display: flex;                /* Enables flex context for all its children */
-//   flex-direction: column;      /* Align items vertically */
-//   align-items: center;         /* Center items horizontally */
-//   padding: 10px;              /* Add some padding */
-//   background-color: #e7e7e7;  /* Background color for the column */
-// }
-// .item {
-//   padding: 20px;              /* Padding around items */
-//   background-color: #4CAF50;  /* Background color for items */
-//   color: white;               /* Text color */
-//   border-radius: 5px;        /* Rounded corners */
-//   margin: 10px 0;            /* Margin between items */
-// }
