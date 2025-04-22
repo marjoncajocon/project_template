@@ -1,4 +1,4 @@
-import { a, button, col, div, head, header, img, input, label, li, nav, option, select, span, table, tbody, td, textarea, th, thead, tr, ul, Widget } from "../plugin/core/core.mts";
+import { a, button, col, div, h3, head, header, img, input, label, li, nav, option, select, span, table, tbody, td, textarea, th, thead, tr, ul, Widget } from "../plugin/core/core.mts";
 
 
 enum Color {
@@ -537,6 +537,30 @@ class Button extends button {
     super.DeleteAttr('disabled');
     return this;
   }
+
+  PopOver(option: {
+    header: string|Widget,
+    body: string|Widget
+  }) {
+
+    // const {header, body} = option;
+
+    super.AddEventListener('click', (e) => {
+
+      // this is use for debugging purpose only
+      // we will try to create a popover or tooltip in the future
+      // using this will help us to build dynamic tooltip position and 
+      // popover positioning
+      
+      console.dir(`TOP:${this.control.offsetTop} - LEFT: ${this.control.offsetLeft} - WIDTH:${this.control.clientWidth} - HEIGHT:${this.control.clientHeight}`);
+    
+    });
+
+
+
+    return this;
+  }
+
 }
 
 
@@ -845,16 +869,23 @@ class Card extends div {
 
 class BasicTab extends div {
   private menu: ul;
-  private list: li[];
+  private list: a[];
   private content: Widget;
 
-  constructor(option: { }) {
+  constructor(option: { pill?:boolean }) {
     super();
     
+    const {pill} = option;
     this.list = [];
 
     this.menu = new ul();
-    this.menu.AddClass(['nav', 'nav-tabs']);
+    this.menu.AddClass('nav');
+
+    if(pill != undefined && pill) {
+      this.menu.AddClass('nav-pills');
+    } else {
+      this.menu.AddClass('nav-tabs');
+    }
 
     this.content = new div();
 
@@ -887,7 +918,7 @@ class BasicTab extends div {
     lli.AddClass('nav-item');
 
     if (active != undefined && active) {
-      lli.AddClass('active');
+      aa.AddClass('active');
       
       if (body != undefined) {
         this.content.Clear();
@@ -899,7 +930,7 @@ class BasicTab extends div {
 
     lli.AddEventListener('click', (e) => {
       this.ClearActive();
-      lli.AddClass('active');
+      aa.AddClass('active');
 
       if (body != undefined) {
         this.content.Clear();
@@ -911,7 +942,7 @@ class BasicTab extends div {
     this.menu.Add(lli);
 
 
-    this.list.push(lli);
+    this.list.push(aa);
     return this;
   }
 }
@@ -2508,7 +2539,6 @@ class Box extends div {
 
 class ButtonDropDown extends div {
   dropmenu: div
-  toggle: boolean
   constructor(option: {
     bgColor?: Color
     title?: string|Widget,
@@ -2534,6 +2564,7 @@ class ButtonDropDown extends div {
 
     if (isNav != undefined && isNav) {
       btn = new a().AddClass(['nav-link', 'dropdown-toggle']);
+      btn.AddStyle({cursor: 'pointer'});
     } else {
       btn = new button().AddClass(['btn', 'dropdown-toggle']);
       
@@ -2555,13 +2586,14 @@ class ButtonDropDown extends div {
     
     this.dropmenu = new div().AddClass('dropdown-menu');
 
-    this.toggle = false;
+
 
     btn.AddEventListener('click', (e) => {
       e.stopPropagation();
       e.preventDefault();
-      this.toggle = !this.toggle;
-      if (this.toggle) {
+
+
+      if (!super.HasClass('show')) {
         super.AddClass('show');
         this.dropmenu.AddClass('show');
       } else {
@@ -2622,7 +2654,7 @@ class ButtonDropDown extends div {
     super.DeleteClass('show');
     this.dropmenu.DeleteClass('show');
     this.dropmenu.DeleteAttr('style');
-    this.toggle = false;
+  
   }
 
   private bodyClick = (e) => {
