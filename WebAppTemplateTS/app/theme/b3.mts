@@ -2322,7 +2322,7 @@ class Modal extends div {
       width: '100%',
       height: '100%',
       backgroundColor: 'rgba(0, 0, 0, 0.2)',
-      zIndex: '1000',
+      zIndex: '2000',
       position: 'fixed',
       top: '0',
       left: '0',
