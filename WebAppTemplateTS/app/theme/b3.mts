@@ -2549,6 +2549,7 @@ class ButtonDropDown extends div {
   dropmenu: div
   rowCount: number
   constructor(option: {
+    hover?: boolean,
     noCaret?: boolean,
     bgColor?: Color
     title?: string|Widget,
@@ -2568,11 +2569,14 @@ class ButtonDropDown extends div {
     super.AddStyle({
       display: 'inline-block'
     });
-    const {bgColor, title, dropDirection, items, isNav, grid, noCaret} = option;
+    const {bgColor, title, dropDirection, items, isNav, grid, noCaret, hover} = option;
     if(dropDirection != undefined) 
       super.AddClass(`drop${dropDirection}`);
     else 
       super.AddClass('dropdown');
+
+    
+
 
     let btn: Widget;
 
@@ -2607,6 +2611,24 @@ class ButtonDropDown extends div {
 
     
     this.dropmenu = new div().AddClass('dropdown-menu');
+
+    if (hover != undefined && hover) {
+      super.AddEventListener('mouseover', () => {
+        super.AddClass('show');
+        this.dropmenu.AddClass('show');
+
+        if (grid != undefined && grid) { 
+          this.dropmenu.AddStyle({
+            width: `${grid.width}px`
+          });
+        }
+      });
+
+      super.AddEventListener('mouseout', () => {
+        super.DeleteClass('show');
+        this.dropmenu.DeleteClass('show');
+      });
+    }
 
     if (grid != undefined && grid) {
       this.dropmenu.AddAttr({
