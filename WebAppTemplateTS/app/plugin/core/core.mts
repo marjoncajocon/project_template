@@ -163,11 +163,8 @@ class Widget {
     }
     return this.control.innerText;
   }
-  public Show(is_block:boolean = false): Widget {
-    if (!is_block)
-      this.control.style.display = 'inline-block';
-    else
-      this.control.style.display = 'block';
+  public Show(): Widget {
+    this.control.style.display = '';
     
     return this;
   }
