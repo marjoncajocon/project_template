@@ -2537,11 +2537,16 @@ class Box extends div {
 
 class ButtonDropDown extends div {
   dropmenu: div
+  rowCount: number
   constructor(option: {
     bgColor?: Color
     title?: string|Widget,
     dropDirection?: Direction,
     isNav?: boolean,
+    grid?: {
+      width: number,
+      rowCount?: number
+    },
     items?: {
       key: string|Widget,
       fn: (obj: ButtonDropDown) => void,
@@ -2552,7 +2557,7 @@ class ButtonDropDown extends div {
     super.AddStyle({
       display: 'inline-block'
     });
-    const {bgColor, title, dropDirection, items, isNav} = option;
+    const {bgColor, title, dropDirection, items, isNav, grid} = option;
     if(dropDirection != undefined) 
       super.AddClass(`drop${dropDirection}`);
     else 
@@ -2579,11 +2584,25 @@ class ButtonDropDown extends div {
       btn.Add(title);
 
 
-    
+    this.rowCount = 0;
 
     
     this.dropmenu = new div().AddClass('dropdown-menu');
 
+    if (grid != undefined && grid) {
+      this.dropmenu.AddAttr({
+        'aria-labelledby': 'themes'
+      });
+
+      this.dropmenu.AddStyle({
+        width: `${grid.width}px`
+      });
+    }
+
+
+    if (grid != undefined && grid.rowCount != undefined) {
+      this.rowCount = grid.rowCount;
+    }
 
 
     btn.AddEventListener('click', (e) => {
@@ -2599,6 +2618,12 @@ class ButtonDropDown extends div {
         // this.dropmenu.DeleteClass('show');
         // this.dropmenu.DeleteAttr('style');
         this.bodyClick(null);
+      }
+
+      if (grid != undefined && grid) { 
+        this.dropmenu.AddStyle({
+          width: `${grid.width}px`
+        });
       }
     });
 
@@ -2624,6 +2649,13 @@ class ButtonDropDown extends div {
     const {key, fn, type} = option;
 
     const aa = new a().AddClass('dropdown-item');
+
+    if (this.rowCount > 0) {
+      aa.AddStyle({
+        width: `${100.0 / this.rowCount}%`
+      });
+    }
+
     aa.AddAttr({href: '#'});
     this.dropmenu.Add(aa);
     
