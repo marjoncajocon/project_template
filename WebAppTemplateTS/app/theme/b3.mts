@@ -791,9 +791,7 @@ class BreadCrumb extends ul {
 
       const aa = new a();
       aa.Html(item);
-      list.Add(aa.AddAttr({ 
-        'href': '#'
-      }));
+      list.Add(aa);
 
       list.AddEventListener('click', (e) => {
         e.preventDefault();
