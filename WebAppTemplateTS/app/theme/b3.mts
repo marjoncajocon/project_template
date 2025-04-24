@@ -1902,7 +1902,8 @@ class Grid extends div {
   row: div
   constructor(option: { 
     item: Widget[],
-    size: GridSize[]
+    size: GridSize[],
+    noPadding?: boolean
   }) {
     super();
     // super.AddClass('container-fluid');
@@ -1911,8 +1912,12 @@ class Grid extends div {
     this.row.AddClass('row');
 
    
-    const {item, size} = option;
+    const {item, size, noPadding} = option;
     
+    if (noPadding != undefined && noPadding) {
+      this.row.AddClass('no-gutters');
+    }
+
     for (const item1 of item) {
       const cell = new div();
       cell.AddClass(size);
