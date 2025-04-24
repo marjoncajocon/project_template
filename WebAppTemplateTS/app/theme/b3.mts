@@ -2539,6 +2539,7 @@ class ButtonDropDown extends div {
   dropmenu: div
   rowCount: number
   constructor(option: {
+    noCaret?: boolean,
     bgColor?: Color
     title?: string|Widget,
     dropDirection?: Direction,
@@ -2557,7 +2558,7 @@ class ButtonDropDown extends div {
     super.AddStyle({
       display: 'inline-block'
     });
-    const {bgColor, title, dropDirection, items, isNav, grid} = option;
+    const {bgColor, title, dropDirection, items, isNav, grid, noCaret} = option;
     if(dropDirection != undefined) 
       super.AddClass(`drop${dropDirection}`);
     else 
@@ -2566,14 +2567,22 @@ class ButtonDropDown extends div {
     let btn: Widget;
 
     if (isNav != undefined && isNav) {
-      btn = new a().AddClass(['nav-link', 'dropdown-toggle']);
+      btn = new a().AddClass(['nav-link']);
       btn.AddStyle({cursor: 'pointer'});
     } else {
-      btn = new button().AddClass(['btn', 'dropdown-toggle']);
+      btn = new button().AddClass(['btn']);
       
       /// it must be added in the button
       if (bgColor != undefined) 
         btn.AddClass(`btn-${bgColor}`);
+    }
+
+    if (noCaret != undefined) {
+      if (!noCaret) {
+        btn.AddClass('dropdown-toggle');
+      }
+    } else {
+      btn.AddClass('dropdown-toggle');
     }
 
     btn.AddAttr({ariaExpanded: 'false'});
