@@ -1905,7 +1905,7 @@ class Grid extends div {
     size: GridSize[]
   }) {
     super();
-    super.AddClass('container-fluid');
+    // super.AddClass('container-fluid');
 
     this.row = new div();
     this.row.AddClass('row');
@@ -1934,6 +1934,7 @@ class Grid extends div {
 
 class Panel extends div {
   constructor(option: {
+    isFluid?: boolean,
     backgroundcolor?: Color,
     image?: string,
     network_image?: string,
@@ -1959,7 +1960,11 @@ class Panel extends div {
   }) {
     super();
 
-    const {backgroundcolor, network_image, image, width, height, shadow, textAlign, padding, margin, hide} = option;
+    const {backgroundcolor, network_image, image, width, height, shadow, textAlign, padding, margin, hide, isFluid} = option;
+
+    if (isFluid != undefined && isFluid) {
+      super.AddClass(`container-fluid`);
+    }
 
     if (backgroundcolor != undefined)
       super.AddClass(`bg-${backgroundcolor}`);
