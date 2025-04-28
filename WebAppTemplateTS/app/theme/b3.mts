@@ -831,9 +831,9 @@ class ListGroup extends ul {
 }
 
 class Card extends div {
-  constructor(option: { color?: Color, body?: Widget, footer?: Widget, title?: string, header_color?: Color }) {
+  constructor(option: { color?: Color, body?: Widget, footer?: Widget, title?: string, header_color?: Color, bodyPadding?: number }) {
     super();
-    const {color, body, footer, title, header_color} = option;
+    const {color, body, footer, title, header_color, bodyPadding} = option;
     super.AddClass(`card`);
 
     
@@ -851,8 +851,15 @@ class Card extends div {
     if (body != undefined) 
       content.Add(body)
 
+    if (bodyPadding != undefined) 
+      content.AddStyle({padding: `${bodyPadding}px`});
+    
+
     if (title != undefined)
       super.Add(head);
+
+    
+
     super.Add(content);
 
     if (footer != undefined) {
