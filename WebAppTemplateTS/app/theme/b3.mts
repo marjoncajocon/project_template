@@ -901,7 +901,7 @@ class BasicTab extends div {
   AddItem(option: {
     title: string,
     active?: boolean,
-    body?: Widget
+    body?: (obj: div) => void
   }) {
     const { title, active, body } = option;
 
@@ -920,7 +920,8 @@ class BasicTab extends div {
       
       if (body != undefined) {
         this.content.Clear();
-        this.content.Add(body);
+        //this.content.Add(body);
+        body(this.content);
       }
 
     }
@@ -932,7 +933,8 @@ class BasicTab extends div {
 
       if (body != undefined) {
         this.content.Clear();
-        this.content.Add(body);
+        //this.content.Add(body);
+        body(this.content);
       }
       e.preventDefault();
     });
