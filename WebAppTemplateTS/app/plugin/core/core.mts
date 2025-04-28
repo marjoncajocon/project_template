@@ -164,7 +164,8 @@ class Widget {
     return this.control.innerText;
   }
   public Show(): Widget {
-    this.control.style.display = 'inline-block';
+    this.control.style.display = '';
+    
     return this;
   }
   public Hide(): Widget {

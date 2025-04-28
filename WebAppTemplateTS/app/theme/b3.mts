@@ -791,9 +791,7 @@ class BreadCrumb extends ul {
 
       const aa = new a();
       aa.Html(item);
-      list.Add(aa.AddAttr({ 
-        'href': '#'
-      }));
+      list.Add(aa);
 
       list.AddEventListener('click', (e) => {
         e.preventDefault();
@@ -833,9 +831,9 @@ class ListGroup extends ul {
 }
 
 class Card extends div {
-  constructor(option: { color?: Color, body?: Widget, footer?: Widget, title?: string, header_color?: Color }) {
+  constructor(option: { color?: Color, body?: Widget, footer?: Widget, title?: string, header_color?: Color, bodyPadding?: number }) {
     super();
-    const {color, body, footer, title, header_color} = option;
+    const {color, body, footer, title, header_color, bodyPadding} = option;
     super.AddClass(`card`);
 
     
@@ -853,8 +851,15 @@ class Card extends div {
     if (body != undefined) 
       content.Add(body)
 
+    if (bodyPadding != undefined) 
+      content.AddStyle({padding: `${bodyPadding}px`});
+    
+
     if (title != undefined)
       super.Add(head);
+
+    
+
     super.Add(content);
 
     if (footer != undefined) {
@@ -903,7 +908,7 @@ class BasicTab extends div {
   AddItem(option: {
     title: string,
     active?: boolean,
-    body?: Widget
+    body?: (obj: div) => void
   }) {
     const { title, active, body } = option;
 
@@ -922,7 +927,8 @@ class BasicTab extends div {
       
       if (body != undefined) {
         this.content.Clear();
-        this.content.Add(body);
+        //this.content.Add(body);
+        body(this.content);
       }
 
     }
@@ -934,7 +940,8 @@ class BasicTab extends div {
 
       if (body != undefined) {
         this.content.Clear();
-        this.content.Add(body);
+        //this.content.Add(body);
+        body(this.content);
       }
       e.preventDefault();
     });
@@ -1904,17 +1911,22 @@ class Grid extends div {
   row: div
   constructor(option: { 
     item: Widget[],
-    size: GridSize[]
+    size: GridSize[],
+    noPadding?: boolean
   }) {
     super();
-    super.AddClass('container-fluid');
+    // super.AddClass('container-fluid');
 
     this.row = new div();
     this.row.AddClass('row');
 
    
-    const {item, size} = option;
+    const {item, size, noPadding} = option;
     
+    if (noPadding != undefined && noPadding) {
+      this.row.AddClass('no-gutters');
+    }
+
     for (const item1 of item) {
       const cell = new div();
       cell.AddClass(size);
@@ -1936,6 +1948,7 @@ class Grid extends div {
 
 class Panel extends div {
   constructor(option: {
+    isFluid?: boolean,
     backgroundcolor?: Color,
     image?: string,
     network_image?: string,
@@ -1961,7 +1974,11 @@ class Panel extends div {
   }) {
     super();
 
-    const {backgroundcolor, network_image, image, width, height, shadow, textAlign, padding, margin, hide} = option;
+    const {backgroundcolor, network_image, image, width, height, shadow, textAlign, padding, margin, hide, isFluid} = option;
+
+    if (isFluid != undefined && isFluid) {
+      super.AddClass(`container-fluid`);
+    }
 
     if (backgroundcolor != undefined)
       super.AddClass(`bg-${backgroundcolor}`);
@@ -2322,7 +2339,7 @@ class Modal extends div {
       width: '100%',
       height: '100%',
       backgroundColor: 'rgba(0, 0, 0, 0.2)',
-      zIndex: '1000',
+      zIndex: '2000',
       position: 'fixed',
       top: '0',
       left: '0',
@@ -2539,11 +2556,18 @@ class Box extends div {
 
 class ButtonDropDown extends div {
   dropmenu: div
+  rowCount: number
   constructor(option: {
+    hover?: boolean,
+    noCaret?: boolean,
     bgColor?: Color
     title?: string|Widget,
     dropDirection?: Direction,
     isNav?: boolean,
+    grid?: {
+      width: number,
+      rowCount?: number
+    },
     items?: {
       key: string|Widget,
       fn: (obj: ButtonDropDown) => void,
@@ -2554,23 +2578,34 @@ class ButtonDropDown extends div {
     super.AddStyle({
       display: 'inline-block'
     });
-    const {bgColor, title, dropDirection, items, isNav} = option;
+    const {bgColor, title, dropDirection, items, isNav, grid, noCaret, hover} = option;
     if(dropDirection != undefined) 
       super.AddClass(`drop${dropDirection}`);
     else 
       super.AddClass('dropdown');
 
+    
+
+
     let btn: Widget;
 
     if (isNav != undefined && isNav) {
-      btn = new a().AddClass(['nav-link', 'dropdown-toggle']);
+      btn = new a().AddClass(['nav-link']);
       btn.AddStyle({cursor: 'pointer'});
     } else {
-      btn = new button().AddClass(['btn', 'dropdown-toggle']);
+      btn = new button().AddClass(['btn']);
       
       /// it must be added in the button
       if (bgColor != undefined) 
         btn.AddClass(`btn-${bgColor}`);
+    }
+
+    if (noCaret != undefined) {
+      if (!noCaret) {
+        btn.AddClass('dropdown-toggle');
+      }
+    } else {
+      btn.AddClass('dropdown-toggle');
     }
 
     btn.AddAttr({ariaExpanded: 'false'});
@@ -2581,11 +2616,43 @@ class ButtonDropDown extends div {
       btn.Add(title);
 
 
-    
+    this.rowCount = 0;
 
     
     this.dropmenu = new div().AddClass('dropdown-menu');
 
+    if (hover != undefined && hover) {
+      super.AddEventListener('mouseover', () => {
+        super.AddClass('show');
+        this.dropmenu.AddClass('show');
+
+        if (grid != undefined && grid) { 
+          this.dropmenu.AddStyle({
+            width: `${grid.width}px`
+          });
+        }
+      });
+
+      super.AddEventListener('mouseout', () => {
+        super.DeleteClass('show');
+        this.dropmenu.DeleteClass('show');
+      });
+    }
+
+    if (grid != undefined && grid) {
+      this.dropmenu.AddAttr({
+        'aria-labelledby': 'themes'
+      });
+
+      this.dropmenu.AddStyle({
+        width: `${grid.width}px`
+      });
+    }
+
+
+    if (grid != undefined && grid.rowCount != undefined) {
+      this.rowCount = grid.rowCount;
+    }
 
 
     btn.AddEventListener('click', (e) => {
@@ -2601,6 +2668,12 @@ class ButtonDropDown extends div {
         // this.dropmenu.DeleteClass('show');
         // this.dropmenu.DeleteAttr('style');
         this.bodyClick(null);
+      }
+
+      if (grid != undefined && grid) { 
+        this.dropmenu.AddStyle({
+          width: `${grid.width}px`
+        });
       }
     });
 
@@ -2626,6 +2699,13 @@ class ButtonDropDown extends div {
     const {key, fn, type} = option;
 
     const aa = new a().AddClass('dropdown-item');
+
+    if (this.rowCount > 0) {
+      aa.AddStyle({
+        width: `${100.0 / this.rowCount}%`
+      });
+    }
+
     aa.AddAttr({href: '#'});
     this.dropmenu.Add(aa);
     
