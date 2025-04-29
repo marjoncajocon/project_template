@@ -2332,7 +2332,7 @@ class Modal2 extends div {
   private modal_content;
 
   constructor(option: {
-    header: Widget|string,
+    header: Row|string,
     footer?: Widget,
     size?: Size,
     isCenter?: boolean,
@@ -2383,6 +2383,8 @@ class Modal2 extends div {
 
       if (typeof(header) == 'string') {
         modal_title.Add(new Text({text: header}));
+      } else if (header instanceof Row) {
+        modal_title.Add(header);
       }
 
       this.modal_content.Add(this.fheader);
