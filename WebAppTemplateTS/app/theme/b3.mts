@@ -1,4 +1,4 @@
-import { a, button, col, div, h3, head, header, img, input, label, li, nav, option, select, span, table, tbody, td, textarea, th, thead, tr, ul, Widget } from "../plugin/core/core.mts";
+import { a, button, col, div, h3, h4, h5, head, header, img, input, label, li, nav, option, select, span, table, tbody, td, textarea, th, thead, tr, ul, Widget } from "../plugin/core/core.mts";
 
 
 enum Color {
@@ -2318,9 +2318,158 @@ class Spinner extends div {
 }
 
 
+// Modal2 base on the bootstrap modal
+// Integration part of the bootstrap
+class Modal2 extends div {
+  private resolvefn;
+  private promise;
+  private backdrop:div;
+
+  private fheader:div;
+  private fbody:div;
+  private ffooter:div;
+
+  private modal_content;
+
+  constructor(option: {
+    header: Widget|string,
+    footer?: Widget,
+    size?: Size,
+    isCenter?: boolean,
+    scrollable?: boolean
+  }) {
+    super();
+    const {header, footer, size, isCenter, scrollable} = option;
+    super.AddClass(['modal', 'fade']);
+    super.AddStyle({
+      display: 'none'
+    });
+
+    this.promise = new Promise((resolve) => {
+      this.resolvefn = resolve;
+    });
+
+
+    const dialog = new div();
+    dialog.AddClass('modal-dialog');
+
+    if (size != undefined) {
+      dialog.AddClass(`modal-${size}`);
+    }
+
+    if (isCenter != undefined && isCenter) {
+      dialog.AddClass('modal-dialog-centered');
+    }
+
+    if (scrollable != undefined && scrollable) {
+      dialog.AddClass('modal-dialog-scrollable');
+    }
+
+    this.modal_content = new div();
+    this.modal_content.AddClass('modal-content');
+
+    dialog.Add(this.modal_content);
+    // draw the header, body and the footer
+    // this area is part of the modal_content variable
+    this.fheader = new div().AddClass('modal-header');
+    this.fbody = new div().AddClass('modal-body');
+    this.ffooter = new div().AddClass('modal-footer');
+
+    if (header != undefined) {
+
+      const modal_title = new div().AddClass('modal-title');
+
+      this.fheader.Add(modal_title);
+
+      if (typeof(header) == 'string') {
+        modal_title.Add(new Text({text: header}));
+      }
+
+      this.modal_content.Add(this.fheader);
+
+      const close = new button().AddClass('close');
+      close.AddAttr({type: 'button'});
+      close.Add(new Icon({icon: Icons.RemoveCircle}));
+
+      close.AddEventListener('click', () => {
+        this.Close();
+      });
+
+      this.fheader.Add(close);
+
+    }
+
+    
+
+    this.modal_content.Add(this.fbody);
+
+    if (footer != undefined) {
+      this.modal_content.Add(this.ffooter);
+
+      this.ffooter.Add(footer);
+    }
+
+    // end here the header, body and footer
+
+    
+
+    this.backdrop = new div();
+    this.backdrop.AddClass(['modal-backdrop', 'show']);
+    
+    
+
+    super.Add(dialog);
+  }
+
+  SetFooter(footer:Row) {
+    
+    this.modal_content.Add(this.ffooter);
+
+    this.ffooter.Add(footer);
+  }
+
+  SetBody(body: Panel) {
+    this.fbody.Add(body);
+  }
+
+  async Open() {
+    super.AddClass(['show', 'fade']);
+    this.body.classList.add('modal-open');
+    super.AddStyle({display: 'block'});
+
+    this.body.style.overflow = 'hidden';
+    this.body.appendChild(this.control);
+
+    this.backdrop.AddClass('fade');
+    this.body.appendChild(this.backdrop.control);
+    return this.promise;
+  }
+
+  Close(resolve: boolean|string|null = null) {
+
+    super.DeleteClass('show');
+    this.body.classList.remove('modal-open');
+    super.AddStyle({display: 'none'});
+    this.backdrop.Delete();
+
+
+    this.body.style.overflow = '';
+
+    this.resolvefn(resolve);
+
+    this.Delete();
+  }
+
+  public Dispose(): void {
+    
+  }
+  
+}
 
 
 
+// this modal is a custom modal
+// not part of the bootstrap
 class Modal extends div {
 
 
@@ -2972,5 +3121,6 @@ export {
   Textfield,
   TextBox,
   Status,
-  Alerts
+  Alerts, 
+  Modal2
 };
