@@ -2336,10 +2336,11 @@ class Modal2 extends div {
     footer?: Widget,
     size?: Size,
     isCenter?: boolean,
-    scrollable?: boolean
+    scrollable?: boolean,
+    headerColor?: Color
   }) {
     super();
-    const {header, footer, size, isCenter, scrollable} = option;
+    const {header, footer, size, isCenter, scrollable, headerColor} = option;
     super.AddClass(['modal', 'fade']);
     super.AddStyle({
       display: 'none'
@@ -2398,6 +2399,10 @@ class Modal2 extends div {
       });
 
       this.fheader.Add(close);
+
+      if (headerColor != undefined) {
+        this.fheader.AddClass(`bg-${headerColor}`);
+      }
 
     }
 
@@ -3083,14 +3088,16 @@ class Toast extends div {
 }
 
 
-const Alert = async (msg: string|Widget) => {
+const Alert = async (msg: string|Widget, isError = false) => {
   const modal = new Modal2({
+  headerColor: isError ? Color.Danger : Color.Success,
   isCenter: true,
   scrollable:true,
     header: new Row({widgets: [
     new Icon({icon: Icons.Envelope}),
     new Box({width: 10}),
     new Text({text: 'Alert'}),
+  
   ]})});
 
   if (typeof(msg) == 'string') {
@@ -3125,8 +3132,9 @@ const Alert = async (msg: string|Widget) => {
 };
 
 
-const Confirm = async (msg: string|Widget) => {
+const Confirm = async (msg: string|Widget, isError = false) => {
   const modal = new Modal2({
+  headerColor: isError ? Color.Warning : Color.Primary,
   isCenter: true,
   scrollable:true,
     header: new Row({widgets: [
