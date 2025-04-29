@@ -2336,10 +2336,11 @@ class Modal2 extends div {
     footer?: Widget,
     size?: Size,
     isCenter?: boolean,
-    scrollable?: boolean
+    scrollable?: boolean,
+    headerColor?: Color
   }) {
     super();
-    const {header, footer, size, isCenter, scrollable} = option;
+    const {header, footer, size, isCenter, scrollable, headerColor} = option;
     super.AddClass(['modal', 'fade']);
     super.AddStyle({
       display: 'none'
@@ -2398,6 +2399,10 @@ class Modal2 extends div {
       });
 
       this.fheader.Add(close);
+
+      if (headerColor != undefined) {
+        this.fheader.AddClass(`bg-${headerColor}`);
+      }
 
     }
 
@@ -3083,6 +3088,107 @@ class Toast extends div {
 }
 
 
+const Alert = async (msg: string|Widget, isError = false) => {
+  const modal = new Modal2({
+  headerColor: isError ? Color.Danger : Color.Success,
+  isCenter: true,
+  scrollable:true,
+    header: new Row({widgets: [
+    new Icon({icon: Icons.Envelope}),
+    new Box({width: 10}),
+    new Text({text: 'Alert'}),
+  
+  ]})});
+
+  if (typeof(msg) == 'string') {
+    modal.SetBody(new Panel({padding: {all: ValueRange.Two}}).Add(new Html({text: msg})));
+  } else if (msg instanceof Widget) {
+    modal.SetBody(new Panel({padding: {all: ValueRange.Two}}).Add(msg));
+  }
+  const okay = new Button({
+    color: Color.Primary,
+    text: new Row({widgets: [
+      new Icon({icon: Icons.Check}),
+      new Box({width: 10}),
+      new Text({text: 'Okay'})
+    ]})
+  });
+
+  modal.SetFooter(new Row({widgets: [
+    okay
+  ]}));
+
+  okay.AddEventListener('click', () => {
+    modal.Close(true);
+  });
+
+  const res = await modal.Open();
+  if (res == null) return false;
+
+  if (res) return true;
+
+  return false;
+  
+};
+
+
+const Confirm = async (msg: string|Widget, isError = false) => {
+  const modal = new Modal2({
+  headerColor: isError ? Color.Warning : Color.Primary,
+  isCenter: true,
+  scrollable:true,
+    header: new Row({widgets: [
+    new Icon({icon: Icons.QuestionSign}),
+    new Box({width: 10}),
+    new Text({text: 'Confirmation'}),
+  ]})});
+
+  if (typeof(msg) == 'string') {
+    modal.SetBody(new Panel({padding: {all: ValueRange.Two}}).Add(new Html({text: msg})));
+  } else if (msg instanceof Widget) {
+    modal.SetBody(new Panel({padding: {all: ValueRange.Two}}).Add(msg));
+  }
+  const okay = new Button({
+    color: Color.Primary,
+    text: new Row({widgets: [
+      new Icon({icon: Icons.Check}),
+      new Box({width: 10}),
+      new Text({text: 'Okay'})
+    ]})
+  });
+
+  const close = new Button({
+    color: Color.Warning,
+    text: new Row({widgets: [
+      new Icon({icon: Icons.Check}),
+      new Box({width: 10}),
+      new Text({text: 'Cancel'})
+    ]})
+  });
+
+  modal.SetFooter(new Row({widgets: [
+    okay, 
+    new Box({width: 3}),
+    close
+  ]}));
+
+  close.AddEventListener('click', () => {
+    modal.Close(false);
+  });
+
+  okay.AddEventListener('click', () => {
+    modal.Close(true);
+  });
+
+  const res = await modal.Open();
+  if (res == null) return false;
+
+  if (res) return true;
+
+  return false;
+  
+};
+
 // Enumeration
 export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant, JustifyContent, Resource, Position, ValueRange, Direction, Theme }
 
@@ -3124,5 +3230,7 @@ export {
   TextBox,
   Status,
   Alerts, 
-  Modal2
+  Modal2,
+  Alert,
+  Confirm
 };
