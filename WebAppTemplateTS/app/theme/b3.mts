@@ -1082,6 +1082,13 @@ class Textfield extends div {
     
     }
   }
+  
+  ReadOnly(ok:boolean = true) {
+    if (ok)
+      this.input.AddAttr({readonly: ''});
+    else
+      this.input.DeleteAttr('readonly');
+  }
 
   MaskValue() {
     if (this.mask != undefined) {
