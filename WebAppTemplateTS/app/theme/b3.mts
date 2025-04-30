@@ -1,5 +1,5 @@
 import { a, button, col, div, h3, h4, h5, head, header, img, input, label, li, nav, option, select, span, table, tbody, td, textarea, th, thead, tr, ul, Widget } from "../plugin/core/core.mts";
-
+import { InputMask } from "../plugin/core/imask";
 
 enum Color {
   Default = 'default',
@@ -956,8 +956,26 @@ class BasicTab extends div {
 
 
 class Textfield extends div {
+  /*
+  
+  MASKING GUIDE: 
+    where definitions are:
+    
+    0 - any digit
+    a - any letter
+    * - any char
+    
+    other chars which is not in custom definitions supposed to be fixed
+    [] - make input optional
+    {} - include fixed part in unmasked value
+    ` - prevent symbols shift back
+
+    If definition character should be treated as fixed it should be escaped by \\ (E.g. \\0).
+  
+  */ 
   public input: input;
   private msg: div
+  private mask
   constructor(option: { 
     title?: string,
     type?: InputType,
@@ -968,10 +986,15 @@ class Textfield extends div {
       prepend: boolean,
       group: Widget,
       size?: Size
+    },
+    imask?: {
+      option: {
+        
+      } 
     }
   }) {
     super();
-    const {title, type, size, placeholder, has_feedback, InputGroup} = option;
+    const {title, type, size, placeholder, has_feedback, InputGroup, imask} = option;
 
     this.input = new input();
 
@@ -1052,7 +1075,28 @@ class Textfield extends div {
         super.Add(this.msg);
       }
     }
+
+    if (imask != undefined) {
+      
+      this.mask = new InputMask(this.input.control, imask.option);
     
+    }
+  }
+
+  MaskValue() {
+    if (this.mask != undefined) {
+      return this.mask.value;
+    } 
+
+    return '';
+  }
+
+  UnMaskValue() {
+    if (this.mask != undefined) {
+      return this.mask.unmaskedValue;
+    } 
+
+    return '';
   }
 
   Update(okay: boolean, msg: string): boolean{
