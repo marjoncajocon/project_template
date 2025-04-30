@@ -1039,40 +1039,68 @@ class Textfield extends div {
 
     
     } else {
-      if (has_feedback != undefined && has_feedback)
-        super.AddClass('has-success');
-  
-      super.AddClass('form-group');
-      super.AddStyle({marginBottom: '0px'});
-  
-      this.input.AddClass('form-control');
-  
-      if (size != undefined)
-        super.AddClass(`input-group-${size}`);
-      
-      if (type != undefined)
-        this.input.AddAttr({type: type});
-  
-      if (placeholder != undefined)
-        this.input.AddAttr({placeholder: placeholder});
-  
-      if (title != undefined) {
-        const lbl = new label();
-        lbl.AddClass('form-control-label');
-        lbl.Text(title);
-        super.Add(lbl);
-      }
-  
-      
-  
+
+      if (type != undefined && type == InputType.File) {
+        // for specific input file
+        
+        if (size != undefined)
+          super.AddClass(`input-group-${size}`);
+        
+        if (type != undefined)
+          this.input.AddAttr({type: type});
     
-      super.Add(this.input);
-      this.msg = new div().Hide();
-  
-      if (has_feedback != undefined && has_feedback) {
+        if (placeholder != undefined)
+          this.input.AddAttr({placeholder: placeholder});
+
+        super.AddStyle({marginBottom: '0px'});
+        super.AddClass('custom-file');
+        this.input.AddClass('custom-file-input');
+        
+        const lbl = new label().AddClass('custom-file-label');
+        lbl.Html(`Choose file`);
+
+        super.Add(this.input);
+        super.Add(lbl);
+
+
+      } else {
+        // for general input
+        if (has_feedback != undefined && has_feedback)
+          super.AddClass('has-success');
+    
+        super.AddClass('form-group');
+        super.AddStyle({marginBottom: '0px'});
+    
+        this.input.AddClass('form-control');
+    
+        if (size != undefined)
+          super.AddClass(`input-group-${size}`);
+        
+        if (type != undefined)
+          this.input.AddAttr({type: type});
+    
+        if (placeholder != undefined)
+          this.input.AddAttr({placeholder: placeholder});
+    
+        if (title != undefined) {
+          const lbl = new label();
+          lbl.AddClass('form-control-label');
+          lbl.Text(title);
+          super.Add(lbl);
+        }
+    
+        
+    
       
-  
-        super.Add(this.msg);
+        super.Add(this.input);
+        this.msg = new div().Hide();
+    
+        if (has_feedback != undefined && has_feedback) {
+        
+    
+          super.Add(this.msg);
+        }
+        /// for general input
       }
     }
 
