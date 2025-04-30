@@ -2440,14 +2440,22 @@ class Modal2 extends div {
   }
 
   async Open() {
-    super.AddClass(['show', 'fade']);
+    setTimeout(() => {
+      super.AddClass(['show', 'fade']);
+    
+    }, 10);
+    
+    
     this.body.classList.add('modal-open');
     super.AddStyle({display: 'block'});
 
     this.body.style.overflow = 'hidden';
     this.body.appendChild(this.control);
 
-    this.backdrop.AddClass('fade');
+    setTimeout(() => {
+      this.backdrop.AddClass('fade');
+    }, 10);
+
     this.body.appendChild(this.backdrop.control);
     return this.promise;
   }
