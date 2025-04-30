@@ -1082,12 +1082,30 @@ class Textfield extends div {
     
     }
   }
+
+  public Dispose(): void {
+    if (this.mask != undefined) {
+      
+      this.mask.destroy();
+      delete this.mask;
+      console.log('mask destroyed!');
+      super.Dispose();
+    }
+  }
   
   ReadOnly(ok:boolean = true) {
     if (ok)
       this.input.AddAttr({readonly: ''});
     else
       this.input.DeleteAttr('readonly');
+  }
+
+  UpdateMaskValue() {
+    if (this.mask != undefined) {
+      this.mask.updateValue();
+      this.mask._onChange();
+    }
+    return this;
   }
 
   MaskValue() {
