@@ -22,17 +22,35 @@ import './theme/bootstrap4/css/theme-lumen.css';
 //import './theme/bootstrap4/css/theme-cerulean.css';
 //import './theme/bootstrap4/css/theme-pulse.css';
 //import './theme/bootstrap4/css/theme-materia.css';
-
-import './theme/bootstrap4/css/gicon.css';
+import './theme/b3.css';
 
 import { button, Widget, Window } from "./plugin/core/core.mts";
 import TestBootstrap3 from "./tests/testb3.mts";
-
+import WebScaffold from './theme/b3-extended.mts';
+import { Box, Button, Color, Icon, Icons, Row, Textfield } from './theme/b3.mts';
 
 
 
 const MyApp = new Window();
-MyApp.Navigate(new TestBootstrap3());
+
+//MyApp.Navigate(new TestBootstrap3()); 
+const app = new WebScaffold({
+  appBar: {
+    title: 'Title',
+    action: [
+      new Textfield({placeholder: 'Search'}).AddStyle({width: '200px'}),
+      new Box({width: 5}),
+      new Button({text: new Icon({icon: Icons.LogOut}), color: Color.Danger}),
+      new Box({width: 10})
+    ],
+    drawer: {
+      
+    }
+  }
+});
+
+MyApp.Navigate(app);
+
 MyApp.Run();
 
 export default MyApp;

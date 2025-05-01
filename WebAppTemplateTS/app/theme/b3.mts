@@ -624,12 +624,18 @@ class Badge extends span {
 
 class Icon extends span {
   gicon: Icons
-  constructor(option: { icon: Icons}) {
+  constructor(option: { icon: Icons, size?: number}) {
     super();
 
-    const {icon} = option;
+    const {icon, size} = option;
 
     super.AddClass(['glyphicon', `glyphicon-${icon}`]);
+
+    if (size != undefined) {
+      super.AddStyle({
+        fontSize: `${size}px`
+      });
+    }
 
     this.gicon = icon;
 
@@ -2782,6 +2788,7 @@ class Row extends div {
 
 
 class Column extends div {
+  pad?: number
   constructor(option: {
     widgets: Widget[],
     reverse?: boolean,
@@ -2799,7 +2806,7 @@ class Column extends div {
     if (reverse != undefined && reverse == true) {
       super.AddClass('flex-column-reverse');
     }
-
+    this.pad = padding;
     for (const item of widgets) {
       const d = new div();
       if (padding != undefined && padding > 0)
@@ -2808,6 +2815,19 @@ class Column extends div {
       super.Add(d);
     }
 
+  }
+
+  AddWidget(option: {widget: Widget}) {
+    const {widget} = option;
+
+    const d = new div();
+    if (this.pad != undefined && this.pad > 0)
+      d.AddClass(`p-${this.pad}`);
+    
+    d.Add(widget);
+    super.Add(d);
+
+    return this;
   }
 }
 
