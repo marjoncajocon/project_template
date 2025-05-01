@@ -1,5 +1,18 @@
-import { a, button, col, div, h3, h4, h5, head, header, img, input, label, li, nav, option, select, span, table, tbody, td, textarea, th, thead, tr, ul, Widget } from "../plugin/core/core.mts";
+import { Chart } from "../plugin/core/chartjs";
+import { a, button, canvas, col, div, h3, h4, h5, head, header, img, input, label, li, nav, option, select, span, table, tbody, td, textarea, th, thead, tr, ul, Widget } from "../plugin/core/core.mts";
 import { InputMask } from "../plugin/core/imask";
+
+
+enum ChartType {
+  LINE = 'line',
+  BAR = 'bar',
+  RADAR = 'radar',
+  DOUGHNUT = 'doughnut',
+  PIE ='pie',
+  BUBBLE ='bubble',
+  SCATTER ='scatter',
+  POLAR_AREA = 'polarArea'
+}
 
 enum Color {
   Default = 'default',
@@ -3294,12 +3307,117 @@ const Confirm = async (msg: string|Widget, isError = false) => {
   
 };
 
+// About chart
+class ChartV1 extends canvas {
+  private chart
+  constructor(option: {
+    type: ChartType,
+    data: number[],
+    label?: string,
+    backgroundColor?: string[],
+    borderWidth?: number,
+    labels: string[],
+    borderColor?: string[]
+  }) {
+    super();
+
+    let {data, label, backgroundColor, borderWidth, labels, borderColor, type} = option;
+
+    if (data == undefined) data = [];
+    if (label == undefined) label = '';
+    if (backgroundColor == undefined) backgroundColor = [];
+    if (borderWidth == undefined) borderWidth = 0;
+    if (labels == undefined) labels = [];
+    if (borderColor == undefined) borderColor = [];
+
+    this.chart = new Chart(this.control,  {
+      type: type, // Chart type
+      data: {
+        labels: labels, // X-axis labels
+        datasets: [{
+          label: label,
+          data: data, // Data points
+          backgroundColor: backgroundColor,
+          borderColor: borderColor,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+    setTimeout(() => {
+      this.Init({
+        data: [20, 10, 15, 25, 30, 40],
+        backgroundColor: ['rgba(255, 0, 0, 1)', 'rgba(0, 255, 0, 1)'],
+        label: 'updated label',
+        borderWidth: 4
+      });
+
+      this.Update();
+    }, 3000);
+  }
+
+  getChartObject() {
+    return this.chart;
+  }
+
+  Init(option: {
+    labels?: [],
+    data: number[],
+    label?: string,
+    backgroundColor?: string[],
+    borderWidth?: number,
+    borderColor?: string[]
+  }, index: number = 0) {
+    const {data, label, backgroundColor, borderWidth, labels, borderColor} = option;
+
+    this.chart.data.datasets[index].data = data;
+
+    if (label != undefined)
+      this.chart.data.datasets[index].label = label;
+
+    if (backgroundColor != undefined) 
+      this.chart.data.datasets[index].backgroundColor = backgroundColor;
+
+    if (borderWidth != undefined)
+      this.chart.data.datasets[index].borderWidth = borderWidth;
+
+    if (labels != undefined) 
+      this.chart.data.labels = labels;
+
+    if (borderColor != undefined)
+      this.chart.data.datasets[index].borderColor = borderColor;
+
+
+  }
+
+  Update() {
+    this.chart.update();
+  }
+
+  public Dispose(): void {
+    this.chart.destroy();
+    this.chart = null;
+    console.log('clearing chart!');
+  }
+}
+
+
+
 // Enumeration
-export { Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant, JustifyContent, Resource, Position, ValueRange, Direction, Theme }
+export { ChartType, Color, Size, Icons, InputType, Corner, GridSize, ButtonVariant, SpinnerVariant, JustifyContent, Resource, Position, ValueRange, Direction, Theme }
 
 
 // Classes
 export {
+  ChartV1,
   Navbar,
   ButtonDropDown,
   Box,

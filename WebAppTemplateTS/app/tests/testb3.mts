@@ -1,5 +1,5 @@
-import { button, div } from "../plugin/core/core.mts";
-import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Grid, GridSize, Icon, Icons, InputType, Label, ListGroup, Pagination, Card, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well, Panel, Html, Text, Dialog, ButtonVariant, SpinnerVariant, Spinner, Switch, Modal, Row, Column, JustifyContent, Resource, Box, Position, ValueRange, ButtonDropDown, Direction, Navbar, Theme, Toast} from "../theme/b3.mts";
+import { button, div, Widget } from "../plugin/core/core.mts";
+import {Alerts, Badge, BasicTab, BreadCrumb, Button, ButtonGroup, CheckBox, Color, Grid, GridSize, Icon, Icons, InputType, Label, ListGroup, Pagination, Card, ProgressBar, Radio, SelectBox, Size, Status, Table, TextBox, Textfield, Well, Panel, Html, Text, Dialog, ButtonVariant, SpinnerVariant, Spinner, Switch, Modal, Row, Column, JustifyContent, Resource, Box, Position, ValueRange, ButtonDropDown, Direction, Navbar, Theme, Toast, ChartV1, ChartType} from "../theme/b3.mts";
 
 class TestBootstrap3 extends div {
   constructor() {
@@ -120,13 +120,24 @@ class TestBootstrap3 extends div {
     const tab = new BasicTab({pill: true});
     tab.AddItem({
       title: 'Test Item',
-      active: true,
-      body: new Text({text: 'Home'})
+      active: true
     });
 
     tab.AddItem({
       title: 'Test Item2',
-      body: new Text({text: 'About'})
+      body(obj) {
+        obj.Add(
+        new Panel({}).Add(new ChartV1({
+          type: ChartType.DOUGHNUT,
+          data: [12, 23, 43, 43],
+          labels: ['jan', 'feb', 'mar', 'april'],
+          backgroundColor: ['rgba(255, 0, 0, 1)', 'rgba(0, 0, 255, 1)'],
+          label: 'Sample'
+        })).AddStyle({
+          width: '500px'
+        })
+      );
+      },
     });
 
     
