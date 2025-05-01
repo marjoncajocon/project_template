@@ -27,7 +27,7 @@ import './theme/b3.css';
 import { button, Widget, Window } from "./plugin/core/core.mts";
 import TestBootstrap3 from "./tests/testb3.mts";
 import WebScaffold from './theme/b3-extended.mts';
-import { Box, Button, Color, Icon, Icons, Row, Textfield } from './theme/b3.mts';
+import { Box, Button, Color, Column, Icon, Icons, Panel, Row, Textfield } from './theme/b3.mts';
 
 
 
@@ -36,7 +36,7 @@ const MyApp = new Window();
 //MyApp.Navigate(new TestBootstrap3()); 
 const app = new WebScaffold({
   appBar: {
-    title: 'Title',
+    title: 'M.M.C',
     action: [
       new Textfield({placeholder: 'Search'}).AddStyle({width: '200px'}),
       new Box({width: 5}),
@@ -44,10 +44,18 @@ const app = new WebScaffold({
       new Box({width: 10})
     ],
     drawer: {
-      
+      copyTitle: true,
+      content: new Column({widgets: [
+        new Button({text: 'Title header', color: Color.Danger}),
+        new Button({text: 'title header 2', color: Color.Primary})
+      ]})
     }
   }
 });
+
+app.SetBody(new Panel({}).Add([
+  new Button({text: 'test Body Content'})
+]));
 
 MyApp.Navigate(app);
 

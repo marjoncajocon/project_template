@@ -815,3 +815,39 @@
   width: 33.333%
 }
 
+.b3-show {
+  display: block!important;
+}
+
+
+/* animation */
+/* Define keyframes for slide-in effect */
+@keyframes b3-slideIn {
+  from {
+    left: -250px; /* Off-screen */
+  }
+  to {
+    left: 0; /* On-screen */
+  }
+}
+
+/* Define keyframes for slide-out effect */
+@keyframes b3-slideOut {
+  from {
+    left: 0; /* On-screen */
+  }
+  to {
+    left: -250px; /* Off-screen */
+  }
+}
+
+/* end animation */
+
+
+.b3-sidebar-show {
+  animation: b3-slideIn 0.3s forwards;
+}
+
+.b3-sidebar-hide {
+  animation: b3-slideOut 0.3s forwards;
+}
