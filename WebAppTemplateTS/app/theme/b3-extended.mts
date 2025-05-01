@@ -1,12 +1,27 @@
 import { button, div, Widget } from "../plugin/core/core.mts";
 import { Button, Color, Column, Icon, Icons, JustifyContent, Row, Text } from "./b3.mts";
 
+
+class MenuButton extends div {
+  constructor() {
+    super();
+  }
+}
+
+class MenuButtonDropDown extends div {
+  constructor() {
+    super();
+  }
+}
+
+
 class WebScaffold extends div {
   back_drop: div
   side_bar: div
   body_content: div
   constructor(option: {
     appBar?: {
+      backgroundColor?: Color,
       title?: string|Widget,
       drawer?: {
         content?: Widget,
@@ -21,7 +36,7 @@ class WebScaffold extends div {
     if (appBar != undefined) {
       // working with the appBar
 
-      const {title, drawer, action} = appBar;
+      const {title, drawer, action, backgroundColor} = appBar;
 
       const top_nav = new div().AddStyle({
         height: '56px',
@@ -31,9 +46,11 @@ class WebScaffold extends div {
         top: '0px',
         left: '0px'
       });
-
-      top_nav.AddClass('bg-primary');
-
+      if (backgroundColor != undefined) {
+        top_nav.AddClass(`bg-${backgroundColor}`); 
+      } else {
+        top_nav.AddClass('bg-primary');
+      }
       const row = new Row({});
       row.AddStyle({
         height: '100%',
@@ -57,12 +74,13 @@ class WebScaffold extends div {
         const bar = new button();
         bar.AddStyle({
           height: '46px', width: '46px',
-          color: 'inherit',
           backgroundColor: 'rgba(0, 0, 0, 0)',
           border: 'none',
           borderRadius: '10px',
           fontSize: '24px'
         });
+
+        bar.AddClass(`text-${Color.White}`);
 
         bar.Add(new Icon({icon: Icons.MenuHamburger}));
         row.AddWidget({widget: bar});
@@ -77,7 +95,7 @@ class WebScaffold extends div {
           top: '0px',
           boxShadow: '0 0 3px rgba(0, 0, 0, 0.2)'
         });
-
+        
         this.side_bar.AddClass(`bg-light`);
         this.side_bar.AddEventListener('click', (e) => {
           e.stopPropagation();
@@ -131,7 +149,6 @@ class WebScaffold extends div {
                 letterSpacing: '2px',
                 height: '46px',
                 backgroundColor: 'rgba(0,0,0,0)',
-                color: 'inherit',
                 border: 'none',
                 textAlign: 'left',
                 padding: '0px'
@@ -169,6 +186,7 @@ class WebScaffold extends div {
             padding: '0px'
           });
           btitle.Html(title);
+          btitle.AddClass(`text-${Color.White}`);
 
           row.AddWidget({widget: btitle});
         } else {
@@ -237,3 +255,5 @@ class WebScaffold extends div {
 }
 
 export default WebScaffold;
+
+export {MenuButton, MenuButtonDropDown};

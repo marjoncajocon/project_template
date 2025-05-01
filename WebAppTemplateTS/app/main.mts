@@ -21,7 +21,7 @@ import './theme/bootstrap4/css/theme-lumen.css';
 //import './theme/bootstrap4/css/theme-darkly.css';
 //import './theme/bootstrap4/css/theme-cerulean.css';
 //import './theme/bootstrap4/css/theme-pulse.css';
-//import './theme/bootstrap4/css/theme-materia.css';
+//import './theme/bootstrap4/css/theme-sketchy.css';
 import './theme/b3.css';
 
 import { button, Widget, Window } from "./plugin/core/core.mts";
@@ -46,8 +46,7 @@ const app = new WebScaffold({
     drawer: {
       copyTitle: true,
       content: new Column({widgets: [
-        new Button({text: 'Title header', color: Color.Danger}),
-        new Button({text: 'title header 2', color: Color.Primary})
+        
       ]})
     }
   }
