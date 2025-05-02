@@ -3371,17 +3371,6 @@ class ChartV1 extends canvas {
         }
       }
     });
-
-    setTimeout(() => {
-      this.Init({
-        data: [20, 10, 15, 25, 30, 40],
-        backgroundColor: ['rgba(255, 0, 0, 1)', 'rgba(0, 255, 0, 1)'],
-        label: 'updated label',
-        borderWidth: 4
-      });
-
-      this.Update();
-    }, 3000);
   }
 
   getChartObject() {
