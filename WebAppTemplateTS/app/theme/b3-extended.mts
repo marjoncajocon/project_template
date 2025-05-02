@@ -1,14 +1,8 @@
 import { button, div, Widget } from "../plugin/core/core.mts";
-import { Button, Color, Column, Icon, Icons, JustifyContent, Row, Text } from "./b3.mts";
+import { Button, Color, Column, Icon, Icons, JustifyContent, Panel, Row, Text } from "./b3.mts";
 
 
 class MenuButton extends div {
-  constructor() {
-    super();
-  }
-}
-
-class MenuButtonDropDown extends div {
   constructor() {
     super();
   }
@@ -93,7 +87,7 @@ class WebScaffold extends div {
           position: 'absolute',
           left: '0px',
           top: '0px',
-          boxShadow: '0 0 3px rgba(0, 0, 0, 0.2)'
+          boxShadow: '0 0 2px rgba(0, 0, 0, 0.2)'
         });
         
         this.side_bar.AddClass(`bg-light`);
@@ -168,7 +162,12 @@ class WebScaffold extends div {
         }
 
         if (content != undefined) {
-          this.side_bar.Add(content);
+          this.side_bar.Add(
+            new Panel({}).Add(content).AddStyle({
+              height: 'calc(100% - 56px)',
+              overflowX: 'auto'
+            })
+          );
         }
 
       }
@@ -213,7 +212,8 @@ class WebScaffold extends div {
       ],justify: JustifyContent.Between}));
 
       this.body_content = new div().AddStyle({
-        paddingTop: '58px'
+        paddingTop: '56px',
+        overflowX: 'auto'
       });
       super.Add(top_nav);
 
@@ -230,13 +230,13 @@ class WebScaffold extends div {
     this.body_content.Add(content);
   }
 
-  private ShowSideBar() {
+  public ShowSideBar() {
     this.back_drop.AddClass('b3-show');
     this.side_bar.AddClass('b3-sidebar-show');
     this.body.style.overflow = 'hidden';
   }
 
-  private HideSideBar() {
+  public HideSideBar() {
     this.side_bar.DeleteClass('b3-sidebar-show');
     this.side_bar.AddClass('b3-sidebar-hide');
 
@@ -256,4 +256,4 @@ class WebScaffold extends div {
 
 export default WebScaffold;
 
-export {MenuButton, MenuButtonDropDown};
+export {MenuButton};
