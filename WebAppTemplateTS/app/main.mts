@@ -27,7 +27,7 @@ import './theme/b3.css';
 import { button, Widget, Window } from "./plugin/core/core.mts";
 import TestBootstrap3 from "./tests/testb3.mts";
 import WebScaffold from './theme/b3-extended.mts';
-import { Box, Button, Color, Column, Icon, Icons, Panel, Row, Textfield } from './theme/b3.mts';
+import { Box, Button, Color, Column, Icon, Icons, ListTile, Panel, Row, Text, Textfield, ValueRange } from './theme/b3.mts';
 
 
 
@@ -45,9 +45,38 @@ const app = new WebScaffold({
     ],
     drawer: {
       copyTitle: true,
-      content: new Column({widgets: [
-        
-      ]})
+      content: new Panel({padding: {all: ValueRange.One}}).Add( new Column({widgets: [
+        new ListTile({
+          title: new Row({widgets: [ new Icon({icon: Icons.Dashboard}), new Box({width: 5}), new Text({text: 'Dashboard'}) ]}),
+          curve: true,
+          click(obj) {
+            app.HideSideBar();
+            app.SetBody(new Button({text: 'Dashboard Page', color: Color.Info}));
+          },
+        }),
+        new Box({
+          height: 5
+        }),
+        new ListTile({
+          title: new Row({widgets: [ new Icon({icon: Icons.User}), new Box({width: 5}), new Text({text: 'My Profile'}) ]}),
+          curve: true,
+          click(obj) {
+            app.HideSideBar();
+            app.SetBody(new Button({text: 'My Profile Page', color: Color.Info}));
+          }
+        }),
+        new Box({
+          height: 5
+        }),
+        new ListTile({
+          title: new Row({widgets: [ new Icon({icon: Icons.Cog}), new Box({width: 5}), new Text({text: 'Setting'}) ]}),
+          curve: true,
+          click(obj) {
+            app.HideSideBar();
+            app.SetBody(new Button({text: 'Setting Page', color: Color.Danger}));
+          },
+        })
+      ]}))
     }
   }
 });

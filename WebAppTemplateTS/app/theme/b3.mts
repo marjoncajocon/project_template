@@ -3429,6 +3429,75 @@ class ChartV1 extends canvas {
   }
 }
 
+class ListTile extends div {
+  constructor(option: {
+    title?: string|Widget,
+    height?: number,
+    paddingLeft?: number,
+    letterSpacing?: number,
+    curve?: boolean,
+    cursor?: boolean,
+    backgroundColor?: Color,
+    click?: (obj:div) => void
+  }) {
+    super();
+    
+    let {title, height, paddingLeft, letterSpacing, curve, cursor, backgroundColor, click} = option;
+
+    if (height == undefined) height = 35;
+    if (paddingLeft == undefined) paddingLeft = 10;
+    if (letterSpacing == undefined) letterSpacing = 2;
+    if (curve == undefined) curve = false;
+    if (cursor == undefined) cursor = true;
+    if (backgroundColor == undefined) backgroundColor = Color.Light;
+
+    super.AddStyle({
+      width: '100%',
+      height: `${height}px`,
+      boxShadow: '1px 1px 3px rgba(0, 0, 0, 0.3)',
+      paddingLeft: `${paddingLeft}px`,
+      letterSpacing: `${letterSpacing}px`
+    });
+
+
+    if (curve) {
+      super.AddStyle({
+        borderRadius: '15px'
+      });
+    }
+
+    if (cursor) {
+      super.AddStyle({
+        cursor: 'pointer'
+      });
+    }
+
+    super.AddClass(`bg-${backgroundColor}`);
+
+    if (typeof(click) == 'function') {
+      super.AddEventListener('click', () => {
+        click(this);
+      });
+    }
+
+    if (typeof(title) == 'string') {
+      super.Add(
+        new Column({
+          widgets: [new Text({text: title})],
+          justify: JustifyContent.Center
+        }).AddStyle({height: `${height}px`})
+      );
+    } else if (title instanceof Widget) {
+      super.Add(
+        new Column({
+          widgets: [title],
+          justify: JustifyContent.Center
+        }).AddStyle({height: `${height}px`})
+      );
+    }
+
+  }
+}
 
 
 // Enumeration
@@ -3437,6 +3506,7 @@ export { ChartType, Color, Size, Icons, InputType, Corner, GridSize, ButtonVaria
 
 // Classes
 export {
+  ListTile,
   ChartV1,
   Navbar,
   ButtonDropDown,
