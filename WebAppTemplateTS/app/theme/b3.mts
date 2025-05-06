@@ -1293,8 +1293,9 @@ class TextBox extends div {
 }
 
 class Alerts extends div {
+  init_color?: Color
   constructor(option: {
-    color: Color,
+    color?: Color,
     msg?: string|Widget
   }) {
     
@@ -1303,7 +1304,26 @@ class Alerts extends div {
 
     super.AddClass(['alert', `alert-${color}`]);
 
-    if (msg != undefined && typeof(msg) == 'string') {
+    if (typeof(msg) == 'string') {
+      super.Add(new Text({text: msg}));
+    } 
+
+    this.init_color = color;
+
+  }
+
+  Update(option: {color?: Color, msg: string}) {
+    
+
+    const {color, msg} = option;
+    if (color != undefined) {
+      super.DeleteClass(`alert-${this.init_color}`);
+
+      super.AddClass(`alert-${color}`);
+    }
+
+    if (typeof(msg) == 'string') {
+      super.Clear();
       super.Add(new Text({text: msg}));
     } 
 
