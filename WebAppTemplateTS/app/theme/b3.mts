@@ -2765,7 +2765,7 @@ class Modal extends div {
 class Row extends div {
   pad?: number
   constructor(option: {
-    widgets?: Widget[],
+    widgets?: (Widget|number)[],
     reverse?: boolean,
     justify?: JustifyContent,
     padding?: number
@@ -2786,7 +2786,11 @@ class Row extends div {
 
     if (widgets != undefined)
       for (const item of widgets) {
-        this.AddWidget({widget: item});
+        if (item instanceof Widget) {
+          this.AddWidget({widget: item});
+        } else if (typeof(item) == 'number') {
+          this.AddWidget({widget: new Box({width: item})});
+        }
       }
     
 
@@ -2810,7 +2814,7 @@ class Row extends div {
 class Column extends div {
   pad?: number
   constructor(option: {
-    widgets: Widget[],
+    widgets: (Widget|number)[],
     reverse?: boolean,
     justify?: JustifyContent,
     padding?: number
@@ -2831,7 +2835,13 @@ class Column extends div {
       const d = new div();
       if (padding != undefined && padding > 0)
         d.AddClass(`p-${padding}`);
-      d.Add(item);
+      
+      if (item instanceof Widget) {
+        this.AddWidget({widget: item});
+      } else if (typeof(item) == 'number') {
+        this.AddWidget({widget: new Box({height: item})});
+      }
+
       super.Add(d);
     }
 
