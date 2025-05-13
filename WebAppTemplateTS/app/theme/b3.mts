@@ -809,6 +809,7 @@ class BreadCrumb extends ul {
       list.AddClass('breadcrumb-item');
 
       const aa = new a();
+      aa.AddAttr({href: '#'});
       aa.Html(item);
       list.Add(aa);
 
@@ -2916,6 +2917,7 @@ class ButtonDropDown extends div {
     if (isNav != undefined && isNav) {
       btn = new a().AddClass(['nav-link']);
       btn.AddStyle({cursor: 'pointer'});
+      btn.AddAttr({href: '#'});
     } else {
       btn = new button().AddClass(['btn']);
       
