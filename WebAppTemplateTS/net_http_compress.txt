@@ -1,0 +1,52 @@
+package main
+
+import (
+    "compress/gzip"
+    "io"
+    "net/http"
+    "strings"
+)
+
+// gzipResponseWriter wraps http.ResponseWriter to support gzip
+type gzipResponseWriter struct {
+    io.Writer
+    http.ResponseWriter
+}
+
+func (w gzipResponseWriter) Write(b []byte) (int, error) {
+    return w.Writer.Write(b)
+}
+
+// gzipMiddleware checks if client accepts gzip and wraps the response
+func gzipMiddleware(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        // Check if client supports gzip
+        if !strings.Contains(r.Header.Get("Accept-Encoding"), "gzip") {
+            next.ServeHTTP(w, r)
+            return
+        }
+
+        // Set the header
+        w.Header().Set("Content-Encoding", "gzip")
+        // Create gzip writer
+        gz := gzip.NewWriter(w)
+        defer gz.Close()
+
+        // Wrap the response writer
+        gzrw := gzipResponseWriter{Writer: gz, ResponseWriter: w}
+        next.ServeHTTP(gzrw, r)
+    })
+}
+
+func main() {
+    mux := http.NewServeMux()
+
+    mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+        w.Write([]byte("Hello, World!"))
+    })
+
+    // Wrap your handlers with gzip middleware
+    wrappedMux := gzipMiddleware(mux)
+
+    http.ListenAndServe(":8080", wrappedMux)
+}
