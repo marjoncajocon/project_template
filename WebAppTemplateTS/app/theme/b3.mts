@@ -3410,7 +3410,7 @@ class ChartV1 extends canvas {
   }
 
   Init(option: {
-    labels?: [],
+    labels?:string [],
     data: number[],
     label?: string,
     backgroundColor?: string[],
