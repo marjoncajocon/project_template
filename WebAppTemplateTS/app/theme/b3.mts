@@ -809,6 +809,7 @@ class BreadCrumb extends ul {
       list.AddClass('breadcrumb-item');
 
       const aa = new a();
+      aa.AddAttr({href: '#'});
       aa.Html(item);
       list.Add(aa);
 
@@ -1420,6 +1421,7 @@ class Table extends div {
 
   constructor(option: {
     header: (Widget|string)[],
+    style?: {[key:string]:string}[],
     scrollable?: boolean,
     striped?: boolean,
     bordered?: boolean,
@@ -1434,7 +1436,7 @@ class Table extends div {
   }) {
 
     super();
-    const {scrollable, striped, bordered, hover, condensed, header, size, item, filter} = option;
+    const {scrollable, striped, bordered, hover, condensed, header, size, item, filter, style} = option;
     if (scrollable != undefined && scrollable)
       super.AddClass('table-responsive');
 
@@ -1492,6 +1494,7 @@ class Table extends div {
 
 
     // create a header
+    let i = 0;
     const ttr = new tr();
     for (const item of header) {
       const tth = new th();
@@ -1502,7 +1505,14 @@ class Table extends div {
         tth.Add(item);
       }
 
+      if (typeof(style) != 'undefined') {
+        if (typeof(style[i]) != 'undefined') {
+          tth.AddStyle(style[i]);  
+        }
+      }
+
       ttr.Add(tth);
+      i++;
     }
     this.table.Add(new thead().Add(ttr));
     // end create header
@@ -1600,9 +1610,11 @@ class Table extends div {
 
   AddItem(option: {
     item: (string|Widget)[],
-    color?: Color
+    color?: Color,
+    style?: {[key:string]: string}[]
   }) {
-    const {item, color} = option;
+    const {item, color, style} = option;
+    let i = 0;
 
     const ttr = new tr();
     for (const o of item) {
@@ -1614,7 +1626,15 @@ class Table extends div {
         ttd.Add(o);
       }
 
+      if (typeof(style) != 'undefined') {
+        if (typeof(style[i]) != 'undefined') {
+          ttd.AddStyle(style[i]);  
+        }
+      }
+
       ttr.Add(ttd);
+
+      i++;
     }
 
     if (color != undefined) {
@@ -2916,6 +2936,7 @@ class ButtonDropDown extends div {
     if (isNav != undefined && isNav) {
       btn = new a().AddClass(['nav-link']);
       btn.AddStyle({cursor: 'pointer'});
+      btn.AddAttr({href: '#'});
     } else {
       btn = new button().AddClass(['btn']);
       
@@ -3408,7 +3429,7 @@ class ChartV1 extends canvas {
   }
 
   Init(option: {
-    labels?: [],
+    labels?:string [],
     data: number[],
     label?: string,
     backgroundColor?: string[],
