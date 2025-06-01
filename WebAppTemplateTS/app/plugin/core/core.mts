@@ -328,6 +328,7 @@ class center extends Widget { constructor() { super("center"); } }
 
 
 class Window extends Widget {
+  static obj: Window
   constructor(param: {
     app: string | null,
     title: string | null,
@@ -335,23 +336,28 @@ class Window extends Widget {
     height: string | null
   } | null = null) {
     super('div');
-    this.AddStyle({
-      width: '100%',
-      height: '100%',
-      position: 'relative'
-    });
-    if (typeof (param) == 'object') {
-      //const { app = null, title = '', width = null, height = null } = param;
+    if (typeof(Window.obj) == 'undefined') {
+      this.AddStyle({
+        width: '100%',
+        height: '100%',
+        position: 'relative'
+      });
+      if (typeof (param) == 'object') {
+        //const { app = null, title = '', width = null, height = null } = param;
+      }
+      this.Hide();
+      this.body.appendChild(this.control);
+      Window.obj = this;
     }
-    this.Hide();
-    this.body.appendChild(this.control);
   }
-  public Navigate(obj: Widget | Widget[]): void {
-    this.Clear();
-    this.Add(obj);
+  public Navigate(obj: Widget | Widget[]) {
+    Window.obj.Clear();
+    Window.obj.Add(obj);
+    return this;
   }
-  public Run(): void {
-    this.Show();
+  public Run() {
+    Window.obj.Show();
+    return this;
   }
 }
 
