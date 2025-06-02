@@ -27,11 +27,84 @@ import './theme/b3.css';
 import { button, Widget, Window } from "./plugin/core/core.mts";
 import TestBootstrap3 from "./tests/testb3.mts";
 import WebScaffold from './theme/b3-extended.mts';
-import { Box, Button, Color, Column, Icon, Icons, ListTile, Panel, Row, Text, Textfield, ValueRange } from './theme/b3.mts';
+import { Box, Button, Card, Color, Column, Icon, Icons, ListTile, Pagination, Panel, Row, Text, Textfield, ValueRange } from './theme/b3.mts';
+
+
+class pageone extends Card {
+  constructor() {
+    super({
+      body: new Button({text: 'page one'})
+    });
+  }
+}
+
+
+class pagetwo extends Card {
+  constructor() {
+    super({
+      body: new Button({text: 'page two'})
+    });
+  }
+}
+
+
+
+class Dashboard extends Panel {
+  constructor() {
+    super({});
+
+
+
+
+    const content = new Panel({});
+
+
+
+    const paginate = new Pagination({
+      onchange: (page) => {
+        content.Clear();
+
+        // if(page == 1) {
+        //   content.Add(new pageone());
+        // } else if(page == 2) {
+        //   content.Add(new pagetwo());
+        // } else if (page == 3) {
+          
+        // }
+
+
+        switch(page) {
+          case 1:
+            content.Add(new pageone());
+            break;
+          case 2:
+            content.Add(new pagetwo());
+          case 3:
+            // ikaw nay sumpay ana
+            break;
+          default:
+            content.Add(new Text({text: 'Invalid Page'}));
+        }
+
+      }
+    });
+
+    paginate.AddItem([1, 2, 3, 4, 5, 6, 7, 8]);
+
+
+    super.Add([
+      content,
+      paginate
+    ]);
+
+
+  }
+}
 
 
 
 const MyApp = new Window();
+
 
 //MyApp.Navigate(new TestBootstrap3()); 
 const app = new WebScaffold({
@@ -51,7 +124,9 @@ const app = new WebScaffold({
           curve: true,
           click(obj) {
             app.HideSideBar();
-            app.SetBody(new Button({text: 'Dashboard Page', color: Color.Info}));
+            app.SetBody(
+              new Dashboard()
+            );
           },
         }),
         new Box({
