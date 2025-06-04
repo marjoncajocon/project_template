@@ -2638,6 +2638,231 @@ class Modal2 extends div {
 }
 
 
+class Modal3 extends div {
+  private backdrop:div
+  private fn: Function
+
+  private cbody: div 
+  private card: div
+  constructor(option: {
+    header?: Row,
+    footer?: (Button|button)[],
+    size?: Size|number,
+    isFull?: boolean,
+    showBackdrop?: boolean,
+    closableBackdrop?: boolean, 
+    scrollableBody?: boolean,
+    bodyFixedHeight?: boolean
+  }) {
+    
+    super();
+
+    let { 
+      showBackdrop, 
+      closableBackdrop, 
+      isFull, 
+      size,
+      footer,
+      header,
+      scrollableBody,
+      bodyFixedHeight
+    } = option;
+
+    showBackdrop = showBackdrop ?? true;
+    closableBackdrop = closableBackdrop ?? false;
+    isFull = isFull ?? false;
+    size = size ?? Size.Medium; // default to medium screen
+    footer = footer ?? [];
+    scrollableBody = scrollableBody ?? true;
+    bodyFixedHeight = bodyFixedHeight ?? true;
+
+    this.backdrop = new div().AddStyle({
+      position: 'fixed',
+      top: '0px',
+      left: '0px',
+      width: '100%',
+      height: '100%',
+      zIndex: '1000',
+      overflowY: 'auto'
+    });
+
+    this.card = new div().AddClass(`bg-${Color.Light}`);
+
+    this.cbody = new div();
+  
+
+    if (isFull) {
+      this.card.AddStyle({
+        width: '100%',
+        height: '100%',
+        position: 'absolute',
+        left: '0px',
+        top: '0px'
+      })
+    } else { 
+      this.card.AddStyle({
+        maxWidth: 'calc(100% - 10px)',
+        borderRadius: '2px'
+      });
+
+      if (typeof (size) == 'number') {
+        this.card.AddStyle({
+          width: `${size}px`
+        });
+      } else {
+      
+        if (size == Size.Medium) {
+          this.card.AddStyle({
+            width: '768px'
+          });
+        } else if (size == Size.Large) {
+          this.card.AddStyle({
+            width: '992px'
+          });
+        } else if (size == Size.ExtraLarge) {
+          this.card.AddStyle({
+            width: '1200px'
+          });
+        } else if (size == Size.Small) {
+          this.card.AddStyle({
+            width: '600px'
+          });
+        } else if (size == Size.ExtraSmall) {
+          this.card.AddStyle({
+            width: '360px'
+          });
+        }
+
+
+        this.card.AddStyle({
+          margin: 'auto',
+          marginTop: '10%',
+          marginBottom: '10px'
+        });
+
+      }
+    }
+
+    if (showBackdrop) {
+      this.backdrop.AddStyle({
+        backgroundColor: 'rgba(0, 0, 0, 0.3)'
+      });
+    }
+
+    if (closableBackdrop) {
+      /* if the backdrop is clickable then close the modal */
+      this.backdrop.AddEventListener('click', () => this.Close());
+      this.card.AddEventListener('click', e => e.stopPropagation());
+    }
+
+    /*  Create a footer,body, header now  */
+    this.card.AddStyle({
+      display: 'flex',
+      flexDirection: 'column'
+    });
+    
+    const header_panel = new div().AddStyle({
+      width: '100%',
+      minHeight: '20px',
+      padding: '10px',
+      borderBottom: '1px solid #ddd'
+    });
+    
+    this.cbody = new div().AddStyle({
+      width: '100%',
+      flexGrow: '1'
+    });
+
+    const footer_panel = new div().AddStyle({
+      width: '100%',
+      minHeight: '30px',
+      padding: '5px',
+      borderTop: '1px solid #ddd'
+    });
+
+
+
+    // add close button in footer
+    const close = new Button({text: 'Close', color: Color.Danger});
+    close.AddEventListener('click', () => this.Close());
+
+    const footer_list:(Button|button|number)[] = [];
+    footer_list.push(close);
+
+    for (let i = footer.length - 1; i >= 0; --i) {
+      footer_list.push(5);
+      footer_list.push(footer[i]);
+    } 
+
+
+    footer_panel.Add(new Row({widgets: footer_list, reverse: true}));
+    // end draw footer
+
+    if (typeof(header) != 'undefined') {
+      header_panel.Add(header);
+      this.card.Add(header_panel);
+    }
+  
+
+    if (scrollableBody) {
+      this.card.AddStyle({
+        marginTop: '20px'
+      });
+      if (bodyFixedHeight) {
+        if (!isFull) {
+          this.cbody.AddStyle({
+            height: 'calc(100vh - 200px)',
+            overflowY: 'auto'
+          });
+        }
+      } else {
+        this.cbody.AddStyle({
+          maxHeight: 'calc(100vh - 200px)',
+          overflowY: 'auto'
+        });
+      }
+
+    }
+
+    this.card.Add([
+      this.cbody, footer_panel
+    ]);
+    /* End Create a footer, body, header */
+
+
+    this.backdrop.Add(this.card);
+
+  }
+
+  SetBody(obj: Widget) {
+    this.cbody.Add(obj);
+    return this;
+  }
+
+  async Open() {
+    
+    /* create a promise */
+    const promise = new Promise((resolve, reject) => {
+      this.fn = resolve;
+    });
+
+    this.body.style.overflow = 'hidden';
+    this.body.appendChild(this.backdrop.control);
+
+    return promise;
+  }
+
+  Close(resolve: object|boolean|string|null = null) {
+    this.body.style.overflow = '';
+    this.backdrop.Delete();
+    this.Delete();
+    this.fn(resolve);
+  }
+
+  public Dispose(): void {
+    
+  }
+}
 
 // this modal is a custom modal
 // not part of the bootstrap
@@ -2789,30 +3014,46 @@ class Row extends div {
     reverse?: boolean,
     justify?: JustifyContent,
     padding?: number
-  }) {
+  }|(Widget|number)[]) {
     super();
-    const {widgets, reverse, justify, padding} = option;
-    super.AddClass(['d-flex', 'flex-row']);
+    
+    if (option instanceof Array) {
 
-    if (justify != undefined) {
-      super.AddClass(`justify-content-${justify}`);
-    }
+      super.AddClass(['d-flex', 'flex-row']);
 
-    if (reverse != undefined && reverse == true) {
-      super.AddClass('flex-row-reverse');
-    }
-
-    this.pad = padding;
-
-    if (widgets != undefined)
-      for (const item of widgets) {
+      for (const item of option) {
         if (item instanceof Widget) {
           this.AddWidget({widget: item});
         } else if (typeof(item) == 'number') {
           this.AddWidget({widget: new Box({width: item})});
         }
       }
-    
+
+    } else {
+      const {widgets, reverse, justify, padding} = option;
+      super.AddClass(['d-flex', 'flex-row']);
+
+      if (justify != undefined) {
+        super.AddClass(`justify-content-${justify}`);
+      }
+
+      if (reverse != undefined && reverse == true) {
+        super.AddClass('flex-row-reverse');
+      }
+
+      this.pad = padding;
+
+      if (widgets != undefined) {
+        for (const item of widgets) {
+          if (item instanceof Widget) {
+            this.AddWidget({widget: item});
+          } else if (typeof(item) == 'number') {
+            this.AddWidget({widget: new Box({width: item})});
+          }
+        }
+      }
+
+    }
 
   }
 
@@ -2838,31 +3079,48 @@ class Column extends div {
     reverse?: boolean,
     justify?: JustifyContent,
     padding?: number
-  }) {
+  }|(Widget|number)[]) {
     super();
-    const {widgets, reverse, justify, padding} = option;
-    super.AddClass(['d-flex', 'flex-column']);
+    if (option instanceof Array) {
+      super.AddClass(['d-flex', 'flex-column']);
 
-    if (justify != undefined) {
-      super.AddClass(`justify-content-${justify}`);
-    }
+      for (const item of option) {
+        const d = new div();
+        
+        if (item instanceof Widget) {
+          this.AddWidget({widget: item});
+        } else if (typeof(item) == 'number') {
+          this.AddWidget({widget: new Box({height: item})});
+        }
 
-    if (reverse != undefined && reverse == true) {
-      super.AddClass('flex-column-reverse');
-    }
-    this.pad = padding;
-    for (const item of widgets) {
-      const d = new div();
-      if (padding != undefined && padding > 0)
-        d.AddClass(`p-${padding}`);
-      
-      if (item instanceof Widget) {
-        this.AddWidget({widget: item});
-      } else if (typeof(item) == 'number') {
-        this.AddWidget({widget: new Box({height: item})});
+        super.Add(d);
+      }
+    } else { 
+      const {widgets, reverse, justify, padding} = option;
+      super.AddClass(['d-flex', 'flex-column']);
+
+      if (justify != undefined) {
+        super.AddClass(`justify-content-${justify}`);
       }
 
-      super.Add(d);
+      if (reverse != undefined && reverse == true) {
+        super.AddClass('flex-column-reverse');
+      }
+      this.pad = padding;
+      for (const item of widgets) {
+        const d = new div();
+        if (padding != undefined && padding > 0)
+          d.AddClass(`p-${padding}`);
+        
+        if (item instanceof Widget) {
+          this.AddWidget({widget: item});
+        } else if (typeof(item) == 'number') {
+          this.AddWidget({widget: new Box({height: item})});
+        }
+
+        super.Add(d);
+      }
+
     }
 
   }
@@ -3584,6 +3842,7 @@ export {
   Status,
   Alerts, 
   Modal2,
+  Modal3,
   Alert,
   Confirm
 };
