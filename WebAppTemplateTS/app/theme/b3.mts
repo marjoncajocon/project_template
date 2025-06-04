@@ -2672,7 +2672,7 @@ class Modal3 extends div {
     closableBackdrop = closableBackdrop ?? false;
     isFull = isFull ?? false;
     size = size ?? Size.Medium; // default to medium screen
-    footer = footer ?? [];
+  
     scrollableBody = scrollableBody ?? true;
     bodyFixedHeight = bodyFixedHeight ?? true;
 
@@ -2783,19 +2783,21 @@ class Modal3 extends div {
 
 
     // add close button in footer
-    const close = new Button({text: 'Close', color: Color.Danger});
-    close.AddEventListener('click', () => this.Close());
+    if (typeof(footer) != 'undefined') {
+      const close = new Button({text: 'Close', color: Color.Danger});
+      close.AddEventListener('click', () => this.Close());
 
-    const footer_list:(Button|button|number)[] = [];
-    footer_list.push(close);
+      const footer_list:(Button|button|number)[] = [];
+      footer_list.push(close);
 
-    for (let i = footer.length - 1; i >= 0; --i) {
-      footer_list.push(5);
-      footer_list.push(footer[i]);
-    } 
+      for (let i = footer.length - 1; i >= 0; --i) {
+        footer_list.push(5);
+        footer_list.push(footer[i]);
+      } 
 
 
-    footer_panel.Add(new Row({widgets: footer_list, reverse: true}));
+      footer_panel.Add(new Row({widgets: footer_list, reverse: true}));
+    }
     // end draw footer
 
     if (typeof(header) != 'undefined') {
@@ -2825,8 +2827,11 @@ class Modal3 extends div {
     }
 
     this.card.Add([
-      this.cbody, footer_panel
+      this.cbody
     ]);
+    if (typeof(footer) != 'undefined') {
+      this.card.Add(footer_panel);
+    }
     /* End Create a footer, body, header */
 
 
