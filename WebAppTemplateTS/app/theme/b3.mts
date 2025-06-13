@@ -624,20 +624,25 @@ class Badge extends span {
 
 class Icon extends span {
   gicon: Icons
-  constructor(option: { icon: Icons, size?: number}) {
+  constructor(option: { icon: Icons, size?: number}| Icons) {
     super();
+    
+    if (typeof(option) == 'string') {
+      this.gicon = option;
+      super.AddClass(['glyphicon', `glyphicon-${option}`]);
+    } else {
+      const {icon, size} = option;
 
-    const {icon, size} = option;
+      super.AddClass(['glyphicon', `glyphicon-${icon}`]);
 
-    super.AddClass(['glyphicon', `glyphicon-${icon}`]);
+      if (size != undefined) {
+        super.AddStyle({
+          fontSize: `${size}px`
+        });
+      }
 
-    if (size != undefined) {
-      super.AddStyle({
-        fontSize: `${size}px`
-      });
+      this.gicon = icon;
     }
-
-    this.gicon = icon;
 
   }
 
@@ -1386,12 +1391,16 @@ class Text extends div {
 
 
 class Html extends span {
-  constructor(option: {text: string, textColor?: Color}) {
+  constructor(option: {text: string, textColor?: Color}|string) {
     super();
-    const {text, textColor} = option;
-    super.Html(text);
-    if (textColor != undefined) {
-      super.AddClass(`text-${textColor}`);
+    if (typeof(option) == 'object') {
+      const {text, textColor} = option;
+      super.Html(text);
+      if (textColor != undefined) {
+        super.AddClass(`text-${textColor}`);
+      }
+    } else if (typeof(option) == 'string') {
+      super.Html(option);
     }
   
   }
@@ -2133,8 +2142,10 @@ class Panel extends div {
       right?: ValueRange
     },
     hide?: Size[]
-  }) {
+  } | null = null) {
     super();
+
+    if (option == null) return;
 
     const {backgroundcolor, network_image, image, width, height, shadow, textAlign, padding, margin, hide, isFluid} = option;
 
