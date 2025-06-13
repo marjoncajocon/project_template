@@ -1349,30 +1349,36 @@ class Well extends div {
 }
 
 class Text extends div {
-  constructor(option: {text: string, textColor?: Color, textOverflow?: boolean, width?: number }) {
+  constructor(option: {text: string, textColor?: Color, textOverflow?: boolean, width?: number } | (string|number)) {
     super();
-    const {text, textColor, textOverflow, width} = option;
-    super.Text(text);
+    if (typeof(option) == 'object') {
+      const {text, textColor, textOverflow, width} = option;
+      super.Text(text);
 
-    if (textColor != undefined) {
-      super.AddClass(`text-${textColor}`);
-    }
+      if (textColor != undefined) {
+        super.AddClass(`text-${textColor}`);
+      }
 
-    super.AddStyle({display: 'inline-block'});
+      super.AddStyle({display: 'inline-block'});
 
-    if (textOverflow != undefined && textOverflow) {
-      super.AddStyle({
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis'
-      });
+      if (textOverflow != undefined && textOverflow) {
+        super.AddStyle({
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis'
+        });
 
-    }
+      }
 
-    if (width != undefined) {
-      super.AddStyle({
-        width: `${width}px`
-      });
+      if (width != undefined) {
+        super.AddStyle({
+          width: `${width}px`
+        });
+      }
+    } else if (typeof(option) == 'string') {
+      super.Text(option);
+    } else if (typeof(option) == 'number') {
+      super.Text(option.toString());
     }
     
   }
@@ -2644,6 +2650,9 @@ class Modal3 extends div {
 
   private cbody: div 
   private card: div
+  
+  private custom_resolve: object|boolean|string|null = null
+
   constructor(option: {
     header?: Row,
     footer?: (Button|button)[],
@@ -2676,13 +2685,15 @@ class Modal3 extends div {
     scrollableBody = scrollableBody ?? true;
     bodyFixedHeight = bodyFixedHeight ?? true;
 
+    this.custom_resolve = null;
+
     this.backdrop = new div().AddStyle({
       position: 'fixed',
       top: '0px',
       left: '0px',
       width: '100%',
       height: '100%',
-      zIndex: '1000',
+      zIndex: '3000',
       overflowY: 'auto'
     });
 
@@ -2839,6 +2850,11 @@ class Modal3 extends div {
 
   }
 
+  SetCustomResolve(v: object|boolean|string|null = null) {
+    this.custom_resolve = v;
+    return this;
+  }
+
   SetBody(obj: Widget) {
     this.cbody.Add(obj);
     return this;
@@ -2861,7 +2877,11 @@ class Modal3 extends div {
     this.body.style.overflow = '';
     this.backdrop.Delete();
     this.Delete();
-    this.fn(resolve);
+    if (this.custom_resolve != null) {
+      this.fn(this.custom_resolve);
+    } else {
+      this.fn(resolve);
+    }
   }
 
   public Dispose(): void {
