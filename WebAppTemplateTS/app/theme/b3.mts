@@ -370,6 +370,20 @@ enum Resource {
 }
 
 enum GridSize {
+  TinyPhoneAuto = 'col-xs',
+  TinyPhone1 = 'col-1',
+  TinyPhone2 = 'col-2',
+  TinyPhone3 = 'col-3',
+  TinyPhone4 = 'col-4',
+  TinyPhone5 = 'col-5',
+  TinyPhone6 = 'col-6',
+  TinyPhone7 = 'col-7',
+  TinyPhone8 = 'col-8',
+  TinyPhone9 = 'col-9',
+  TinyPhone10 = 'col-10',
+  TinyPhone11 = 'col-11',
+  TinyPhone12 = 'col-12',
+  
   PhoneAuto = 'col-xs',
   Phone1 = 'col-xs-1',
   Phone2 = 'col-xs-2',
