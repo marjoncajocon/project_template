@@ -3087,11 +3087,11 @@ class Modal extends div {
 class Row extends div {
   pad?: number
   constructor(option: {
-    widgets?: (Widget|number)[],
+    widgets?: (Widget|number|string)[],
     reverse?: boolean,
     justify?: JustifyContent,
     padding?: number
-  }|(Widget|number)[]) {
+  }|(Widget|number|string)[]) {
     super();
     
     if (option instanceof Array) {
@@ -3103,6 +3103,8 @@ class Row extends div {
           this.AddWidget({widget: item});
         } else if (typeof(item) == 'number') {
           this.AddWidget({widget: new Box({width: item})});
+        } else if (typeof(item) == 'string') {
+          this.AddWidget({widget: new Text(item)});
         }
       }
 
@@ -3126,6 +3128,8 @@ class Row extends div {
             this.AddWidget({widget: item});
           } else if (typeof(item) == 'number') {
             this.AddWidget({widget: new Box({width: item})});
+          } else if (typeof(item) == 'string') {
+            this.AddWidget({widget: new Text(item)});
           }
         }
       }
@@ -3152,11 +3156,11 @@ class Row extends div {
 class Column extends div {
   pad?: number
   constructor(option: {
-    widgets: (Widget|number)[],
+    widgets: (Widget|number|string)[],
     reverse?: boolean,
     justify?: JustifyContent,
     padding?: number
-  }|(Widget|number)[]) {
+  }|(Widget|number|string)[]) {
     super();
     if (option instanceof Array) {
       super.AddClass(['d-flex', 'flex-column']);
@@ -3168,6 +3172,8 @@ class Column extends div {
           this.AddWidget({widget: item});
         } else if (typeof(item) == 'number') {
           this.AddWidget({widget: new Box({height: item})});
+        } else if (typeof(item) == 'string') {
+          this.AddWidget({widget: new Text(item)});
         }
 
         super.Add(d);
@@ -3193,6 +3199,8 @@ class Column extends div {
           this.AddWidget({widget: item});
         } else if (typeof(item) == 'number') {
           this.AddWidget({widget: new Box({height: item})});
+        } else if (typeof(item) == 'string') {
+          this.AddWidget({widget: new Text(item)});
         }
 
         super.Add(d);
