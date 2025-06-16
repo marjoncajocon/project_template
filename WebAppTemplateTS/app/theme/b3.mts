@@ -370,6 +370,21 @@ enum Resource {
 }
 
 enum GridSize {
+  TinyPhoneAuto = 'col-xs',
+  TinyPhone1 = 'col-1',
+  TinyPhone2 = 'col-2',
+  TinyPhone3 = 'col-3',
+  TinyPhone4 = 'col-4',
+  TinyPhone5 = 'col-5',
+  TinyPhone6 = 'col-6',
+  TinyPhone7 = 'col-7',
+  TinyPhone8 = 'col-8',
+  TinyPhone9 = 'col-9',
+  TinyPhone10 = 'col-10',
+  TinyPhone11 = 'col-11',
+  TinyPhone12 = 'col-12',
+  
+  PhoneAuto = 'col-xs',
   Phone1 = 'col-xs-1',
   Phone2 = 'col-xs-2',
   Phone3 = 'col-xs-3',
@@ -382,7 +397,8 @@ enum GridSize {
   Phone10 = 'col-xs-10',
   Phone11 = 'col-xs-11',
   Phone12 = 'col-xs-12',
-
+  
+  TabletAuto = 'col-sm',
   Tablet1 = 'col-sm-1',
   Tablet2 = 'col-sm-2',
   Tablet3 = 'col-sm-3',
@@ -396,6 +412,7 @@ enum GridSize {
   Tablet11 = 'col-sm-11',
   Tablet12 = 'col-sm-12',
 
+  LabtopAuto = 'col-md',
   Laptop1 = 'col-md-1',
   Laptop2 = 'col-md-2',
   Laptop3 = 'col-md-3',
@@ -409,6 +426,7 @@ enum GridSize {
   Laptop11 = 'col-md-11',
   Laptop12 = 'col-md-12',
 
+  DesktopAuto = 'col-lg',
   Desktop1 = 'col-lg-1',
   Desktop2 = 'col-lg-2',
   Desktop3 = 'col-lg-3',
@@ -624,20 +642,25 @@ class Badge extends span {
 
 class Icon extends span {
   gicon: Icons
-  constructor(option: { icon: Icons, size?: number}) {
+  constructor(option: { icon: Icons, size?: number}| Icons) {
     super();
+    
+    if (typeof(option) == 'string') {
+      this.gicon = option;
+      super.AddClass(['glyphicon', `glyphicon-${option}`]);
+    } else {
+      const {icon, size} = option;
 
-    const {icon, size} = option;
+      super.AddClass(['glyphicon', `glyphicon-${icon}`]);
 
-    super.AddClass(['glyphicon', `glyphicon-${icon}`]);
+      if (size != undefined) {
+        super.AddStyle({
+          fontSize: `${size}px`
+        });
+      }
 
-    if (size != undefined) {
-      super.AddStyle({
-        fontSize: `${size}px`
-      });
+      this.gicon = icon;
     }
-
-    this.gicon = icon;
 
   }
 
@@ -1349,30 +1372,36 @@ class Well extends div {
 }
 
 class Text extends div {
-  constructor(option: {text: string, textColor?: Color, textOverflow?: boolean, width?: number }) {
+  constructor(option: {text: string, textColor?: Color, textOverflow?: boolean, width?: number } | (string|number)) {
     super();
-    const {text, textColor, textOverflow, width} = option;
-    super.Text(text);
+    if (typeof(option) == 'object') {
+      const {text, textColor, textOverflow, width} = option;
+      super.Text(text);
 
-    if (textColor != undefined) {
-      super.AddClass(`text-${textColor}`);
-    }
+      if (textColor != undefined) {
+        super.AddClass(`text-${textColor}`);
+      }
 
-    super.AddStyle({display: 'inline-block'});
+      super.AddStyle({display: 'inline-block'});
 
-    if (textOverflow != undefined && textOverflow) {
-      super.AddStyle({
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis'
-      });
+      if (textOverflow != undefined && textOverflow) {
+        super.AddStyle({
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis'
+        });
 
-    }
+      }
 
-    if (width != undefined) {
-      super.AddStyle({
-        width: `${width}px`
-      });
+      if (width != undefined) {
+        super.AddStyle({
+          width: `${width}px`
+        });
+      }
+    } else if (typeof(option) == 'string') {
+      super.Text(option);
+    } else if (typeof(option) == 'number') {
+      super.Text(option.toString());
     }
     
   }
@@ -1380,12 +1409,16 @@ class Text extends div {
 
 
 class Html extends span {
-  constructor(option: {text: string, textColor?: Color}) {
+  constructor(option: {text: string, textColor?: Color}|string) {
     super();
-    const {text, textColor} = option;
-    super.Html(text);
-    if (textColor != undefined) {
-      super.AddClass(`text-${textColor}`);
+    if (typeof(option) == 'object') {
+      const {text, textColor} = option;
+      super.Html(text);
+      if (textColor != undefined) {
+        super.AddClass(`text-${textColor}`);
+      }
+    } else if (typeof(option) == 'string') {
+      super.Html(option);
     }
   
   }
@@ -2066,30 +2099,37 @@ class SelectBox extends div {
 class Grid extends div {
   row: div
   constructor(option: { 
-    item: Widget[],
-    size: GridSize[],
+    item?: Widget[],
+    size?: GridSize[],
     noPadding?: boolean
-  }) {
+  } | null = null) {
     super();
     // super.AddClass('container-fluid');
 
     this.row = new div();
     this.row.AddClass('row');
 
-   
-    const {item, size, noPadding} = option;
-    
-    if (noPadding != undefined && noPadding) {
-      this.row.AddClass('no-gutters');
-    }
+    if (option != null) {
+      const {item, size, noPadding} = option;
+      
+      if (noPadding != undefined && noPadding) {
+        this.row.AddClass('no-gutters');
+      }
 
-    for (const item1 of item) {
-      const cell = new div();
-      cell.AddClass(size);
+      if (item != undefined) {
 
-      cell.Add(item1);
+        for (const item1 of item) {
+          const cell = new div();
 
-      this.row.Add(cell);
+          if (size != undefined) {
+            cell.AddClass(size);
+          }
+
+          cell.Add(item1);
+
+          this.row.Add(cell);
+        }
+      } 
     }
 
 
@@ -2098,7 +2138,23 @@ class Grid extends div {
 
   }
 
-  
+  AddCell(item: Widget, size: GridSize[], style?: {[key: string]: string}) {
+    const cell = new div();
+    
+
+    if (style != undefined) {
+      cell.AddStyle(style);
+    }
+
+    cell.AddClass(size);
+
+    cell.Add(item);
+
+    this.row.Add(cell);
+
+    return this;
+  }
+
 }
 
 
@@ -2127,8 +2183,10 @@ class Panel extends div {
       right?: ValueRange
     },
     hide?: Size[]
-  }) {
+  } | null = null) {
     super();
+
+    if (option == null) return;
 
     const {backgroundcolor, network_image, image, width, height, shadow, textAlign, padding, margin, hide, isFluid} = option;
 
@@ -2644,6 +2702,9 @@ class Modal3 extends div {
 
   private cbody: div 
   private card: div
+  
+  private custom_resolve: object|boolean|string|null = null
+
   constructor(option: {
     header?: Row,
     footer?: (Button|button)[],
@@ -2672,9 +2733,11 @@ class Modal3 extends div {
     closableBackdrop = closableBackdrop ?? false;
     isFull = isFull ?? false;
     size = size ?? Size.Medium; // default to medium screen
-    footer = footer ?? [];
+  
     scrollableBody = scrollableBody ?? true;
     bodyFixedHeight = bodyFixedHeight ?? true;
+
+    this.custom_resolve = null;
 
     this.backdrop = new div().AddStyle({
       position: 'fixed',
@@ -2682,7 +2745,7 @@ class Modal3 extends div {
       left: '0px',
       width: '100%',
       height: '100%',
-      zIndex: '1000',
+      zIndex: '3000',
       overflowY: 'auto'
     });
 
@@ -2783,19 +2846,21 @@ class Modal3 extends div {
 
 
     // add close button in footer
-    const close = new Button({text: 'Close', color: Color.Danger});
-    close.AddEventListener('click', () => this.Close());
+    if (typeof(footer) != 'undefined') {
+      const close = new Button({text: 'Close', color: Color.Danger});
+      close.AddEventListener('click', () => this.Close());
 
-    const footer_list:(Button|button|number)[] = [];
-    footer_list.push(close);
+      const footer_list:(Button|button|number)[] = [];
+      footer_list.push(close);
 
-    for (let i = footer.length - 1; i >= 0; --i) {
-      footer_list.push(5);
-      footer_list.push(footer[i]);
-    } 
+      for (let i = footer.length - 1; i >= 0; --i) {
+        footer_list.push(5);
+        footer_list.push(footer[i]);
+      } 
 
 
-    footer_panel.Add(new Row({widgets: footer_list, reverse: true}));
+      footer_panel.Add(new Row({widgets: footer_list, reverse: true}));
+    }
     // end draw footer
 
     if (typeof(header) != 'undefined') {
@@ -2825,13 +2890,21 @@ class Modal3 extends div {
     }
 
     this.card.Add([
-      this.cbody, footer_panel
+      this.cbody
     ]);
+    if (typeof(footer) != 'undefined') {
+      this.card.Add(footer_panel);
+    }
     /* End Create a footer, body, header */
 
 
     this.backdrop.Add(this.card);
 
+  }
+
+  SetCustomResolve(v: object|boolean|string|null = null) {
+    this.custom_resolve = v;
+    return this;
   }
 
   SetBody(obj: Widget) {
@@ -2856,7 +2929,11 @@ class Modal3 extends div {
     this.body.style.overflow = '';
     this.backdrop.Delete();
     this.Delete();
-    this.fn(resolve);
+    if (this.custom_resolve != null) {
+      this.fn(this.custom_resolve);
+    } else {
+      this.fn(resolve);
+    }
   }
 
   public Dispose(): void {
