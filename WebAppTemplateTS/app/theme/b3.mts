@@ -370,6 +370,7 @@ enum Resource {
 }
 
 enum GridSize {
+  PhoneAuto = 'col-xs',
   Phone1 = 'col-xs-1',
   Phone2 = 'col-xs-2',
   Phone3 = 'col-xs-3',
@@ -382,7 +383,8 @@ enum GridSize {
   Phone10 = 'col-xs-10',
   Phone11 = 'col-xs-11',
   Phone12 = 'col-xs-12',
-
+  
+  TabletAuto = 'col-sm',
   Tablet1 = 'col-sm-1',
   Tablet2 = 'col-sm-2',
   Tablet3 = 'col-sm-3',
@@ -396,6 +398,7 @@ enum GridSize {
   Tablet11 = 'col-sm-11',
   Tablet12 = 'col-sm-12',
 
+  LabtopAuto = 'col-md',
   Laptop1 = 'col-md-1',
   Laptop2 = 'col-md-2',
   Laptop3 = 'col-md-3',
@@ -409,6 +412,7 @@ enum GridSize {
   Laptop11 = 'col-md-11',
   Laptop12 = 'col-md-12',
 
+  DesktopAuto = 'col-lg',
   Desktop1 = 'col-lg-1',
   Desktop2 = 'col-lg-2',
   Desktop3 = 'col-lg-3',
@@ -2081,30 +2085,37 @@ class SelectBox extends div {
 class Grid extends div {
   row: div
   constructor(option: { 
-    item: Widget[],
-    size: GridSize[],
+    item?: Widget[],
+    size?: GridSize[],
     noPadding?: boolean
-  }) {
+  } | null = null) {
     super();
     // super.AddClass('container-fluid');
 
     this.row = new div();
     this.row.AddClass('row');
 
-   
-    const {item, size, noPadding} = option;
-    
-    if (noPadding != undefined && noPadding) {
-      this.row.AddClass('no-gutters');
-    }
+    if (option != null) {
+      const {item, size, noPadding} = option;
+      
+      if (noPadding != undefined && noPadding) {
+        this.row.AddClass('no-gutters');
+      }
 
-    for (const item1 of item) {
-      const cell = new div();
-      cell.AddClass(size);
+      if (item != undefined) {
 
-      cell.Add(item1);
+        for (const item1 of item) {
+          const cell = new div();
 
-      this.row.Add(cell);
+          if (size != undefined) {
+            cell.AddClass(size);
+          }
+
+          cell.Add(item1);
+
+          this.row.Add(cell);
+        }
+      } 
     }
 
 
@@ -2113,7 +2124,23 @@ class Grid extends div {
 
   }
 
-  
+  AddCell(item: Widget, size: GridSize[], style?: {[key: string]: string}) {
+    const cell = new div();
+    
+
+    if (style != undefined) {
+      cell.AddStyle(style);
+    }
+
+    cell.AddClass(size);
+
+    cell.Add(item);
+
+    this.row.Add(cell);
+
+    return this;
+  }
+
 }
 
 
