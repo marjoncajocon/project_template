@@ -695,11 +695,13 @@ class Label extends span {
 
 class ProgressBar extends div {
   bar: div
+  cur_color: Color
   constructor(option: {color: Color, striped?: boolean, animate?: boolean}) {
     super();
     
     const {color, striped, animate} = option;
 
+    this.cur_color = color;
     super.AddClass('progress');
 
     this.bar = new div();
@@ -715,6 +717,12 @@ class ProgressBar extends div {
 
     super.Add(this.bar);
 
+  }
+
+  ChangeColor(color: Color) {
+    this.bar.DeleteClass(`bg-${this.cur_color}`);
+    this.cur_color = color;
+    this.bar.AddClass(`bg-${color}`);
   }
 
   UpdateText(percent: number, text: string = '') {
