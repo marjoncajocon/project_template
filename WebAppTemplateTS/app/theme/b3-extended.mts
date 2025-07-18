@@ -10,9 +10,9 @@ class MenuButton extends div {
 
 
 class WebScaffold extends div {
-  back_drop: div
-  side_bar: div
-  body_content: div
+  back_drop: div|undefined
+  side_bar: div|undefined
+  body_content: div|undefined
   constructor(option: {
     appBar?: {
       backgroundColor?: Color,
@@ -226,21 +226,27 @@ class WebScaffold extends div {
 
 
   public SetBody(content: Widget) {
+    if (this.body_content == undefined) return;
     this.body_content.Clear();
     this.body_content.Add(content);
   }
 
   public ShowSideBar() {
+    if (this.back_drop == undefined || this.side_bar == undefined) return;
+
     this.back_drop.AddClass('b3-show');
     this.side_bar.AddClass('b3-sidebar-show');
     this.body.style.overflow = 'hidden';
   }
 
   public HideSideBar() {
+    if (this.back_drop == undefined || this.side_bar == undefined) return;
     this.side_bar.DeleteClass('b3-sidebar-show');
     this.side_bar.AddClass('b3-sidebar-hide');
 
     setTimeout(() => {
+      if (this.back_drop == undefined || this.side_bar == undefined) return;
+    
       this.back_drop.DeleteClass('b3-show');
       this.side_bar.DeleteClass('b3-sidebar-hide');
 
@@ -249,6 +255,7 @@ class WebScaffold extends div {
   }
 
   public Dispose(): void {
+    if (this.back_drop == undefined || this.side_bar == undefined) return;    
     this.back_drop.Delete();
     this.HideSideBar();
   }
