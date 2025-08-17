@@ -1,58 +1,36 @@
-// // w3css
-// import { button, Widget, Window } from "./plugin/core/core.mts";
-
-// import "./theme/w3css/w3.css";
-// import "./theme/icon/css/all.css";
-// import './main.css';
-
-// //import TestScaffold from "./tests/testscaffold.mts";
-// import Login from "./lib/login.mts";
-// import TestScaffold from "./tests/testscaffold.mts";
-
-
-// const MyApp = new Window();
-// MyApp.Navigate(new Login());
-// MyApp.Run();
-
-// export default MyApp;
-
-//import './theme/bootstrap4/css/bootstrap.css';
-import './theme/bootstrap4/css/theme-lumen.css';
-//import './theme/bootstrap4/css/theme-darkly.css';
-//import './theme/bootstrap4/css/theme-cerulean.css';
-//import './theme/bootstrap4/css/theme-pulse.css';
-//import './theme/bootstrap4/css/theme-sketchy.css';
-import './theme/b3.css';
-
-import { button, Widget, Window, input } from "./plugin/core/core.mts";
-import TestBootstrap3 from "./tests/testb3.mts";
-import WebScaffold from './theme/b3-extended.mts';
-import { Box, Button, Card, Color, Column, Icon, Icons, ListTile, Pagination, Panel, Row, Text, Textfield, ValueRange, TextBox } from './theme/b3.mts';
-
-
-
-
+import { Button, Size, Color, Badge, ProgressBar, Pagination } from "./plugin/core/bs.3.mts";
+import {div, Window} from "./plugin/core/core.mjs";
+import "./theme/bootstrap3/css/bootstrap.min.css";
 
 const MyApp = new Window();
 
-const panel_test = new Panel();
+const btn = new Button({text: "",  color: Color.Danger});
+const prog = new ProgressBar({color: Color.Success, striped: true, animation: true});
+let p = 0;
+let i = setInterval(() => {
+  if (p == 100) {
+    clearInterval(i);
+  }
+  prog.update(p, true);
+  p++;
+}, 100);
+btn.Add(new Badge({text: "sample"}));
 
-// testing widget here 
-const btn = new Button({text: 'sample button', color: Color.Primary});
-
-btn.AddEventListener('click', () => {
-  alert('this button is clicked');
+const pagination = new Pagination({
+  size: Size.Xs
 });
+pagination.addItem(1, (i) => {
+  console.log(i);
+});
+pagination.addItem(2);
+pagination.addItem(3);
+pagination.addItem(4);
 
-const n = new input();
-
-panel_test.Add(new Column([
+MyApp.Navigate(new div().Add([
   btn,
-  n
+  prog,
+  pagination
 ]));
-// end testing widget 
-
-MyApp.Navigate(panel_test);
 
 MyApp.Run();
 
