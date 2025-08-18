@@ -1,4 +1,4 @@
-import { a, button, col, div, h4, input, label, li, option, select, span, textarea, u, ul, Widget } from "./core.mts";
+import { a, button, col, div, fieldset, h4, input, label, legend, li, option, select, span, table, tbody, td, textarea, th, thead, tr, u, ul, Widget } from "./core.mts";
 
 enum Icons {
   Asterisk = 'asterisk',
@@ -302,7 +302,8 @@ enum Color {
 enum Size {
   Lg = "lg",
   Sm = "sm",
-  Xs = "xs"
+  Xs = "xs",
+  Md = "md"
 }
 
 enum Message {
@@ -1467,7 +1468,16 @@ class Modal extends div {
 
     const body = new div().AddClass("modal-body");
     const footer = new div().AddClass("modal-footer");
-    modal_content.Add([header, body, footer]);
+
+    if (o.label != undefined) {
+      modal_content.Add(header);
+    }
+
+    modal_content.Add([body]);
+
+    if (o.footer != undefined) {
+      modal_content.Add(footer);
+    }
 
     this.backdrop = new div();
     this.backdrop.AddClass(["modal-backdrop", "fade", "in"]);
@@ -1518,6 +1528,98 @@ class Modal extends div {
 }
 
 
+class Form extends fieldset {
+  content: div
+  constructor(o: {label: string|Widget}) {
+    super();
+
+    if (typeof(o.label) == "string") {
+      super.Add(new legend().Add(new Text(o.label)));
+    } else {
+      super.Add(new legend().Add(o.label));
+    }
+
+    this.content = new div();
+    super.Add(this.content);
+  }
+
+  add(obj: Widget|Widget[]) {
+    this.content.Add(obj);
+    return this;
+  }
+}
+
+class Table extends div {
+  table: table
+  tbody: tbody
+  constructor(o: {
+    header?: (string|Widget)[],
+    hover?: boolean,
+    size?: Size,
+    border?: boolean
+  }) {
+    super();
+    super.AddClass("table-responsive");
+
+    this.table = new table().AddClass("table");
+    
+    if ( o.size != undefined ) {
+      this.table.AddClass("table-" + o.size);
+    }
+
+    super.Add(this.table);
+    if (o.header != undefined) {
+      //draw the header
+      const tr1 = new tr();
+      for (const item of o.header) {
+        const th1 = new th();
+        
+        if (typeof(item) == "string") {
+          th1.Add(new Text(item));
+        } else {
+          th1.Add(item);
+        }
+
+        tr1.Add(th1);
+      }
+      this.table.Add(new thead().Add(tr1));
+    }
+
+    if (o.hover != undefined && o.hover) {
+      this.table.AddClass("table-hover");
+    } 
+
+    if (o.border != undefined && o.border) {
+      this.table.AddClass("table-bordered");
+    }
+
+    this.tbody = new tbody();
+
+    this.table.Add(this.tbody);
+
+  }
+  
+  add(o: {
+    item: (string|Widget)[]
+  }): tr {
+    const tr1 = new tr();
+    for (const item of o.item) {
+      const th1 = new td();
+      
+      if (typeof(item) == "string") {
+        th1.Add(new Text(item));
+      } else {
+        th1.Add(item);
+      }
+
+      tr1.Add(th1);
+    }
+    this.tbody.Add(tr1);
+
+    return tr1;
+  }
+}
+
 
 export {
   Color,
@@ -1529,6 +1631,7 @@ export {
 };
 
 export {
+  Form,
   SelectBox,
   AlertMessage,
   Button,
@@ -1557,5 +1660,6 @@ export {
   CheckBox,
   Row,
   Column,
-  Modal
+  Modal,
+  Table
 };

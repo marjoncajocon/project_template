@@ -1,4 +1,4 @@
-import { Button, Size, Color, Badge, ProgressBar, Pagination, BreadCrumb, Pager, ListGroup, Panel, Tab, Card, Icon, Icons, ButtonSplit, Divider, Label, Well, Text, AlertMessage, TextField, InputType, TextBox, TextFieldAddon, TextFieldFeedBack, Message, Radio, CheckBox, SelectBox, Row, Column, Flex, Modal } from "./plugin/core/bs.3.mts";
+import { Button, Size, Color, Badge, ProgressBar, Pagination, BreadCrumb, Pager, ListGroup, Panel, Tab, Card, Icon, Icons, ButtonSplit, Divider, Label, Well, Text, AlertMessage, TextField, InputType, TextBox, TextFieldAddon, TextFieldFeedBack, Message, Radio, CheckBox, SelectBox, Row, Column, Flex, Modal, Form, Table } from "./plugin/core/bs.3.mts";
 import {col, div, Window} from "./plugin/core/core.mjs";
 import "./theme/bootstrap3/css/bootstrap.min.css";
 //import "./theme/bootstrap3/css/theme-lumen.css";
@@ -159,14 +159,31 @@ openmodal.AddEventListener("click", async () => {
       new Button({text: new Row([new Icon(Icons.Save), 5, "Save"]), color: Color.Primary})
     ]
   });  
-  modal.add(new Column([
+  modal.add(new Form({label: "Add User"}).add(new Column([
     new TextField({type: InputType.Text}),
     10
-  ]));
+  ])));
 
   const res = await modal.show();
   console.log(res);
 });
+
+
+const table = new Table({
+  header: ["Id", "Name", "Category", "Status"],
+  hover: true,
+  border: true
+});
+
+table.add({item: [
+  "1", "marjon", "xs", "Active"
+]})
+table.add({item: [
+  new Button({text: "sample", color: Color.Danger, size: Size.Xs}), "marjon", "xs", "Active"
+]})
+table.add({item: [
+  "1", "marjon", "xs", "Active"
+]})
 
 MyApp.Navigate(new div().Add([
   btn,
@@ -194,6 +211,7 @@ MyApp.Navigate(new div().Add([
   b,
   card,
   openmodal,
+  table,
   new Panel().AddStyle({
     margin: "500px",
     width: "100px",
