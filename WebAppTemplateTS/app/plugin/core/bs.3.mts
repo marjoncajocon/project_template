@@ -1,4 +1,4 @@
-import { a, button, div, li, span, u, ul, Widget } from "./core.mts";
+import { a, button, col, div, h4, input, label, li, option, select, span, textarea, u, ul, Widget } from "./core.mts";
 
 enum Icons {
   Asterisk = 'asterisk',
@@ -260,6 +260,30 @@ enum Icons {
   MenuUp = 'menu-up',
 }
 
+enum InputType {
+  Text = "text",
+  Password = "password",
+  Email = "email",
+  Number = "number",
+  URL = "url",
+  Telephone = "tel",
+  Search = "search",
+  Date = "date",
+  DateTimeLocal = "datetime-local",
+  Month = "month",
+  Week = "week",
+  Time = "time",
+  Color = "color",
+  File = "file",
+  Range = "range",
+  Checkbox = "checkbox",
+  Radio = "radio",
+  Hidden = "hidden",
+  Submit = "submit",
+  Reset = "reset",
+  Button = "button",
+}
+
 enum Color {
   Default = 'default',
   Primary = 'primary',
@@ -279,6 +303,22 @@ enum Size {
   Lg = "lg",
   Sm = "sm",
   Xs = "xs"
+}
+
+enum Message {
+  Success = "success",
+  Danger = "error",
+  Warning = "warning"
+}
+
+enum Flex {
+  Center = 'center',
+  Stretch = 'stretch',
+  FlexStart = 'flex-start',
+  FlexEnd = 'flex-end',
+  SpaceAround = 'space-around',
+  SpaceBetween = 'space-between',
+  SpaceEvenly = 'space-evenly'
 }
 
 class Text extends div {
@@ -348,6 +388,28 @@ class Badge extends span {
       }
     }
 
+  }
+}
+
+class Label extends span {
+  constructor(o: {
+    text: string | Widget,
+    color?: Color
+  }) {
+    super();
+    super.AddClass("label");
+    if (o.text != undefined) {
+
+      if (typeof(o.text) == "string") {
+        super.Add(new Text({text: o.text}));
+      } else {
+        super.Add(o.text);
+      }
+    }
+
+    if (o.color != undefined) {
+      super.AddClass("label-" + o.color);
+    }
   }
 }
 
@@ -761,9 +823,19 @@ class Panel extends div {
 }
 
 class Icon extends span {
+  prev: string
   constructor(icon: Icons) {
     super();
-    super.AddClass(["glyphicon", "glyphicon-" + icon])
+
+    this.prev = "glyphicon-" + icon;
+    
+    super.AddClass(["glyphicon", this.prev])
+  }
+
+  change(icon: Icons) {
+    super.DeleteClass(this.prev);
+    this.prev = "glyphicon-" + icon;
+    super.AddClass(this.prev);
   }
 }
 
@@ -776,15 +848,29 @@ class Divider extends div {
 
 class ButtonSplit extends div {
   menu: ul
-  constructor() {
+  constructor(o: {
+    color: Color,
+    clicked?: () => void,
+    enable?: boolean
+  }) {
     super();
     super.AddClass("btn-group");
 
-    const title = new ButtonLink({text: "sample", color: Color.Primary});
+    const title = new ButtonLink({text: "sample", color: o.color});
+    if (o.enable != undefined) {
+      title.enable(o.enable);
+    }
+
     const caret = new ButtonLink({
       text: new span().AddClass("caret"),
-      color: Color.Primary
+      color: o.color
     });
+
+    if (o.enable != undefined) {
+      caret.enable(o.enable);
+    }
+
+
     caret.AddClass("dropdown-toggle");
     caret.AddAttr({
       "data-toggle": "dropdown",
@@ -811,6 +897,14 @@ class ButtonSplit extends div {
       }
     });
 
+    
+    title.AddEventListener("click", () => {
+      if (o.clicked != undefined) {
+        o.clicked();
+      }
+    });
+    
+
   }
 
   add(title: string|Divider, fn?:() => void) {
@@ -826,20 +920,617 @@ class ButtonSplit extends div {
     }
 
     if (fn != undefined) {
-
+      aa.AddEventListener("click", (e) => {
+        e.preventDefault();
+        fn();
+        if (!super.HasClass("open")) {
+          super.AddClass("open");
+        } else {
+          super.DeleteClass("open");
+        }
+      });
     }
 
     return this;
   }
 }
 
+class Well extends div {
+  constructor(o: {
+    size?: Size
+  }) {
+    super();
+
+    super.AddClass("well");
+    if (o.size != undefined) {
+      super.AddClass("well-" + o.size);
+    }
+  }
+}
+
+
+class AlertMessage extends div {
+  constructor(o: {color?: Color, dismissible?: boolean}) {
+    super();
+    super.AddClass("alert");
+    
+    if (o.dismissible != undefined && o.dismissible) {
+      super.AddClass("alert-dismissible");
+
+      const close = new button();close.Html("x");
+      close.AddAttr({
+        type: "button",
+        class: "close",
+        "data-dismiss": "alert"
+      });
+
+      close.AddEventListener("click", () => {
+        super.Delete();
+      });
+
+      super.Add(close);
+    }
+
+    if (o.color != undefined) {
+      super.AddClass("alert-" + o.color);
+    }
+    
+  }
+}
+
+class TextField extends input {
+  constructor(o: {
+    size?: Size,
+    type?: InputType,
+    placeholder?: string
+  }) {
+
+    super();
+
+    super.AddClass("form-control");
+
+    if (o.size != undefined) {
+      super.AddClass("input-" + o.size);
+    }
+
+    if (o.type != undefined) {
+      super.AddAttr({
+        type: o.type
+      });
+    }
+
+    if (o.placeholder != undefined) {
+      super.AddAttr({
+        placeholder: o.placeholder
+      });
+    }
+
+  }
+
+  value(v: string = "") {
+    if (v == "")
+      return this.GetValue();
+    else 
+      this.AddValue(v);
+    return this;
+  }
+
+  enable(v: boolean = true) {
+    if (v) {
+      this.DeleteAttr("disabled");
+    } else {
+      this.AddAttr({
+        disabled: ""
+      });
+    }
+  }
+
+}
+
+class TextFieldAddon extends div{
+  tf: TextField
+  constructor(o: { 
+    size?: Size,
+    type?: InputType,
+    placeholder?: string,
+    prefix?: string | Widget,
+    suffix?: string | Widget
+  }) {
+    super();
+    super.AddClass("input-group");
+    this.tf = new TextField(o);
+
+    const prefix = new span();
+    prefix.AddClass("input-group-addon");
+    if (o.prefix != undefined) {
+      if (typeof(o.prefix) == "string") {
+        prefix.Html(o.prefix);
+      } else {
+        prefix.Add(o.prefix);
+      }
+      super.Add(prefix);
+    }
+
+    super.Add(this.tf);
+
+    const suffix = new span();
+    suffix.AddClass("input-group-btn");
+    if (o.suffix != undefined) {
+      
+      const btn = new Button({text: o.suffix, color: Color.Default});
+      suffix.Add(btn);
+      super.Add(suffix);
+    }
+  
+
+  }
+
+  value(v: string = "") {
+    if (v == "")
+      return this.tf.GetValue();
+    else 
+      this.tf.AddValue(v);
+    return this;
+  }
+
+  enable(v: boolean = true) {
+    if (v) {
+      this.tf.DeleteAttr("disabled");
+    } else {
+      this.tf.AddAttr({
+        disabled: ""
+      });
+    }
+  }
+
+}
+
+class TextFieldFeedBack extends div {
+  tf: TextField
+  icon: Icon
+  msg: div
+  constructor(o: {
+    size?: Size,
+    type?: InputType,
+    placeholder?: string,
+  }) {
+    super();
+    this.tf = new TextField(o);
+
+    super.AddClass("has-feedback");
+    super.Add(this.tf);
+
+    this.icon = new Icon(Icons.Ok);
+    this.icon.AddClass("form-control-feedback");
+    this.icon.Hide();
+    super.Add(this.icon);
+  }
+
+  check(msg: string, type: Message) {
+
+    super.DeleteClass(["has-success", "has-warning", "has-danger"]);
+    this.icon.Show();
+
+    if (type == Message.Success) {
+      super.AddClass("has-success");
+      this.icon.change(Icons.Ok);
+    } else if (type == Message.Warning) {
+      this.icon.change(Icons.WarningSign);
+      super.AddClass("has-warning");
+    } else {
+      this.icon.change(Icons.Remove);
+      super.AddClass("has-error");
+    }
+  }
+
+  value(v: string = "") {
+    if (v == "")
+      return this.tf.GetValue();
+    else 
+      this.tf.AddValue(v);
+    return this;
+  }
+
+  enable(v: boolean = true) {
+    if (v) {
+      this.tf.DeleteAttr("disabled");
+    } else {
+      this.tf.AddAttr({
+        disabled: ""
+      });
+    }
+  }
+}
+
+class TextBox extends textarea {
+  constructor(o: {
+    placeholder?: string
+  }) {
+
+    super();
+
+    super.AddClass("form-control");
+
+
+    if (o.placeholder != undefined) {
+      super.AddAttr({
+        placeholder: o.placeholder
+      });
+    }
+
+  }
+
+  value(v: string = "") {
+    if (v == "")
+      return this.GetValue();
+    else 
+      this.Html(v);
+    return this;
+  }
+
+  enable(v: boolean = true) {
+    if (v) {
+      this.DeleteAttr("disabled");
+    } else {
+      this.AddAttr({
+        disabled: ""
+      });
+    }
+  }
+
+}
+
+class Radio extends div {
+  tf: input
+  constructor(o: {
+    label?: string | Widget,
+    inline?: boolean,
+    group: string,
+    change?: (v: boolean) => void
+  }) {
+    super();
+    super.AddClass("radio");
+    
+    if (o.inline != undefined && o.inline) {
+      super.AddStyle({display: "inline"});
+    }
+
+    this.tf = new input().AddAttr({
+      type: InputType.Radio,
+      name: o.group
+    });
+
+    const lbl = new label();
+    
+    lbl.Add(this.tf);
+
+    super.Add(lbl);
+    
+    if (o.label != undefined) {
+      if (typeof(o.label) == "string") {
+        const a = new span();
+        a.Html(o.label);
+        lbl.Add(a);
+      } else {
+        lbl.Add(o.label);
+      }
+    }
+
+    if (o.change != undefined) {
+      this.tf.AddEventListener("change", () => {
+        if (o.change != undefined) {
+          const v = this.tf.GetValue() as boolean;
+          o.change(v);
+        }
+      });
+    }
+
+  }
+
+  value(v: boolean|null = null) {
+    if (v == null) {
+      return this.tf.GetValue();
+    } else {
+      this.tf.AddValue(v);
+    }
+    return false;
+  } 
+
+  enable(v: boolean = true) {
+    if (v) {
+      this.tf.DeleteAttr("disabled");
+    } else {
+      this.tf.AddAttr({
+        disabled: ""
+      });
+    }
+  }
+}
+
+
+class CheckBox extends div {
+  tf: input
+  constructor(o: {
+    label?: string | Widget,
+    inline?: boolean,
+    change?: (v: boolean) => void
+  }) {
+    super();
+    super.AddClass("checkbox");
+    
+    if (o.inline != undefined && o.inline) {
+      super.AddStyle({display: "inline"});
+    }
+
+    this.tf = new input().AddAttr({
+      type: InputType.Checkbox
+    });
+
+    const lbl = new label();
+    
+    lbl.Add(this.tf);
+
+    super.Add(lbl);
+    
+    if (o.label != undefined) {
+      if (typeof(o.label) == "string") {
+        const a = new span();
+        a.Html(o.label);
+        lbl.Add(a);
+      } else {
+        lbl.Add(o.label);
+      }
+    }
+
+    if (o.change != undefined) {
+      this.tf.AddEventListener("change", () => {
+        if (o.change != undefined) {
+          const v = this.tf.GetValue() as boolean;
+          o.change(v);
+        }
+      });
+    }
+
+  }
+
+  value(v: boolean|null = null) {
+    if (v == null) {
+      if (this.tf.control instanceof HTMLInputElement)
+        return this.tf.control.checked;
+      //return this.tf.GetValue();
+    } else {
+      this.tf.AddValue(v);
+    }
+    return false;
+  } 
+
+  enable(v: boolean = true) {
+    if (v) {
+      this.tf.DeleteAttr("disabled");
+    } else {
+      this.tf.AddAttr({
+        disabled: ""
+      });
+    }
+  }
+}
+
+class SelectBox extends select {
+  constructor(o: {
+    multiple?: boolean
+  }) {
+    super();
+    super.AddClass("form-control");
+    if (o.multiple != undefined && o.multiple) {
+      super.AddAttr({
+        multiple: ""
+      });
+    }
+  }
+
+  clear() {
+
+  }
+
+  add(key: string, value: string) {
+    const o = new option();
+    o.AddAttr({key: key});
+    o.Text(value);
+    super.Add(o);
+  }
+
+  value(v: string = "") {
+    if (v == "") {
+      return this.GetValue();
+    } else {
+      this.AddValue(v);
+    }
+  }
+
+  enable(v: boolean = true) {
+    if (v) {
+      this.DeleteAttr("disabled");
+    } else {
+      this.AddAttr({
+        disabled: ""
+      });
+    }
+  }
+}
+
+class Row extends div {
+  constructor(obj: (Widget|string|number)[], align?: Flex) {
+    super();
+
+    super.AddStyle({
+      display: "flex",
+      "flex-direction": "row",
+      "align-items": "baseline"
+    })
+
+    if (align != undefined) {
+      super.AddStyle({
+        "align-content": align
+      })
+    }
+
+    for (const item of obj) {
+      if (item instanceof Widget) {
+        super.Add(item);
+      } else if (typeof(item) == "number") {
+        super.Add(new div().AddStyle({width: `${item}px`}));
+      } else if (typeof(item) == "string") {
+        super.Add(new Text({text: item}));
+      }
+    }
+  }
+}
+
+
+class Column extends div {
+  constructor(obj: (Widget|string|number)[]) {
+    super();
+
+    super.AddStyle({
+      display: "block"
+    })
+
+    for (const item of obj) {
+      if (item instanceof Widget) {
+        super.Add(item);
+      } else if (typeof(item) == "number") {
+        super.Add(new div().AddStyle({height: `${item}px`}));
+      }
+    }
+  }
+}
+
+class Modal extends div {
+  backdrop: div
+  promise: Promise<unknown>
+  resolvefn: (value: unknown) => void
+  content: div
+  constructor(o: {
+    label?: string | Widget,
+    size?: Size,
+    footer?: (Button|ButtonLink|ButtonSplit)[]
+  }) {
+    super();
+    super.AddClass(["modal", "fade"]);
+    super.AddStyle({
+      display: "none"
+    });
+
+    this.promise = new Promise((resolve) => {
+      this.resolvefn = resolve;
+    });
+
+    const modal_dialog = new div();
+    if (o.size != undefined) {
+      modal_dialog.AddClass(["modal-dialog", "modal-" + o.size]);
+    } else {
+      modal_dialog.AddClass(["modal-dialog", "modal-" + Size.Lg]);
+    }
+    const modal_content = new div().AddClass("modal-content");
+    modal_dialog.Add(modal_content);
+
+    super.Add(modal_dialog);
+
+    // for header
+    const header = new div().AddClass("modal-header");
+
+    const close = new button();
+    close.AddAttr({
+      type: "button",
+      class: "close",
+      "data-dismiss": "modal"
+    });
+    close.Html("×");
+
+    close.AddEventListener("click", () => {
+      this.hide(null);
+    });
+
+    header.Add(close);
+
+    if (o.label != undefined) {
+      if (typeof(o.label) == "string") {
+        const h = new h4();
+        h.AddClass("modal-title");
+        h.Html(o.label);
+        header.Add(h);
+      } else {
+        header.Add(o.label);
+      }
+    }
+    /// end header
+
+    const body = new div().AddClass("modal-body");
+    const footer = new div().AddClass("modal-footer");
+    modal_content.Add([header, body, footer]);
+
+    this.backdrop = new div();
+    this.backdrop.AddClass(["modal-backdrop", "fade", "in"]);
+
+    this.content = body;
+
+    if (o.footer != undefined) {
+      footer.Add(o.footer);
+    }
+
+  }
+
+  add(obj: Widget) {
+    this.content.Add(obj);
+  }
+
+  async show() {
+
+    this.body.appendChild(this.control);
+
+    super.AddStyle({
+      display: "block"
+    });
+    super.AddClass("in");
+
+    this.body.appendChild(this.backdrop.control);
+  
+    this.backdrop.AddClass(["modal-backdrop", "fade", "in"]);
+
+    this.backdrop.AddEventListener("click", () => {
+      this.hide(null);
+    });
+
+    return this.promise;
+  }
+
+  hide(msg: string|null = null) {
+    this.resolvefn(msg);
+    
+    super.AddStyle({
+      display: "none"
+    });
+    super.DeleteClass("in");
+    
+    super.Delete();
+    this.backdrop.Delete();
+  }
+}
+
+
+
 export {
   Color,
   Size,
-  Icons
+  Icons,
+  InputType,
+  Message,
+  Flex
 };
 
 export {
+  SelectBox,
+  AlertMessage,
   Button,
   Html,
   Badge,
@@ -854,5 +1545,17 @@ export {
   Icon,
   Divider,
   ButtonLink,
-  ButtonSplit
+  ButtonSplit,
+  Label,
+  Well,
+  Text,
+  TextField,
+  TextBox,
+  TextFieldAddon,
+  TextFieldFeedBack,
+  Radio,
+  CheckBox,
+  Row,
+  Column,
+  Modal
 };
