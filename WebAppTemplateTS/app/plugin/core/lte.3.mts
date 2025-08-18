@@ -48,7 +48,7 @@ class LTEApp extends Panel {
     // generation of the menu
 
     const menu = new button().Add(new Row([new Icon(Icons.Camera), 10, "Dashboard"])).AddClass("lte-menu-btn");
-    const arrow = new Panel().Add(new Icon(Icons.TriangleLeft));    
+    const arrow = new Panel().Add(new Icon(Icons.ChevronLeft));    
     arrow.AddStyle({
       position: "absolute",
       right: "10px",
