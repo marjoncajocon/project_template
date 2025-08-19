@@ -10,14 +10,20 @@ class LTESubMenuButton extends div {
     super();
     const menu = new button().Add(new Row([new Icon(Icons.OptionVertical).AddStyle({
       color: "rgba(255, 255, 255, 0.3)"
-    }), 10, new Html(o.title).AddClass("lte-hidable")])).AddClass("lte-menu-btn");
+    }), 10, new Html(o.title).AddClass("lte-hidable")])).AddClass("lte-menu-btn").AddClass("cc-menu");
 
     super.Add(menu);
 
     if (o.fn != undefined) {
       menu.AddEventListener("click", () => {
-        if (o.fn != undefined)
-        o.fn();
+        if (o.fn != undefined) {
+          o.fn();
+          const a = document.getElementsByClassName("cc-menu");
+          for (const item of a) {
+            item.classList.remove("lte-active");
+          }
+          menu.AddClass("lte-active");
+        }
       });
     }
   }
@@ -32,7 +38,7 @@ class LTEMenuButton extends div {
   }) {
     super();
     const arrow_icon = new Icon(Icons.ChevronLeft);
-    const menu = new button().Add(new Row([new Icon(o.icon), 10, new Html(o.title).AddClass("lte-hidable")])).AddClass("lte-menu-btn");
+    const menu = new button().Add(new Row([new Icon(o.icon), 10, new Html(o.title).AddClass("lte-hidable")])).AddClass("lte-menu-btn").AddClass("cc-menu");
     
     arrow_icon.AddClass("lte-hidable");
 
@@ -84,7 +90,14 @@ class LTEMenuButton extends div {
 
       if (o.fn != undefined) {
         menu.AddEventListener("click", () => {
-          if (o.fn != undefined) o.fn();
+          if (o.fn != undefined) { 
+            o.fn();
+            const a = document.getElementsByClassName("cc-menu");
+            for (const item of a) {
+              item.classList.remove("lte-active");
+            }
+            menu.AddClass("lte-active");
+          }
         });
       }
     }

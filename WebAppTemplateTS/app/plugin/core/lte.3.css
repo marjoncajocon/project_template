@@ -115,6 +115,11 @@
   padding-bottom: 57px; 
 }
 
+.lte-active {
+  background-color: #007bff!important;
+  color: white!important;
+}
+
 /* end of the Sidebar */
 
 .lte-body {
