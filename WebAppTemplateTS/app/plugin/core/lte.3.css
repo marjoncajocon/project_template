@@ -66,11 +66,13 @@
 .lte-search .form-control {
   background-color: rgba(0, 0, 0, 0.2);
   border: 1px solid #4b535d;
+  height: 38px;
 }
 .lte-search .btn-default {
   background-color: rgba(0, 0, 0, 0.2);
   color: #4b535d;
   border: 1px solid #4b535d;
+  height: 38px;
 }
 .lte-search .btn-default:hover {
   background-color: rgba(0, 0, 0, 0.1);
@@ -105,6 +107,13 @@
 .lte-light-active {
   background-color: rgba(255, 255, 255, 0.2);
 }
+
+.lte-side-bar-content {
+  height: calc(100% - 57px);
+  overflow-y: auto;
+  padding-bottom: 57px; 
+}
+
 /* end of the Sidebar */
 
 .lte-body {
@@ -166,4 +175,25 @@
 
 .lte-menu-active {
   display: block!important;
+}
+
+
+/* width */
+.lte-side-bar-content::-webkit-scrollbar {
+  width: 2px;
+}
+
+/* Track */
+.lte-side-bar-content::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+.lte-side-bar-content::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+.lte-side-bar-content::-webkit-scrollbar-thumb:hover {
+  background: #555; 
 }

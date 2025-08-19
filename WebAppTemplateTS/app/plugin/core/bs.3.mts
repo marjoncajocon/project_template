@@ -1,5 +1,7 @@
 import "./bootstrap3/css/bootstrap.min.css";
 //import "./bootstrap3/css/theme-lumen.css";
+//import "./bootstrap3/css/theme-sandstone.css";
+//import "./bootstrap3/css/theme-spacelab.css";
 
 import { a, button, col, div, fieldset, h4, input, label, legend, li, option, select, span, table, tbody, td, textarea, th, thead, tr, u, ul, Widget } from "./core.mts";
 
@@ -323,6 +325,64 @@ enum Flex {
   SpaceAround = 'space-around',
   SpaceBetween = 'space-between',
   SpaceEvenly = 'space-evenly'
+}
+
+enum GridSize {
+  // Extra small devices (xs)
+  Xs1 = "col-xs-1",
+  Xs2 = "col-xs-2",
+  Xs3 = "col-xs-3",
+  Xs4 = "col-xs-4",
+  Xs5 = "col-xs-5",
+  Xs6 = "col-xs-6",
+  Xs7 = "col-xs-7",
+  Xs8 = "col-xs-8",
+  Xs9 = "col-xs-9",
+  Xs10 = "col-xs-10",
+  Xs11 = "col-xs-11",
+  Xs12 = "col-xs-12",
+
+  // Small devices (sm)
+  Sm1 = "col-sm-1",
+  Sm2 = "col-sm-2",
+  Sm3 = "col-sm-3",
+  Sm4 = "col-sm-4",
+  Sm5 = "col-sm-5",
+  Sm6 = "col-sm-6",
+  Sm7 = "col-sm-7",
+  Sm8 = "col-sm-8",
+  Sm9 = "col-sm-9",
+  Sm10 = "col-sm-10",
+  Sm11 = "col-sm-11",
+  Sm12 = "col-sm-12",
+
+  // Medium devices (md)
+  Md1 = "col-md-1",
+  Md2 = "col-md-2",
+  Md3 = "col-md-3",
+  Md4 = "col-md-4",
+  Md5 = "col-md-5",
+  Md6 = "col-md-6",
+  Md7 = "col-md-7",
+  Md8 = "col-md-8",
+  Md9 = "col-md-9",
+  Md10 = "col-md-10",
+  Md11 = "col-md-11",
+  Md12 = "col-md-12",
+
+  // Large devices (lg)
+  Lg1 = "col-lg-1",
+  Lg2 = "col-lg-2",
+  Lg3 = "col-lg-3",
+  Lg4 = "col-lg-4",
+  Lg5 = "col-lg-5",
+  Lg6 = "col-lg-6",
+  Lg7 = "col-lg-7",
+  Lg8 = "col-lg-8",
+  Lg9 = "col-lg-9",
+  Lg10 = "col-lg-10",
+  Lg11 = "col-lg-11",
+  Lg12 = "col-lg-12"
 }
 
 class Text extends div {
@@ -1624,13 +1684,30 @@ class Table extends div {
 }
 
 
+class Grid extends div {
+  constructor(o: {}) {
+    super();
+    super.AddClass("row");
+  }
+  add(obj: Widget, grid: GridSize[]) {
+    const panel = new Panel().AddClass(grid);
+
+    panel.Add(obj);
+
+    super.Add(panel);
+  }
+}
+
+
+
 export {
   Color,
   Size,
   Icons,
   InputType,
   Message,
-  Flex
+  Flex,
+  GridSize
 };
 
 export {
@@ -1664,5 +1741,6 @@ export {
   Row,
   Column,
   Modal,
-  Table
+  Table,
+  Grid
 };

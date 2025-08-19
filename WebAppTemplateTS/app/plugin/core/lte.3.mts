@@ -1,5 +1,5 @@
-import { Html, Icon, Icons, Panel, Row, Size, TextField, TextFieldAddon } from "./bs.3.mts";
-import { button, div, input, title, Widget } from "./core.mts";
+import { BreadCrumb, Grid, GridSize, Html, Icon, Icons, Panel, Row, Size, TextField, TextFieldAddon } from "./bs.3.mts";
+import { button, div, h3, h5, input, title, Widget } from "./core.mts";
 import "./lte.3.css";
 
 class LTESubMenuButton extends div {
@@ -177,6 +177,21 @@ class LTEApp extends Panel {
       }
     });
 
+    // title bar and bread crumb
+    const title_grid = new Grid({});
+    panel.Add(new Panel().AddStyle({
+      padding: "0px 15px 15px 15px"
+    }).Add(title_grid));
+    const htitle = new h3();
+    htitle.Html(`Widgets`);
+    title_grid.add(
+      htitle, [GridSize.Lg9]
+    );
+    const bread = new BreadCrumb({});
+    bread.add("Home");
+    bread.add("Widgets");
+    title_grid.add(bread, [GridSize.Lg3]);
+
     return panel;
   }
 
@@ -227,6 +242,8 @@ class LTEApp extends Panel {
     }
 
     // end generation of the menu
+
+    sidebar_content.AddClass("lte-side-bar-content");
 
     panel.Add(sidebar_content);
     return panel;
