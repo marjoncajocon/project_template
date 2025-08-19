@@ -1,9 +1,13 @@
+/* start sidebar here */
 .lte-sidebar {
   width: 250px;
-  height: 100vh;
+  height: 100%;
   background-color: #343940;
-  box-shadow: 1px 1px solid rgba(0, 0, 0, 0.3);
-  float: left;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
 }
 .lte-brand {
   width: 100%;
@@ -85,10 +89,72 @@
   border: none;
   padding-left: 20px;
   background-color: rgba(0, 0, 0, 0);
-  color: white;
+  color: #c2c7d0;
   font-size: 16px;
   position: relative;
 }
 .lte-menu-btn:hover {
   background-color: rgba(255, 255, 255, 0.1);
+}
+.lte-menu-show {
+  display: block!important;
+  background-color: rgba(0, 0, 0, 0.09);
+  border-radius: 4px;
+  transition: all .5s ease-in-out;
+}
+.lte-light-active {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+/* end of the Sidebar */
+
+.lte-body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #eff1f4;
+  padding-left: 250px;
+}
+.lte-top-bar {
+  height: 57px;
+  width: 100%;
+  background-color: white;
+  position: relative;
+  padding: 8px;
+  border-bottom: 1px solid #dee2e6;
+}
+.lte-bar-btn {
+  height: 100%;
+  width: 40px;
+  background-color: white;
+  border: none;
+  color: #00000080;
+  display: none;
+}
+
+.lte-rotate-arrow {
+  rotate: -90deg;
+  transition: 0.5s;
+}
+
+.lte-rotate-arrow-original {
+  rotate: 0deg;
+  transition: 0.5s;
+}
+
+@media (max-width: 990px) {
+  .lte-sidebar {
+    display: none;
+  }
+  .lte-body {
+    padding-left: 0px;
+  }
+  .lte-bar-btn {
+    display: block;
+  }
+}
+
+.lte-menu-active {
+  display: block!important;
 }

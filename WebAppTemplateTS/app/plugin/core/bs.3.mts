@@ -1,3 +1,6 @@
+import "./bootstrap3/css/bootstrap.min.css";
+//import "./bootstrap3/css/theme-lumen.css";
+
 import { a, button, col, div, fieldset, h4, input, label, legend, li, option, select, span, table, tbody, td, textarea, th, thead, tr, u, ul, Widget } from "./core.mts";
 
 enum Icons {
