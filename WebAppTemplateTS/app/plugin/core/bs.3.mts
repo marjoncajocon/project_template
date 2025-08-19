@@ -840,7 +840,7 @@ class Card extends div {
 
 }
 
-class Tab extends ul {
+class _Tab extends ul {
   list: li[]
   content: div
   constructor(o: {}) {
@@ -852,7 +852,7 @@ class Tab extends ul {
     this.content = new div();
   }
 
-  add(title: string|Widget, fn?: () => void) {
+  add(title: string|Widget, fn?: () => void, active: boolean = false) {
     const ll = new li().AddStyle({
       cursor: "pointer"
     });
@@ -871,13 +871,63 @@ class Tab extends ul {
         }
 
         ll.AddClass("active");
+        fn();
       });
+    }
+
+    if (active) {
+      ll.AddClass("active");
+      if (fn != undefined) {
+        fn();
+      }
     }
 
     this.list.push(ll);
     
     super.Add(ll);
   }
+}
+
+class Tab extends div {
+  tab: _Tab
+  content: div
+  constructor(o: {
+    padding?: number 
+  }) {
+    super();
+    this.tab = new _Tab(o);
+
+    super.Add(this.tab);
+    this.content = new Panel();
+    this.content.AddStyle({
+      "border-bottom-right-radius": "4px",
+      "border-bottom-left-radius": "4px",
+      "border-left": "1px solid #e7e7e7",
+      "border-right": "1px solid #e7e7e7",
+      "border-bottom": "1px solid #e7e7e7"
+    })
+
+    if (o.padding != undefined) {
+      this.content.AddStyle({
+        "padding": `${o.padding}px`
+      });
+    } else {
+      this.content.AddStyle({
+        "padding": `10px`
+      });
+    }
+    
+    super.Add(this.content);
+  }
+
+  add(title: string, fn: (o: Panel) => void, active: boolean = false) {
+    this.tab.add(title, () => {
+      this.content.Clear();
+      fn(this.content);
+    }, active);
+    return this;
+  }
+
 }
 
 class Panel extends div {
@@ -1098,7 +1148,8 @@ class TextFieldAddon extends div{
     type?: InputType,
     placeholder?: string,
     prefix?: string | Widget,
-    suffix?: string | Widget
+    suffix?: string | Widget,
+    suffix_fn?: () => void
   }) {
     super();
     super.AddClass("input-group");
@@ -1124,6 +1175,10 @@ class TextFieldAddon extends div{
       const btn = new Button({text: o.suffix, color: Color.Default});
       suffix.Add(btn);
       super.Add(suffix);
+      
+      btn.AddEventListener("click", () => {
+        if (o.suffix_fn != undefined) o.suffix_fn();
+      });
     }
   
 
@@ -1615,6 +1670,7 @@ class Form extends fieldset {
 class Table extends div {
   table: table
   tbody: tbody
+  list: tr[]
   constructor(o: {
     header?: (string|Widget)[],
     hover?: boolean,
@@ -1660,12 +1716,16 @@ class Table extends div {
 
     this.table.Add(this.tbody);
 
+    this.list = [];
+
   }
   
   add(o: {
     item: (string|Widget)[]
   }): tr {
+    
     const tr1 = new tr();
+    
     for (const item of o.item) {
       const th1 = new td();
       
@@ -1677,9 +1737,17 @@ class Table extends div {
 
       tr1.Add(th1);
     }
+
     this.tbody.Add(tr1);
 
+    this.list.push(tr1);
     return tr1;
+  }
+
+  clear() {
+    for (const item of this.list) {
+      item.Delete();
+    }
   }
 }
 
@@ -1689,12 +1757,14 @@ class Grid extends div {
     super();
     super.AddClass("row");
   }
-  add(obj: Widget, grid: GridSize[]) {
+  add(obj: Widget, grid: GridSize[]): Widget{
     const panel = new Panel().AddClass(grid);
 
     panel.Add(obj);
 
     super.Add(panel);
+
+    return this;
   }
 }
 
