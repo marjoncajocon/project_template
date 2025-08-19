@@ -1,5 +1,5 @@
-import "./bootstrap3/css/bootstrap.min.css";
-//import "./bootstrap3/css/theme-lumen.css";
+//import "./bootstrap3/css/bootstrap.min.css";
+import "./bootstrap3/css/theme-lumen.css";
 //import "./bootstrap3/css/theme-sandstone.css";
 //import "./bootstrap3/css/theme-spacelab.css";
 
@@ -1698,6 +1698,65 @@ class Grid extends div {
   }
 }
 
+class CardV2 extends div {
+  constructor(o: {
+    header?: string|Widget,
+    body: Widget,
+    footer?: Widget,
+    bodyPadding?: boolean
+  }) {
+    super()
+    super.AddStyle({
+      "background-color": "white",
+      "border-radius": "5px",
+      "box-shadow": "0 0 2px rgba(0, 0, 0, 0.3)"
+    })
+
+    if (o.header != undefined) {
+      
+      const header = new Panel().AddStyle({
+        height: "46.41px",
+        "border-bottom": "1px solid #dee2e6",
+        "padding": "12px 20px"
+      });
+
+      if (typeof(o.header) == "string") {
+        header.Html(o.header)
+        header.AddStyle({
+          "font-size": "17.6px",
+          "color": "#212529"
+        })
+      } else {
+        header.Add(o.header);
+      }
+
+      super.Add(header);
+    }
+    
+    // add the body
+    const bodyPanel = new Panel();
+    if (o.bodyPadding != undefined && o.bodyPadding) {
+      bodyPanel.AddStyle({
+        "padding": "20px"
+      });
+    }
+    bodyPanel.Add(o.body);
+    super.Add(bodyPanel);
+
+    if (o.footer != undefined) {
+      const footer = new Panel().AddStyle({
+        "height": "55px",
+        "border-top": "1px solid #dee2e6",
+        "padding": "12px 20px"
+      });
+      footer.Add(o.footer);
+      super.Add(footer);
+    }
+    
+
+  }
+}
+
 
 
 export {
@@ -1742,5 +1801,6 @@ export {
   Column,
   Modal,
   Table,
-  Grid
+  Grid,
+  CardV2
 };
