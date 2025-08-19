@@ -1121,8 +1121,8 @@ class TextField extends input {
 
   }
 
-  value(v: string = "") {
-    if (v == "")
+  value(v: string|null = null) {
+    if (v == null)
       return this.GetValue();
     else 
       this.AddValue(v);
@@ -1184,8 +1184,8 @@ class TextFieldAddon extends div{
 
   }
 
-  value(v: string = "") {
-    if (v == "")
+  value(v: string|null = null) {
+    if (v == null)
       return this.tf.GetValue();
     else 
       this.tf.AddValue(v);
@@ -1242,8 +1242,8 @@ class TextFieldFeedBack extends div {
     }
   }
 
-  value(v: string = "") {
-    if (v == "")
+  value(v: string|null = null) {
+    if (v == null)
       return this.tf.GetValue();
     else 
       this.tf.AddValue(v);
@@ -1279,7 +1279,7 @@ class TextBox extends textarea {
 
   }
 
-  value(v: string = "") {
+  value(v: string|null = null) {
     if (v == "")
       return this.GetValue();
     else 
