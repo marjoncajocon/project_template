@@ -1,5 +1,5 @@
 import { BreadCrumb, Grid, GridSize, Html, Icon, Icons, Panel, Row, Size, TextField, TextFieldAddon } from "./bs.3.mts";
-import { button, div, h3, h5, input, title, Widget } from "./core.mts";
+import { button, div, h3, h5, img, input, title, Widget } from "./core.mts";
 import "./lte.3.css";
 
 class LTESubMenuButton extends div {
@@ -8,7 +8,7 @@ class LTESubMenuButton extends div {
     fn?: () => void
   }) {
     super();
-    const menu = new button().Add(new Row([new Icon(Icons.Link).AddStyle({
+    const menu = new button().Add(new Row([new Icon(Icons.OptionVertical).AddStyle({
       color: "rgba(255, 255, 255, 0.3)"
     }), 10, new Html(o.title).AddClass("lte-hidable")])).AddClass("lte-menu-btn");
 
@@ -93,12 +93,16 @@ class LTEMenuButton extends div {
 }
 
 class LTEApp extends Panel {
+  page_title: Widget
+  page_bread: Widget
+  page_body: Widget
   constructor(o: {
     title?: string,
-    logo?: string,
-    userPhoto?: string,
+    logo?: string, // must be  a link or blob link
+    userPhoto?: string, // must be a link or blob link
     userName?: string,
-    sideMenu: LTEMenuButton[]
+    sideMenu: LTEMenuButton[],
+    topLeftMenu?: Row
   }) {
     super();
 
@@ -111,7 +115,8 @@ class LTEApp extends Panel {
     });
     
     const body = this.createBody({
-      sidebar: sideBar
+      sidebar: sideBar,
+      topleftmenu: o.topLeftMenu
     });
 
     super.Add([
@@ -120,8 +125,41 @@ class LTEApp extends Panel {
     ]);
   }
 
+  route(o: {
+    title?: string,
+    page?: string[],
+    body?: Widget
+  }) {
+    
+    if (o.title != undefined) {
+      this.page_title.Html(o.title);
+    }
+
+    if (o.page != undefined) {
+      this.page_bread.Clear();
+      const bread = new BreadCrumb({});
+      bread.AddStyle({
+        background: "rgba(0, 0, 0, 0)"
+      });
+
+      for (const item of o.page) {
+        bread.add(item);
+      }
+
+      this.page_bread.Add(bread);
+    } 
+
+    this.page_body.Clear();
+
+    if (o.body != undefined) {
+      this.page_body.Add(o.body);
+    }
+
+  }
+
   createBody(o: {
-    sidebar: Widget
+    sidebar: Widget,
+    topleftmenu?: Row
   }): Panel {
     const panel = new Panel().AddClass("lte-body");
 
@@ -131,6 +169,16 @@ class LTEApp extends Panel {
     const bar = new button().AddClass("lte-bar-btn");
     bar.Add(new Icon(Icons.MenuHamburger))
     topBar.Add(bar);
+
+    
+    if (o.topleftmenu != undefined) {
+      o.topleftmenu.AddStyle({
+        position: "absolute",
+        right: "10px",
+        top: "10px"
+      });
+      topBar.Add(o.topleftmenu);
+    }
 
     bar.AddEventListener("click", () => {
 
@@ -184,13 +232,29 @@ class LTEApp extends Panel {
     }).Add(title_grid));
     const htitle = new h3();
     htitle.Html(`Widgets`);
+
+    this.page_title = htitle;
+
     title_grid.add(
       htitle, [GridSize.Lg9]
     );
-    const bread = new BreadCrumb({});
-    bread.add("Home");
-    bread.add("Widgets");
-    title_grid.add(bread, [GridSize.Lg3]);
+    // const bread = new BreadCrumb({});
+    // bread.AddStyle({
+    //   background: "rgba(0, 0, 0, 0)"
+    // });
+    // bread.add("Home");
+    // bread.add("Widgets");
+
+    this.page_bread = new Panel();
+
+    title_grid.add(this.page_bread, [GridSize.Lg3]);
+
+    this.page_body = new Panel().AddStyle({
+      padding: "16px",
+      paddingTop: "0px"
+    });
+
+    panel.Add(this.page_body);
 
     return panel;
   }
@@ -208,6 +272,21 @@ class LTEApp extends Panel {
     const brand_title = new Panel();
     brand_title.Html(o.title != undefined ? o.title : `AdminLTE 3`);
     brand_title.AddClass(["lte-brand-title", "lte-hidable"]);
+
+    // brand_icon logo
+    const logo_img = new img().AddStyle({
+      width: "100%",
+      height: "100%",
+      "border-radius": "50%"
+    });
+    if (o.logo != undefined) {
+      logo_img.AddAttr({
+        src: o.logo
+      });
+      brand_icon.Add(logo_img);
+    }
+    // end brand icon logo
+    
 
     brand.Add(new Row([
       brand_icon,
@@ -228,6 +307,22 @@ class LTEApp extends Panel {
     user_panel.Add(user_name);
     /// end sidebar content
     // search
+
+
+     // brand_icon logo
+    const pic_img = new img().AddStyle({
+      width: "100%",
+      height: "100%",
+      "border-radius": "50%"
+    });
+    if (o.userPhoto != undefined) {
+      pic_img.AddAttr({
+        src: o.userPhoto
+      });
+      user_photo.Add(pic_img);
+    }
+    // end brand icon logo
+
     const search = new TextFieldAddon({
       placeholder: "Search",
       suffix: new Icon(Icons.Search)

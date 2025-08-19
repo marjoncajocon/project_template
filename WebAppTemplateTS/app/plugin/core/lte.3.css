@@ -22,6 +22,7 @@
   width: 33px;
   height: 33px;
   border-radius: 50%;
+  position: relative;
 }
 .lte-brand-title {
   color: #b7d3d9;
