@@ -1,4 +1,4 @@
-import { BreadCrumb, Grid, GridSize, Html, Icon, Icons, Panel, Row, Size, TextField, TextFieldAddon } from "./bs.3.mts";
+import { BreadCrumb, Button, Card, Color, Column, Grid, GridSize, Html, Icon, Icons, Panel, Row, Size, Text, TextField, TextFieldAddon } from "./bs.3.mts";
 import { button, div, h3, h5, img, input, title, Widget } from "./core.mts";
 import "./lte.3.css";
 
@@ -345,9 +345,53 @@ class LTEApp extends Panel {
   }
 }
 
+class LTEAppLogin extends div {
+  constructor(o: {
+    title: string
+  }) {
+    super();
+
+    const username = new TextFieldAddon({
+      prefix: new Icon(Icons.User),
+      placeholder: "Enter Username"
+    });
+
+    const password = new TextFieldAddon({
+      prefix: new Icon(Icons.Lock),
+      placeholder: "Enter Password"
+    });
+
+    const submit = new Button({text: new Row([new Icon(Icons.LogIn), 10, "Sign In"]), color: Color.Success});
+
+    const login = new Card({
+      header: o.title,
+      color: Color.Primary,
+      body: new Column([
+        new Text({text: "Username"}),
+        username,
+        10,
+        new Text({text: "Password"}),
+        password,
+        10,
+        submit
+      ])
+    });
+
+    super.Add(new Panel().Add(login).AddStyle({
+      width: "480px",
+      height: "480px",
+      margin: "auto",
+      "margin-top": "10%",
+      "max-width": "98%"
+    }));
+
+  }
+}
+
 export default LTEApp;
 
 export {
   LTEMenuButton,
-  LTESubMenuButton
+  LTESubMenuButton,
+  LTEAppLogin
 };

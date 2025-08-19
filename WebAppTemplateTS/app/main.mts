@@ -1,6 +1,6 @@
 import { Button, Card, Color, Icon, Icons, Pagination, Row, Size, Table } from "./plugin/core/bs.3.mts";
 import {Window} from "./plugin/core/core.mjs";
-import LTEApp, { LTEMenuButton, LTESubMenuButton } from "./plugin/core/lte.3.mts";
+import LTEApp, { LTEAppLogin, LTEMenuButton, LTESubMenuButton } from "./plugin/core/lte.3.mts";
 
 const MyApp = new Window();
 
@@ -16,7 +16,9 @@ tbl.add({item: [
 const lte = new LTEApp({
   topLeftMenu: new Row([
     new Button({text: new Icon(Icons.Bell), color: Color.Default, size: Size.Sm}), 10,
-    new Button({text: new Icon(Icons.Th), color: Color.Default, size: Size.Sm}),
+    new Button({text: new Icon(Icons.Th), color: Color.Default, size: Size.Sm}).AddEventListener("click", () => {
+      MyApp.Navigate(new LTEAppLogin({title: "Sample App"}));
+    }),
   ]),
   title: "Application Title",
   userName: "MARJON CAJOCON",
