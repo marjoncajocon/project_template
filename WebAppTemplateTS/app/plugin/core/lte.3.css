@@ -130,7 +130,7 @@
   background-color: white;
   border: none;
   color: #00000080;
-  display: none;
+  /*display: none;*/
 }
 
 .lte-rotate-arrow {
@@ -141,6 +141,15 @@
 .lte-rotate-arrow-original {
   rotate: 0deg;
   transition: 0.5s;
+}
+
+.lte-desktop-hide-side {
+  width: 73.60px!important;
+  transition: 0.2s;
+}
+.lte-desktop-body {
+  padding-left: 73.60px!important;
+  transition: 0.2s;
 }
 
 @media (max-width: 990px) {

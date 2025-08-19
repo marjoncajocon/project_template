@@ -10,7 +10,7 @@ class LTESubMenuButton extends div {
     super();
     const menu = new button().Add(new Row([new Icon(Icons.Link).AddStyle({
       color: "rgba(255, 255, 255, 0.3)"
-    }), 10, o.title])).AddClass("lte-menu-btn");
+    }), 10, new Html(o.title).AddClass("lte-hidable")])).AddClass("lte-menu-btn");
 
     super.Add(menu);
 
@@ -32,9 +32,10 @@ class LTEMenuButton extends div {
   }) {
     super();
     const arrow_icon = new Icon(Icons.ChevronLeft);
-    const menu = new button().Add(new Row([new Icon(o.icon), 10, o.title])).AddClass("lte-menu-btn");
+    const menu = new button().Add(new Row([new Icon(o.icon), 10, new Html(o.title).AddClass("lte-hidable")])).AddClass("lte-menu-btn");
     
-    
+    arrow_icon.AddClass("lte-hidable");
+
     const arrow = new Panel().Add(arrow_icon);    
     
     arrow.AddStyle({
@@ -132,27 +133,47 @@ class LTEApp extends Panel {
     topBar.Add(bar);
 
     bar.AddEventListener("click", () => {
-      if (o.sidebar.HasClass("lte-menu-active")) {
-        o.sidebar.DeleteClass("lte-menu-active");
+
+      if (window.innerWidth > 990) {
+        // for desktop and tablets
+        if (o.sidebar.HasClass("lte-desktop-hide-side")) {
+          panel.DeleteClass("lte-desktop-body");
+          o.sidebar.DeleteClass("lte-desktop-hide-side");
+          const all = document.getElementsByClassName("lte-hidable"); // get all the hidable content
+          for (const item of all) {
+            item.setAttribute("style", "display:;");
+          }
+        } else {
+          o.sidebar.AddClass("lte-desktop-hide-side");
+          panel.AddClass("lte-desktop-body");
+          const all = document.getElementsByClassName("lte-hidable"); // get all the hidable content
+          for (const item of all) {
+            item.setAttribute("style", "display: none;");
+          }
+        }
       } else {
-        const backdrop = new Panel().AddStyle({
-          background: "rgba(0,0,0,0.3)",
-          width: "100%",
-          height: "100%",
-          position: "fixed",
-          zIndex: "999",
-          top: "0px",
-          left: "0px"
-        }).AddClass("lte-backdrop");
-        this.body.appendChild(backdrop.control);
-
-        backdrop.AddEventListener("click", () => {
+        if (o.sidebar.HasClass("lte-menu-active")) {
           o.sidebar.DeleteClass("lte-menu-active");
-          backdrop.Delete();
-        });
+        } else {
+          const backdrop = new Panel().AddStyle({
+            background: "rgba(0,0,0,0.3)",
+            width: "100%",
+            height: "100%",
+            position: "fixed",
+            zIndex: "999",
+            top: "0px",
+            left: "0px"
+          }).AddClass("lte-backdrop");
+          this.body.appendChild(backdrop.control);
 
-        o.sidebar.AddClass("lte-menu-active");
-        
+          backdrop.AddEventListener("click", () => {
+            o.sidebar.DeleteClass("lte-menu-active");
+            backdrop.Delete();
+          });
+
+          o.sidebar.AddClass("lte-menu-active");
+          
+        }
       }
     });
 
@@ -171,7 +192,7 @@ class LTEApp extends Panel {
     const brand_icon = new Panel().AddClass("lte-brand-icon");
     const brand_title = new Panel();
     brand_title.Html(o.title != undefined ? o.title : `AdminLTE 3`);
-    brand_title.AddClass("lte-brand-title");
+    brand_title.AddClass(["lte-brand-title", "lte-hidable"]);
 
     brand.Add(new Row([
       brand_icon,
@@ -187,7 +208,7 @@ class LTEApp extends Panel {
     sidebar_content.Add(user_panel);
     const user_photo = new Panel().AddClass("lte-user-pic");
     user_panel.Add(user_photo);
-    const user_name = new Panel().AddClass("lte-user-name");
+    const user_name = new Panel().AddClass(["lte-user-name", "lte-hidable"]);
     user_name.Add(new Html(o.userName != undefined ? o.userName : "Name of the user"));
     user_panel.Add(user_name);
     /// end sidebar content
@@ -195,7 +216,7 @@ class LTEApp extends Panel {
     const search = new TextFieldAddon({
       placeholder: "Search",
       suffix: new Icon(Icons.Search)
-    });
+    }).AddClass("lte-hidable");
     sidebar_content.Add(new Panel().Add(search).AddClass("lte-search"));
     // end search
 
