@@ -963,6 +963,7 @@ class Divider extends div {
 class ButtonSplit extends div {
   menu: ul
   constructor(o: {
+    text: string|Widget,
     color: Color,
     clicked?: () => void,
     enable?: boolean
@@ -970,7 +971,7 @@ class ButtonSplit extends div {
     super();
     super.AddClass("btn-group");
 
-    const title = new ButtonLink({text: "sample", color: o.color});
+    const title = new ButtonLink({text: o.text, color: o.color});
     if (o.enable != undefined) {
       title.enable(o.enable);
     }
