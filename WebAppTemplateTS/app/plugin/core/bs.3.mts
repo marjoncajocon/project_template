@@ -1748,6 +1748,7 @@ class Table extends div {
     for (const item of this.list) {
       item.Delete();
     }
+    this.list = [];
   }
 }
 
