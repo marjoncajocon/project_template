@@ -97,7 +97,7 @@
   position: relative;
 }
 .lte-menu-btn:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  /*background-color: rgba(255, 255, 255, 0.1);*/
 }
 .lte-menu-show {
   display: block!important;
@@ -106,7 +106,7 @@
   transition: all .5s ease-in-out;
 }
 .lte-light-active {
-  background-color: rgba(255, 255, 255, 0.2);
+  /*background-color: rgba(255, 255, 255, 0.2);*/
 }
 
 .lte-side-bar-content {
