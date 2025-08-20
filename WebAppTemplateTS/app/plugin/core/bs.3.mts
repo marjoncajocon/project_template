@@ -1479,14 +1479,22 @@ class SelectBox extends select {
 }
 
 class Row extends div {
-  constructor(obj: (Widget|string|number)[], align?: Flex) {
+  constructor(obj: (Widget|string|number)[], align?: Flex, baseline?: boolean) {
     super();
 
     super.AddStyle({
       display: "flex",
-      "flex-direction": "row",
-      "align-items": "baseline"
-    })
+      "flex-direction": "row"
+    });
+
+    const is_baseline = baseline == undefined ? true : baseline;
+
+
+    super.AddStyle({
+      "align-items": is_baseline ? "baseline" : ""
+    });
+    
+
 
     if (align != undefined) {
       super.AddStyle({
