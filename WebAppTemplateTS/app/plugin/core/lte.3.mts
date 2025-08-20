@@ -60,7 +60,8 @@ class LTEMenuButton extends div {
       /// here is the logic for the drop 
       const panel = new Panel().AddStyle({
         display: "none",
-        "padding-left": "10px"
+        "padding-left": "5px",
+        "padding-right": "5px"
       });
       super.Add(panel);
 
