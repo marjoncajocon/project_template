@@ -206,3 +206,9 @@
 .lte-side-bar-content::-webkit-scrollbar-thumb:hover {
   background: #555; 
 }
+
+
+.lte-body .breadcrumb {
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  border: none;
+}
