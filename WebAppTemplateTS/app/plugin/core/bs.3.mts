@@ -1533,7 +1533,7 @@ class Modal extends div {
   constructor(o: {
     label?: string | Widget,
     size?: Size,
-    footer?: (Button|ButtonLink|ButtonSplit)[]
+    footer?: (Widget)[]
   }) {
     super();
     super.AddClass(["modal", "fade"]);
