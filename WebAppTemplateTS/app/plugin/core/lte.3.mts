@@ -2,38 +2,38 @@ import { BreadCrumb, Button, Card, Color, Column, Grid, GridSize, Html, Icon, Ic
 import { button, div, h3, h5, img, input, title, Widget } from "./core.mts";
 import "./lte.3.css";
 
-class LTESubMenuButton extends div {
-  constructor(o: {
-    title: string,
-    fn?: () => void
-  }) {
-    super();
-    const menu = new button().Add(new Row([new Icon(Icons.OptionVertical).AddStyle({
-      color: "rgba(255, 255, 255, 0.3)"
-    }), 10, new Html(o.title).AddClass("lte-hidable")])).AddClass("lte-menu-btn").AddClass("cc-menu");
+// class LTESubMenuButton extends div {
+//   constructor(o: {
+//     title: string,
+//     fn?: () => void
+//   }) {
+//     super();
+//     const menu = new button().Add(new Row([new Icon(Icons.OptionVertical).AddStyle({
+//       color: "rgba(255, 255, 255, 0.3)"
+//     }), 10, new Html(o.title).AddClass("lte-hidable")])).AddClass("lte-menu-btn").AddClass("cc-menu");
 
-    super.Add(menu);
+//     super.Add(menu);
 
-    if (o.fn != undefined) {
-      menu.AddEventListener("click", () => {
-        if (o.fn != undefined) {
-          o.fn();
-          const a = document.getElementsByClassName("cc-menu");
-          for (const item of a) {
-            item.classList.remove("lte-active");
-          }
-          menu.AddClass("lte-active");
-        }
-      });
-    }
-  }
-}
+//     if (o.fn != undefined) {
+//       menu.AddEventListener("click", () => {
+//         if (o.fn != undefined) {
+//           o.fn();
+//           const a = document.getElementsByClassName("cc-menu");
+//           for (const item of a) {
+//             item.classList.remove("lte-active");
+//           }
+//           menu.AddClass("lte-active");
+//         }
+//       });
+//     }
+//   }
+// }
 
 class LTEMenuButton extends div {
   constructor(o: {
     icon: Icons,
     title: string,
-    submenu?: LTESubMenuButton[],
+    submenu?: LTEMenuButton[],
     fn?: () => void
   }) {
     super();
@@ -59,7 +59,8 @@ class LTEMenuButton extends div {
     if (o.submenu != undefined) {
       /// here is the logic for the drop 
       const panel = new Panel().AddStyle({
-        display: "none"
+        display: "none",
+        "padding-left": "10px"
       });
       super.Add(panel);
 
@@ -277,7 +278,7 @@ class LTEApp extends Panel {
     logo?: string,
     userName?: string,
     userPhoto?: string,
-    sideMenu: LTESubMenuButton[]
+    sideMenu: LTEMenuButton[]
   }): Widget {
     const panel = new Panel().AddClass("lte-sidebar");
     const brand = new Panel().AddClass("lte-brand");
@@ -405,6 +406,6 @@ export default LTEApp;
 
 export {
   LTEMenuButton,
-  LTESubMenuButton,
+  // LTESubMenuButton,
   LTEAppLogin
 };
