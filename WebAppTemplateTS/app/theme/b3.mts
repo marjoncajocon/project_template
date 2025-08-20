@@ -1,5 +1,9 @@
+//@ts-ignore
 import { Chart } from "../plugin/core/chartjs";
+
 import { a, button, canvas, col, div, h3, h4, h5, head, header, img, input, label, li, nav, option, select, span, table, tbody, td, textarea, th, thead, tr, ul, Widget } from "../plugin/core/core.mts";
+
+// @ts-ignore
 import { InputMask } from "../plugin/core/imask";
 
 
@@ -695,11 +699,13 @@ class Label extends span {
 
 class ProgressBar extends div {
   bar: div
+  cur_color: Color
   constructor(option: {color: Color, striped?: boolean, animate?: boolean}) {
     super();
     
     const {color, striped, animate} = option;
 
+    this.cur_color = color;
     super.AddClass('progress');
 
     this.bar = new div();
@@ -715,6 +721,12 @@ class ProgressBar extends div {
 
     super.Add(this.bar);
 
+  }
+
+  ChangeColor(color: Color) {
+    this.bar.DeleteClass(`bg-${this.cur_color}`);
+    this.cur_color = color;
+    this.bar.AddClass(`bg-${color}`);
   }
 
   UpdateText(percent: number, text: string = '') {
@@ -749,6 +761,7 @@ class Pagination extends ul {
 
     if (size != undefined) 
       this.AddClass(`pagination-${size}`);
+    this.changeCallback = () => {};
 
     this.items = [];
     
@@ -1039,6 +1052,7 @@ class Textfield extends div {
     super();
     const {title, type, size, placeholder, has_feedback, InputGroup, imask} = option;
 
+    this.msg = new div();
     this.input = new input();
 
     if (InputGroup != undefined) {
@@ -1242,7 +1256,7 @@ class Textfield extends div {
 
 class TextBox extends div {
   input: textarea;
-  ico: Icon;
+  ico: Icon|undefined;
   constructor(option: { 
     title?: string,
     size?: Size,
@@ -1251,6 +1265,8 @@ class TextBox extends div {
   }) {
     super();
     const {title, size, placeholder, feedback} = option;
+
+    this.ico = undefined;
 
     if (feedback != undefined && feedback) {
       super.AddClass('has-feedback');
@@ -1290,6 +1306,8 @@ class TextBox extends div {
     const {msg, status} = option;
 
     super.DeleteClass(['has-success', 'has-error', 'has-warning' ]);
+    
+    if (this.ico == undefined) return;
 
     if (status == Status.Ok) {
       super.AddClass('has-success');
@@ -1615,13 +1633,13 @@ class Table extends div {
 
     // temporary hide all the tr    
     for (let i = 0; i < tr_len; i++) {
-      const item = tr[i];
+      const item = tr[i] as HTMLElement;
       item['style'].display = 'none';
     }
 
     /// searching
     for (let i = 0; i < tr_len; i++) {
-      const item = tr[i];
+      const item = tr[i] as HTMLElement;
       const content = item.textContent?.toLowerCase();
       const search = this.search.GetValue().toString().toLowerCase();
 
@@ -1850,9 +1868,9 @@ class Radio extends div {
 
 class SelectBox extends div {
   input: select
-  search_container: Panel
+  search_container: Panel|undefined
   items: {key: string, value:string }[]
-  item_panel: Panel
+  item_panel: Panel|undefined
   constructor(option: { size?: Size, title?: string, multiple?: boolean, placeholder?: string, search?: {
     type: Resource,
     icon?: Icons,
@@ -1966,17 +1984,21 @@ class SelectBox extends div {
       search_item.AddEventListener('keyup', () => {
         const s = search_item.GetValue().toString().toLowerCase();
         
+        if (this.item_panel == undefined) return;
+
         const children = this.item_panel.control.children;
 
         for (const child of children) {
-          child['style'].display = 'none';
+          const c = child as HTMLElement;
+          c['style'].display = 'none';
         }
 
 
         for (const child of children) {
+          const c = child as HTMLElement;
           if (child.textContent != undefined)
             if (child.textContent.toString().toLowerCase().indexOf(s) > -1) {
-              child['style'].display = '';
+              c['style'].display = '';
             }
   
         }
@@ -1988,6 +2010,9 @@ class SelectBox extends div {
       });
 
       this.input.AddEventListener('click', (e) => {
+        if (this.item_panel == undefined) return;
+        if (this.search_container == undefined) return;
+
         e.stopPropagation();
         e.preventDefault();
         this.input.AddAttr({
@@ -2046,7 +2071,8 @@ class SelectBox extends div {
 
   }
 
-  private bodyEvent = (e)=> {
+  private bodyEvent = (e: any)=> {
+    if (this.search_container == undefined || this.item_panel == undefined) return;
 
     this.search_container.Hide();
     this.item_panel.Clear();
@@ -2252,7 +2278,7 @@ class Dialog extends div {
     content: div;
     hdr: div;
 
-    resolve: Function
+    resolve: Function|undefined
 
     constructor(option: { position?: {
         left: number,
@@ -2535,7 +2561,7 @@ class Spinner extends div {
 // Modal2 base on the bootstrap modal
 // Integration part of the bootstrap
 class Modal2 extends div {
-  private resolvefn;
+  private resolvefn:any;
   private promise;
   private backdrop:div;
 
@@ -2698,7 +2724,7 @@ class Modal2 extends div {
 
 class Modal3 extends div {
   private backdrop:div
-  private fn: Function
+  private fn: Function|undefined
 
   private cbody: div 
   private card: div
@@ -2926,6 +2952,8 @@ class Modal3 extends div {
   }
 
   Close(resolve: object|boolean|string|null = null) {
+    if (this.fn == undefined) return;
+    
     this.body.style.overflow = '';
     this.backdrop.Delete();
     this.Delete();
@@ -2949,7 +2977,7 @@ class Modal extends div {
   private content: div;
   private header_content: div;
   private body_content;
-  private resolvefn;
+  private resolvefn: any;
   private promise;
 
   constructor(option: {width?: number, icon?: Icons, title: string, padding?: number, dismissable?: boolean}) {
@@ -3087,11 +3115,11 @@ class Modal extends div {
 class Row extends div {
   pad?: number
   constructor(option: {
-    widgets?: (Widget|number)[],
+    widgets?: (Widget|number|string)[],
     reverse?: boolean,
     justify?: JustifyContent,
     padding?: number
-  }|(Widget|number)[]) {
+  }|(Widget|number|string)[]) {
     super();
     
     if (option instanceof Array) {
@@ -3103,6 +3131,8 @@ class Row extends div {
           this.AddWidget({widget: item});
         } else if (typeof(item) == 'number') {
           this.AddWidget({widget: new Box({width: item})});
+        } else if (typeof(item) == 'string') {
+          this.AddWidget({widget: new Text(item)});
         }
       }
 
@@ -3126,6 +3156,8 @@ class Row extends div {
             this.AddWidget({widget: item});
           } else if (typeof(item) == 'number') {
             this.AddWidget({widget: new Box({width: item})});
+          } else if (typeof(item) == 'string') {
+            this.AddWidget({widget: new Text(item)});
           }
         }
       }
@@ -3152,11 +3184,11 @@ class Row extends div {
 class Column extends div {
   pad?: number
   constructor(option: {
-    widgets: (Widget|number)[],
+    widgets: (Widget|number|string)[],
     reverse?: boolean,
     justify?: JustifyContent,
     padding?: number
-  }|(Widget|number)[]) {
+  }|(Widget|number|string)[]) {
     super();
     if (option instanceof Array) {
       super.AddClass(['d-flex', 'flex-column']);
@@ -3168,6 +3200,8 @@ class Column extends div {
           this.AddWidget({widget: item});
         } else if (typeof(item) == 'number') {
           this.AddWidget({widget: new Box({height: item})});
+        } else if (typeof(item) == 'string') {
+          this.AddWidget({widget: new Text(item)});
         }
 
         super.Add(d);
@@ -3193,6 +3227,8 @@ class Column extends div {
           this.AddWidget({widget: item});
         } else if (typeof(item) == 'number') {
           this.AddWidget({widget: new Box({height: item})});
+        } else if (typeof(item) == 'string') {
+          this.AddWidget({widget: new Text(item)});
         }
 
         super.Add(d);
@@ -3417,7 +3453,7 @@ class ButtonDropDown extends div {
   
   }
 
-  private bodyClick = (e) => {
+  private bodyClick = (e: any) => {
     this.Close();
   }
 

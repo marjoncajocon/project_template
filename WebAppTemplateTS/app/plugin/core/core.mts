@@ -50,11 +50,13 @@ class Widget {
 
   public AddStyle(styles: { [index: string]: string } | string, value = ''): Widget {
     if (typeof (styles) == 'object') {
+
       for (const item in styles) {
-        this.control.style[item] = styles[item];
+        //this.control.style[item] = styles[item];
+        this.control.style.setProperty(item, styles[item]);
       }
     } else if (typeof (styles) == 'string') {
-      this.control.style[styles] = value;
+      this.control.style.setProperty(styles, value);
     }
     return this;
   }
@@ -128,23 +130,25 @@ class Widget {
       } else if (this.control.type == 'radio' || this.control.type == 'checkbox'){
         return this.control.checked;
       }
+    } else if (this.control instanceof HTMLTextAreaElement) {
+      return this.control.value;
     }
     return false;
   }
   protected __Escape(text: string): string {
-    if (typeof text !== 'string') {
-      return text; // if not a string, return as is 
-    }
-    const htmlEntities = {
+    
+    const htmlEntities: Record<string, string> = {
       "&": "&amp;",
       "<": "&lt;",
       ">": "&gt;",
       '"': "&quot;",
       "'": "&#039;"
     };
+
     return text.replace(/[&<>"']/g, function (match) {
       return htmlEntities[match];
     });
+    
   }
  
   public Html(html: string | null = null): string | Widget {
@@ -393,6 +397,7 @@ class Http {
 
   constructor(param: { method: string, url: string, body: string | null | FormData | { [index: string]: string }, header: { [index: string]: string } }) {
     let { method = 'GET', url = '', body = null, header = {} } = param;
+    this.body = null;
     this.xml = new XMLHttpRequest();
     this.xml.open(method, url, true);
     if (typeof (header) == 'object') {

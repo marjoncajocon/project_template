@@ -2,7 +2,7 @@ import { Http } from "../../plugin/core/core.mts";
 
 
 
-const AppHttp = async (url, data = {}, progress: Function|null = null, upload_progress: Function|null = null) => {
+const AppHttp = async (url: string, data = {}, progress: Function|null = null, upload_progress: Function|null = null) => {
 
     let local = localStorage.getItem("xauth");
     let xauth: string = '';
