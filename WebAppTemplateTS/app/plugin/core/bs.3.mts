@@ -1454,13 +1454,13 @@ class SelectBox extends select {
 
   add(key: string, value: string) {
     const o = new option();
-    o.AddAttr({key: key});
+    o.AddAttr({value: key});
     o.Text(value);
     super.Add(o);
   }
 
-  value(v: string = "") {
-    if (v == "") {
+  value(v: string|null = null) {
+    if (v == null) {
       return this.GetValue();
     } else {
       this.AddValue(v);
