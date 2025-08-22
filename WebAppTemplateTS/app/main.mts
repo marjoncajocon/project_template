@@ -1,6 +1,6 @@
 import { Button, Card, Color, Icon, Icons, Pagination, Row, Size, Table } from "./plugin/core/bs.3.mts";
 import {Window} from "./plugin/core/core.mjs";
-import LTEApp, { LTEAppLogin, LTEMenuButton, LTESubMenuButton } from "./plugin/core/lte.3.mts";
+import LTEApp, { LTEAppLogin, LTEMenuButton } from "./plugin/core/lte.3.mts";
 
 const MyApp = new Window();
 
@@ -27,14 +27,14 @@ const lte = new LTEApp({
       icon: Icons.Dashboard,
       title: "Dashboard",
       submenu: [
-        new LTESubMenuButton({title: "View Graph", fn: () => {
+        new LTEMenuButton({icon: Icons.OptionVertical, title: "View Graph", fn: () => {
           lte.route({
             title: "Dashboard",
             page: ["Dashboard", "View Graph"],
             body: new Card({header: "List of User", color: Color.Primary, body: tbl})
           })
         }}),
-        new LTESubMenuButton({
+        new LTEMenuButton({icon: Icons.OptionVertical,
           title: "View Likeds page",
           fn: () => {
             lte.route({
@@ -49,7 +49,8 @@ const lte = new LTEApp({
       icon: Icons.User,
       title: "Profile",
       submenu: [
-        new LTESubMenuButton({
+        new LTEMenuButton({
+          icon: Icons.OptionVertical,
           title: "Edit Profile",
           fn: () => {
             lte.route({
