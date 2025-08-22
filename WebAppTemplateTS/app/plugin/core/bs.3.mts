@@ -620,40 +620,250 @@ class ProgressBar extends div {
 
 }
 
-class Pagination extends ul {
-  list: li[]
+class Pagination extends div {
+  list: {
+    index: number,
+    li: li
+  }[]
+  gul: ul
+  start: number
+  stop: number
+  total: number
+  current_page: number
+  change?: (n: number) => void
   constructor(o: {
-    size?: Size
+    size?: Size,
+    change?: (n: number) => void
   }) {
     super();
-    super.AddClass("pagination");
+    
+    this.gul = new ul().AddClass("pagination");
   
     if (o.size != undefined) {
-      super.AddClass(`pagination-${o.size}`);
+      this.gul.AddClass(`pagination-${o.size}`);
     }
 
     this.list = [];
+
+    super.Add(this.gul);
+
+    this.change = o.change;
+
+    this.start = 0;
+    this.stop = 0;
+    this.total = 0;
+
+    this.current_page = 0;
   }
-  add(num: number, fn?: (n: number) => void) {
+
+  private clearActive() {
+    for (const item of this.list) {
+      item.li.DeleteClass("active");
+    }
+  }
+
+  private getLink(page: number): li|null {
+    for (const item of this.list) {
+      if (page == item.index) {
+        return item.li;
+      }
+    }
+    return null;
+  }
+
+  private active(page: number) {
+    this.clearActive();
+    const ll = this.getLink(page);
+    if (ll != null) {
+      ll.AddClass("active");
+    }
+  }
+
+  update(start: number = 1, stop: number = 10, total: number) {
+
+    if (this.current_page == 0) {
+      this.current_page = start;
+    }
+
+    this.start = start;
+    this.stop = stop;
+    this.total = total;
+
+    // repaint the pagination
+    this.clear();
+    this.gul.Clear();
+
+    // Group previous
+    const prev_all = new li();
+    const prev_all_a = new a().AddAttr({
+      href: "#"
+    });
+    prev_all_a.Add(new Icon(Icons.ArrowLeft));
+    prev_all.Add(prev_all_a);
+    this.gul.Add(prev_all);
+
+    prev_all.AddEventListener("click", (e) => {
+      e.preventDefault();
+
+      this.start = this.start - 10;
+      this.stop = this.stop - 10;
+
+      if (this.start < 1) {
+        this.start = 1;
+      }
+
+      if (this.stop < 1) {
+        this.stop = 1;
+      }
+        
+      this.current_page = this.start;
+      this.update(this.start, this.stop, this.total);
+      this.active(this.current_page);
+      
+      if (this.change != undefined) {
+        this.change(this.current_page);
+      }
+    });
+
+    const prev = new li();
+    const prev_a = new a().AddAttr({
+      href: "#"
+    });
+    prev_a.Add(new Icon(Icons.TriangleLeft));
+    prev.Add(prev_a);
+    this.gul.Add(prev);
+    
+    // previous logic
+    prev.AddEventListener("click", (e) => {
+      
+      e.preventDefault();
+      
+      if (this.current_page <= this.start) {
+        this.current_page = this.start;
+        // other logic goes here
+        if (this.current_page > 1) {
+          this.current_page--;
+          this.stop--;
+          this.update(this.current_page, this.stop, this.total);
+          this.active(this.current_page);
+          if (this.change != undefined) {
+            this.change(this.current_page);
+          }
+        }
+      } else {
+        this.current_page--;
+        this.active(this.current_page);    
+        if (this.change != undefined) {
+          this.change(this.current_page);
+        }
+      }
+    
+    });
+
+    for (let i = start; i <= stop; i++) {
+      this.add(i);
+    }
+
+    const next = new li();
+    const next_a = new a().AddAttr({
+      href: "#"
+    });
+    next_a.Add(new Icon(Icons.TriangleRight));
+    next.Add(next_a);
+    this.gul.Add(next);
+
+    next.AddEventListener("click", (e) => {
+      e.preventDefault();
+      if (this.current_page >= this.stop) {
+        this.current_page = this.stop;
+        if (this.current_page < this.total) {
+          this.current_page++;
+          this.stop++;
+          this.start++;
+          this.update(this.start, this.stop, this.total);
+          this.active(this.current_page);
+          if (this.change != undefined) {
+            this.change(this.current_page);
+          }  
+        }
+      } else {
+        this.current_page++;
+        this.active(this.current_page);    
+        if (this.change != undefined) {
+          this.change(this.current_page);
+        }
+      } 
+    });
+
+
+    //// Group previous
+    const next_all = new li();
+    const next_all_a = new a().AddAttr({
+      href: "#"
+    });
+    //next_all_a.Html("»»»");
+    next_all_a.Add(new Icon(Icons.ArrowRight));
+    next_all.Add(next_all_a);
+    this.gul.Add(next_all);
+
+    next_all.AddEventListener("click", (e) => {
+      e.preventDefault();
+
+      this.start = this.stop + 1;
+      this.stop = this.stop + 10;
+      
+      if (this.stop > total) {
+        this.stop = total;
+      }
+
+      if (this.start > total) {
+        this.start = total;
+        return;
+      }
+    
+      this.current_page = this.start;
+      this.update(this.start, this.stop, this.total);
+      this.active(this.current_page);
+
+      if (this.change != undefined) {
+        this.change(this.current_page);
+      }
+    });
+
+
+    /// activate using the current index
+    this.clearActive();
+    const idx = this.getLink(this.current_page);
+    if (idx != null) idx.AddClass("active");
+  }
+
+  add(num: number) {
 
     const aa = new a();
     const ll = new li().Add(aa);
 
-    this.list.push(ll);
+    this.list.push({
+      index: num,
+      li: ll
+    });
 
-    super.Add(ll);
+    this.gul.Add(ll);
     aa.AddAttr({href: "#"});
     aa.Add(new Text(`${num}`));
 
-    if ( fn != undefined )
+    
     aa.AddEventListener("click", () => {
-
+      this.current_page = num;
       for (const item of this.list) {
-        item.DeleteClass("active");
+        item.li.DeleteClass("active");
       }
       
       ll.AddClass("active");
-      fn(num);
+      if (typeof(num) == "number") {
+        if (this.change != undefined) {
+          this.change(num);
+        }
+      }
     });
 
     return this;
@@ -661,7 +871,7 @@ class Pagination extends ul {
 
   clear() {
     for (const item of this.list) {
-      item.Delete();
+      item.li.Delete();
     }
     this.list = [];
   }
@@ -1594,6 +1804,10 @@ class Modal extends div {
     /// end header
 
     const body = new div().AddClass("modal-body");
+    body.AddStyle({
+      "max-height": "calc(100vh - 160px)",
+      "overflow-y": "auto"
+    });
     const footer = new div().AddClass("modal-footer");
 
     if (o.label != undefined) {
