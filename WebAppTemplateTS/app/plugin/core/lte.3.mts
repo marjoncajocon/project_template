@@ -34,9 +34,17 @@ class LTEMenuButton extends div {
     icon: Icons,
     title: string,
     submenu?: LTEMenuButton[],
-    fn?: () => void
+    fn?: () => void,
+    hide?: boolean
   }) {
     super();
+
+    if (o.hide != undefined && o.hide) {
+      super.AddStyle({
+        display: "none"
+      });
+    }
+
     const arrow_icon = new Icon(Icons.ChevronLeft);
     const menu = new button().Add(new Row([new Icon(o.icon), 10, new Html(o.title).AddClass("lte-hidable")])).AddClass("lte-menu-btn").AddClass("cc-menu");
     
