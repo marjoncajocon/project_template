@@ -1752,6 +1752,8 @@ class Column extends div {
         super.Add(item);
       } else if (typeof(item) == "number") {
         super.Add(new div().AddStyle({height: `${item}px`}));
+      } else if (typeof(item) == "string") {
+        super.Add(new Text({text: item}))
       }
     }
   }
