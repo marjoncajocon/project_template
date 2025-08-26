@@ -3,7 +3,21 @@ import "./bootstrap3/css/theme-lumen.css";
 //import "./bootstrap3/css/theme-sandstone.css";
 //import "./bootstrap3/css/theme-spacelab.css";
 
-import { a, button, col, div, fieldset, h4, input, label, legend, li, option, select, span, table, tbody, td, textarea, th, thead, tr, u, ul, Widget } from "./core.mts";
+import { Chart } from "./chartjs";
+import { a, button, canvas, col, div, fieldset, h4, input, label, legend, li, option, select, span, table, tbody, td, textarea, th, thead, tr, u, ul, Widget } from "./core.mts";
+
+
+enum ChartType {
+  LINE = 'line',
+  BAR = 'bar',
+  RADAR = 'radar',
+  DOUGHNUT = 'doughnut',
+  PIE ='pie',
+  BUBBLE ='bubble',
+  SCATTER ='scatter',
+  POLAR_AREA = 'polarArea'
+}
+
 
 enum Icons {
   Asterisk = 'asterisk',
@@ -2052,6 +2066,98 @@ class CardV2 extends div {
 }
 
 
+// About chart
+class ChartV1 extends canvas {
+  private chart
+  constructor(option: {
+    type: ChartType,
+    data: number[],
+    label?: string,
+    backgroundColor?: string[],
+    borderWidth?: number,
+    labels: string[],
+    borderColor?: string[]
+  }) {
+    super();
+
+    let {data, label, backgroundColor, borderWidth, labels, borderColor, type} = option;
+
+    if (data == undefined) data = [];
+    if (label == undefined) label = '';
+    if (backgroundColor == undefined) backgroundColor = [];
+    if (borderWidth == undefined) borderWidth = 0;
+    if (labels == undefined) labels = [];
+    if (borderColor == undefined) borderColor = [];
+
+    this.chart = new Chart(this.control,  {
+      type: type, // Chart type
+      data: {
+        labels: labels, // X-axis labels
+        datasets: [{
+          label: label,
+          data: data, // Data points
+          backgroundColor: backgroundColor,
+          borderColor: borderColor,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+
+  getChartObject() {
+    return this.chart;
+  }
+
+  init(option: {
+    labels?:string [],
+    data: number[],
+    label?: string,
+    backgroundColor?: string[],
+    borderWidth?: number,
+    borderColor?: string[]
+  }, index: number = 0) {
+    const {data, label, backgroundColor, borderWidth, labels, borderColor} = option;
+
+    this.chart.data.datasets[index].data = data;
+
+    if (label != undefined)
+      this.chart.data.datasets[index].label = label;
+
+    if (backgroundColor != undefined) 
+      this.chart.data.datasets[index].backgroundColor = backgroundColor;
+
+    if (borderWidth != undefined)
+      this.chart.data.datasets[index].borderWidth = borderWidth;
+
+    if (labels != undefined) 
+      this.chart.data.labels = labels;
+
+    if (borderColor != undefined)
+      this.chart.data.datasets[index].borderColor = borderColor;
+
+
+  }
+
+  update() {
+    this.chart.update();
+  }
+
+  public dispose(): void {
+    this.chart.destroy();
+    this.chart = null;
+    console.log('clearing chart!');
+  }
+}
+
+
 
 export {
   Color,
@@ -2060,10 +2166,12 @@ export {
   InputType,
   Message,
   Flex,
-  GridSize
+  GridSize,
+  ChartType
 };
 
 export {
+  ChartV1,
   Form,
   SelectBox,
   AlertMessage,
