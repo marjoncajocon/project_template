@@ -1505,7 +1505,7 @@ class TextBox extends textarea {
   }
 
   value(v: string|null = null) {
-    if (v == "")
+    if (v == null)
       return this.GetValue();
     else 
       this.Html(v);
