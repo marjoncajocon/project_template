@@ -1,9 +1,23 @@
 //import "./bootstrap3/css/bootstrap.min.css";
 import "./bootstrap3/css/theme-lumen.css";
-//import "./bootstrap3/css/theme-sandstone.css";
+//import "./bootstrap3/css/theme-united.css";
 //import "./bootstrap3/css/theme-spacelab.css";
 
-import { a, button, col, div, fieldset, h4, input, label, legend, li, option, select, span, table, tbody, td, textarea, th, thead, tr, u, ul, Widget } from "./core.mts";
+import { Chart } from "./chartjs";
+import { a, button, canvas, col, div, fieldset, h4, input, label, legend, li, option, select, span, table, tbody, td, textarea, th, thead, tr, u, ul, Widget } from "./core.mts";
+
+
+enum ChartType {
+  LINE = 'line',
+  BAR = 'bar',
+  RADAR = 'radar',
+  DOUGHNUT = 'doughnut',
+  PIE ='pie',
+  BUBBLE ='bubble',
+  SCATTER ='scatter',
+  POLAR_AREA = 'polarArea'
+}
+
 
 enum Icons {
   Asterisk = 'asterisk',
@@ -1491,7 +1505,7 @@ class TextBox extends textarea {
   }
 
   value(v: string|null = null) {
-    if (v == "")
+    if (v == null)
       return this.GetValue();
     else 
       this.Html(v);
@@ -1738,6 +1752,8 @@ class Column extends div {
         super.Add(item);
       } else if (typeof(item) == "number") {
         super.Add(new div().AddStyle({height: `${item}px`}));
+      } else if (typeof(item) == "string") {
+        super.Add(new Text({text: item}))
       }
     }
   }
@@ -1898,7 +1914,8 @@ class Table extends div {
     header?: (string|Widget)[],
     hover?: boolean,
     size?: Size,
-    border?: boolean
+    border?: boolean,
+    header_style?: {[key: string]: string}[]
   }) {
     super();
     super.AddClass("table-responsive");
@@ -1913,6 +1930,7 @@ class Table extends div {
     if (o.header != undefined) {
       //draw the header
       const tr1 = new tr();
+      let i = 0;
       for (const item of o.header) {
         const th1 = new th();
         
@@ -1922,7 +1940,12 @@ class Table extends div {
           th1.Add(item);
         }
 
+        if (o.header_style != undefined && typeof(o.header_style[i]) != "undefined") {
+          th1.AddStyle(o.header_style[i]);
+        }
+
         tr1.Add(th1);
+        i++;
       }
       this.table.Add(new thead().Add(tr1));
     }
@@ -1944,11 +1967,12 @@ class Table extends div {
   }
   
   add(o: {
-    item: (string|Widget)[]
+    item: (string|Widget)[],
+    header_style?: {[key: string]: string}[]
   }): tr {
     
     const tr1 = new tr();
-    
+    let i = 0;
     for (const item of o.item) {
       const th1 = new td();
       
@@ -1958,7 +1982,12 @@ class Table extends div {
         th1.Add(item);
       }
 
+      if (o.header_style != undefined && typeof(o.header_style[i]) != "undefined") {
+        th1.AddStyle(o.header_style[i]);
+      }
+
       tr1.Add(th1);
+      i++;
     }
 
     this.tbody.Add(tr1);
@@ -2052,6 +2081,98 @@ class CardV2 extends div {
 }
 
 
+// About chart
+class ChartV1 extends canvas {
+  private chart
+  constructor(option: {
+    type: ChartType,
+    data: number[],
+    label?: string,
+    backgroundColor?: string[],
+    borderWidth?: number,
+    labels: string[],
+    borderColor?: string[]
+  }) {
+    super();
+
+    let {data, label, backgroundColor, borderWidth, labels, borderColor, type} = option;
+
+    if (data == undefined) data = [];
+    if (label == undefined) label = '';
+    if (backgroundColor == undefined) backgroundColor = [];
+    if (borderWidth == undefined) borderWidth = 0;
+    if (labels == undefined) labels = [];
+    if (borderColor == undefined) borderColor = [];
+
+    this.chart = new Chart(this.control,  {
+      type: type, // Chart type
+      data: {
+        labels: labels, // X-axis labels
+        datasets: [{
+          label: label,
+          data: data, // Data points
+          backgroundColor: backgroundColor,
+          borderColor: borderColor,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+
+  getChartObject() {
+    return this.chart;
+  }
+
+  init(option: {
+    labels?:string [],
+    data: number[],
+    label?: string,
+    backgroundColor?: string[],
+    borderWidth?: number,
+    borderColor?: string[]
+  }, index: number = 0) {
+    const {data, label, backgroundColor, borderWidth, labels, borderColor} = option;
+
+    this.chart.data.datasets[index].data = data;
+
+    if (label != undefined)
+      this.chart.data.datasets[index].label = label;
+
+    if (backgroundColor != undefined) 
+      this.chart.data.datasets[index].backgroundColor = backgroundColor;
+
+    if (borderWidth != undefined)
+      this.chart.data.datasets[index].borderWidth = borderWidth;
+
+    if (labels != undefined) 
+      this.chart.data.labels = labels;
+
+    if (borderColor != undefined)
+      this.chart.data.datasets[index].borderColor = borderColor;
+
+
+  }
+
+  update() {
+    this.chart.update();
+  }
+
+  public dispose(): void {
+    this.chart.destroy();
+    this.chart = null;
+    console.log('clearing chart!');
+  }
+}
+
+
 
 export {
   Color,
@@ -2060,10 +2181,12 @@ export {
   InputType,
   Message,
   Flex,
-  GridSize
+  GridSize,
+  ChartType
 };
 
 export {
+  ChartV1,
   Form,
   SelectBox,
   AlertMessage,
