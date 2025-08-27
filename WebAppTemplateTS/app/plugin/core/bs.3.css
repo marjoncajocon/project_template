@@ -1,0 +1,30 @@
+.bs-3-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.1);
+  z-index: 2000;
+
+  display: flex;
+  align-items: center;   /* vertical center */
+  justify-content: center; /* horizontal center */
+}
+
+.bs-3-dialog-body {
+  width: 480px;
+  max-width: 90%;
+  min-height: 10px;
+  background-color: white;
+  box-shadow: 0 1px 4px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  overflow-y: auto;
+  padding: 7px;
+
+}
+
+.dialog-alert-icon {
+  font-weight: bolder;
+  font-size: 50pt;
+}

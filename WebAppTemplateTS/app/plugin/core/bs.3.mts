@@ -1,10 +1,11 @@
+import "./bs.3.css";
 //import "./bootstrap3/css/bootstrap.min.css";
 import "./bootstrap3/css/theme-lumen.css";
 //import "./bootstrap3/css/theme-united.css";
 //import "./bootstrap3/css/theme-spacelab.css";
 
 import { Chart } from "./chartjs";
-import { a, button, canvas, col, div, fieldset, h4, input, label, legend, li, option, select, span, table, tbody, td, textarea, th, thead, tr, u, ul, Widget } from "./core.mts";
+import { a, button, canvas, center, col, div, fieldset, h4, hr, input, label, legend, li, option, select, span, table, tbody, td, textarea, th, thead, tr, u, ul, Widget } from "./core.mts";
 
 
 enum ChartType {
@@ -1845,6 +1846,8 @@ class Modal extends div {
       footer.Add(o.footer);
     }
 
+    //@ts-ignore
+    document.activeElement.blur();
   }
 
   add(obj: Widget) {
@@ -2165,14 +2168,88 @@ class ChartV1 extends canvas {
     this.chart.update();
   }
 
-  public dispose(): void {
+  public Dispose(): void {
     this.chart.destroy();
     this.chart = null;
     console.log('clearing chart!');
   }
 }
 
+class Dialog extends Panel {
 
+  promise: Promise<unknown>
+  resolvefn: (value: unknown) => void
+
+  constructor() {
+    super();
+    super.AddClass("bs-3-dialog");
+
+    this.promise = new Promise((resolve) => {
+      this.resolvefn = resolve;
+    });
+  }
+
+  async show(o: {
+    widget: Column,
+    dismissable?: boolean
+  }) {
+
+    // add the componts here 
+    const body = new Panel().AddClass("bs-3-dialog-body");
+
+    if (o.dismissable != undefined && o.dismissable) {
+      this.AddEventListener("click", () => {
+        this.close();
+      });
+
+      body.AddEventListener("click", o => o.stopPropagation());
+    }
+
+    body.Add(o.widget);
+
+    this.Add(body);
+    this.body.appendChild(this.control);
+    //@ts-ignore
+    document.activeElement.blur();
+    return this.promise;
+  }
+
+  close(msg: string|boolean|null = null) {
+    this.resolvefn(msg);
+    this.Delete();
+  }
+
+
+}
+
+const Alert = async (msg: string, color?: Color) => {
+
+  const dialog = new Dialog();
+  const logo = new Icon(Icons.Alert).AddClass("dialog-alert-icon");
+  if (color != undefined) {
+    logo.AddClass(["text-" + color]);
+  }
+  const okay = new Button({text: new Row([new Icon(Icons.Check), 5, "OK"]), color: Color.Success});
+  okay.AddStyle({
+    "padding-left": "20px",
+    "padding-right": "20px"
+  });
+
+  okay.AddEventListener("click", () => {
+    dialog.close(true);
+  });
+
+  return dialog.show({
+    widget: new Column([
+      new center().Add(logo),
+      new center().Add(new Text(msg)).AddStyle({ "font-size": "15px", "font-weight": "bold", "letter-spacing": "2px", "padding-left": "40px", "padding-right": "40px" }),
+      new hr(),
+      new center().Add([
+        okay
+      ])
+    ])
+  });
+}
 
 export {
   Color,
@@ -2186,6 +2263,7 @@ export {
 };
 
 export {
+  Alert,
   ChartV1,
   Form,
   SelectBox,
@@ -2219,5 +2297,6 @@ export {
   Modal,
   Table,
   Grid,
-  CardV2
+  CardV2,
+  Dialog
 };
