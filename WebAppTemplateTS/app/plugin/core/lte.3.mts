@@ -1,4 +1,4 @@
-import { BreadCrumb, Button, Card, Color, Column, Grid, GridSize, Html, Icon, Icons, Panel, Row, Size, Text, TextField, TextFieldAddon } from "./bs.3.mts";
+import { Badge, BreadCrumb, Button, Card, Color, Column, Grid, GridSize, Html, Icon, Icons, Panel, Row, Size, Text, TextField, TextFieldAddon } from "./bs.3.mts";
 import { button, div, h3, h5, img, input, title, Widget } from "./core.mts";
 import "./lte.3.css";
 
@@ -35,7 +35,8 @@ class LTEMenuButton extends div {
     title: string,
     submenu?: LTEMenuButton[],
     fn?: () => void,
-    hide?: boolean
+    hide?: boolean,
+    badge?: Badge
   }) {
     super();
 
@@ -62,10 +63,16 @@ class LTEMenuButton extends div {
       menu.Add(arrow);
     }
     
+    if (o.badge != undefined) {
+      o.badge.AddClass("lte-btn-badge");
+      o.badge.AddClass("lte-hidable");
+      menu.Add(o.badge);
+    }
+
     super.Add(menu);
 
     if (o.submenu != undefined) {
-      /// here is the logic for the drop 
+      /// here is the logic for the drop  
       const panel = new Panel().AddStyle({
         display: "none",
         "padding-left": "5px",
@@ -97,6 +104,13 @@ class LTEMenuButton extends div {
       });
 
     } else {
+
+      if (o.badge != undefined) {
+        o.badge.DeleteClass("lte-btn-badge");
+        o.badge.AddClass("lte-btn-badge-no-arrow");
+        o.badge.AddClass("lte-hidable");
+        menu.Add(o.badge);
+      }
 
       if (o.fn != undefined) {
         menu.AddEventListener("click", () => {
