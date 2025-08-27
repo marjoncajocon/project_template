@@ -1,6 +1,6 @@
 //import "./bootstrap3/css/bootstrap.min.css";
 import "./bootstrap3/css/theme-lumen.css";
-//import "./bootstrap3/css/theme-sandstone.css";
+//import "./bootstrap3/css/theme-united.css";
 //import "./bootstrap3/css/theme-spacelab.css";
 
 import { Chart } from "./chartjs";
@@ -1914,7 +1914,8 @@ class Table extends div {
     header?: (string|Widget)[],
     hover?: boolean,
     size?: Size,
-    border?: boolean
+    border?: boolean,
+    header_style?: {[key: string]: string}[]
   }) {
     super();
     super.AddClass("table-responsive");
@@ -1929,6 +1930,7 @@ class Table extends div {
     if (o.header != undefined) {
       //draw the header
       const tr1 = new tr();
+      let i = 0;
       for (const item of o.header) {
         const th1 = new th();
         
@@ -1938,7 +1940,12 @@ class Table extends div {
           th1.Add(item);
         }
 
+        if (o.header_style != undefined && typeof(o.header_style[i]) != "undefined") {
+          th1.AddStyle(o.header_style[i]);
+        }
+
         tr1.Add(th1);
+        i++;
       }
       this.table.Add(new thead().Add(tr1));
     }
@@ -1960,11 +1967,12 @@ class Table extends div {
   }
   
   add(o: {
-    item: (string|Widget)[]
+    item: (string|Widget)[],
+    header_style?: {[key: string]: string}[]
   }): tr {
     
     const tr1 = new tr();
-    
+    let i = 0;
     for (const item of o.item) {
       const th1 = new td();
       
@@ -1974,7 +1982,12 @@ class Table extends div {
         th1.Add(item);
       }
 
+      if (o.header_style != undefined && typeof(o.header_style[i]) != "undefined") {
+        th1.AddStyle(o.header_style[i]);
+      }
+
       tr1.Add(th1);
+      i++;
     }
 
     this.tbody.Add(tr1);
