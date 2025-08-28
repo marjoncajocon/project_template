@@ -494,11 +494,13 @@ class Label extends span {
 
 
 class Button extends button {
+  overlay: Panel
   constructor(o : {  
     text: Widget | string,
     color?: Color,
     size?: Size,
-    block?: boolean
+    block?: boolean,
+    loader?: boolean
   }) {
     super();
 
@@ -519,6 +521,31 @@ class Button extends button {
     if (o.block != undefined && o.block) {
       super.AddClass("btn-block");
     }
+    const overlay = new Panel().AddStyle({
+      "width": "100%",
+      "height": "100%",
+      "position": "absolute",
+      "top": "0px",
+      "left": "0px",
+      "border-radius": "5px",
+      "background-color": "rgba(0, 0, 0, 0.3)",
+      "padding-top": "5px"
+    });
+    this.overlay = overlay;
+
+    if (o.loader != undefined && o.loader) {
+      this.loader(false);
+      super.AddStyle({"position": "relative"});
+
+      overlay.AddEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+
+      const s = new span().AddClass("loader01");
+      overlay.Add(s);
+
+      super.Add(overlay);
+    }
 
   }
 
@@ -528,6 +555,16 @@ class Button extends button {
       super.AddClass("active");
     } else {
       super.AddClass("disabled");
+    }
+  }
+
+  loader(show: boolean = true) {
+    if (show) {
+      this.overlay.Show();
+      this.enable(false);
+    } else {
+      this.overlay.Hide();
+      this.enable(true);
     }
   }
   
