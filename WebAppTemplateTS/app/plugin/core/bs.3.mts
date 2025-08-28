@@ -1423,7 +1423,14 @@ class TextFieldAddon extends div{
 
   }
 
-  check(msg: string, type: Message) {
+  check(msg: string, type: Message, hide: boolean = false) {
+    
+    if (hide) {
+      super.DeleteClass(["has-success", "has-warning", "has-error"]);
+      this.err.Hide();  
+      return;
+    }
+
     super.DeleteClass(["has-success", "has-warning", "has-error"]);
     this.err.DeleteClass([`text-${Color.Success}`, `text-${Color.Warning}`, `text-${Color.Danger}`])
     
