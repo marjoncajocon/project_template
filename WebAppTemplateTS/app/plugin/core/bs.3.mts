@@ -2221,12 +2221,14 @@ class ChartV1 extends canvas {
 
 class SelectBoxAddon extends div{
   tf: SelectBox
+  err: Panel
   constructor(o: { 
     size?: Size,
     type?: InputType,
     prefix?: string | Widget,
     suffix?: string | Widget,
-    suffix_fn?: () => void
+    suffix_fn?: () => void,
+    hasfeedback?: boolean
   }) {
     super();
     super.AddClass("input-group");
@@ -2257,8 +2259,49 @@ class SelectBoxAddon extends div{
         if (o.suffix_fn != undefined) o.suffix_fn();
       });
     }
+
+    this.err = new Panel().AddStyle({
+      position: "absolute",
+      bottom: "-20px",
+      right: "0px"
+    });
+    if (o.hasfeedback != undefined && o.hasfeedback) {
+      super.AddClass(["has-feedback"]);
+      super.Add(this.err);
+    }
   
 
+  }
+
+  check(msg: string, type: Message, hide: boolean = false) {
+    
+    if (hide) {
+      super.DeleteClass(["has-success", "has-warning", "has-error"]);
+      this.err.Hide();  
+      return;
+    }
+
+    super.DeleteClass(["has-success", "has-warning", "has-error"]);
+    this.err.DeleteClass([`text-${Color.Success}`, `text-${Color.Warning}`, `text-${Color.Danger}`])
+    
+    if (type == Message.Success) {
+      super.AddClass("has-success");
+      this.err.AddClass(`text-${Color.Success}`);
+    } else if (type == Message.Warning) {
+      super.AddClass("has-warning");
+      this.err.AddClass(`text-${Color.Warning}`);
+    } else {
+      super.AddClass("has-error");
+      this.err.AddClass(`text-${Color.Danger}`);
+    }
+
+    if (msg == "") {
+      this.err.Hide();
+    } else {
+      this.err.Show();
+      this.err.Clear();
+      this.err.Html(msg);
+    }
   }
 
   clear() {
