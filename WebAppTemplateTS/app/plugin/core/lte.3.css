@@ -212,3 +212,15 @@
   box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
   border: none;
 }
+
+.lte-btn-badge {
+  position: absolute;
+  right: 35px;
+  top: 10px;
+}
+
+.lte-btn-badge-no-arrow {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}

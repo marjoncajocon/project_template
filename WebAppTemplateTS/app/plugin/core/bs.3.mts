@@ -1,10 +1,11 @@
+import "./bs.3.css";
 //import "./bootstrap3/css/bootstrap.min.css";
 import "./bootstrap3/css/theme-lumen.css";
 //import "./bootstrap3/css/theme-united.css";
 //import "./bootstrap3/css/theme-spacelab.css";
 
 import { Chart } from "./chartjs";
-import { a, button, canvas, col, div, fieldset, h4, input, label, legend, li, option, select, span, table, tbody, td, textarea, th, thead, tr, u, ul, Widget } from "./core.mts";
+import { a, button, canvas, center, col, div, fieldset, h4, hr, input, label, legend, li, option, select, span, table, tbody, td, textarea, th, thead, tr, u, ul, Widget } from "./core.mts";
 
 
 enum ChartType {
@@ -1845,6 +1846,8 @@ class Modal extends div {
       footer.Add(o.footer);
     }
 
+    //@ts-ignore
+    document.activeElement.blur();
   }
 
   add(obj: Widget) {
@@ -2165,14 +2168,211 @@ class ChartV1 extends canvas {
     this.chart.update();
   }
 
-  public dispose(): void {
+  public Dispose(): void {
     this.chart.destroy();
     this.chart = null;
     console.log('clearing chart!');
   }
 }
 
+class SelectBoxAddon extends div{
+  tf: SelectBox
+  constructor(o: { 
+    size?: Size,
+    type?: InputType,
+    prefix?: string | Widget,
+    suffix?: string | Widget,
+    suffix_fn?: () => void
+  }) {
+    super();
+    super.AddClass("input-group");
+    this.tf = new SelectBox({});
 
+    const prefix = new span();
+    prefix.AddClass("input-group-addon");
+    if (o.prefix != undefined) {
+      if (typeof(o.prefix) == "string") {
+        prefix.Html(o.prefix);
+      } else {
+        prefix.Add(o.prefix);
+      }
+      super.Add(prefix);
+    }
+
+    super.Add(this.tf);
+
+    const suffix = new span();
+    suffix.AddClass("input-group-btn");
+    if (o.suffix != undefined) {
+      
+      const btn = new Button({text: o.suffix, color: Color.Default});
+      suffix.Add(btn);
+      super.Add(suffix);
+      
+      btn.AddEventListener("click", () => {
+        if (o.suffix_fn != undefined) o.suffix_fn();
+      });
+    }
+  
+
+  }
+
+  clear() {
+
+  }
+
+  add(key: string, value: string) {
+    const o = new option();
+    o.AddAttr({value: key});
+    o.Text(value);
+    this.tf.Add(o);
+  }
+
+  value(v: string|null = null) {
+    if (v == null) {
+      return this.tf.GetValue();
+    } else {
+      this.tf.AddValue(v);
+    }
+  }
+
+  enable(v: boolean = true) {
+    if (v) {
+      this.tf.DeleteAttr("disabled");
+    } else {
+      this.tf.AddAttr({
+        disabled: ""
+      });
+    }
+  }
+
+
+}
+
+class Dialog extends Panel {
+  gbody: Panel
+  promise: Promise<unknown>
+  resolvefn: (value: unknown) => void
+
+  constructor() {
+    super();
+    super.AddClass("bs-3-dialog");
+
+    this.promise = new Promise((resolve) => {
+      this.resolvefn = resolve;
+    });
+  }
+
+  async show(o: {
+    widget: Column,
+    dismissable?: boolean
+  }) {
+
+    // add the componts here 
+    const body = new Panel().AddClass("bs-3-dialog-body");
+    body.AddClass("dialog-show");
+    this.gbody = body;
+
+    if (o.dismissable != undefined && o.dismissable) {
+      this.AddEventListener("click", () => {
+        this.close();
+      });
+
+      body.AddEventListener("click", o => o.stopPropagation());
+    }
+
+    body.Add(o.widget);
+
+    this.Add(body);
+    this.body.appendChild(this.control);
+    //@ts-ignore
+    document.activeElement.blur();
+    return this.promise;
+  }
+
+  close(msg: string|boolean|null = null) {
+    this.AddStyle({
+      "background-color": "rgba(0, 0, 0, 0)"
+    });
+    this.gbody.DeleteClass("dialog-show");
+    this.gbody.AddClass("dialog-hide");
+
+    setTimeout(() => {
+      this.resolvefn(msg);
+      this.Delete();
+    }, 300);
+  }
+
+
+}
+
+const Alert = async (msg: string, color?: Color) => {
+
+  const dialog = new Dialog();
+  const logo = new Icon(Icons.Alert).AddClass("dialog-alert-icon");
+  if (color != undefined) {
+    logo.AddClass(["text-" + color]);
+  }
+  const okay = new Button({text: new Row([new Icon(Icons.Check), 5, "OK"]), color: Color.Default});
+  okay.AddStyle({
+    "padding-left": "20px",
+    "padding-right": "20px"
+  });
+
+  okay.AddEventListener("click", () => {
+    dialog.close(true);
+  });
+
+  return dialog.show({
+    widget: new Column([
+      new center().Add(logo),
+      20,
+      new center().Add(new Text(msg)).AddStyle({ "font-size": "15px", "font-weight": "bold", "letter-spacing": "2px", "padding-left": "40px", "padding-right": "40px" }),
+      new hr(),
+      new center().Add([
+        okay
+      ])
+    ])
+  });
+}
+
+const Confirm = async (msg: string, color?: Color) => {
+  const dialog = new Dialog();
+  const logo = new Icon(Icons.QuestionSign).AddClass("dialog-alert-icon");
+  if (color != undefined) {
+    logo.AddClass(["text-" + color]);
+  }
+  const okay = new Button({text: new Row([new Icon(Icons.Check), 5, "OK"]), color: Color.Default});
+  okay.AddStyle({
+    "width": "90px"
+  });
+
+  const cancel = new Button({text: new Row([new Icon(Icons.Trash), 5, "CANCEL"]), color: Color.Default});
+  cancel.AddStyle({
+    "margin-left": "10px",
+    "width": "90px"
+  });
+
+  okay.AddEventListener("click", () => {
+    dialog.close(true);
+  });
+
+  cancel.AddEventListener("click", () => {
+    dialog.close(false);
+  });
+
+  return dialog.show({
+    widget: new Column([
+      new center().Add(logo),
+      20,
+      new center().Add(new Text(msg)).AddStyle({ "font-size": "15px", "font-weight": "bold", "letter-spacing": "2px", "padding-left": "40px", "padding-right": "40px" }),
+      new hr(),
+      new center().Add([
+        okay, cancel
+      ])
+    ])
+  });
+};
 
 export {
   Color,
@@ -2186,9 +2386,12 @@ export {
 };
 
 export {
+  Confirm,
+  Alert,
   ChartV1,
   Form,
   SelectBox,
+  SelectBoxAddon,
   AlertMessage,
   Button,
   Html,
@@ -2219,5 +2422,6 @@ export {
   Modal,
   Table,
   Grid,
-  CardV2
+  CardV2,
+  Dialog
 };
