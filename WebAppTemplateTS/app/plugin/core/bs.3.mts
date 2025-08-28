@@ -2239,7 +2239,7 @@ const Alert = async (msg: string, color?: Color) => {
   if (color != undefined) {
     logo.AddClass(["text-" + color]);
   }
-  const okay = new Button({text: new Row([new Icon(Icons.Check), 5, "OK"]), color: Color.Success});
+  const okay = new Button({text: new Row([new Icon(Icons.Check), 5, "OK"]), color: Color.Default});
   okay.AddStyle({
     "padding-left": "20px",
     "padding-right": "20px"
@@ -2252,6 +2252,7 @@ const Alert = async (msg: string, color?: Color) => {
   return dialog.show({
     widget: new Column([
       new center().Add(logo),
+      20,
       new center().Add(new Text(msg)).AddStyle({ "font-size": "15px", "font-weight": "bold", "letter-spacing": "2px", "padding-left": "40px", "padding-right": "40px" }),
       new hr(),
       new center().Add([
@@ -2260,6 +2261,44 @@ const Alert = async (msg: string, color?: Color) => {
     ])
   });
 }
+
+const Confirm = async (msg: string, color?: Color) => {
+  const dialog = new Dialog();
+  const logo = new Icon(Icons.QuestionSign).AddClass("dialog-alert-icon");
+  if (color != undefined) {
+    logo.AddClass(["text-" + color]);
+  }
+  const okay = new Button({text: new Row([new Icon(Icons.Check), 5, "OK"]), color: Color.Default});
+  okay.AddStyle({
+    "width": "90px"
+  });
+
+  const cancel = new Button({text: new Row([new Icon(Icons.Trash), 5, "CANCEL"]), color: Color.Default});
+  cancel.AddStyle({
+    "margin-left": "10px",
+    "width": "90px"
+  });
+
+  okay.AddEventListener("click", () => {
+    dialog.close(true);
+  });
+
+  cancel.AddEventListener("click", () => {
+    dialog.close(false);
+  });
+
+  return dialog.show({
+    widget: new Column([
+      new center().Add(logo),
+      20,
+      new center().Add(new Text(msg)).AddStyle({ "font-size": "15px", "font-weight": "bold", "letter-spacing": "2px", "padding-left": "40px", "padding-right": "40px" }),
+      new hr(),
+      new center().Add([
+        okay, cancel
+      ])
+    ])
+  });
+};
 
 export {
   Color,
@@ -2273,6 +2312,7 @@ export {
 };
 
 export {
+  Confirm,
   Alert,
   ChartV1,
   Form,
