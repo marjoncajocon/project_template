@@ -2176,7 +2176,7 @@ class ChartV1 extends canvas {
 }
 
 class Dialog extends Panel {
-
+  gbody: Panel
   promise: Promise<unknown>
   resolvefn: (value: unknown) => void
 
@@ -2196,6 +2196,8 @@ class Dialog extends Panel {
 
     // add the componts here 
     const body = new Panel().AddClass("bs-3-dialog-body");
+    body.AddClass("dialog-show");
+    this.gbody = body;
 
     if (o.dismissable != undefined && o.dismissable) {
       this.AddEventListener("click", () => {
@@ -2215,8 +2217,16 @@ class Dialog extends Panel {
   }
 
   close(msg: string|boolean|null = null) {
-    this.resolvefn(msg);
-    this.Delete();
+    this.AddStyle({
+      "background-color": "rgba(0, 0, 0, 0)"
+    });
+    this.gbody.DeleteClass("dialog-show");
+    this.gbody.AddClass("dialog-hide");
+
+    setTimeout(() => {
+      this.resolvefn(msg);
+      this.Delete();
+    }, 300);
   }
 
 
