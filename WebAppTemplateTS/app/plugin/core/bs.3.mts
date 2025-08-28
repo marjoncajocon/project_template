@@ -2175,6 +2175,80 @@ class ChartV1 extends canvas {
   }
 }
 
+class SelectBoxAddon extends div{
+  tf: SelectBox
+  constructor(o: { 
+    size?: Size,
+    type?: InputType,
+    prefix?: string | Widget,
+    suffix?: string | Widget,
+    suffix_fn?: () => void
+  }) {
+    super();
+    super.AddClass("input-group");
+    this.tf = new SelectBox({});
+
+    const prefix = new span();
+    prefix.AddClass("input-group-addon");
+    if (o.prefix != undefined) {
+      if (typeof(o.prefix) == "string") {
+        prefix.Html(o.prefix);
+      } else {
+        prefix.Add(o.prefix);
+      }
+      super.Add(prefix);
+    }
+
+    super.Add(this.tf);
+
+    const suffix = new span();
+    suffix.AddClass("input-group-btn");
+    if (o.suffix != undefined) {
+      
+      const btn = new Button({text: o.suffix, color: Color.Default});
+      suffix.Add(btn);
+      super.Add(suffix);
+      
+      btn.AddEventListener("click", () => {
+        if (o.suffix_fn != undefined) o.suffix_fn();
+      });
+    }
+  
+
+  }
+
+  clear() {
+
+  }
+
+  add(key: string, value: string) {
+    const o = new option();
+    o.AddAttr({value: key});
+    o.Text(value);
+    this.tf.Add(o);
+  }
+
+  value(v: string|null = null) {
+    if (v == null) {
+      return this.tf.GetValue();
+    } else {
+      this.tf.AddValue(v);
+    }
+  }
+
+  enable(v: boolean = true) {
+    if (v) {
+      this.tf.DeleteAttr("disabled");
+    } else {
+      this.tf.AddAttr({
+        disabled: ""
+      });
+    }
+  }
+
+
+}
+
 class Dialog extends Panel {
   gbody: Panel
   promise: Promise<unknown>
@@ -2317,6 +2391,7 @@ export {
   ChartV1,
   Form,
   SelectBox,
+  SelectBoxAddon,
   AlertMessage,
   Button,
   Html,
