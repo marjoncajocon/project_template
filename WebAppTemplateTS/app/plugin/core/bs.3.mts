@@ -19,6 +19,11 @@ enum ChartType {
   POLAR_AREA = 'polarArea'
 }
 
+enum FlexDirection {
+  ROW = "row",
+  ROW_REVERSE = "row-reverse"
+}
+
 
 enum Icons {
   Asterisk = 'asterisk',
@@ -1785,13 +1790,19 @@ class SelectBox extends select {
 }
 
 class Row extends div {
-  constructor(obj: (Widget|string|number)[], align?: Flex, baseline?: boolean) {
+  constructor(obj: (Widget|string|number)[], align?: Flex, baseline?: boolean, direction?: FlexDirection) {
     super();
 
     super.AddStyle({
       display: "flex",
       "flex-direction": "row"
     });
+
+    if (direction != undefined) {
+      super.AddStyle({
+        "flex-direction": direction
+      });
+    }
 
     const is_baseline = baseline == undefined ? true : baseline;
 
@@ -2506,7 +2517,8 @@ export {
   Message,
   Flex,
   GridSize,
-  ChartType
+  ChartType,
+  FlexDirection
 };
 
 export {
