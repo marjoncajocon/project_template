@@ -2010,7 +2010,8 @@ class Table extends div {
     hover?: boolean,
     size?: Size,
     border?: boolean,
-    header_style?: {[key: string]: string}[]
+    header_style?: {[key: string]: string}[],
+    header_color?: Color
   }) {
     super();
     super.AddClass("table-responsive");
@@ -2025,6 +2026,11 @@ class Table extends div {
     if (o.header != undefined) {
       //draw the header
       const tr1 = new tr();
+
+      if (o.header_color != undefined) {
+        tr1.AddClass(`bg-${o.header_color}`);
+      }
+
       let i = 0;
       for (const item of o.header) {
         const th1 = new th();
