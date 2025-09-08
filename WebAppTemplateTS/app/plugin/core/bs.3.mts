@@ -738,6 +738,12 @@ class Pagination extends div {
 
   update(start: number = 1, stop: number = 10, total: number) {
 
+    if (total == 0) {
+      super.Hide();
+    } else {
+      super.Show();
+    }
+
     if (this.current_page == 0) {
       this.current_page = start;
     }
