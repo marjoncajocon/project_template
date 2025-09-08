@@ -2024,6 +2024,11 @@ class Table extends div {
 
     this.table = new table().AddClass("table");
     
+    this.table.AddStyle({
+      "margin": "0px",
+      "padding": "0px"
+    });
+
     if ( o.size != undefined ) {
       this.table.AddClass("table-" + o.size);
     }
