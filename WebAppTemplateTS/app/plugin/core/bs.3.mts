@@ -2356,7 +2356,8 @@ class SelectBoxAddon extends div{
         placeholder: o.placeholder
       });
       const search_content = new Panel().AddStyle({
-        height: "300px",
+        "min-height": "100px",
+        "max-height": "300px",
         width: "100%",
         "padding-top": "10px",
         "padding-bottom": "10px",
@@ -2485,6 +2486,8 @@ class SelectBoxAddon extends div{
           
         } else if (code == 13) {
           // enter key
+          if (search_result.length == 0) return; // avoid undefined error
+
           this.tf.value(search_result[selected_index].key);
           /// back to normal
           this.tf.DeleteAttr("disabled");
