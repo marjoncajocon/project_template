@@ -738,7 +738,7 @@ class Pagination extends div {
 
   update(start: number = 1, stop: number = 10, total: number) {
 
-    if (total == 0) {
+    if (total <= 1) {
       super.Hide();
     } else {
       super.Show();
@@ -915,7 +915,8 @@ class Pagination extends div {
     aa.Add(new Text(`${num}`));
 
     
-    aa.AddEventListener("click", () => {
+    aa.AddEventListener("click", (e) => {
+      e.preventDefault();
       this.current_page = num;
       for (const item of this.list) {
         item.li.DeleteClass("active");
@@ -2287,16 +2288,23 @@ class ChartV1 extends canvas {
 class SelectBoxAddon extends div{
   tf: SelectBox
   err: Panel
+  filterPanel: Panel
+  items: {key: string, value: string}[]
   constructor(o: { 
     size?: Size,
     type?: InputType,
     prefix?: string | Widget,
     suffix?: string | Widget,
     suffix_fn?: () => void,
-    hasfeedback?: boolean
+    hasfeedback?: boolean,
+    filter?: boolean,
+    placeholder?: string
   }) {
     super();
     super.AddClass("input-group");
+    super.AddStyle({
+      "position": "relative"
+    });
     this.tf = new SelectBox({});
 
     const prefix = new span();
@@ -2334,8 +2342,174 @@ class SelectBoxAddon extends div{
       super.AddClass(["has-feedback"]);
       super.Add(this.err);
     }
-  
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// START local filter ///////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    this.items = [];
+    if (o.filter != undefined && o.filter) {
+
+      const search = new TextFieldAddon({
+        prefix: o.prefix != undefined ? new Icon(Icons.Search) : undefined,
+        hasfeedback: o.hasfeedback,
+        size: o.size,
+        placeholder: o.placeholder
+      });
+      const search_content = new Panel().AddStyle({
+        height: "300px",
+        width: "100%",
+        "padding-top": "10px",
+        "padding-bottom": "10px",
+        "overflow-y": "auto"
+      }).AddClass("b-filter-panel");
+      // panel
+
+      this.filterPanel = new Panel().AddStyle({
+        "position": "absolute",
+        "top": "0px",
+        "left": "0px",
+        "min-height": "100px",
+        "width": `100%`,
+        "background-color": "white",
+        "border-radius": "3px 3px 3px 3px",
+        "box-shadow": "0 0 2px rgba(0, 0, 0, 0.3)",
+        "z-index": "100",
+        "display": "none"
+      });
+
+      this.Add(this.filterPanel);
+      // here the logic here 
+      let selected_index = 0;
+      let search_result: {key: string, panel: Panel}[] = [];
+      
+      const clearResultActive = () => {
+        for (const item of search_result) {
+          item.panel.DeleteClass("b-search-active-item");
+        }
+      }
+
+      const searchfn = (v: string|null = null) => {
+        // plot all the available search
+        search_content.Clear();
+        search_result.length = 0;
+
+        for (const item of this.items) {
+          const txt = new Panel().Add(new Text({text: item.value})).AddClass("b-search-filter-item").AddEventListener("click", () => {
+            this.tf.value(item.key);
+            /// back to normal
+            this.tf.DeleteAttr("disabled");
+            this.filterPanel.Hide();
+            selected_index = 0;
+
+            this.tf.control.dispatchEvent(new Event('change'));
+          });
+
+          if (item.value.toLocaleLowerCase().indexOf(`${search.value()}`.toLowerCase()) > -1) {
+            search_content.Add(txt);
+            search_result.push({key: item.key, panel: txt});
+          }
+
+          if (item.key == v) {
+            txt.AddClass("b-search-active-item");
+          }
+        }
+
+      };
+
+      this.tf.AddEventListener("click", (e) => {
+        this.tf.AddAttr({"disabled": ""});
+        e.preventDefault();
+        e.stopPropagation();
+        this.filterPanel.Show();
+        searchfn();
+        search.tf.control.focus();
+        const len = `${search.value()}`.length;
+        //@ts-ignore
+        search.tf.control.setSelectionRange(len, len);
+      });
+
+      this.tf.AddEventListener("keyup", () => {
+        searchfn();
+      });
+      
+      // stopPropagation
+      this.filterPanel.AddEventListener("click", (e) => {
+        e.stopPropagation();
+
+      });
+      document.addEventListener("click", this.documentEvent);
+
+      
+
+      this.filterPanel.Add(search);
+      this.filterPanel.Add(search_content);
+
+      //let time = 0;
+      search.AddEventListener("keyup", (e) => {
+        //clearTimeout(time);
+        //time = setTimeout(() => { 
+        // 40 -> down 
+        // 38 -> up
+        //@ts-ignore
+        const code = e.keyCode as number;
+        if (![40, 38, 13].includes(code)) {
+          // reset to zero
+          selected_index = 0;
+          searchfn();
+
+        } else if (code == 40) {
+
+          clearResultActive();
+          selected_index++;
+          // if down
+          if (selected_index > search_result.length - 1) {
+            selected_index = search_result.length - 1;
+          }
+          search_result[selected_index].panel.AddClass("b-search-active-item");
+        
+        } else if (code == 38) {
+          
+          // if up
+          clearResultActive();
+          selected_index--;
+          
+          if (selected_index <= 0) {
+            selected_index = 0;
+          }
+          
+          search_result[selected_index].panel.AddClass("b-search-active-item");
+          
+        } else if (code == 13) {
+          // enter key
+          this.tf.value(search_result[selected_index].key);
+          /// back to normal
+          this.tf.DeleteAttr("disabled");
+          this.filterPanel.Hide();
+          selected_index = 0;
+          this.tf.control.dispatchEvent(new Event('change'));
+        }
+        //}, 500);
+      });
+
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// END local filter ///////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  }
+
+  private documentEvent = (e) => {
+    e.stopPropagation();
+
+    this.tf.DeleteAttr("disabled");
+    this.filterPanel.Hide();
+
+  }
+
+  public Dispose(): void {
+    // clean up goes here
+    document.removeEventListener("click", this.documentEvent);
+    console.log("document event removed");
   }
 
   check(msg: string, type: Message, hide: boolean = false) {
@@ -2370,10 +2544,19 @@ class SelectBoxAddon extends div{
   }
 
   clear() {
+    // clear the time contentts
+    this.items.length = 0;
+
 
   }
 
   add(key: string, value: string) {
+    
+    this.items.push({
+      key: key,
+      value: value
+    });
+
     const o = new option();
     o.AddAttr({value: key});
     o.Text(value);

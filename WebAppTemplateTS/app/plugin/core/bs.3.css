@@ -31,6 +31,44 @@
 }
 
 
+.b-search-filter-item {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  cursor: pointer;
+}
+
+.b-search-active-item {
+  background-color: rgba(0, 110, 255, 1);
+  color: white;
+}
+
+.b-search-filter-item:hover {
+  background-color: rgba(0, 110, 255, 1);
+  color: white;
+}
+
+
+.b-filter-panel::-webkit-scrollbar {
+  width: 2px;
+}
+
+/* Track */
+.b-filter-panel::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+.b-filter-panel::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+.b-filter-panel::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+
 @keyframes fadeIn {
   0% {
     opacity: 0;
