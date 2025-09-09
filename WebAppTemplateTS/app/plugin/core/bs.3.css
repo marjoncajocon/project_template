@@ -31,6 +31,44 @@
 }
 
 
+.b-search-filter-item {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  cursor: pointer;
+}
+
+.b-search-active-item {
+  background-color: rgba(0, 110, 255, 1);
+  color: white;
+}
+
+.b-search-filter-item:hover {
+  background-color: rgba(0, 110, 255, 1);
+  color: white;
+}
+
+
+.b-filter-panel::-webkit-scrollbar {
+  width: 2px;
+}
+
+/* Track */
+.b-filter-panel::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+.b-filter-panel::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+.b-filter-panel::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+
 @keyframes fadeIn {
   0% {
     opacity: 0;
@@ -78,3 +116,26 @@
   -webkit-animation: slideDown 0.4s ease;
   -ms-animation: slideDown 0.4s ease;
 }
+
+/*loaders*/
+
+.loader01 {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  border: 10px solid;
+  border-color: rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.25) rgba(255, 255, 255, 0.35) rgba(255, 255, 255, 0.5);
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+} 

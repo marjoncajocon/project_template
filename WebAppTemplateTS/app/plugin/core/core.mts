@@ -416,6 +416,8 @@ class Http {
     }
     if (typeof (body) == 'string') {
       this.body = body;
+    } else if (body instanceof FormData) {
+      this.body = body;
     }
   }
   public async Load<T>(): Promise<T> {

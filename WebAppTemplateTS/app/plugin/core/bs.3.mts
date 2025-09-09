@@ -19,6 +19,11 @@ enum ChartType {
   POLAR_AREA = 'polarArea'
 }
 
+enum FlexDirection {
+  ROW = "row",
+  ROW_REVERSE = "row-reverse"
+}
+
 
 enum Icons {
   Asterisk = 'asterisk',
@@ -494,11 +499,13 @@ class Label extends span {
 
 
 class Button extends button {
+  overlay: Panel
   constructor(o : {  
     text: Widget | string,
     color?: Color,
     size?: Size,
-    block?: boolean
+    block?: boolean,
+    loader?: boolean
   }) {
     super();
 
@@ -519,6 +526,31 @@ class Button extends button {
     if (o.block != undefined && o.block) {
       super.AddClass("btn-block");
     }
+    const overlay = new Panel().AddStyle({
+      "width": "100%",
+      "height": "100%",
+      "position": "absolute",
+      "top": "0px",
+      "left": "0px",
+      "border-radius": "5px",
+      "background-color": "rgba(0, 0, 0, 0.3)",
+      "padding-top": "5px"
+    });
+    this.overlay = overlay;
+
+    if (o.loader != undefined && o.loader) {
+      this.loader(false);
+      super.AddStyle({"position": "relative"});
+
+      overlay.AddEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+
+      const s = new span().AddClass("loader01");
+      overlay.Add(s);
+
+      super.Add(overlay);
+    }
 
   }
 
@@ -528,6 +560,16 @@ class Button extends button {
       super.AddClass("active");
     } else {
       super.AddClass("disabled");
+    }
+  }
+
+  loader(show: boolean = true) {
+    if (show) {
+      this.overlay.Show();
+      this.enable(false);
+    } else {
+      this.overlay.Hide();
+      this.enable(true);
     }
   }
   
@@ -695,6 +737,12 @@ class Pagination extends div {
   }
 
   update(start: number = 1, stop: number = 10, total: number) {
+
+    if (total <= 1) {
+      super.Hide();
+    } else {
+      super.Show();
+    }
 
     if (this.current_page == 0) {
       this.current_page = start;
@@ -867,7 +915,8 @@ class Pagination extends div {
     aa.Add(new Text(`${num}`));
 
     
-    aa.AddEventListener("click", () => {
+    aa.AddEventListener("click", (e) => {
+      e.preventDefault();
       this.current_page = num;
       for (const item of this.list) {
         item.li.DeleteClass("active");
@@ -1369,13 +1418,15 @@ class TextField extends input {
 
 class TextFieldAddon extends div{
   tf: TextField
+  err: Panel
   constructor(o: { 
     size?: Size,
     type?: InputType,
     placeholder?: string,
     prefix?: string | Widget,
     suffix?: string | Widget,
-    suffix_fn?: () => void
+    suffix_fn?: () => void,
+    hasfeedback?: boolean
   }) {
     super();
     super.AddClass("input-group");
@@ -1393,6 +1444,8 @@ class TextFieldAddon extends div{
     }
 
     super.Add(this.tf);
+    
+    
 
     const suffix = new span();
     suffix.AddClass("input-group-btn");
@@ -1406,8 +1459,48 @@ class TextFieldAddon extends div{
         if (o.suffix_fn != undefined) o.suffix_fn();
       });
     }
-  
+    
+    this.err = new Panel().AddStyle({
+      position: "absolute",
+      bottom: "-20px",
+      right: "0px"
+    });
+    if (o.hasfeedback != undefined && o.hasfeedback) {
+      super.AddClass(["has-feedback"]);
+      super.Add(this.err);
+    }
 
+  }
+
+  check(msg: string, type: Message, hide: boolean = false) {
+    
+    if (hide) {
+      super.DeleteClass(["has-success", "has-warning", "has-error"]);
+      this.err.Hide();  
+      return;
+    }
+
+    super.DeleteClass(["has-success", "has-warning", "has-error"]);
+    this.err.DeleteClass([`text-${Color.Success}`, `text-${Color.Warning}`, `text-${Color.Danger}`])
+    
+    if (type == Message.Success) {
+      super.AddClass("has-success");
+      this.err.AddClass(`text-${Color.Success}`);
+    } else if (type == Message.Warning) {
+      super.AddClass("has-warning");
+      this.err.AddClass(`text-${Color.Warning}`);
+    } else {
+      super.AddClass("has-error");
+      this.err.AddClass(`text-${Color.Danger}`);
+    }
+
+    if (msg == "") {
+      this.err.Hide();
+    } else {
+      this.err.Show();
+      this.err.Clear();
+      this.err.Html(msg);
+    }
   }
 
   value(v: string|null = null) {
@@ -1453,7 +1546,7 @@ class TextFieldFeedBack extends div {
 
   check(msg: string, type: Message) {
 
-    super.DeleteClass(["has-success", "has-warning", "has-danger"]);
+    super.DeleteClass(["has-success", "has-warning", "has-error"]);
     this.icon.Show();
 
     if (type == Message.Success) {
@@ -1704,13 +1797,19 @@ class SelectBox extends select {
 }
 
 class Row extends div {
-  constructor(obj: (Widget|string|number)[], align?: Flex, baseline?: boolean) {
+  constructor(obj: (Widget|string|number)[], align?: Flex, baseline?: boolean, direction?: FlexDirection) {
     super();
 
     super.AddStyle({
       display: "flex",
       "flex-direction": "row"
     });
+
+    if (direction != undefined) {
+      super.AddStyle({
+        "flex-direction": direction
+      });
+    }
 
     const is_baseline = baseline == undefined ? true : baseline;
 
@@ -1822,7 +1921,7 @@ class Modal extends div {
 
     const body = new div().AddClass("modal-body");
     body.AddStyle({
-      "max-height": "calc(100vh - 160px)",
+      "max-height": "calc(100vh - 200px)",
       "overflow-y": "auto"
     });
     const footer = new div().AddClass("modal-footer");
@@ -1918,13 +2017,21 @@ class Table extends div {
     hover?: boolean,
     size?: Size,
     border?: boolean,
-    header_style?: {[key: string]: string}[]
+    header_style?: {[key: string]: string}[],
+    header_color?: Color,
+    striped?: boolean,
+    condensed?: boolean,
   }) {
     super();
     super.AddClass("table-responsive");
 
     this.table = new table().AddClass("table");
     
+    this.table.AddStyle({
+      "margin": "0px",
+      "padding": "0px"
+    });
+
     if ( o.size != undefined ) {
       this.table.AddClass("table-" + o.size);
     }
@@ -1933,6 +2040,11 @@ class Table extends div {
     if (o.header != undefined) {
       //draw the header
       const tr1 = new tr();
+
+      if (o.header_color != undefined) {
+        tr1.AddClass(`bg-${o.header_color}`);
+      }
+
       let i = 0;
       for (const item of o.header) {
         const th1 = new th();
@@ -1959,6 +2071,14 @@ class Table extends div {
 
     if (o.border != undefined && o.border) {
       this.table.AddClass("table-bordered");
+    }
+
+    if (o.striped != undefined && o.striped) {
+      this.table.AddClass("table-striped");
+    }
+
+    if (o.condensed != undefined && o.condensed) {
+      this.table.AddClass("table-condensed");
     }
 
     this.tbody = new tbody();
@@ -2177,15 +2297,24 @@ class ChartV1 extends canvas {
 
 class SelectBoxAddon extends div{
   tf: SelectBox
+  err: Panel
+  filterPanel: Panel
+  items: {key: string, value: string}[]
   constructor(o: { 
     size?: Size,
     type?: InputType,
     prefix?: string | Widget,
     suffix?: string | Widget,
-    suffix_fn?: () => void
+    suffix_fn?: () => void,
+    hasfeedback?: boolean,
+    filter?: boolean,
+    placeholder?: string
   }) {
     super();
     super.AddClass("input-group");
+    super.AddStyle({
+      "position": "relative"
+    });
     this.tf = new SelectBox({});
 
     const prefix = new span();
@@ -2213,15 +2342,260 @@ class SelectBoxAddon extends div{
         if (o.suffix_fn != undefined) o.suffix_fn();
       });
     }
-  
+
+    this.err = new Panel().AddStyle({
+      position: "absolute",
+      bottom: "-20px",
+      right: "0px"
+    });
+    if (o.hasfeedback != undefined && o.hasfeedback) {
+      super.AddClass(["has-feedback"]);
+      super.Add(this.err);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// START local filter ///////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    this.items = [];
+    if (o.filter != undefined && o.filter) {
+
+      const search = new TextFieldAddon({
+        prefix: o.prefix != undefined ? new Icon(Icons.Search) : undefined,
+        hasfeedback: o.hasfeedback,
+        size: o.size,
+        placeholder: o.placeholder
+      });
+      const search_content = new Panel().AddStyle({
+        "min-height": "100px",
+        "max-height": "300px",
+        width: "100%",
+        "padding-top": "10px",
+        "padding-bottom": "10px",
+        "overflow-y": "auto"
+      }).AddClass("b-filter-panel");
+      // panel
+
+      this.filterPanel = new Panel().AddStyle({
+        "position": "absolute",
+        "top": "0px",
+        "left": "0px",
+        "min-height": "100px",
+        "width": `100%`,
+        "background-color": "white",
+        "border-radius": "3px 3px 3px 3px",
+        "box-shadow": "0 0 2px rgba(0, 0, 0, 0.3)",
+        "z-index": "100",
+        "display": "none"
+      });
+      const blocker = new Panel().AddStyle({
+        "position": "absolute",
+        "left": "0",
+        "top": "0",
+        "width": "100%",
+        "height": "100%",
+        "z-index": "50",
+        "cursor": "pointer"
+      });
+
+      this.Add(blocker);
+      this.Add(this.filterPanel);
+      // here the logic here 
+      let selected_index = 0;
+      let search_result: {key: string, panel: Panel}[] = [];
+      
+      const clearResultActive = () => {
+        for (const item of search_result) {
+          item.panel.DeleteClass("b-search-active-item");
+        }
+      }
+
+      const searchfn = (v: string|null = null) => {
+        // plot all the available search
+        search_content.Clear();
+        search_result.length = 0;
+
+        for (const item of this.items) {
+          const txt = new Panel().Add(new Text({text: item.value})).AddClass("b-search-filter-item").AddEventListener("click", () => {
+            this.tf.value(item.key);
+            /// back to normal
+            this.tf.DeleteAttr("disabled");
+            this.filterPanel.Hide();
+            selected_index = 0;
+
+            this.tf.control.dispatchEvent(new Event('change'));
+          });
+
+          if (item.value.toLocaleLowerCase().indexOf(`${search.value()}`.toLowerCase()) > -1) {
+            search_content.Add(txt);
+            search_result.push({key: item.key, panel: txt});
+          }
+
+          if (item.key == v) {
+            txt.AddClass("b-search-active-item");
+          }
+        }
+
+      };
+
+      this.tf.AddEventListener("click", (e) => {
+        this.tf.AddAttr({"disabled": ""});
+        e.preventDefault();
+        e.stopPropagation();
+        this.filterPanel.Show();
+        searchfn();
+        search.tf.control.focus();
+        const len = `${search.value()}`.length;
+        //@ts-ignore
+        search.tf.control.setSelectionRange(len, len);
+      });
+      // for blocker event to avoid showing the option list
+      blocker.AddEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.tf.AddAttr({"disabled": ""});
+        this.filterPanel.Show();
+        searchfn();
+        search.tf.control.focus();
+        const len = `${search.value()}`.length;
+        //@ts-ignore
+        search.tf.control.setSelectionRange(len, len);
+      });
+
+      this.tf.AddEventListener("keyup", () => {
+        searchfn();
+      });
+      
+      // stopPropagation
+      this.filterPanel.AddEventListener("click", (e) => {
+        e.stopPropagation();
+
+      });
+      document.addEventListener("click", this.documentEvent);
+
+      
+
+      this.filterPanel.Add(search);
+      this.filterPanel.Add(search_content);
+
+      //let time = 0;
+      search.AddEventListener("keyup", (e) => {
+        //clearTimeout(time);
+        //time = setTimeout(() => { 
+        // 40 -> down 
+        // 38 -> up
+        //@ts-ignore
+        const code = e.keyCode as number;
+        if (![40, 38, 13].includes(code)) {
+          // reset to zero
+          selected_index = 0;
+          searchfn();
+
+          if (search_result.length > 0) {
+            search_result[selected_index].panel.AddClass("b-search-active-item");  
+          }
+
+        } else if (code == 40) {
+
+          clearResultActive();
+          selected_index++;
+          // if down
+          if (selected_index > search_result.length - 1) {
+            selected_index = search_result.length - 1;
+          }
+          search_result[selected_index].panel.AddClass("b-search-active-item");
+        
+        } else if (code == 38) {
+          
+          // if up
+          clearResultActive();
+          selected_index--;
+          
+          if (selected_index <= 0) {
+            selected_index = 0;
+          }
+          
+          search_result[selected_index].panel.AddClass("b-search-active-item");
+          
+        } else if (code == 13) {
+          // enter key
+          if (search_result.length == 0) return; // avoid undefined error
+
+          this.tf.value(search_result[selected_index].key);
+          /// back to normal
+          this.tf.DeleteAttr("disabled");
+          this.filterPanel.Hide();
+          selected_index = 0;
+          this.tf.control.dispatchEvent(new Event('change'));
+        }
+        //}, 500);
+      });
+
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// END local filter ///////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   }
 
+  private documentEvent = (e) => {
+    e.stopPropagation();
+
+    this.tf.DeleteAttr("disabled");
+    this.filterPanel.Hide();
+
+  }
+
+  public Dispose(): void {
+    // clean up goes here
+    document.removeEventListener("click", this.documentEvent);
+    console.log("document event removed");
+  }
+
+  check(msg: string, type: Message, hide: boolean = false) {
+    
+    if (hide) {
+      super.DeleteClass(["has-success", "has-warning", "has-error"]);
+      this.err.Hide();  
+      return;
+    }
+
+    super.DeleteClass(["has-success", "has-warning", "has-error"]);
+    this.err.DeleteClass([`text-${Color.Success}`, `text-${Color.Warning}`, `text-${Color.Danger}`])
+    
+    if (type == Message.Success) {
+      super.AddClass("has-success");
+      this.err.AddClass(`text-${Color.Success}`);
+    } else if (type == Message.Warning) {
+      super.AddClass("has-warning");
+      this.err.AddClass(`text-${Color.Warning}`);
+    } else {
+      super.AddClass("has-error");
+      this.err.AddClass(`text-${Color.Danger}`);
+    }
+
+    if (msg == "") {
+      this.err.Hide();
+    } else {
+      this.err.Show();
+      this.err.Clear();
+      this.err.Html(msg);
+    }
+  }
+
   clear() {
+    // clear the time contentts
+    this.items.length = 0;
+
 
   }
 
   add(key: string, value: string) {
+    
+    this.items.push({
+      key: key,
+      value: value
+    });
+
     const o = new option();
     o.AddAttr({value: key});
     o.Text(value);
@@ -2382,7 +2756,8 @@ export {
   Message,
   Flex,
   GridSize,
-  ChartType
+  ChartType,
+  FlexDirection
 };
 
 export {

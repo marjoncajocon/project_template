@@ -1,4 +1,4 @@
-import { Badge, BreadCrumb, Button, Card, Color, Column, Grid, GridSize, Html, Icon, Icons, Panel, Row, Size, Text, TextField, TextFieldAddon } from "./bs.3.mts";
+import { Badge, BreadCrumb, Button, Card, Color, Column, Dialog, Grid, GridSize, Html, Icon, Icons, Panel, ProgressBar, Row, Size, Text, TextField, TextFieldAddon } from "./bs.3.mts";
 import { button, div, h3, h5, img, input, title, Widget } from "./core.mts";
 import "./lte.3.css";
 
@@ -28,6 +28,44 @@ import "./lte.3.css";
 //     }
 //   }
 // }
+
+class LTELoaderProgress extends Dialog {
+  progress: ProgressBar
+  constructor(o: {  
+    title: string,
+    color: Color
+  }) {
+
+
+    super();
+
+    const progress = new ProgressBar({color: o.color, striped: true, animation: true});
+
+    this.progress = progress;
+
+    super.show({
+      widget: new Column([
+        o.title,
+        30,
+        progress
+      ])
+    });
+    
+  }
+
+  update(loaded: number, total: number) {
+    if (total > 0) {
+      this.progress.update(Math.ceil(
+        (loaded / total) * 100
+      ));
+    }
+  }
+
+  close() {
+    super.close();
+  }
+
+}
 
 class LTEMenuButton extends div {
   constructor(o: {
@@ -425,10 +463,21 @@ class LTEAppLogin extends div {
   }
 }
 
+const LTESleep = async (time: number) => {
+  const promise = new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, time);
+  });
+  return promise;
+};
+
 export default LTEApp;
 
 export {
   LTEMenuButton,
   // LTESubMenuButton,
-  LTEAppLogin
+  LTEAppLogin,
+  LTELoaderProgress,
+  LTESleep
 };
