@@ -2457,6 +2457,10 @@ class SelectBoxAddon extends div{
           selected_index = 0;
           searchfn();
 
+          if (search_result.length > 0) {
+            search_result[selected_index].panel.AddClass("b-search-active-item");  
+          }
+
         } else if (code == 40) {
 
           clearResultActive();
