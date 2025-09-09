@@ -5,7 +5,7 @@ import "./bootstrap3/css/theme-lumen.css";
 //import "./bootstrap3/css/theme-spacelab.css";
 
 import { Chart } from "./chartjs";
-import { a, button, canvas, center, col, div, fieldset, h4, hr, input, label, legend, li, option, select, span, table, tbody, td, textarea, th, thead, tr, u, ul, Widget } from "./core.mts";
+import { a, button, canvas, center, col, div, fieldset, h4, hr, Http, input, label, legend, li, option, select, span, table, tbody, td, textarea, th, thead, tr, u, ul, Widget } from "./core.mts";
 
 
 enum ChartType {
@@ -761,7 +761,7 @@ class Pagination extends div {
     const prev_all_a = new a().AddAttr({
       href: "#"
     });
-    prev_all_a.Add(new Icon(Icons.ArrowLeft));
+    prev_all_a.Add(new Icon(Icons.StepBackward));
     prev_all.Add(prev_all_a);
     this.gul.Add(prev_all);
 
@@ -865,7 +865,7 @@ class Pagination extends div {
       href: "#"
     });
     //next_all_a.Html("»»»");
-    next_all_a.Add(new Icon(Icons.ArrowRight));
+    next_all_a.Add(new Icon(Icons.StepForward));
     next_all.Add(next_all_a);
     this.gul.Add(next_all);
 
@@ -2307,7 +2307,27 @@ class SelectBoxAddon extends div{
     suffix?: string | Widget,
     suffix_fn?: () => void,
     hasfeedback?: boolean,
-    filter?: boolean,
+    filter?: {
+      /// this is an optional since if url is not set, 
+      // it only search from the data ,
+      // url can be get only
+      url?: string,
+      // header example the authentication
+      header?: {[key: string]: string},
+      emptyOption?: string,
+      // default to 555 ms
+      delay?: number, 
+      /*sample:
+        filter: {
+          url: "http://localhost:5000/api/cashier/dv-search?q=payee",
+          header: {
+            "X-Auth": `${localStorage.getItem("xauth")}`
+          },
+          emptyOption: "[ Select Payee ]",
+          delay: 0
+        }
+      */
+    },
     placeholder?: string
   }) {
     super();
@@ -2357,7 +2377,7 @@ class SelectBoxAddon extends div{
     /// START local filter ///////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     this.items = [];
-    if (o.filter != undefined && o.filter) {
+    if (o.filter != undefined) {
 
       const search = new TextFieldAddon({
         prefix: o.prefix != undefined ? new Icon(Icons.Search) : undefined,
@@ -2409,12 +2429,53 @@ class SelectBoxAddon extends div{
         }
       }
 
-      const searchfn = (v: string|null = null) => {
+      const searchfn = async (v: string|null = null) => {
         // plot all the available search
         search_content.Clear();
         search_result.length = 0;
 
+        // load the items here 
+        // try to check if there is a network for search
+        if (o.filter?.url != undefined) {
+
+          try {
+            let url = o.filter.url;
+            
+            if (url.indexOf("?") > -1) {
+              url = url + "&search=" + search.value()
+            } else {
+              url = url + "?search=" + search.value()
+            }
+
+            const xhr = new Http({
+              method: "POST",
+              url: url,
+              body: {search: `${search.value()}`},
+              header: o.filter.header == undefined ? {} : o.filter.header,
+            });
+            
+            const res = JSON.parse(await xhr.Load() as string) as {
+              key: string,
+              value: string
+            }[]
+
+            // clear 
+            this.clear();
+          
+            this.add("", o.filter.emptyOption != undefined ? o.filter.emptyOption : "");
+
+            for (const ii of res) {      
+              this.add(ii.key, ii.value);
+            }
+
+          } catch (e) {
+            console.warn(e);
+          }
+          
+        }
+
         for (const item of this.items) {
+
           const txt = new Panel().Add(new Text({text: item.value})).AddClass("b-search-filter-item").AddEventListener("click", () => {
             this.tf.value(item.key);
             /// back to normal
@@ -2477,7 +2538,7 @@ class SelectBoxAddon extends div{
       this.filterPanel.Add(search);
       this.filterPanel.Add(search_content);
 
-      //let time = 0;
+      let time = 0;
       search.AddEventListener("keyup", (e) => {
         //clearTimeout(time);
         //time = setTimeout(() => { 
@@ -2488,7 +2549,16 @@ class SelectBoxAddon extends div{
         if (![40, 38, 13].includes(code)) {
           // reset to zero
           selected_index = 0;
-          searchfn();
+
+          if (o.filter?.url != undefined) {
+            // add delay
+            clearTimeout(time);
+            time = setTimeout(() => {
+              searchfn();
+            }, o.filter.delay != undefined ? o.filter.delay : 555);  
+          } else {
+            searchfn();
+          }
 
           if (search_result.length > 0) {
             search_result[selected_index].panel.AddClass("b-search-active-item");  
@@ -2585,12 +2655,10 @@ class SelectBoxAddon extends div{
   clear() {
     // clear the time contentts
     this.items.length = 0;
-
-
+    this.tf.Clear();
   }
 
   add(key: string, value: string) {
-    
     this.items.push({
       key: key,
       value: value
