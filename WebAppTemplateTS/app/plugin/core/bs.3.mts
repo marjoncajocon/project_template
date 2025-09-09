@@ -2018,7 +2018,9 @@ class Table extends div {
     size?: Size,
     border?: boolean,
     header_style?: {[key: string]: string}[],
-    header_color?: Color
+    header_color?: Color,
+    striped?: boolean,
+    condensed?: boolean,
   }) {
     super();
     super.AddClass("table-responsive");
@@ -2069,6 +2071,14 @@ class Table extends div {
 
     if (o.border != undefined && o.border) {
       this.table.AddClass("table-bordered");
+    }
+
+    if (o.striped != undefined && o.striped) {
+      this.table.AddClass("table-striped");
+    }
+
+    if (o.condensed != undefined && o.condensed) {
+      this.table.AddClass("table-condensed");
     }
 
     this.tbody = new tbody();
