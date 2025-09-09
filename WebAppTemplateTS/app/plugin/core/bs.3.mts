@@ -2377,7 +2377,17 @@ class SelectBoxAddon extends div{
         "z-index": "100",
         "display": "none"
       });
+      const blocker = new Panel().AddStyle({
+        "position": "absolute",
+        "left": "0",
+        "top": "0",
+        "width": "100%",
+        "height": "100%",
+        "z-index": "50",
+        "cursor": "pointer"
+      });
 
+      this.Add(blocker);
       this.Add(this.filterPanel);
       // here the logic here 
       let selected_index = 0;
@@ -2421,6 +2431,18 @@ class SelectBoxAddon extends div{
         this.tf.AddAttr({"disabled": ""});
         e.preventDefault();
         e.stopPropagation();
+        this.filterPanel.Show();
+        searchfn();
+        search.tf.control.focus();
+        const len = `${search.value()}`.length;
+        //@ts-ignore
+        search.tf.control.setSelectionRange(len, len);
+      });
+      // for blocker event to avoid showing the option list
+      blocker.AddEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.tf.AddAttr({"disabled": ""});
         this.filterPanel.Show();
         searchfn();
         search.tf.control.focus();
