@@ -1419,6 +1419,7 @@ class TextField extends input {
 class TextFieldAddon extends div{
   tf: TextField
   err: Panel
+  document_fn: () => void
   constructor(o: { 
     size?: Size,
     type?: InputType,
@@ -1426,7 +1427,10 @@ class TextFieldAddon extends div{
     prefix?: string | Widget,
     suffix?: string | Widget,
     suffix_fn?: () => void,
-    hasfeedback?: boolean
+    hasfeedback?: boolean,
+    filter?: {
+      data?: {key: string, value: string}[]
+    }
   }) {
     super();
     super.AddClass("input-group");
@@ -1470,6 +1474,109 @@ class TextFieldAddon extends div{
       super.Add(this.err);
     }
 
+    /*********** Filter *******************/
+    if (o.filter != undefined) {
+
+      super.AddStyle({
+        "position": "relative"
+      });
+      
+      const items: {key: string, value: string}[] = [];
+      
+      if (o.filter.data != undefined)
+        for (const i of o.filter.data)
+          items.push({key: i.key, value: i.value})
+
+      const clearItem = () => {  items.length = 0; }
+
+      const search = new TextFieldAddon({
+        prefix: new Icon(Icons.Search), 
+        placeholder: o.placeholder,
+        size: o.size,
+        type: o.type
+      });
+
+      const blocker = new Panel().AddStyle({
+        "position": "absolute",
+        "width": "100%",
+        "height": "100%",
+        "top": "0",
+        "left": "0",
+        "z-index": "10",
+        "border-radius": "3px",
+        "box-shadow": "0px 0px rgba(0, 0, 0, 0.3)"
+      });
+      super.Add(blocker);
+
+      const search_result = new Panel().AddStyle({
+        "width": "100%",
+        "max-height": "300px",
+        "position": "relative",
+        "overflow-y": "auto"
+      }).AddClass(["b-filter-panel"]);
+
+      const search_panel = new Panel().AddStyle({
+        "position": "absolute",
+        "width": "100%",
+        "overflow-y": "auto",
+        "z-index": "12",
+        "left": "0",
+        "top": "0",
+        "background-color": "white",
+        "border-radius": "3px",
+        "box-shadow": "0 0 2px rgba(0, 0, 0, 0.3)"
+      }).AddClass("b-filter-panel");
+      
+      const search_fn = () => {
+        search_result.Clear();
+
+        for (const item of items) {
+          const panel_item = new Panel().AddClass("b-search-filter-item");
+          panel_item.Add(new Text({text: item.value}));
+
+          search_result.Add(panel_item);
+        }
+      }
+
+      search_panel.Hide();
+
+      super.Add(search_panel);
+
+      blocker.AddEventListener("click", (e) => {
+        e.stopPropagation();
+        search_panel.Show();
+        search.tf.control.focus();
+        search_fn();
+      });
+      
+      search.AddEventListener("keyup", () => {
+        this.tf.value(`${search.value()}`);
+      });
+
+      search_panel.AddEventListener("click", e => e.stopPropagation());
+
+      const document_fn = () => {
+        search_panel.Hide();
+      };
+
+      document.addEventListener("click", document_fn);
+      this.document_fn = document_fn;
+
+      search_panel.Add(search);
+
+      search_panel.Add(search_result);
+
+    }
+    /*********** End Filter ***************/
+
+  }
+
+  public Dispose(): void {
+    // cleanup
+    if (this.document_fn != undefined) {
+      document.removeEventListener("click", this.document_fn);
+      console.log("document event cleared!");
+    }
   }
 
   check(msg: string, type: Message, hide: boolean = false) {
