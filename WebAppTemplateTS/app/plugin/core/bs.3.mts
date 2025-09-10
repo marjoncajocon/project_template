@@ -1429,7 +1429,12 @@ class TextFieldAddon extends div{
     suffix_fn?: () => void,
     hasfeedback?: boolean,
     filter?: {
-      data?: {key: string, value: string}[]
+      data?: {key: string, value: string}[],
+      url?: string,
+      // header example the authentication
+      header?: {[key: string]: string},
+      // default to 555 ms
+      delay?: number, 
     }
   }) {
     super();
@@ -1531,10 +1536,46 @@ class TextFieldAddon extends div{
       let selected_index: number = 0;
       const search_found: {key: string, panel: Panel}[] = [];
 
-      const search_fn = () => {
+      const search_fn = async () => {
         search_result.Clear();
         search_found.length = 0;
         selected_index = 0;
+
+        if (o.filter?.url != undefined) {
+
+          try {
+            let url = o.filter.url;
+            
+            if (url.indexOf("?") > -1) {
+              url = url + "&search=" + search.value()
+            } else {
+              url = url + "?search=" + search.value()
+            }
+
+            const xhr = new Http({
+              method: "POST",
+              url: url,
+              body: {search: `${search.value()}`},
+              header: o.filter.header == undefined ? {} : o.filter.header,
+            });
+            
+            const res = JSON.parse(await xhr.Load() as string) as {
+              key: string,
+              value: string
+            }[]
+
+            // clear 
+            items.length = 0;
+
+            for (const ii of res) {      
+              items.push({key: ii.key, value: ii.value})
+            }
+
+          } catch (e) {
+            console.warn(e);
+          }
+          
+        }
 
         for (const item of items) {
 
@@ -1571,7 +1612,6 @@ class TextFieldAddon extends div{
       
       search.AddEventListener("keyup", (e) => {
         this.tf.value(`${search.value()}`);
-        
         
         for (const f of search_found) {
           f.panel.DeleteClass("b-search-active-item");
@@ -2558,11 +2598,8 @@ class SelectBoxAddon extends div{
         placeholder: o.placeholder
       });
       const search_content = new Panel().AddStyle({
-        "min-height": "100px",
         "max-height": "300px",
         width: "100%",
-        "padding-top": "10px",
-        "padding-bottom": "10px",
         "overflow-y": "auto"
       }).AddClass("b-filter-panel");
       // panel
@@ -2571,7 +2608,6 @@ class SelectBoxAddon extends div{
         "position": "absolute",
         "top": "0px",
         "left": "0px",
-        "min-height": "100px",
         "width": `100%`,
         "background-color": "white",
         "border-radius": "3px 3px 3px 3px",
