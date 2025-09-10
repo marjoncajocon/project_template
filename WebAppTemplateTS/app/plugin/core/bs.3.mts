@@ -1595,6 +1595,7 @@ class TextFieldAddon extends div{
           if (selected_index > search_found.length - 1) {
             selected_index = search_found.length - 1;
           }          
+          search_result.control.scrollTop = search_found[selected_index].panel.control.offsetTop - search_found[selected_index].panel.control.offsetHeight;
           // set active
           search_found[selected_index].panel.AddClass("b-search-active-item");
 
@@ -1605,6 +1606,7 @@ class TextFieldAddon extends div{
           if (selected_index <= 0) {
             selected_index = 0;
           }
+          search_result.control.scrollTop = search_found[selected_index].panel.control.offsetTop - search_found[selected_index].panel.control.offsetHeight;
           search_found[selected_index].panel.AddClass("b-search-active-item");          
         } else if (code == 13) {
           // enter key
@@ -2742,6 +2744,8 @@ class SelectBoxAddon extends div{
           if (selected_index > search_result.length - 1) {
             selected_index = search_result.length - 1;
           }
+
+          search_content.control.scrollTop = search_result[selected_index].panel.control.offsetTop - search_result[selected_index].panel.control.offsetHeight * 3;
           search_result[selected_index].panel.AddClass("b-search-active-item");
         
         } else if (code == 38) {
@@ -2753,7 +2757,9 @@ class SelectBoxAddon extends div{
           if (selected_index <= 0) {
             selected_index = 0;
           }
-          
+
+          search_content.control.scrollTop = search_result[selected_index].panel.control.offsetTop - search_result[selected_index].panel.control.offsetHeight * 3;
+
           search_result[selected_index].panel.AddClass("b-search-active-item");
           
         } else if (code == 13) {
