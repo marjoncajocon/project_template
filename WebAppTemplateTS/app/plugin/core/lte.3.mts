@@ -1,5 +1,5 @@
-import { Badge, BreadCrumb, Button, Card, Color, Column, Dialog, Grid, GridSize, Html, Icon, Icons, Panel, ProgressBar, Row, Size, Text, TextField, TextFieldAddon } from "./bs.3.mts";
-import { button, div, h3, h5, img, input, title, Widget } from "./core.mts";
+import { Badge, BreadCrumb, Button, Card, Color, Column, Dialog, FlexDirection, Grid, GridSize, Html, Icon, Icons, Panel, ProgressBar, Row, Size, Text, TextField, TextFieldAddon } from "./bs.3.mts";
+import { a, button, div, h1, h2, h3, h5, hr, img, input, span, title, Widget } from "./core.mts";
 import "./lte.3.css";
 
 // class LTESubMenuButton extends div {
@@ -65,6 +65,96 @@ class LTELoaderProgress extends Dialog {
     super.close();
   }
 
+}
+
+class LTESmallBox extends div {
+  constructor(p: {
+    value: string,
+    label: string,
+    color: Color,
+    icon: Icons,
+    click?: () => void
+  }) {
+    super();
+    super.AddStyle({
+      "width": "100%",
+      "border-radius": "6px",
+      "box-shadow": "1px 1px 2px rgba(0, 0, 0, 0.3)"
+    });
+
+    super.AddClass("bg-" + p.color);
+
+    const content = new Panel().AddStyle({
+      width: "100%",
+      height: "113px",
+      padding: "10px",
+      "border-radius": "6px",
+      "position": "relative"
+    });
+
+    content.AddClass("bg-" + p.color);
+
+    super.Add(content);
+
+    /// content 
+    const h = new h1().AddStyle({
+      "font-weight": "bolder",
+      "color": "white"
+    });
+    h.Text(p.value);
+    content.Add(h);
+
+    const lbl = new span();
+    lbl.Text(p.label);
+    lbl.AddStyle({
+      color: "white"
+    });
+
+    content.Add(lbl);
+    // end content
+
+    const footer = new Panel().AddStyle({
+      width: "100%",
+      height: "30px",
+      "background-color": "rgba(0, 0, 0, 0.1)",
+      "text-align": "center",
+      "padding": "5px"
+    });
+
+    const icon = new Icon(p.icon);
+    icon.AddStyle({
+      "position": "absolute",
+      "right": "20px",
+      "top": "20px",
+      "font-size": "80px",
+      "color": "rgba(0, 0, 0, 0.1)"
+    });
+
+    content.Add(icon);
+
+    const link = new a().AddStyle({
+      "color": "white"
+    }).Add(new Row([
+      new Icon(Icons.CircleArrowRight), 10, "More Info"
+    ], undefined, undefined, FlexDirection.ROW_REVERSE));
+    footer.Add(link);
+
+    if (p.click != undefined) {
+      link.AddStyle({cursor: "pointer"});
+      link.AddEventListener("click", e => {
+        e.preventDefault();
+        if (p.click != undefined)
+          p.click();
+      });
+    }
+
+    super.Add(footer);
+
+  }
+
+  update() {
+
+  }
 }
 
 class LTEMenuButton extends div {
@@ -479,5 +569,6 @@ export {
   // LTESubMenuButton,
   LTEAppLogin,
   LTELoaderProgress,
-  LTESleep
+  LTESleep,
+  LTESmallBox,
 };

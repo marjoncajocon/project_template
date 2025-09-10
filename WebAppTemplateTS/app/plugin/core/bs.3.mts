@@ -2341,9 +2341,14 @@ class Table extends div {
 
 
 class Grid extends div {
-  constructor(o: {}) {
+  space_bot?: number
+  constructor(o: {
+    spacingBottom?: number 
+  }) {
     super();
     super.AddClass("row");
+
+    this.space_bot = o.spacingBottom
   }
   add(obj: Widget, grid: GridSize[]): Widget{
     const panel = new Panel().AddClass(grid);
@@ -2351,6 +2356,12 @@ class Grid extends div {
     panel.Add(obj);
 
     super.Add(panel);
+
+    if (this.space_bot != undefined) {
+      panel.AddStyle({
+        "margin-bottom": `${this.space_bot}px`
+      });
+    }
 
     return this;
   }
