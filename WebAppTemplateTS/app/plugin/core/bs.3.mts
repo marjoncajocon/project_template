@@ -1504,7 +1504,8 @@ class TextFieldAddon extends div{
         "left": "0",
         "z-index": "10",
         "border-radius": "3px",
-        "box-shadow": "0px 0px rgba(0, 0, 0, 0.3)"
+        "box-shadow": "0px 0px rgba(0, 0, 0, 0.3)",
+        "cursor": "text"
       });
       super.Add(blocker);
 
@@ -1527,15 +1528,34 @@ class TextFieldAddon extends div{
         "box-shadow": "0 0 2px rgba(0, 0, 0, 0.3)"
       }).AddClass("b-filter-panel");
       
+      let selected_index: number = 0;
+      const search_found: {key: string, panel: Panel}[] = [];
+
       const search_fn = () => {
         search_result.Clear();
+        search_found.length = 0;
+        selected_index = 0;
 
         for (const item of items) {
-          const panel_item = new Panel().AddClass("b-search-filter-item");
-          panel_item.Add(new Text({text: item.value}));
 
-          search_result.Add(panel_item);
+          // if the input search found
+          if (item.value.toLowerCase().indexOf(`${search.value()}`.toLowerCase()) > -1 || item.key.toLowerCase().indexOf(`${search.value()}`.toLowerCase()) > -1) {
+            
+            const panel_item = new Panel().AddClass("b-search-filter-item");
+            panel_item.Add(new Text({text: item.value}));
+            search_result.Add(panel_item);
+            panel_item.AddEventListener("click", () => {
+              search.value(item.key);
+              this.tf.value(item.key);
+              search_panel.Hide();
+            });
+
+            search_found.push({key: item.key, panel: panel_item});
+
+          }
+
         }
+
       }
 
       search_panel.Hide();
@@ -1549,8 +1569,51 @@ class TextFieldAddon extends div{
         search_fn();
       });
       
-      search.AddEventListener("keyup", () => {
+      search.AddEventListener("keyup", (e) => {
         this.tf.value(`${search.value()}`);
+        
+        
+        for (const f of search_found) {
+          f.panel.DeleteClass("b-search-active-item");
+        }
+
+        //@ts-ignore
+        const code = e.keyCode as number;
+        if (![40, 38, 13].includes(code)) {
+          // reset to zero
+          selected_index = 0;
+
+          search_fn();          
+
+          if (search_found.length == 0) return;
+          search_found[selected_index].panel.AddClass("b-search-active-item");
+
+        } else if (code == 40) {
+          if (search_found.length == 0) return;
+          // down
+          selected_index++;
+          if (selected_index > search_found.length - 1) {
+            selected_index = search_found.length - 1;
+          }          
+          // set active
+          search_found[selected_index].panel.AddClass("b-search-active-item");
+
+        } else if (code == 38) {
+          if (search_found.length == 0) return;
+          // if up
+          selected_index--;
+          if (selected_index <= 0) {
+            selected_index = 0;
+          }
+          search_found[selected_index].panel.AddClass("b-search-active-item");          
+        } else if (code == 13) {
+          // enter key
+          if (search_found.length > 0) {
+            search.value(search_found[selected_index].key);
+            this.tf.value(search_found[selected_index].key);
+            search_panel.Hide();
+          }
+        }
       });
 
       search_panel.AddEventListener("click", e => e.stopPropagation());
@@ -2672,7 +2735,7 @@ class SelectBoxAddon extends div{
           }
 
         } else if (code == 40) {
-
+          if (search_result.length == 0) return;
           clearResultActive();
           selected_index++;
           // if down
@@ -2682,7 +2745,7 @@ class SelectBoxAddon extends div{
           search_result[selected_index].panel.AddClass("b-search-active-item");
         
         } else if (code == 38) {
-          
+          if (search_result.length == 0) return;   
           // if up
           clearResultActive();
           selected_index--;
