@@ -2034,7 +2034,7 @@ class Row extends div {
 
     if (align != undefined) {
       super.AddStyle({
-        "align-content": align
+        "justify-content": align
       })
     }
 
