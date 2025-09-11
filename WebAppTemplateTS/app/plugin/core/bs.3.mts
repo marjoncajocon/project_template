@@ -1439,6 +1439,11 @@ class TextFieldAddon extends div{
   }) {
     super();
     super.AddClass("input-group");
+    
+    super.AddClass("input-group").AddStyle({
+      "width": "100%"
+    });
+
     this.tf = new TextField(o);
 
     const prefix = new span();
@@ -2573,6 +2578,11 @@ class SelectBoxAddon extends div{
   }) {
     super();
     super.AddClass("input-group");
+
+    super.AddClass("input-group").AddStyle({
+      "width": "100%"
+    });
+
     super.AddStyle({
       "position": "relative"
     });
