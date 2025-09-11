@@ -2948,11 +2948,38 @@ class Dialog extends Panel {
 
   async show(o: {
     widget: Column,
-    dismissable?: boolean
+    dismissable?: boolean,
+    width?: string,
+    height?: string,
+    wholeScreen?: boolean
   }) {
 
     // add the componts here 
     const body = new Panel().AddClass("bs-3-dialog-body");
+
+
+    if (o.width != undefined) {
+      body.AddStyle({
+        "width": o.width
+      });
+    }
+
+    if (o.height != undefined) {
+      body.AddStyle({
+        "height": o.height
+      });
+    }
+
+    if (o.wholeScreen != undefined) {
+      body.AddStyle({
+        "width": "100%",
+        "height": "100%",
+        "max-width": "100%",
+        "max-height": "100%",
+        "border-radius": "0px"
+      });
+    }
+
     body.AddClass("dialog-show");
     this.gbody = body;
 
