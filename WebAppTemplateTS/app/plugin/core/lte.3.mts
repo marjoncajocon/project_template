@@ -1,5 +1,5 @@
 import { Badge, BreadCrumb, Button, Card, Color, Column, Dialog, FlexDirection, Grid, GridSize, Html, Icon, Icons, Panel, ProgressBar, Row, Size, Text, TextField, TextFieldAddon } from "./bs.3.mts";
-import { a, button, div, h1, h2, h3, h5, hr, img, input, span, title, Widget } from "./core.mts";
+import { a, button, div, h1, h2, h3, h5, hr, img, input, p, span, title, Widget } from "./core.mts";
 import "./lte.3.css";
 
 // class LTESubMenuButton extends div {
@@ -393,15 +393,14 @@ class LTEApp extends Panel {
     // title bar and bread crumb
     const title_grid = new Grid({});
     panel.Add(new Panel().AddStyle({
-      padding: "0px 15px 15px 15px"
+      padding: "0px 15px 0px 15px"
     }).Add(title_grid));
-    const htitle = new h3();
-    htitle.Html(`Widgets`);
+    const htitle = new p().AddStyle({"font-size": "18px", "margin-top": "10px"});
 
     this.page_title = htitle;
 
     title_grid.add(
-      htitle, [GridSize.Lg9]
+      new Row([new Icon(Icons.InfoSign), 3, htitle]), [GridSize.Lg9]
     );
     // const bread = new BreadCrumb({});
     // bread.AddStyle({
@@ -416,7 +415,7 @@ class LTEApp extends Panel {
 
     this.page_body = new Panel().AddStyle({
       padding: "16px",
-      paddingTop: "0px"
+      "padding-top": "0px"
     });
 
     panel.Add(this.page_body);
