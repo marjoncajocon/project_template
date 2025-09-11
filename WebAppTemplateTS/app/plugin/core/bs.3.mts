@@ -1204,6 +1204,86 @@ class Tab extends div {
 
 }
 
+class Tab2 extends div {
+  items: Widget[]
+  widget: new () => Widget
+  content: Panel
+  tabInfo: Panel
+  constructor(p: {
+    widgetClass: new () => Widget
+  }) {
+    super();
+    super.AddStyle({
+      width: "100%",
+      height: "50px",
+      "background-color": "orange"
+    });
+    
+    this.items = [];
+
+    this.widget = p.widgetClass;
+
+    const tabContainer = new Panel();
+    const plus = new Button({text: "+"});
+    
+    const tabInfo = new Panel();
+    this.tabInfo = tabInfo;
+
+    tabContainer.Add(new Row([
+      tabInfo, plus
+    ]));
+
+    plus.AddEventListener("click", () => {
+      this.add();
+    });
+
+    this.content = new Panel();
+    super.Add(new Column([
+      tabContainer
+      ,
+      this.content
+    ]));
+
+    this.add();
+  }
+
+  clear() {
+
+  }
+
+  _updateTab() {
+    this.tabInfo.Clear();
+    const lbl :Widget[] = [];
+
+    let i = 1;
+    for (const item of this.items) {
+      const tab = new Panel();
+      tab.Add(new Row([`Tab ${i}`, new Button({text: "x"})]));
+
+      lbl.push(tab);
+      i++;
+    }
+
+
+
+    const row = new Row(lbl);
+    this.tabInfo.Add(row);
+  }
+
+  // add tab
+  add() {
+    const item = new this.widget();
+    this.content.Add(item);
+    this.items.push(item);
+    this._updateTab();
+  }
+
+  clearAll() {
+
+  }
+
+}
+
 class Panel extends div {
   constructor() {
     super();
@@ -1439,6 +1519,11 @@ class TextFieldAddon extends div{
   }) {
     super();
     super.AddClass("input-group");
+    
+    super.AddClass("input-group").AddStyle({
+      "width": "100%"
+    });
+
     this.tf = new TextField(o);
 
     const prefix = new span();
@@ -1589,6 +1674,7 @@ class TextFieldAddon extends div{
               search.value(item.key);
               this.tf.value(item.key);
               search_panel.Hide();
+              this.tf.control.dispatchEvent(new Event('change'));
             });
 
             search_found.push({key: item.key, panel: panel_item});
@@ -1655,6 +1741,7 @@ class TextFieldAddon extends div{
             this.tf.value(search_found[selected_index].key);
             search_panel.Hide();
           }
+          this.tf.control.dispatchEvent(new Event('change'));
         }
       });
 
@@ -2034,7 +2121,7 @@ class Row extends div {
 
     if (align != undefined) {
       super.AddStyle({
-        "align-content": align
+        "justify-content": align
       })
     }
 
@@ -2573,6 +2660,11 @@ class SelectBoxAddon extends div{
   }) {
     super();
     super.AddClass("input-group");
+
+    super.AddClass("input-group").AddStyle({
+      "width": "100%"
+    });
+
     super.AddStyle({
       "position": "relative"
     });
@@ -2948,11 +3040,38 @@ class Dialog extends Panel {
 
   async show(o: {
     widget: Column,
-    dismissable?: boolean
+    dismissable?: boolean,
+    width?: string,
+    height?: string,
+    wholeScreen?: boolean
   }) {
 
     // add the componts here 
     const body = new Panel().AddClass("bs-3-dialog-body");
+
+
+    if (o.width != undefined) {
+      body.AddStyle({
+        "width": o.width
+      });
+    }
+
+    if (o.height != undefined) {
+      body.AddStyle({
+        "height": o.height
+      });
+    }
+
+    if (o.wholeScreen != undefined) {
+      body.AddStyle({
+        "width": "100%",
+        "height": "100%",
+        "max-width": "100%",
+        "max-height": "100%",
+        "border-radius": "0px"
+      });
+    }
+
     body.AddClass("dialog-show");
     this.gbody = body;
 
@@ -3107,5 +3226,6 @@ export {
   Table,
   Grid,
   CardV2,
-  Dialog
+  Dialog,
+  Tab2
 };

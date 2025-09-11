@@ -10,19 +10,20 @@
   display: flex;
   align-items: center;   /* vertical center */
   justify-content: center; /* horizontal center */
+  overflow-y: auto;
 }
 
 .bs-3-dialog-body {
   width: 480px;
-  max-width: 90%;
+  max-width: 95%;
+  max-height: 95%;
   min-height: 10px;
   background-color: white;
   box-shadow: 0 1px 4px 4px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   overflow-y: auto;
   padding: 7px;
-  padding-bottom: 20px;
-  padding-top: 20px;
+  overflow-x: hidden;
 }
 
 .dialog-alert-icon {
