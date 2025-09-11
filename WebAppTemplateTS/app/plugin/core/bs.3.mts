@@ -1594,6 +1594,7 @@ class TextFieldAddon extends div{
               search.value(item.key);
               this.tf.value(item.key);
               search_panel.Hide();
+              this.tf.control.dispatchEvent(new Event('change'));
             });
 
             search_found.push({key: item.key, panel: panel_item});
@@ -1660,6 +1661,7 @@ class TextFieldAddon extends div{
             this.tf.value(search_found[selected_index].key);
             search_panel.Hide();
           }
+          this.tf.control.dispatchEvent(new Event('change'));
         }
       });
 
