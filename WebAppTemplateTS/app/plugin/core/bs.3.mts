@@ -2233,6 +2233,9 @@ class Table extends div {
     header_color?: Color,
     striped?: boolean,
     condensed?: boolean,
+    sticky?: {
+      height: string
+    }
   }) {
     super();
     super.AddClass("table-responsive");
@@ -2274,7 +2277,22 @@ class Table extends div {
         tr1.Add(th1);
         i++;
       }
-      this.table.Add(new thead().Add(tr1));
+      const thd = new thead().Add(tr1);
+      this.table.Add(thd);
+
+      if (o.sticky != undefined) {
+        thd.AddStyle({
+          "position": "sticky",
+          "top": "-1px",
+          "z-index": "3"
+        });
+
+        this.AddStyle({
+          height: o.sticky.height,
+          "overflow-y": "auto"
+        });
+       
+      }
     }
 
     if (o.hover != undefined && o.hover) {
