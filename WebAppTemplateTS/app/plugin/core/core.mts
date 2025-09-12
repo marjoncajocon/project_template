@@ -7,7 +7,7 @@ class Widget {
   body: HTMLElement
   widgets: Widget[]
   events_list: CEvent[]
-  private disposed_void: () => void|null
+  private disposed_void: (() => void) | null = null;
 
   public constructor(element: string) {
     this.obj = element;
