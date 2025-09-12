@@ -7,6 +7,7 @@ class Widget {
   body: HTMLElement
   widgets: Widget[]
   events_list: CEvent[]
+  private disposed_void: () => void|null
 
   public constructor(element: string) {
     this.obj = element;
@@ -35,8 +36,15 @@ class Widget {
     this.widgets.length = 0;
   }
 
-  public Dispose(): void {
+  public SetDispose(dispose: () => void) {
+    this.disposed_void = dispose;
+  }
 
+  public Dispose(): void {
+    
+    if (this.disposed_void != null) {
+      this.disposed_void();
+    }
   }
 
 
