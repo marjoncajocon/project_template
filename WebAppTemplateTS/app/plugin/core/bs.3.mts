@@ -344,7 +344,8 @@ enum Flex {
   FlexEnd = 'flex-end',
   SpaceAround = 'space-around',
   SpaceBetween = 'space-between',
-  SpaceEvenly = 'space-evenly'
+  SpaceEvenly = 'space-evenly',
+  BaseLine = 'baseline'
 }
 
 enum GridSize {
@@ -1570,7 +1571,7 @@ class TextField extends input {
 class TextFieldAddon extends div{
   tf: TextField
   err: Panel
-  document_fn: () => void
+  document_fn: (() => void) =  () => {};
   constructor(o: { 
     size?: Size,
     type?: InputType,
@@ -1896,7 +1897,6 @@ class TextFieldAddon extends div{
 class TextFieldFeedBack extends div {
   tf: TextField
   icon: Icon
-  msg: div
   constructor(o: {
     size?: Size,
     type?: InputType,
@@ -2167,7 +2167,7 @@ class SelectBox extends select {
 }
 
 class Row extends div {
-  constructor(obj: (Widget|string|number)[], align?: Flex, baseline?: Flex, direction?: FlexDirection) {
+  constructor(obj: (Widget|string|number)[], justifyContent?: Flex, alignItem?: Flex, direction?: FlexDirection) {
     super();
 
     super.AddStyle({
@@ -2183,17 +2183,21 @@ class Row extends div {
 
 
 
-    if (baseline != undefined) {
+    if (alignItem != undefined) {
       super.AddStyle({
-        "align-items": baseline
+        "align-items": alignItem
+      });
+    } else {
+      super.AddStyle({
+        "align-items": Flex.BaseLine
       });
     }
     
 
 
-    if (align != undefined) {
+    if (justifyContent != undefined) {
       super.AddStyle({
-        "justify-content": align
+        "justify-content": justifyContent
       })
     }
 
@@ -2233,7 +2237,7 @@ class Column extends div {
 class Modal extends div {
   backdrop: div
   promise: Promise<unknown>
-  resolvefn: (value: unknown) => void
+  resolvefn: (value: unknown) => void = () => {}
   content: div
   constructor(o: {
     label?: string | Widget,
@@ -2690,7 +2694,8 @@ class ChartV1 extends canvas {
 
   public Dispose(): void {
     this.chart.destroy();
-    this.chart = null;
+    //@ts-ignore
+    this.chart = null; // Javascript
     console.log('clearing chart!');
   }
 }
@@ -2698,7 +2703,7 @@ class ChartV1 extends canvas {
 class SelectBoxAddon extends div{
   tf: SelectBox
   err: Panel
-  filterPanel: Panel
+  filterPanel: Panel = new Panel()
   items: {key: string, value: string}[]
   constructor(o: { 
     size?: Size,
@@ -3012,7 +3017,7 @@ class SelectBoxAddon extends div{
 
   }
 
-  private documentEvent = (e) => {
+  private documentEvent = (e: Event) => {
     e.stopPropagation();
 
     this.tf.DeleteAttr("disabled");
@@ -3097,9 +3102,9 @@ class SelectBoxAddon extends div{
 }
 
 class Dialog extends Panel {
-  gbody: Panel
+  gbody: Panel = new Panel()
   promise: Promise<unknown>
-  resolvefn: (value: unknown) => void
+  resolvefn: (value: unknown) => void = () => {}
 
   constructor() {
     super();
@@ -3190,7 +3195,7 @@ const Alert = async (msg: string, color?: Color) => {
   const okay = new Button({text: new Row([new Icon(Icons.Check), 5, "OK"]), color: Color.Default});
 
 
-  const keydown_event = e => {
+  const keydown_event = (e: KeyboardEvent) => {
     if (e.keyCode == 13) {
       dialog.close(true);
     }
@@ -3242,7 +3247,7 @@ const Confirm = async (msg: string, color?: Color) => {
   });
 
   
-  const keydown_event = e => {
+  const keydown_event = (e: KeyboardEvent) => {
     if (e.keyCode == 13) {
       dialog.close(true);
     }

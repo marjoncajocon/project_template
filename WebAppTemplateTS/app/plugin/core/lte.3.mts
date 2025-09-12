@@ -258,9 +258,9 @@ class LTEMenuButton extends div {
 }
 
 class LTEApp extends Panel {
-  page_title: Widget
-  page_bread: Widget
-  page_body: Widget
+  page_title: Widget = new Panel()
+  page_bread: Widget = new Panel()
+  page_body: Widget = new Panel()
   constructor(o: {
     title?: string,
     logo?: string, // must be  a link or blob link
