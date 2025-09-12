@@ -69,6 +69,59 @@
   background: #555; 
 }
 
+.tab2-item-close {
+  border: none;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  font-size: 10px;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.tab2-item-close:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.tab2-plus {
+  background-color: rgba(0, 0, 0, 0);
+  color: black; 
+  font-weight: bolder;
+  border: none;
+  font-size: 15px;
+}
+
+.tab2-plus:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+}
+
+.tab2-item {
+  height: 35px;
+  padding: 5px;
+  padding-left: 15px;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.tab2-item:not(:first-child):not(:last-child) {
+  border-left-width: 0px;
+  border-right-width: 1px;
+}
+
+.tab2-item:last-child {
+  border-left-width: 0px;
+}
+.tab2-item:first-child {
+  border-left-width: 1px;
+}
+.tab2-item-active {
+  background-color: #348dbc;
+  color: white;
+}
 
 @keyframes fadeIn {
   0% {

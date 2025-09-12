@@ -1205,33 +1205,45 @@ class Tab extends div {
 }
 
 class Tab2 extends div {
-  items: Widget[]
+  menus: {key: number, widget: Widget}[]
+  items: {key: number, widget: Widget}[]
   widget: new () => Widget
   content: Panel
   tabInfo: Panel
+  key_gen: number
   constructor(p: {
     widgetClass: new () => Widget
   }) {
     super();
+    
+    this.key_gen = 1;
+    
     super.AddStyle({
       width: "100%",
-      height: "50px",
-      "background-color": "orange"
+      height: "40px"
     });
     
     this.items = [];
+    this.menus = [];
 
     this.widget = p.widgetClass;
 
-    const tabContainer = new Panel();
-    const plus = new Button({text: "+"});
+    const tabContainer = new Panel().AddStyle({
+      "border-bottom": "1px solid #ccc"
+    });
+    
+    const plus = new Button({text: "+"}).AddStyle({
+      "width": "25px",
+      "height": "25px",
+      "border-radius": "50%"
+    }).AddClass("tab2-plus");
     
     const tabInfo = new Panel();
     this.tabInfo = tabInfo;
 
     tabContainer.Add(new Row([
-      tabInfo, plus
-    ]));
+      tabInfo, 10, plus
+    ], undefined, Flex.Center));
 
     plus.AddEventListener("click", () => {
       this.add();
@@ -1239,8 +1251,8 @@ class Tab2 extends div {
 
     this.content = new Panel();
     super.Add(new Column([
-      tabContainer
-      ,
+      tabContainer,
+      1,
       this.content
     ]));
 
@@ -1255,27 +1267,86 @@ class Tab2 extends div {
     this.tabInfo.Clear();
     const lbl :Widget[] = [];
 
-    let i = 1;
-    for (const item of this.items) {
-      const tab = new Panel();
-      tab.Add(new Row([`Tab ${i}`, new Button({text: "x"})]));
+    for (let i = 0; i < this.items.length; i++) {
+
+      const tab = new Panel().AddClass("tab2-item");
+       
+      const x = new Button({text: "x"}).AddClass("tab2-item-close");
+
+      tab.Add(new Row([`Tab ${this.items[i].key}`, 5, x]));
 
       lbl.push(tab);
-      i++;
+
+      tab.AddEventListener("click", () => {
+        
+        for (const {key, widget} of this.menus) {
+          widget.DeleteClass("tab2-item-active");
+        }
+
+        tab.AddClass("tab2-item-active");
+
+        for (const {key, widget} of this.items)
+          widget.Hide();
+
+        this.items[i].widget.Show();
+
+      });
+
+      this.menus.push({key: this.key_gen, widget: tab});
+
+      x.AddEventListener("click", async (e) => {
+        e.stopPropagation();
+        if (this.items.length == 1) {return;}
+        // this.items[i].Delete();
+        // this.menus[i].Delete();
+
+        // this.items.splice(i, 1);
+        // this.menus.splice(i, 1);
+        //this._updateTab();
+        const key = this.items[i].key;
+        // find the key 
+        if (!await Confirm(`Close Tab ${key}?`)) return;
+
+        for (let i = 0; i < this.items.length; i++) {
+          if (this.items[i].key == key) {
+            // found a key.,
+            this.items[i].widget.Delete();
+            this.menus[i].widget.Delete();
+
+            this.items.splice(i, 1);
+            this.menus.splice(i, 1);
+            this._updateTab();
+            break;
+          }
+        }
+
+      });
+
     }
 
+    // active the last item
+    this.menus[this.menus.length - 1].widget.AddClass("tab2-item-active");
 
+    // hide all 
+    for (const {key, widget} of this.items)
+      widget.Hide();
+    
+    if (this.items.length > 0) 
+      this.items[this.items.length - 1].widget.Show();
 
     const row = new Row(lbl);
     this.tabInfo.Add(row);
+
   }
 
   // add tab
   add() {
     const item = new this.widget();
     this.content.Add(item);
-    this.items.push(item);
+    this.items.push({key: this.key_gen, widget: item});
     this._updateTab();
+
+    this.key_gen++;
   }
 
   clearAll() {
@@ -2096,7 +2167,7 @@ class SelectBox extends select {
 }
 
 class Row extends div {
-  constructor(obj: (Widget|string|number)[], align?: Flex, baseline?: boolean, direction?: FlexDirection) {
+  constructor(obj: (Widget|string|number)[], align?: Flex, baseline?: Flex, direction?: FlexDirection) {
     super();
 
     super.AddStyle({
@@ -2110,12 +2181,13 @@ class Row extends div {
       });
     }
 
-    const is_baseline = baseline == undefined ? true : baseline;
 
 
-    super.AddStyle({
-      "align-items": is_baseline ? "baseline" : ""
-    });
+    if (baseline != undefined) {
+      super.AddStyle({
+        "align-items": baseline
+      });
+    }
     
 
 
@@ -3116,6 +3188,20 @@ const Alert = async (msg: string, color?: Color) => {
     logo.AddClass(["text-" + color]);
   }
   const okay = new Button({text: new Row([new Icon(Icons.Check), 5, "OK"]), color: Color.Default});
+
+
+  const keydown_event = e => {
+    if (e.keyCode == 13) {
+      dialog.close(true);
+    }
+  };
+  
+  document.addEventListener("keydown", keydown_event);
+  
+  dialog.SetDispose(() => {
+    document.removeEventListener("keydown", keydown_event);
+  });
+
   okay.AddStyle({
     "padding-left": "20px",
     "padding-right": "20px"
@@ -3153,6 +3239,17 @@ const Confirm = async (msg: string, color?: Color) => {
   cancel.AddStyle({
     "margin-left": "10px",
     "width": "90px"
+  });
+
+  
+  const keydown_event = e => {
+    if (e.keyCode == 13) {
+      dialog.close(true);
+    }
+  };
+  document.addEventListener("keydown", keydown_event);
+  dialog.SetDispose(() => {
+    document.removeEventListener("keydown", keydown_event);
   });
 
   okay.AddEventListener("click", () => {
