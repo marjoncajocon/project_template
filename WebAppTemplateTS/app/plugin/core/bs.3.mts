@@ -3340,6 +3340,9 @@ class DataTable extends div {
   search: TextFieldAddon
   table: Table
   page: Pagination
+  label: Widget
+  show_page: number
+  total_page: number
 
   constructor(p: {
     header: (string|Widget)[],
@@ -3362,12 +3365,20 @@ class DataTable extends div {
 
     this.table = new Table(p);
     this.page = new Pagination({});
+    this.label = new span();
+
+    this.show_page = 0;
+    this.total_page = 0;
 
   }
 
   init(p: {
-    change: (n: number) => void
+    page_fn: (n: number) => void,
+    search_fn?: (search: string) => void,
+    limit_fn?: (n: number) => void
   }) {
+
+    this.label = new span();
 
     this.entry = new SelectBoxAddon({
       filter: {}
@@ -3388,24 +3399,50 @@ class DataTable extends div {
     });
 
     this.search.AddStyle({
-      "width": "100px"
+      "width": "150px"
     });
+
+    if (p.search_fn != undefined) 
+      this.search.tf.AddEventListener("keyup", () => {
+        if (p.search_fn != undefined)
+          p.search_fn(this.search.value().toString());
+      });
+    else
+      this.search.Hide();
+
+    if (p.limit_fn != undefined) 
+      this.entry.tf.AddEventListener("change", () => {
+        if (p.limit_fn != undefined) 
+          p.limit_fn(parseInt(`${this.entry.value()}`));
+      });
+    else
+      this.entry.Hide();
 
     this.page = new Pagination({
-      change: p.change
+      change: (n) => {
+        this.label.Html(`PAGE ${n} OF ${this.total_page}`);
+        p.page_fn(n);
+      }
     });
 
+    
+    //new Row([ this.label, 20, this.search, 3, this.entry ], Flex.SpaceBetween)
     super.Add(new Column([
-      new Row([ this.search, 3, this.entry ], Flex.FlexEnd),
-      5,
+      new Row([
+        new Panel().AddStyle({width: "100%"}).Add(new Row([ this.entry, 3, this.search ], Flex.FlexStart)),
+        new Panel().AddStyle({width: "100%"}).Add(new Row([ this.label ], Flex.FlexEnd, Flex.BaseLine))
+      ]),
+      2,
       this.table,
-      5,
+      2,
       new Row([this.page], undefined, undefined, FlexDirection.ROW_REVERSE)
     ]));
 
   }
 
-  update(total_page: number, total_item: number = 0) {
+  update(total_page: number) {
+    this.total_page = total_page;
+    this.label.Html(`PAGE 1 OF ${this.total_page}`);
     this.page.update(total_page > 0 ? 1 : 0, total_page < 10 ? total_page : 10, total_page);
   }
 
