@@ -1833,7 +1833,7 @@ class TextFieldAddon extends div{
           search_panel.Hide();
           
           this.tf.control.dispatchEvent(new Event('change'));
-          
+
         }
       });
 
@@ -1841,7 +1841,6 @@ class TextFieldAddon extends div{
 
       const document_fn = () => {
         search_panel.Hide();
-        this.tf.control.dispatchEvent(new Event('change'));
       };
 
       document.addEventListener("click", document_fn);
@@ -2541,19 +2540,54 @@ class Table extends div {
   }
 }
 
+class ContainerFluid extends div {
+  constructor(p: {
+    body: Widget
+  }) {
+    super();
+    
+    super.AddClass("container-fluid");
+
+    super.Add(p.body);
+
+  }
+}
+
+class Container extends div {
+  constructor(p: {
+    body: Widget
+  }) {
+    super();
+    
+    super.AddClass("container");
+
+    super.Add(p.body);
+
+  }
+}
 
 class Grid extends div {
   space_bot?: number
+  zero_gap?: boolean
   constructor(o: {
-    spacingBottom?: number 
+    spacingBottom?: number,
+    zeroGap?: boolean
   }) {
     super();
     super.AddClass("row");
 
-    this.space_bot = o.spacingBottom
+    this.space_bot = o.spacingBottom;
+    this.zero_gap = o.zeroGap;
   }
   add(obj: Widget, grid: GridSize[]): Widget{
     const panel = new Panel().AddClass(grid);
+
+    if (this.zero_gap != undefined && this.zero_gap) {
+      panel.AddStyle({
+        "margin": "0px",
+        "padding": "0px"
+      });
+    }
 
     panel.Add(obj);
 
@@ -3312,6 +3346,8 @@ export {
 };
 
 export {
+  Container,
+  ContainerFluid,
   Confirm,
   Alert,
   ChartV1,
