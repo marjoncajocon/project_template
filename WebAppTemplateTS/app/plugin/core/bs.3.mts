@@ -1825,11 +1825,12 @@ class TextFieldAddon extends div{
           search_found[selected_index].panel.AddClass("b-search-active-item");          
         } else if (code == 13) {
           // enter key
-          if (search_found.length > 0) {
-            search.value(search_found[selected_index].key);
-            this.tf.value(search_found[selected_index].key);
-            search_panel.Hide();
-          }
+          // if (search_found.length > 0) {
+          //   search.value(search_found[selected_index].key);
+          //   this.tf.value(search_found[selected_index].key);
+          //   search_panel.Hide();
+          // }
+          search_panel.Hide();
           this.tf.control.dispatchEvent(new Event('change'));
         }
       });
