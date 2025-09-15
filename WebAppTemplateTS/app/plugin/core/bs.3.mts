@@ -1839,6 +1839,7 @@ class TextFieldAddon extends div{
 
       const document_fn = () => {
         search_panel.Hide();
+        this.tf.control.dispatchEvent(new Event('change'));
       };
 
       document.addEventListener("click", document_fn);
