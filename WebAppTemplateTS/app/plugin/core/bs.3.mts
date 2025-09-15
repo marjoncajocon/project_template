@@ -2585,7 +2585,8 @@ class Grid extends div {
     if (this.zero_gap != undefined && this.zero_gap) {
       panel.AddStyle({
         "margin": "0px",
-        "padding": "0px"
+        "padding": "0px",
+        "padding-right": "5px"
       });
     }
 
@@ -3333,6 +3334,96 @@ const Confirm = async (msg: string, color?: Color) => {
   });
 };
 
+
+class DataTable extends div {
+  entry: SelectBoxAddon
+  search: TextFieldAddon
+  table: Table
+  page: Pagination
+
+  constructor(p: {
+    header: (string|Widget)[],
+    hover?: boolean,
+    size?: Size,
+    border?: boolean,
+    header_style?: {[key: string]: string}[],
+    header_color?: Color,
+    striped?: boolean,
+    condensed?: boolean,
+    sticky?: {
+      height: string
+    }
+  }) {
+
+    super();
+
+    this.entry = new SelectBoxAddon({});
+    this.search = new TextFieldAddon({});
+
+    this.table = new Table(p);
+    this.page = new Pagination({});
+
+  }
+
+  init(p: {
+    change: (n: number) => void
+  }) {
+
+    this.entry = new SelectBoxAddon({
+      prefix: new Icon(Icons.CircleArrowDown),
+      filter: {}
+    });
+
+    this.entry.AddStyle({
+      width: "120px"
+    });
+
+    this.entry.add("10", "10");
+    this.entry.add("50", "50");
+    this.entry.add("100", "100");
+    this.entry.add("500", "500");
+    this.entry.add("1000", "1000");
+
+    this.search = new TextFieldAddon({
+      prefix: new Icon(Icons.Search),
+      placeholder: "Search..."
+    });
+
+    this.search.AddStyle({
+      "width": "200px"
+    });
+
+    this.page = new Pagination({
+      change: p.change
+    });
+
+    super.Add(new Column([
+      new Row([ this.entry, 3, this.search ], Flex.SpaceBetween),
+      5,
+      this.table,
+      5,
+      new Row([this.page], undefined, undefined, FlexDirection.ROW_REVERSE)
+    ]));
+
+  }
+
+  update(total_page: number, total_item: number = 0) {
+    this.page.update(total_page > 0 ? 1 : 0, total_page < 10 ? total_page : 10, total_page);
+  }
+
+  add(o: {
+    item: (string|Widget)[],
+    header_style?: {[key: string]: string}[]
+  }): tr {
+    return this.table.add(o);
+  }
+
+  clear() {
+    this.table.clear();
+  }
+
+}
+
 export {
   Color,
   Size,
@@ -3386,5 +3477,6 @@ export {
   Grid,
   CardV2,
   Dialog,
-  Tab2
+  Tab2,
+  DataTable
 };
