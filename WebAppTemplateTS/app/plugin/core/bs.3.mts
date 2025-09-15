@@ -1444,7 +1444,22 @@ class ButtonSplit extends div {
         o.clicked();
       }
     });
+
+    const doc_fn = (e: Event) => {
+      e.stopPropagation();
+      if (super.HasClass("open"))
+      super.DeleteClass("open");
+    };
+
+    document.addEventListener("click", doc_fn);
+   
+    this.SetDispose(() => {
+      document.removeEventListener("click", doc_fn);
+    });
     
+    super.AddEventListener("click", (e) => {
+      e.stopPropagation();
+    });
 
   }
 
@@ -1461,8 +1476,10 @@ class ButtonSplit extends div {
     }
 
     if (fn != undefined) {
+
       aa.AddEventListener("click", (e) => {
         e.preventDefault();
+        e.stopPropagation();
         fn();
         if (!super.HasClass("open")) {
           super.AddClass("open");
