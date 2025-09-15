@@ -3370,12 +3370,11 @@ class DataTable extends div {
   }) {
 
     this.entry = new SelectBoxAddon({
-      prefix: new Icon(Icons.CircleArrowDown),
       filter: {}
     });
 
     this.entry.AddStyle({
-      width: "120px"
+      width: "73px"
     });
 
     this.entry.add("10", "10");
@@ -3385,12 +3384,11 @@ class DataTable extends div {
     this.entry.add("1000", "1000");
 
     this.search = new TextFieldAddon({
-      prefix: new Icon(Icons.Search),
       placeholder: "Search..."
     });
 
     this.search.AddStyle({
-      "width": "200px"
+      "width": "100px"
     });
 
     this.page = new Pagination({
@@ -3398,7 +3396,7 @@ class DataTable extends div {
     });
 
     super.Add(new Column([
-      new Row([ this.entry, 3, this.search ], Flex.SpaceBetween),
+      new Row([ this.search, 3, this.entry ], Flex.FlexEnd),
       5,
       this.table,
       5,
