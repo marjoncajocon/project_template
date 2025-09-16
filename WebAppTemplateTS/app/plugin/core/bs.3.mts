@@ -3564,6 +3564,58 @@ class DataTable extends div {
 
 }
 
+
+class NetworkQueue {
+  limit: number;
+  activeCount: number = 0;
+  queue: Array<() => Promise<void>> = [];
+  resolving: boolean = false;
+
+  constructor(limit: number = 1) {
+    this.limit = limit;
+  }
+
+  add(fn: () => Promise<unknown>) {
+    this.queue.push(() => this.execute(fn));
+    this.process();
+    return this;
+  }
+
+  private async execute(fn: () => Promise<unknown>) {
+    this.activeCount++;
+    try {
+      await fn();
+    } catch (error) {
+      console.error('Request failed:', error);
+    } finally {
+      this.activeCount--;
+      this.process(); // Continue processing remaining tasks
+    }
+  }
+
+  private process() {
+    // Launch new promises while under limit and queue not empty
+    while (this.activeCount <= this.limit && this.queue.length > 0) {
+      const task = this.queue.shift();
+      if (task) {
+        task();
+      }
+    }
+  }
+}
+
+/*
+  
+  const net = new NetworkQueue(10); limit of 10 queue
+
+  for (const fn of reqs) {
+    net.Add(fn);
+  } 
+
+*/
+// utils
+export {NetworkQueue};
+
 export {
   Color,
   Size,
