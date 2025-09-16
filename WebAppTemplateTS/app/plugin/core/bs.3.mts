@@ -3414,6 +3414,7 @@ class DataTable extends div {
     this.entry.add("100", "100");
     this.entry.add("500", "500");
     this.entry.add("1000", "1000");
+    this.entry.add("2000", "2000");
 
     this.search = new TextFieldAddon({
       placeholder: "Search..."
@@ -3480,7 +3481,9 @@ class DataTable extends div {
     this.table.clear();
   }
 
-  filter(local_items: (string)[][], cb: (items: (string)[][]) => void) {
+  filter(local_items: (string)[][], cb: (items: (string)[][]) => void, opt?:{
+    limit: (10|50|100|500|1000|2000)
+  }) {
     // we avoid using hide and show, to avoid hang up the browser
     this.local_items = local_items;
     this.local_cb = cb;
@@ -3488,6 +3491,10 @@ class DataTable extends div {
     let cur_page = 1;
     let cur_search = "";
     let cur_limit = 10;
+
+    if (opt != undefined) {
+      cur_limit = opt.limit;
+    }
 
     const process_algo = (o: {
       page_clicked?: boolean 
@@ -3551,6 +3558,8 @@ class DataTable extends div {
 
     this.update(1, local_items.length);
     process_algo({});
+
+    this.entry.value(`${cur_limit}`);
   }
 
 }
