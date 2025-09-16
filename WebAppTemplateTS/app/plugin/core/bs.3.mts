@@ -739,10 +739,14 @@ class Pagination extends div {
 
   update(start: number = 1, stop: number = 10, total: number) {
 
-    if (total <= 1) {
-      super.Hide();
-    } else {
-      super.Show();
+    // if (total <= 1) {
+    //   super.Hide();
+    // } else {
+    //   super.Show();
+    // }
+
+    if (start <= 0) {
+      start = 1;
     }
 
     if (this.current_page == 0) {
@@ -932,6 +936,16 @@ class Pagination extends div {
     });
 
     return this;
+  }
+
+  setActive(page: number) {
+    this.clearActive();
+    for (const item of this.list) {
+      if (page == item.index) {
+        item.li.AddClass("active");
+        break;
+      }
+    }
   }
 
   clear() {
@@ -3343,6 +3357,7 @@ class DataTable extends div {
   label: Widget
   show_page: number
   total_page: number
+  total_item: number
 
   constructor(p: {
     header: (string|Widget)[],
@@ -3369,6 +3384,7 @@ class DataTable extends div {
 
     this.show_page = 0;
     this.total_page = 0;
+    this.total_item = 0;
 
   }
 
@@ -3420,7 +3436,7 @@ class DataTable extends div {
 
     this.page = new Pagination({
       change: (n) => {
-        this.label.Html(`PAGE ${n} OF ${this.total_page}`);
+        this.label.Html(`PAGE ${n} OF ${this.total_page == 0 ? 1 : this.total_page}  / ${this.total_item}`);
         p.page_fn(n);
       }
     });
@@ -3440,10 +3456,12 @@ class DataTable extends div {
 
   }
 
-  update(total_page: number) {
+  update(total_page: number, total_item: number = 0) {
     this.total_page = total_page;
-    this.label.Html(`PAGE 1 OF ${this.total_page}`);
+    this.total_item = total_item;
+    this.label.Html(`PAGE 1 OF ${this.total_page == 0 ? 1: this.total_page} / ${total_item}`);
     this.page.update(total_page > 0 ? 1 : 0, total_page < 10 ? total_page : 10, total_page);
+    this.page.setActive(1);
   }
 
   add(o: {
