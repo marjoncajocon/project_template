@@ -3359,6 +3359,9 @@ class DataTable extends div {
   total_page: number
   total_item: number
 
+  local_items: (string)[][]
+  local_cb: ((items: (string)[][]) => void) | null
+
   constructor(p: {
     header: (string|Widget)[],
     hover?: boolean,
@@ -3386,6 +3389,8 @@ class DataTable extends div {
     this.total_page = 0;
     this.total_item = 0;
 
+    this.local_items = [];
+    this.local_cb = null;
   }
 
   init(p: {
@@ -3473,6 +3478,79 @@ class DataTable extends div {
 
   clear() {
     this.table.clear();
+  }
+
+  filter(local_items: (string)[][], cb: (items: (string)[][]) => void) {
+    // we avoid using hide and show, to avoid hang up the browser
+    this.local_items = local_items;
+    this.local_cb = cb;
+
+    let cur_page = 1;
+    let cur_search = "";
+    let cur_limit = 10;
+
+    const process_algo = (o: {
+      page_clicked?: boolean 
+    }) => {
+      // here the algorith for the search
+      // update_pagination
+      const emp_list: (string)[][] = [];
+
+      for (let i = 0; i < this.local_items.length; i++) {
+        const item = this.local_items[i];
+        // here the filter happened
+        for (const subitem of item) {
+          if (subitem.toLowerCase().indexOf(`${cur_search}`.toLowerCase()) > -1) {
+            emp_list.push(item);
+            break;
+          }
+        }
+
+      }  
+      
+      if (o.page_clicked == undefined || !o.page_clicked) {
+        let total_page = Math.ceil(emp_list.length / cur_limit);
+        this.update(total_page, emp_list.length);
+        cur_page = 1;
+      }
+
+      const final_list: (string)[][] = [];
+      // get the limit
+      let found = 0;
+      for (let i = (cur_page - 1) * cur_limit; i < emp_list.length; i++) {
+        const item = emp_list[i];
+        final_list.push(item);
+
+        // get the limit
+        found++;
+        if (found >= cur_limit) {
+          break;
+        }
+      }
+
+      if (this.local_cb != null) {
+        this.clear();
+        this.local_cb(final_list);
+      }
+    };
+
+    this.init({
+      page_fn: (n) => {
+        cur_page = n;
+        process_algo({page_clicked: true});
+      },
+      search_fn: (search) => {
+        cur_search = search;
+        process_algo({});
+      },
+      limit_fn: (n) => {
+        cur_limit = n;
+        process_algo({});
+      }
+    });
+
+    this.update(1, local_items.length);
+    process_algo({});
   }
 
 }
