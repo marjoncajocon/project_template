@@ -739,10 +739,14 @@ class Pagination extends div {
 
   update(start: number = 1, stop: number = 10, total: number) {
 
-    if (total <= 1) {
-      super.Hide();
-    } else {
-      super.Show();
+    // if (total <= 1) {
+    //   super.Hide();
+    // } else {
+    //   super.Show();
+    // }
+
+    if (start <= 0) {
+      start = 1;
     }
 
     if (this.current_page == 0) {
@@ -932,6 +936,16 @@ class Pagination extends div {
     });
 
     return this;
+  }
+
+  setActive(page: number) {
+    this.clearActive();
+    for (const item of this.list) {
+      if (page == item.index) {
+        item.li.AddClass("active");
+        break;
+      }
+    }
   }
 
   clear() {
@@ -1444,7 +1458,22 @@ class ButtonSplit extends div {
         o.clicked();
       }
     });
+
+    const doc_fn = (e: Event) => {
+      e.stopPropagation();
+      if (super.HasClass("open"))
+      super.DeleteClass("open");
+    };
+
+    document.addEventListener("click", doc_fn);
+   
+    this.SetDispose(() => {
+      document.removeEventListener("click", doc_fn);
+    });
     
+    super.AddEventListener("click", (e) => {
+      e.stopPropagation();
+    });
 
   }
 
@@ -1461,8 +1490,10 @@ class ButtonSplit extends div {
     }
 
     if (fn != undefined) {
+
       aa.AddEventListener("click", (e) => {
         e.preventDefault();
+        e.stopPropagation();
         fn();
         if (!super.HasClass("open")) {
           super.AddClass("open");
@@ -1811,9 +1842,12 @@ class TextFieldAddon extends div{
           if (search_found.length > 0) {
             search.value(search_found[selected_index].key);
             this.tf.value(search_found[selected_index].key);
-            search_panel.Hide();
           }
+
+          search_panel.Hide();
+          
           this.tf.control.dispatchEvent(new Event('change'));
+
         }
       });
 
@@ -2520,19 +2554,55 @@ class Table extends div {
   }
 }
 
+class ContainerFluid extends div {
+  constructor(p: {
+    body: Widget
+  }) {
+    super();
+    
+    super.AddClass("container-fluid");
+
+    super.Add(p.body);
+
+  }
+}
+
+class Container extends div {
+  constructor(p: {
+    body: Widget
+  }) {
+    super();
+    
+    super.AddClass("container");
+
+    super.Add(p.body);
+
+  }
+}
 
 class Grid extends div {
   space_bot?: number
+  zero_gap?: boolean
   constructor(o: {
-    spacingBottom?: number 
+    spacingBottom?: number,
+    zeroGap?: boolean
   }) {
     super();
     super.AddClass("row");
 
-    this.space_bot = o.spacingBottom
+    this.space_bot = o.spacingBottom;
+    this.zero_gap = o.zeroGap;
   }
   add(obj: Widget, grid: GridSize[]): Widget{
     const panel = new Panel().AddClass(grid);
+
+    if (this.zero_gap != undefined && this.zero_gap) {
+      panel.AddStyle({
+        "margin": "0px",
+        "padding": "0px",
+        "padding-right": "5px"
+      });
+    }
 
     panel.Add(obj);
 
@@ -3278,6 +3348,213 @@ const Confirm = async (msg: string, color?: Color) => {
   });
 };
 
+
+class DataTable extends div {
+  entry: SelectBoxAddon
+  search: TextFieldAddon
+  table: Table
+  page: Pagination
+  label: Widget
+  show_page: number
+  total_page: number
+  total_item: number
+
+  local_items: (string)[][]
+  local_cb: ((items: (string)[][]) => void) | null
+
+  constructor(p: {
+    header: (string|Widget)[],
+    hover?: boolean,
+    size?: Size,
+    border?: boolean,
+    header_style?: {[key: string]: string}[],
+    header_color?: Color,
+    striped?: boolean,
+    condensed?: boolean,
+    sticky?: {
+      height: string
+    }
+  }) {
+
+    super();
+
+    this.entry = new SelectBoxAddon({});
+    this.search = new TextFieldAddon({});
+
+    this.table = new Table(p);
+    this.page = new Pagination({});
+    this.label = new span();
+
+    this.show_page = 0;
+    this.total_page = 0;
+    this.total_item = 0;
+
+    this.local_items = [];
+    this.local_cb = null;
+  }
+
+  init(p: {
+    page_fn: (n: number) => void,
+    search_fn?: (search: string) => void,
+    limit_fn?: (n: number) => void
+  }) {
+
+    this.label = new span();
+
+    this.entry = new SelectBoxAddon({
+      filter: {}
+    });
+
+    this.entry.AddStyle({
+      width: "73px"
+    });
+
+    this.entry.add("10", "10");
+    this.entry.add("50", "50");
+    this.entry.add("100", "100");
+    this.entry.add("500", "500");
+    this.entry.add("1000", "1000");
+
+    this.search = new TextFieldAddon({
+      placeholder: "Search..."
+    });
+
+    this.search.AddStyle({
+      "width": "150px"
+    });
+
+    if (p.search_fn != undefined) 
+      this.search.tf.AddEventListener("keyup", () => {
+        if (p.search_fn != undefined)
+          p.search_fn(this.search.value().toString());
+      });
+    else
+      this.search.Hide();
+
+    if (p.limit_fn != undefined) 
+      this.entry.tf.AddEventListener("change", () => {
+        if (p.limit_fn != undefined) 
+          p.limit_fn(parseInt(`${this.entry.value()}`));
+      });
+    else
+      this.entry.Hide();
+
+    this.page = new Pagination({
+      change: (n) => {
+        this.label.Html(`PAGE ${n} OF ${this.total_page == 0 ? 1 : this.total_page}  / ${this.total_item}`);
+        p.page_fn(n);
+      }
+    });
+
+    
+    //new Row([ this.label, 20, this.search, 3, this.entry ], Flex.SpaceBetween)
+    super.Add(new Column([
+      new Row([
+        new Panel().AddStyle({width: "100%"}).Add(new Row([ this.entry, 3, this.search ], Flex.FlexStart)),
+        new Panel().AddStyle({width: "100%"}).Add(new Row([ this.label ], Flex.FlexEnd, Flex.BaseLine))
+      ]),
+      2,
+      this.table,
+      2,
+      new Row([this.page], undefined, undefined, FlexDirection.ROW_REVERSE)
+    ]));
+
+  }
+
+  update(total_page: number, total_item: number = 0) {
+    this.total_page = total_page;
+    this.total_item = total_item;
+    this.label.Html(`PAGE 1 OF ${this.total_page == 0 ? 1: this.total_page} / ${total_item}`);
+    this.page.update(total_page > 0 ? 1 : 0, total_page < 10 ? total_page : 10, total_page);
+    this.page.setActive(1);
+  }
+
+  add(o: {
+    item: (string|Widget)[],
+    header_style?: {[key: string]: string}[]
+  }): tr {
+    return this.table.add(o);
+  }
+
+  clear() {
+    this.table.clear();
+  }
+
+  filter(local_items: (string)[][], cb: (items: (string)[][]) => void) {
+    // we avoid using hide and show, to avoid hang up the browser
+    this.local_items = local_items;
+    this.local_cb = cb;
+
+    let cur_page = 1;
+    let cur_search = "";
+    let cur_limit = 10;
+
+    const process_algo = (o: {
+      page_clicked?: boolean 
+    }) => {
+      // here the algorith for the search
+      // update_pagination
+      const emp_list: (string)[][] = [];
+
+      for (let i = 0; i < this.local_items.length; i++) {
+        const item = this.local_items[i];
+        // here the filter happened
+        for (const subitem of item) {
+          if (subitem.toLowerCase().indexOf(`${cur_search}`.toLowerCase()) > -1) {
+            emp_list.push(item);
+            break;
+          }
+        }
+
+      }  
+      
+      if (o.page_clicked == undefined || !o.page_clicked) {
+        let total_page = Math.ceil(emp_list.length / cur_limit);
+        this.update(total_page, emp_list.length);
+        cur_page = 1;
+      }
+
+      const final_list: (string)[][] = [];
+      // get the limit
+      let found = 0;
+      for (let i = (cur_page - 1) * cur_limit; i < emp_list.length; i++) {
+        const item = emp_list[i];
+        final_list.push(item);
+
+        // get the limit
+        found++;
+        if (found >= cur_limit) {
+          break;
+        }
+      }
+
+      if (this.local_cb != null) {
+        this.clear();
+        this.local_cb(final_list);
+      }
+    };
+
+    this.init({
+      page_fn: (n) => {
+        cur_page = n;
+        process_algo({page_clicked: true});
+      },
+      search_fn: (search) => {
+        cur_search = search;
+        process_algo({});
+      },
+      limit_fn: (n) => {
+        cur_limit = n;
+        process_algo({});
+      }
+    });
+
+    this.update(1, local_items.length);
+    process_algo({});
+  }
+
+}
+
 export {
   Color,
   Size,
@@ -3291,6 +3568,8 @@ export {
 };
 
 export {
+  Container,
+  ContainerFluid,
   Confirm,
   Alert,
   ChartV1,
@@ -3329,5 +3608,6 @@ export {
   Grid,
   CardV2,
   Dialog,
-  Tab2
+  Tab2,
+  DataTable
 };

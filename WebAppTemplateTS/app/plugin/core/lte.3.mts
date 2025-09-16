@@ -158,6 +158,7 @@ class LTESmallBox extends div {
 }
 
 class LTEMenuButton extends div {
+  submenu_g?: LTEMenuButton[]
   constructor(o: {
     icon: Icons,
     title: string,
@@ -189,6 +190,8 @@ class LTEMenuButton extends div {
     
     if (o.submenu != undefined) {
       menu.Add(arrow);
+
+      this.submenu_g = o.submenu;
     }
     
     if (o.badge != undefined) {
@@ -281,13 +284,14 @@ class LTEApp extends Panel {
     
     const body = this.createBody({
       sidebar: sideBar,
-      topleftmenu: o.topLeftMenu
+      topleftmenu: o.topLeftMenu,
+      submenu: o.sideMenu
     });
 
     super.Add([
       sideBar,
       body
-    ]);
+    ]);    
   }
 
   route(o: {
@@ -324,7 +328,8 @@ class LTEApp extends Panel {
 
   createBody(o: {
     sidebar: Widget,
-    topleftmenu?: Row
+    topleftmenu?: Row,
+    submenu: LTEMenuButton[]
   }): Panel {
     const panel = new Panel().AddClass("lte-body");
 
@@ -344,6 +349,8 @@ class LTEApp extends Panel {
       });
       topBar.Add(o.topleftmenu);
     }
+
+    let gbackdrop: Panel|undefined;
 
     bar.AddEventListener("click", () => {
 
@@ -385,6 +392,8 @@ class LTEApp extends Panel {
           });
 
           o.sidebar.AddClass("lte-menu-active");
+
+          gbackdrop = backdrop;
           
         }
       }
@@ -419,6 +428,46 @@ class LTEApp extends Panel {
     });
 
     panel.Add(this.page_body);
+
+
+    
+    /// this is for mobile
+    const recursive_fn = (btn: LTEMenuButton) => {
+      
+      if (btn.submenu_g == undefined || btn.submenu_g.length == 0) {
+        btn.AddEventListener("click", () => {
+
+          // close the menu if it is mobile version
+          if (!(window.innerWidth > 990)) {
+            console.log("mobile version");
+            
+            if (o.sidebar.HasClass("lte-menu-active")) {
+              o.sidebar.DeleteClass("lte-menu-active");
+              if (gbackdrop != undefined) {
+                gbackdrop.Delete();
+              }
+            }
+          }
+  
+        });
+      }
+
+      if (btn.submenu_g != undefined && btn.submenu_g.length > 0) {
+        
+
+        for (const item of btn.submenu_g) {
+          recursive_fn(item); // recursive finding all the sub button
+        }
+
+      }
+
+      
+    };
+    
+    for (const item of o.submenu) {
+      recursive_fn(item);
+    }
+    // end for  mobile
 
     return panel;
   }
@@ -504,7 +553,7 @@ class LTEApp extends Panel {
 
     sidebar_content.AddClass("lte-side-bar-content");
 
-    panel.Add(sidebar_content);
+    panel.Add(sidebar_content);    
     return panel;
   }
 }
