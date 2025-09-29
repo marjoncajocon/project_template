@@ -2249,12 +2249,34 @@ class Row extends div {
 
 
 class Column extends div {
-  constructor(obj: (Widget|string|number)[]) {
+  constructor(obj: (Widget|string|number)[], justifyContent?: Flex, alignItem?: Flex, direction?: FlexDirection) {
     super();
 
     super.AddStyle({
       display: "block"
-    })
+    });
+
+    if (direction != undefined) {
+      super.AddStyle({
+        "flex-direction": direction
+      });
+    }
+
+    if (alignItem != undefined) {
+      super.AddStyle({
+        "align-items": alignItem
+      });
+    } else {
+      super.AddStyle({
+        "align-items": Flex.BaseLine
+      });
+    }
+
+    if (justifyContent != undefined) {
+      super.AddStyle({
+        "justify-content": justifyContent
+      })
+    }
 
     for (const item of obj) {
       if (item instanceof Widget) {
@@ -2271,14 +2293,17 @@ class Column extends div {
 class ModalModern extends div {
   // promise: Promise<unknown>
   // resolvefn: (value: unknown) => void = () => {}
+  size?: Size 
   content: div
   dialog: Dialog
   lbl?: string |Widget
   footer?: Row
+  isFullScreen?: boolean
   constructor(o: {
     label?: string | Widget,
     size?: Size,
-    footer?: Row
+    footer?: Row,
+    isFullScreen?: boolean
   }) {
     super();
     
@@ -2288,6 +2313,8 @@ class ModalModern extends div {
 
     this.lbl = o.label;
     this.footer = o.footer;
+    this.size = o.size
+    this.isFullScreen = o.isFullScreen
 
     this.dialog = new Dialog();
     this.content = new div().AddStyle({
@@ -2314,9 +2341,22 @@ class ModalModern extends div {
       this.hide();
     });
 
+    let size = `798px`;
+    if (this.size != undefined)
+      if (this.size == Size.Xs) {
+        size = `298px`
+      } else if (this.size == Size.Sm) {
+        size = `480px`
+      } else if (this.size == Size.Md) {
+        size = `798px`
+      } else if (this.size == Size.Lg) {
+        size = `994px`
+      }
+
     return await this.dialog.show({
       padding: 7,
-      width: "720px",
+      width: `${size}`,
+      wholeScreen: this.isFullScreen != undefined && this.isFullScreen,
       widget: new Column([
         new Row([this.lbl != undefined ? this.lbl : "", exit], Flex.SpaceBetween).AddStyle({"height": "30px", "margin-bottom": "5px"}),
         this.content,
@@ -3096,6 +3136,7 @@ class SelectBoxAddon extends div{
           if (o.filter?.url != undefined) {
             // add delay
             clearTimeout(time);
+            //@ts-ignore
             time = setTimeout(() => {
               searchfn();
             }, o.filter.delay != undefined ? o.filter.delay : 555);  
@@ -3301,7 +3342,7 @@ class Dialog extends Panel {
       });
     }
 
-    if (o.wholeScreen != undefined) {
+    if (o.wholeScreen != undefined && o.wholeScreen) {
       body.AddStyle({
         "width": "100%",
         "height": "100%",
