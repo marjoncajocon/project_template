@@ -2268,6 +2268,70 @@ class Column extends div {
   }
 }
 
+class ModalModern extends div {
+  // promise: Promise<unknown>
+  // resolvefn: (value: unknown) => void = () => {}
+  content: div
+  dialog: Dialog
+  lbl?: string |Widget
+  footer?: Row
+  constructor(o: {
+    label?: string | Widget,
+    size?: Size,
+    footer?: Row
+  }) {
+    super();
+    
+    // this.promise = new Promise((resolve) => {
+    //   this.resolvefn = resolve;
+    // });
+
+    this.lbl = o.label;
+    this.footer = o.footer;
+
+    this.dialog = new Dialog();
+    this.content = new div().AddStyle({
+      "max-height": "calc(100vh - 100px)",
+      "overflow-y": "auto",
+      "overflow-x": "hidden"
+    });
+    //@ts-ignore
+    document.activeElement.blur();
+  }
+
+  add(obj: Widget) {
+    this.content.Add(obj);
+  }
+
+  async show() {
+
+
+    const exit = new Button({text: "x", color: Color.Danger, size: Size.Xs}).AddStyle({
+          "width": "30px"
+    });
+
+    exit.AddEventListener("click", () => {
+      this.hide();
+    });
+
+    return await this.dialog.show({
+      padding: 7,
+      width: "720px",
+      widget: new Column([
+        new Row([this.lbl != undefined ? this.lbl : "", exit], Flex.SpaceBetween).AddStyle({"height": "30px", "margin-bottom": "5px"}),
+        this.content,
+        this.footer != undefined ? this.footer.AddStyle({"height": "40px", "margin-top": "5px"}) : new Row([]).AddStyle({"height": "40px", "margin-top": "5px"}),
+      ])
+    });
+
+  }
+
+  hide(msg: string|null = null) {
+    this.dialog.close(msg);
+  }
+}
+
+
 class Modal extends div {
   backdrop: div
   promise: Promise<unknown>
@@ -2365,6 +2429,7 @@ class Modal extends div {
   async show() {
 
     this.body.appendChild(this.control);
+    this.body.classList.add("modal-open");
 
     super.AddStyle({
       display: "block"
@@ -2390,6 +2455,8 @@ class Modal extends div {
     });
     super.DeleteClass("in");
     
+    this.body.classList.remove("modal-open");
+
     super.Delete();
     this.backdrop.Delete();
   }
@@ -3178,11 +3245,25 @@ class Dialog extends Panel {
 
   constructor() {
     super();
-    super.AddClass("bs-3-dialog");
+
+    super.AddStyle({
+      "position": "fixed",
+      "top": "0",
+      "left": "0",
+      "width": "100%",
+      "height": "100vh",
+      "background-color": "rgba(0, 0, 0, 0.8)",
+      "z-index": "2000",
+      "display": "flex",
+      "align-items": "center",
+      "justify-content": "center",
+      "overflow-y": "auto"
+    })
 
     this.promise = new Promise((resolve) => {
       this.resolvefn = resolve;
     });
+
   }
 
   async show(o: {
@@ -3190,11 +3271,22 @@ class Dialog extends Panel {
     dismissable?: boolean,
     width?: string,
     height?: string,
-    wholeScreen?: boolean
+    wholeScreen?: boolean,
+    padding?: number
   }) {
 
     // add the componts here 
-    const body = new Panel().AddClass("bs-3-dialog-body");
+    const body = new Panel().AddStyle({
+      "background-color": "white",
+      "border-radius": "5px",
+      "max-width": "98%"
+    });
+
+    if (o.padding != undefined) {
+      body.AddStyle({
+        padding: `${o.padding}px`
+      });
+    }
 
 
     if (o.width != undefined) {
@@ -3287,6 +3379,8 @@ const Alert = async (msg: string, color?: Color) => {
   });
 
   return dialog.show({
+    padding: 7,
+    width: "480px",
     widget: new Column([
       new center().Add(logo),
       20,
@@ -3336,6 +3430,8 @@ const Confirm = async (msg: string, color?: Color) => {
   });
 
   return dialog.show({
+    padding: 7,
+    width: "480px",
     widget: new Column([
       new center().Add(logo),
       20,
@@ -3670,5 +3766,6 @@ export {
   CardV2,
   Dialog,
   Tab2,
-  DataTable
+  DataTable,
+  ModalModern
 };
