@@ -2249,12 +2249,34 @@ class Row extends div {
 
 
 class Column extends div {
-  constructor(obj: (Widget|string|number)[]) {
+  constructor(obj: (Widget|string|number)[], justifyContent?: Flex, alignItem?: Flex, direction?: FlexDirection) {
     super();
 
     super.AddStyle({
       display: "block"
-    })
+    });
+
+    if (direction != undefined) {
+      super.AddStyle({
+        "flex-direction": direction
+      });
+    }
+
+    if (alignItem != undefined) {
+      super.AddStyle({
+        "align-items": alignItem
+      });
+    } else {
+      super.AddStyle({
+        "align-items": Flex.BaseLine
+      });
+    }
+
+    if (justifyContent != undefined) {
+      super.AddStyle({
+        "justify-content": justifyContent
+      })
+    }
 
     for (const item of obj) {
       if (item instanceof Widget) {
@@ -2267,6 +2289,88 @@ class Column extends div {
     }
   }
 }
+
+class ModalModern extends div {
+  // promise: Promise<unknown>
+  // resolvefn: (value: unknown) => void = () => {}
+  size?: Size 
+  content: div
+  dialog: Dialog
+  lbl?: string |Widget
+  footer?: Row
+  isFullScreen?: boolean
+  constructor(o: {
+    label?: string | Widget,
+    size?: Size,
+    footer?: Row,
+    isFullScreen?: boolean
+  }) {
+    super();
+    
+    // this.promise = new Promise((resolve) => {
+    //   this.resolvefn = resolve;
+    // });
+
+    this.lbl = o.label;
+    this.footer = o.footer;
+    this.size = o.size
+    this.isFullScreen = o.isFullScreen
+
+    this.dialog = new Dialog();
+    this.content = new div().AddStyle({
+      "max-height": "calc(100vh - 100px)",
+      "overflow-y": "auto",
+      "overflow-x": "hidden"
+    });
+    //@ts-ignore
+    document.activeElement.blur();
+  }
+
+  add(obj: Widget) {
+    this.content.Add(obj);
+  }
+
+  async show() {
+
+
+    const exit = new Button({text: "x", color: Color.Danger, size: Size.Xs}).AddStyle({
+          "width": "30px"
+    });
+
+    exit.AddEventListener("click", () => {
+      this.hide();
+    });
+
+    let size = `798px`;
+    if (this.size != undefined)
+      if (this.size == Size.Xs) {
+        size = `298px`
+      } else if (this.size == Size.Sm) {
+        size = `480px`
+      } else if (this.size == Size.Md) {
+        size = `798px`
+      } else if (this.size == Size.Lg) {
+        size = `994px`
+      }
+
+    return await this.dialog.show({
+      padding: 7,
+      width: `${size}`,
+      wholeScreen: this.isFullScreen != undefined && this.isFullScreen,
+      widget: new Column([
+        new Row([this.lbl != undefined ? this.lbl : "", exit], Flex.SpaceBetween).AddStyle({"height": "30px", "margin-bottom": "5px"}),
+        this.content,
+        this.footer != undefined ? this.footer.AddStyle({"height": "40px", "margin-top": "5px"}) : new Row([]).AddStyle({"height": "40px", "margin-top": "5px"}),
+      ])
+    });
+
+  }
+
+  hide(msg: string|null = null) {
+    this.dialog.close(msg);
+  }
+}
+
 
 class Modal extends div {
   backdrop: div
@@ -2365,6 +2469,7 @@ class Modal extends div {
   async show() {
 
     this.body.appendChild(this.control);
+    this.body.classList.add("modal-open");
 
     super.AddStyle({
       display: "block"
@@ -2390,6 +2495,8 @@ class Modal extends div {
     });
     super.DeleteClass("in");
     
+    this.body.classList.remove("modal-open");
+
     super.Delete();
     this.backdrop.Delete();
   }
@@ -3029,6 +3136,7 @@ class SelectBoxAddon extends div{
           if (o.filter?.url != undefined) {
             // add delay
             clearTimeout(time);
+            //@ts-ignore
             time = setTimeout(() => {
               searchfn();
             }, o.filter.delay != undefined ? o.filter.delay : 555);  
@@ -3178,11 +3286,25 @@ class Dialog extends Panel {
 
   constructor() {
     super();
-    super.AddClass("bs-3-dialog");
+
+    super.AddStyle({
+      "position": "fixed",
+      "top": "0",
+      "left": "0",
+      "width": "100%",
+      "height": "100vh",
+      "background-color": "rgba(0, 0, 0, 0.8)",
+      "z-index": "2000",
+      "display": "flex",
+      "align-items": "center",
+      "justify-content": "center",
+      "overflow-y": "auto"
+    })
 
     this.promise = new Promise((resolve) => {
       this.resolvefn = resolve;
     });
+
   }
 
   async show(o: {
@@ -3190,11 +3312,22 @@ class Dialog extends Panel {
     dismissable?: boolean,
     width?: string,
     height?: string,
-    wholeScreen?: boolean
+    wholeScreen?: boolean,
+    padding?: number
   }) {
 
     // add the componts here 
-    const body = new Panel().AddClass("bs-3-dialog-body");
+    const body = new Panel().AddStyle({
+      "background-color": "white",
+      "border-radius": "5px",
+      "max-width": "98%"
+    });
+
+    if (o.padding != undefined) {
+      body.AddStyle({
+        padding: `${o.padding}px`
+      });
+    }
 
 
     if (o.width != undefined) {
@@ -3209,7 +3342,7 @@ class Dialog extends Panel {
       });
     }
 
-    if (o.wholeScreen != undefined) {
+    if (o.wholeScreen != undefined && o.wholeScreen) {
       body.AddStyle({
         "width": "100%",
         "height": "100%",
@@ -3287,6 +3420,8 @@ const Alert = async (msg: string, color?: Color) => {
   });
 
   return dialog.show({
+    padding: 7,
+    width: "480px",
     widget: new Column([
       new center().Add(logo),
       20,
@@ -3336,6 +3471,8 @@ const Confirm = async (msg: string, color?: Color) => {
   });
 
   return dialog.show({
+    padding: 7,
+    width: "480px",
     widget: new Column([
       new center().Add(logo),
       20,
@@ -3564,6 +3701,58 @@ class DataTable extends div {
 
 }
 
+
+class NetworkQueue {
+  limit: number;
+  activeCount: number = 0;
+  queue: Array<() => Promise<void>> = [];
+  resolving: boolean = false;
+
+  constructor(limit: number = 1) {
+    this.limit = limit;
+  }
+
+  add(fn: () => Promise<unknown>) {
+    this.queue.push(() => this.execute(fn));
+    this.process();
+    return this;
+  }
+
+  private async execute(fn: () => Promise<unknown>) {
+    this.activeCount++;
+    try {
+      await fn();
+    } catch (error) {
+      console.error('Request failed:', error);
+    } finally {
+      this.activeCount--;
+      this.process(); // Continue processing remaining tasks
+    }
+  }
+
+  private process() {
+    // Launch new promises while under limit and queue not empty
+    while (this.activeCount <= this.limit && this.queue.length > 0) {
+      const task = this.queue.shift();
+      if (task) {
+        task();
+      }
+    }
+  }
+}
+
+/*
+  
+  const net = new NetworkQueue(10); limit of 10 queue
+
+  for (const fn of reqs) {
+    net.Add(fn);
+  } 
+
+*/
+// utils
+export {NetworkQueue};
+
 export {
   Color,
   Size,
@@ -3618,5 +3807,6 @@ export {
   CardV2,
   Dialog,
   Tab2,
-  DataTable
+  DataTable,
+  ModalModern
 };

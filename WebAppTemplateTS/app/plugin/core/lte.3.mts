@@ -44,6 +44,8 @@ class LTELoaderProgress extends Dialog {
     this.progress = progress;
 
     super.show({
+      width: "480px",
+      padding: 7,
       widget: new Column([
         o.title,
         30,
