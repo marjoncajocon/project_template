@@ -661,7 +661,7 @@ class ProgressBar extends div {
     }
   }
 
-  update(percent: number, showText: boolean = false) {
+  update(percent: number, showText: boolean = false, text: string = "") {
     this.bar.AddStyle(`${percent}%`);
     this.bar.AddAttr({
       "aria-valuenow": `${percent}`,
@@ -672,7 +672,13 @@ class ProgressBar extends div {
 
     if (showText) {
       this.bar.Clear();
-      this.bar.Add(new Text(`${percent}%`));
+      
+      if (text == "")
+        this.bar.Add(new Text(`${percent}%`));
+      else 
+        this.bar.Add(new Row([
+          new Text(`${percent}%`), 5, new Text(text)
+        ]));
     }
   }
 
