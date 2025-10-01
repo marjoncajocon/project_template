@@ -3807,12 +3807,13 @@ class Loader extends div {
       backdropOpacity: 0.1,
       borderRadius: "5px"
     });
+    return this;
   }
 
   hide() {
     this.dialog.Hide();
   }
-  
+
 }
 export {NetworkQueue};
 
