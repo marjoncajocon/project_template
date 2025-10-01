@@ -2367,7 +2367,8 @@ class ModalModern extends div {
         new Row([this.lbl != undefined ? this.lbl : "", exit], Flex.SpaceBetween).AddStyle({"height": "30px", "margin-bottom": "5px"}),
         this.content,
         this.footer != undefined ? this.footer.AddStyle({"height": "40px", "margin-top": "5px"}) : new Row([]).AddStyle({"height": "40px", "margin-top": "5px"}),
-      ])
+      ]),
+      backdropOpacity: 0.3
     });
 
   }
@@ -3319,15 +3320,37 @@ class Dialog extends Panel {
     width?: string,
     height?: string,
     wholeScreen?: boolean,
-    padding?: number
+    padding?: number,
+    opacity?: number,
+    backdropOpacity?: number,
+    borderRadius?: string,
   }) {
 
     // add the componts here 
     const body = new Panel().AddStyle({
       "background-color": "white",
       "border-radius": "5px",
-      "max-width": "98%"
+      "max-width": "98%",
+      "position": "relative"
     });
+
+    if (o.borderRadius != undefined) {
+      body.AddStyle({
+        "border-radius": `${o.borderRadius}`
+      });
+    }
+
+    if (o.opacity != undefined) {
+      body.AddStyle({
+        "background-color": `rgba(0, 0, 0, ${o.opacity})`
+      });
+    }
+
+    if (o.backdropOpacity != undefined) {
+      super.AddStyle({
+        "background-color": `rgba(0, 0, 0, ${o.backdropOpacity})`
+      });
+    }
 
     if (o.padding != undefined) {
       body.AddStyle({
@@ -3757,9 +3780,44 @@ class NetworkQueue {
 
 */
 // utils
+
+class Loader extends div {
+  dialog: Dialog
+  constructor() {
+    super();
+  
+    this.dialog = new Dialog();
+    
+  }
+
+  show() {
+    this.dialog.show({
+      widget: new Column([
+        new Panel().AddClass("loader002").AddStyle({
+          "position": "absolute",
+          "left": "0",
+          "right": "0",
+          "bottom": "0",
+          "top": "0",
+          "margin": "auto"
+        })
+      ]),
+      width: "80px",
+      height: "80px",
+      backdropOpacity: 0.1,
+      borderRadius: "5px"
+    });
+  }
+
+  hide() {
+    this.dialog.Hide();
+  }
+  
+}
 export {NetworkQueue};
 
 export {
+  Loader,
   Color,
   Size,
   Icons,
