@@ -6,6 +6,7 @@ import MarAdmin from "./plugin/core/theme/mar/mar.mts";
 const MyApp = new Window();
 
 const mar = new MarAdmin({
+  logo: "fdsa",
   title: "My App",
   menu: new Row([
     new Button({text: "message"}), 5, new Button({text: "sign out"})

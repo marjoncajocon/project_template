@@ -27,12 +27,20 @@ class MarAdmin extends div {
         menu?: Row
     }) {
         const top = new div().AddClass("mar-top-bar");
-
-        const title = o.title != undefined ? o.title : "";
+        
+        const logo = new div().AddStyle({
+            "width": "30px",
+            "height": "30px",
+            "border-radius": "50%",
+            "border": "1px solid grey"
+        });
 
         top.Add(
             new Row([
-                new Text({text: title}).AddStyle({"margin-left": "5px", "fong-weight": "bold"}),
+                new Row([
+                    o.logo != undefined ? logo : "",
+                    o.title != undefined ? new Text({text: o.title}).AddStyle({"margin-left": "5px", "fong-weight": "bold"}) : ""
+                ], undefined, Flex.Center).AddStyle({"height": "100%", "margin-left": "5px"}),
                 o.menu != undefined ? o.menu : ""
             ], Flex.SpaceBetween, Flex.Center).AddStyle({"height": "100%"})
         );
