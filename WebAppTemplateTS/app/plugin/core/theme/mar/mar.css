@@ -1,0 +1,34 @@
+.mar-sider {
+    width: 230px;
+    height: 100%;
+    background-color: yellow;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 101;
+    padding-top: 50px;
+}
+
+.mar-top-bar {
+    width: 100%;
+    height: 50px;
+    background-color: white;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-left: 230px;
+    z-index: 99;
+}
+
+.mar-body {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background-color: #f3f3f3;
+    padding-top: 50px;
+    padding-left: 230px;
+}
