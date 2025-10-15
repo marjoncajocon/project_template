@@ -7,7 +7,8 @@ class MarMenu extends div {
     constructor(o: {
         logo?: Icon,
         title?: string,
-        menu?: MarMenu[]
+        menu?: MarMenu[],
+        click?: () => void
     }) {
         
         super();        
@@ -36,15 +37,29 @@ class MarMenu extends div {
         }
 
         super.Add(btn);
+        const drop = new div();
 
         if (o.menu != undefined) {
+            super.Add(drop);
+            drop.AddClass("mar-active");
             for (const sub of o.menu) {
-                sub.btn.AddStyle({
-                    "padding-left": "10px",
-                    "background-color": "rgba(0, 0, 0, 0.1)"
+                sub.AddStyle({
+                    "border": "none"
                 });
-                super.Add(sub);
+                drop.Add(sub);
             }
+            this.btn.AddEventListener("click", () => {
+                if (drop.HasClass("mar-active")) {
+                    drop.DeleteClass("mar-active");
+                } else {
+                    drop.AddClass("mar-active");
+                }
+            });
+        } else {
+            this.btn.AddEventListener("click", () => {
+                if (o.click != undefined)
+                    o.click();
+            });
         }
 
     }

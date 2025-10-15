@@ -57,3 +57,7 @@
 .mar-menu:hover {
     background-color: rgba(0, 0, 0, 0.2);
 }
+
+.mar-active {
+    display: none;
+}
