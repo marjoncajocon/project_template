@@ -3,6 +3,7 @@ import { button, div, Widget } from "../../core.mts";
 import "./mar.css"
 
 class MarMenu extends div {
+    btn: div
     constructor(o: {
         logo?: Icon,
         title?: string,
@@ -15,6 +16,8 @@ class MarMenu extends div {
         
         btn.AddClass("mar-menu");
 
+        this.btn = btn;
+
         const arr: (string | number | Widget)[] = [];
         
         arr.push(20);
@@ -25,7 +28,7 @@ class MarMenu extends div {
         }
 
         if (o.title != undefined) {
-            arr.push(new Text({text: o.title}).AddStyle({"font-size": "16px"}));
+            arr.push(new Text({text: o.title}).AddStyle({"font-size": "12px"}));
         }
 
         if (o.title != undefined) {
@@ -35,7 +38,13 @@ class MarMenu extends div {
         super.Add(btn);
 
         if (o.menu != undefined) {
-            
+            for (const sub of o.menu) {
+                sub.btn.AddStyle({
+                    "padding-left": "10px",
+                    "background-color": "rgba(0, 0, 0, 0.1)"
+                });
+                super.Add(sub);
+            }
         }
 
     }

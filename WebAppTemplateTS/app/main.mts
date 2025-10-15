@@ -14,7 +14,10 @@ const mar = new MarAdmin({
   ]),
   sideMenu: [
     new MarMenu({title: "Dashboard", logo: new Icon(Icons.Dashboard)}),
-    new MarMenu({title: "Profile", logo: new Icon(Icons.User)}),
+    new MarMenu({title: "Profile", logo: new Icon(Icons.User), menu: [
+      new MarMenu({title: "Edit Profile", logo: new Icon(Icons.OkCircle)}),
+      new MarMenu({title: "Update Password", logo: new Icon(Icons.OkCircle), menu: [new MarMenu({title: "Lock", menu: [new MarMenu({title: "Inner Lock"})]})]})
+    ]}),
     new MarMenu({title: "Setting", logo: new Icon(Icons.Cog)})
   ]
 });
