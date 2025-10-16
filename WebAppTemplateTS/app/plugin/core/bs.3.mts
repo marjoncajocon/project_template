@@ -2254,6 +2254,54 @@ class Row extends div {
 }
 
 
+class Column2 extends div {
+  constructor(obj: (Widget|string|number)[], justifyContent?: Flex, alignItem?: Flex, direction?: FlexDirection) {
+    super();
+
+    super.AddStyle({
+      display: "flex",
+      "flex-direction": "column"
+    });
+
+    if (direction != undefined) {
+      super.AddStyle({
+        "flex-direction": direction
+      });
+    }
+
+
+
+    if (alignItem != undefined) {
+      super.AddStyle({
+        "align-items": alignItem
+      });
+    } else {
+      super.AddStyle({
+        "align-items": Flex.BaseLine
+      });
+    }
+    
+
+
+    if (justifyContent != undefined) {
+      super.AddStyle({
+        "justify-content": justifyContent
+      })
+    }
+
+    for (const item of obj) {
+      if (item instanceof Widget) {
+        super.Add(item);
+      } else if (typeof(item) == "number") {
+        super.Add(new div().AddStyle({height: `${item}px`}));
+      } else if (typeof(item) == "string") {
+        super.Add(new Text({text: item}));
+      }
+    }
+  }
+}
+
+
 class Column extends div {
   constructor(obj: (Widget|string|number)[], justifyContent?: Flex, alignItem?: Flex, direction?: FlexDirection) {
     super();
@@ -3877,6 +3925,18 @@ class DatePicker extends Panel {
   }
 }
 
+class Center extends center {
+  constructor(o: string|Widget) {
+    super();
+    if (typeof(o) == "string") {
+      super.Text(o);
+    } else {
+      super.Add(o);
+    }
+
+  }
+}
+
 export {NetworkQueue};
 
 // plugin
@@ -3899,6 +3959,8 @@ export {
 };
 
 export {
+  Center,
+  Column2,
   Container,
   ContainerFluid,
   Confirm,

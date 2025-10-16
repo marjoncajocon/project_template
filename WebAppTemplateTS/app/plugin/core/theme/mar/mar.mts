@@ -1,5 +1,5 @@
-import { Button, Color, Column, Flex, Icon, Icons, Row, Text } from "../../bs.3.mts";
-import { button, div, Widget } from "../../core.mts";
+import { Button, Center, Color, Column, Column2, Flex, Icon, Icons, InputType, Row, Text, TextField, TextFieldAddon } from "../../bs.3.mts";
+import { button, div, img, Widget } from "../../core.mts";
 import "./mar.css"
 
 class MarMenu extends div {
@@ -56,7 +56,7 @@ class MarMenu extends div {
             for (const sub of o.menu) {
                 sub.btn.AddStyle({
                     "border": "none",
-                    "padding-left": "30px"
+                    "padding-left": "40px"
                 });
                 drop.Add(sub);
             }
@@ -125,7 +125,9 @@ class MarAdmin extends div {
 
     route(obj: Widget) {
         this.bbody.Clear();
-        this.bbody.Add(obj);
+        this.bbody.Add(new div().AddStyle({
+            "padding": "5px"
+        }).Add(obj));
     }
 
     initTopBar(o: {
@@ -231,6 +233,59 @@ class MarAdmin extends div {
         return sider;
     }
 
+}
+
+
+class MarLogin extends div {
+    constructor() {
+        super();
+        const loginw = new div().AddStyle({
+            width: "300px",
+            height: "280px",
+            "box-shadow": "0 0 2px rgba(0, 0, 0, 0.5)",
+            "border-radius": "10px",
+            "padding": "20px"
+        });
+
+        const title = new Text({text: "template login"}).AddStyle({
+            "font-weight": "bold",
+            "letter-spacing": "2px"
+        });
+
+        const logo = new img().AddStyle({
+            "width": "50px",
+            "height": "50px",
+            "border-radius": "50%"
+        });
+        
+        const username = new TextFieldAddon({prefix: new Icon(Icons.User), placeholder: "username"});
+
+        const password = new TextFieldAddon({prefix: new Icon(Icons.Lock), placeholder: "password", type: InputType.Password});
+
+        const submit = new Button({text: new Row([new Icon(Icons.LogIn), 5, "Sign In"]), color: Color.Success});
+      
+        loginw.Add(new Column2([
+            new Row([new Center(title)], undefined, Flex.Center),
+            10,
+            new Center(logo),
+            10,
+            username,
+            10,
+            password,
+            10,
+            submit
+        ], undefined, Flex.Center));
+
+        
+
+        super.Add(
+            new Column2([
+                loginw
+            ], Flex.Center, Flex.Center).AddStyle({
+                "height": "100vh"
+            })
+        );
+    }
 }
 
 export {MarMenu};
