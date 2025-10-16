@@ -96,6 +96,7 @@ class MarMenu extends div {
 }
 
 class MarAdmin extends div {
+    bbody: div
     constructor(o: {
         logo?: string,
         title?: string,
@@ -110,16 +111,21 @@ class MarAdmin extends div {
             sideBarColor: o.sideBarColor
         });
 
-        const body = this.initBody();
+        this.bbody = this.initBody();
 
         this.initTopBar({
             title: o.title,
             logo: o.logo,
             menu: o.menu,
-            body: body,
+            body: this.bbody,
             sider: sider,
         });
         
+    }
+
+    route(obj: Widget) {
+        this.bbody.Clear();
+        this.bbody.Add(obj);
     }
 
     initTopBar(o: {
@@ -194,7 +200,6 @@ class MarAdmin extends div {
     initBody() {
 
         const body = new div().AddClass("mar-body");
-        body.Add(new Button({text: "test", color: Color.Primary}));
         super.Add(body);
 
         return body;

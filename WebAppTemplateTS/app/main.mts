@@ -23,10 +23,12 @@ const mar = new MarAdmin({
   sideMenu: [
     new MarMenu({isMainMenu: true, title: "Dashboard", logo: new Icon(Icons.Dashboard), click: () => {
       console.log("dashboard clicked!");
+
+      mar.route(new Button({text: "Dashboard", color: Color.Primary}));
     }}),
     new MarMenu({isMainMenu: true, title: "Profile", logo: new Icon(Icons.User), menu: [
       new MarMenu({title: "Edit Profile", click: () => {
-
+        mar.route(new Button({text: "Edit Profile"}));
       }}),
       new MarMenu({title: "Update Password", menu: [new MarMenu({title: "Lock", menu: [new MarMenu({title: "Inner Lock"})]})]})
     ]}),
