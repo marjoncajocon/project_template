@@ -80,8 +80,15 @@ class MarMenu extends div {
 
         } else {
             this.btn.AddEventListener("click", () => {
-                if (o.click != undefined)
+                if (o.click != undefined) {
+                    const d = document.getElementsByClassName("mar-menu");
+                    for (const i of d) {
+                        i.classList.remove("mar-link-active");
+                    }
+
+                    this.btn.AddClass("mar-link-active");
                     o.click();
+                }
             });
         }
 

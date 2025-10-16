@@ -17,7 +17,9 @@ const mar = new MarAdmin({
       console.log("dashboard clicked!");
     }}),
     new MarMenu({isMainMenu: true, title: "Profile", logo: new Icon(Icons.User), menu: [
-      new MarMenu({title: "Edit Profile"}),
+      new MarMenu({title: "Edit Profile", click: () => {
+
+      }}),
       new MarMenu({title: "Update Password", menu: [new MarMenu({title: "Lock", menu: [new MarMenu({title: "Inner Lock"})]})]})
     ]}),
     new MarMenu({
@@ -26,7 +28,9 @@ const mar = new MarAdmin({
       logo: new Icon(Icons.Cog),
       menu: [
         new MarMenu({title: "Uacs Code"}),
-        new MarMenu({title: "Sample setting"})
+        new MarMenu({title: "Sample setting", click: () => {
+          
+        }})
       ]
     })
   ]
