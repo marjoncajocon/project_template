@@ -43,6 +43,12 @@
     /* border-bottom: 1px solid rgba(0, 0, 0, 0.1); */
     border: 1px solid rgba(0, 0, 0, 0.1);
     position: relative;
+    user-select: none;
+    /* box-shadow: 0 0 2px rgba(255, 255, 255, 0.3); */
+}
+
+.mar-menu-main {
+    box-shadow: rgba(0, 0, 0, 0.25) 0 1px 0, inset rgba(255, 255, 255, 0.16) 0 1px 0;
 }
 
 .mar-menu:first-child {

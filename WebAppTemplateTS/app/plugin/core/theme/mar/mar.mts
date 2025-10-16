@@ -8,7 +8,8 @@ class MarMenu extends div {
         logo?: Icon,
         title?: string,
         menu?: MarMenu[],
-        click?: () => void
+        click?: () => void,
+        isMainMenu?: boolean,
     }) {
         
         super();        
@@ -21,8 +22,6 @@ class MarMenu extends div {
 
         const arr: (string | number | Widget)[] = [];
         
-        arr.push(20);
-
         if (o.logo != undefined) {
             arr.push(o.logo);
             arr.push(8);
@@ -36,25 +35,49 @@ class MarMenu extends div {
             btn.Add(new Row(arr, undefined, Flex.Center).AddStyle({"height": "100%"}));
         }
 
+        this.btn.AddStyle({
+            "padding-left": "20px"
+        });
+
         super.Add(btn);
-        const drop = new div();
+        const drop = new div().AddStyle({
+            "background-color": "rgba(0, 0, 0, 0.2)"
+        });
 
         if (o.menu != undefined) {
+
             super.Add(drop);
+
             drop.AddClass("mar-active");
+            // drop.AddStyle({
+            //     "padding-left": "20px"
+            // });
+            
             for (const sub of o.menu) {
-                sub.AddStyle({
-                    "border": "none"
+                sub.btn.AddStyle({
+                    "border": "none",
+                    "padding-left": "30px"
                 });
                 drop.Add(sub);
             }
+
             this.btn.AddEventListener("click", () => {
                 if (drop.HasClass("mar-active")) {
                     drop.DeleteClass("mar-active");
+                    
+                    if (o.isMainMenu != undefined && o.isMainMenu) {
+                        this.btn.AddClass("mar-menu-main");
+                    }
                 } else {
                     drop.AddClass("mar-active");
+
+                    if (o.isMainMenu != undefined && o.isMainMenu) {
+                        this.btn.DeleteClass("mar-menu-main");
+                    }
                 }
+
             });
+
         } else {
             this.btn.AddEventListener("click", () => {
                 if (o.click != undefined)
