@@ -105,24 +105,29 @@ class MarAdmin extends div {
     }) {
         super();
 
-        this.initTopBar({
-            title: o.title,
-            logo: o.logo,
-            menu: o.menu
-        });
-        
-        this.initSider({
+        const sider = this.initSider({
             sidebar: o.sideMenu,
             sideBarColor: o.sideBarColor
         });
 
-        this.initBody();
+        const body = this.initBody();
+
+        this.initTopBar({
+            title: o.title,
+            logo: o.logo,
+            menu: o.menu,
+            body: body,
+            sider: sider,
+        });
+        
     }
 
     initTopBar(o: {
         logo?: string,
         title?: string,
-        menu?: Row
+        menu?: Row,
+        body: div,
+        sider: div,
     }) {
 
         const bar = new button().Add(new Icon(Icons.MenuHamburger)).AddStyle({
@@ -154,13 +159,45 @@ class MarAdmin extends div {
         );
 
         super.Add(top);
+
+        let flag = true;
+
+        bar.AddEventListener("click", () => {
+            if (flag) {
+                o.sider.AddStyle({
+                    "left": "-230px"
+                });
+                o.body.AddStyle({
+                    "padding-left": "0px"
+                });
+                top.AddStyle({
+                    "padding-left": "0px"
+                });
+            }  else {
+                o.sider.AddStyle({
+                    "left": "0px"
+                });
+                o.body.AddStyle({
+                    "padding-left": "230px"
+                });
+                top.AddStyle({
+                    "padding-left": "230px"
+                });
+            }
+
+            flag = !flag;
+
+        });
+
     }
 
     initBody() {
 
         const body = new div().AddClass("mar-body");
-        body.Add(new Button({text: "test"}));
+        body.Add(new Button({text: "test", color: Color.Primary}));
         super.Add(body);
+
+        return body;
     }
 
     
@@ -185,6 +222,8 @@ class MarAdmin extends div {
         }
 
         super.Add(sider);
+
+        return sider;
     }
 
 }

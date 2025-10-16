@@ -10,7 +10,15 @@ const mar = new MarAdmin({
   title: "My App",
   sideBarColor: "#2a3f54",
   menu: new Row([
-    new Button({text: "message"}), 5, new Button({text: "sign out"})
+    new Button({text: new Icon(Icons.Bell), color: Color.Primary}).AddStyle({
+      "width": "25px",
+      "height": "30px",
+      "padding": "0px"
+    }), 10, new Button({text: new Icon(Icons.LogOut), color: Color.Danger}).AddStyle({
+      "width": "25px",
+      "height": "30px",
+      "padding": "0px"
+    }), 5
   ]),
   sideMenu: [
     new MarMenu({isMainMenu: true, title: "Dashboard", logo: new Icon(Icons.Dashboard), click: () => {
@@ -29,7 +37,7 @@ const mar = new MarAdmin({
       menu: [
         new MarMenu({title: "Uacs Code"}),
         new MarMenu({title: "Sample setting", click: () => {
-          
+
         }})
       ]
     })
