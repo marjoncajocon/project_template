@@ -2378,6 +2378,17 @@ class ModalModern extends div {
       "overflow-y": "auto",
       "overflow-x": "hidden"
     });
+
+    if (this.isMaxHeight != undefined && this.isMaxHeight) {
+
+      this.content = new div().AddStyle({
+        "height": "calc(100vh - 110px)",
+        "overflow-y": "auto",
+        "overflow-x": "hidden"
+      });
+
+    }
+
     //@ts-ignore
     document.activeElement.blur();
   }
