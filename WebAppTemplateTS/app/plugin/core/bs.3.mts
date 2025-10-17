@@ -2254,6 +2254,54 @@ class Row extends div {
 }
 
 
+class Column2 extends div {
+  constructor(obj: (Widget|string|number)[], justifyContent?: Flex, alignItem?: Flex, direction?: FlexDirection) {
+    super();
+
+    super.AddStyle({
+      display: "flex",
+      "flex-direction": "column"
+    });
+
+    if (direction != undefined) {
+      super.AddStyle({
+        "flex-direction": direction
+      });
+    }
+
+
+
+    if (alignItem != undefined) {
+      super.AddStyle({
+        "align-items": alignItem
+      });
+    } else {
+      super.AddStyle({
+        "align-items": Flex.BaseLine
+      });
+    }
+    
+
+
+    if (justifyContent != undefined) {
+      super.AddStyle({
+        "justify-content": justifyContent
+      })
+    }
+
+    for (const item of obj) {
+      if (item instanceof Widget) {
+        super.Add(item);
+      } else if (typeof(item) == "number") {
+        super.Add(new div().AddStyle({height: `${item}px`}));
+      } else if (typeof(item) == "string") {
+        super.Add(new Text({text: item}));
+      }
+    }
+  }
+}
+
+
 class Column extends div {
   constructor(obj: (Widget|string|number)[], justifyContent?: Flex, alignItem?: Flex, direction?: FlexDirection) {
     super();
@@ -3815,7 +3863,87 @@ class Loader extends div {
   }
 
 }
+
+class DatePicker extends Panel {
+  constructor() {
+    
+    super();
+
+    super.AddStyle({
+      "width": "320px",
+      "height": "300px",
+      "border": "1px solid grey"
+    });
+
+    let cur_date = new Date();
+    const last_day = new Date(cur_date.getFullYear(), cur_date.getMonth() + 1, 0).getDate();
+
+    let i = 1;
+    let start_flag = false;
+    let series = 1;
+    let isbreak = false;
+    for (let row = 1; row <= 6; row++) {
+      for (let col = 1; col <= 7; col++) {  
+        const square = new div().AddStyle({
+          "width": "30px",
+          "height":"30px",
+          "border": "1px solid blue",
+          "display": "inline-block",
+          "text-align": "center",
+          "cursor": "pointer"
+        });
+        square.Html("-");
+        const idx_week = cur_date.getDay()-1;
+
+        super.Add(square);
+        if (i == idx_week) {
+          start_flag = true;
+        }
+
+        if (start_flag) {
+          // here the starting of ploting the date
+          square.Text(`${series}`);
+          if (series == last_day) {
+            isbreak = true
+            break;          
+          }
+          
+
+          
+          series++;
+        }
+
+        i++;
+      }
+      super.Add(new div());
+      if (isbreak) {
+        break;
+      }
+    }
+
+  
+  }
+}
+
+class Center extends center {
+  constructor(o: string|Widget) {
+    super();
+    if (typeof(o) == "string") {
+      super.Text(o);
+    } else {
+      super.Add(o);
+    }
+
+  }
+}
+
 export {NetworkQueue};
+
+// plugin
+
+export {
+  DatePicker
+}
 
 export {
   Loader,
@@ -3831,6 +3959,8 @@ export {
 };
 
 export {
+  Center,
+  Column2,
   Container,
   ContainerFluid,
   Confirm,
