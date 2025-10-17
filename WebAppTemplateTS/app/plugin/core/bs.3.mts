@@ -2353,11 +2353,13 @@ class ModalModern extends div {
   lbl?: string |Widget
   footer?: Row
   isFullScreen?: boolean
+  isMaxHeight?: boolean
   constructor(o: {
     label?: string | Widget,
     size?: Size,
     footer?: Row,
-    isFullScreen?: boolean
+    isFullScreen?: boolean,
+    isMaxHeight?: boolean,
   }) {
     super();
     
@@ -2367,15 +2369,26 @@ class ModalModern extends div {
 
     this.lbl = o.label;
     this.footer = o.footer;
-    this.size = o.size
-    this.isFullScreen = o.isFullScreen
-
+    this.size = o.size;
+    this.isFullScreen = o.isFullScreen;
+    this.isMaxHeight = o.isMaxHeight;
     this.dialog = new Dialog();
     this.content = new div().AddStyle({
       "max-height": "calc(100vh - 100px)",
       "overflow-y": "auto",
       "overflow-x": "hidden"
     });
+
+    if (this.isMaxHeight != undefined && this.isMaxHeight) {
+
+      this.content = new div().AddStyle({
+        "height": "calc(100vh - 110px)",
+        "overflow-y": "auto",
+        "overflow-x": "hidden"
+      });
+
+    }
+
     //@ts-ignore
     document.activeElement.blur();
   }
@@ -2416,7 +2429,8 @@ class ModalModern extends div {
         this.content,
         this.footer != undefined ? this.footer.AddStyle({"height": "40px", "margin-top": "5px"}) : new Row([]).AddStyle({"height": "40px", "margin-top": "5px"}),
       ]),
-      backdropOpacity: 0.3
+      backdropOpacity: 0.3,
+      maxHeight: this.isMaxHeight
     });
 
   }
@@ -3372,6 +3386,7 @@ class Dialog extends Panel {
     opacity?: number,
     backdropOpacity?: number,
     borderRadius?: string,
+    maxHeight?: boolean
   }) {
 
     // add the componts here 
@@ -3426,6 +3441,12 @@ class Dialog extends Panel {
         "max-width": "100%",
         "max-height": "100%",
         "border-radius": "0px"
+      });
+    }
+
+    if (o.maxHeight != undefined && o.maxHeight) {
+      body.AddStyle({
+          "height": "calc(100% - 20px)"
       });
     }
 
