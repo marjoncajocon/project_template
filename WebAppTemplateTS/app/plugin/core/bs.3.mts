@@ -1187,7 +1187,8 @@ class Tab extends div {
   tab: _Tab
   content: div
   constructor(o: {
-    padding?: number 
+    padding?: number,
+    height?: string
   }) {
     super();
     this.tab = new _Tab(o);
@@ -1209,6 +1210,13 @@ class Tab extends div {
     } else {
       this.content.AddStyle({
         "padding": `10px`
+      });
+    }
+
+    if (o.height != undefined && o.height) {
+      this.content.AddStyle({
+        "height": o.height,
+        "overflow-y": "auto"
       });
     }
     
