@@ -1,7 +1,7 @@
 import "./bs.3.css";
 import "./icon/css/all.css";
 //import "./bootstrap3/css/bootstrap.min.css";
-import "./bootstrap3/css/theme-lumen.css";
+//import "./bootstrap3/css/theme-lumen.css";
 //import "./bootstrap3/css/theme-united.css";
 //import "./bootstrap3/css/theme-spacelab.css";
 
