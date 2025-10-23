@@ -5,11 +5,12 @@ import { div } from "../../core.mts";
 
 class EditorQuill extends div {
   id: string
-  param: {placeholder?: string}
+  param: {placeholder?: string, fulltoolbar?: boolean}
   //@ts-ignore
   quill: Quill
   constructor(o: {
-    placeholder?: string
+    placeholder?: string,
+    fulltoolbar?: boolean
   }) {
     super();
 
@@ -26,6 +27,10 @@ class EditorQuill extends div {
    // super.Html(v);
    // call the run first before using set value
    this.quill.clipboard.dangerouslyPasteHTML(v);
+  }
+
+  setValueDelta(delta: any) {
+    this.quill.setContents(delta);
   }
 
   getValueHtml() {
@@ -46,22 +51,24 @@ class EditorQuill extends div {
       theme: 'snow'
     };
 
-    // module
-    opt["modules"] = {
-        toolbar: [
-            [{ 'font': [] }, { 'size': [] }],
-            ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-            [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-            [{ 'script': 'sub'}, { 'script': 'super' }],       // superscript/subscript
-            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-            [{ '-indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-            [{ 'direction': 'rtl' }],                         // text direction
-            [{ 'align': [] }],
-            ['link', 'image', 'video'],                       // media
-            ['clean']
-        ]
-    };
+    if (this.param.fulltoolbar != undefined && this.param.fulltoolbar) {
+      // module
+      opt["modules"] = {
+          toolbar: [
+              [{ 'font': [] }, { 'size': [] }],
+              ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+              [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+              [{ 'script': 'sub'}, { 'script': 'super' }],       // superscript/subscript
+              [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+              [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+              [{ '-indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+              [{ 'direction': 'rtl' }],                         // text direction
+              [{ 'align': [] }],
+              ['link', 'image', 'video'],                       // media
+              ['clean']
+          ]
+      };
+    }
 
     if (this.param.placeholder != undefined) {
         opt["placeholder"] = this.param.placeholder;
