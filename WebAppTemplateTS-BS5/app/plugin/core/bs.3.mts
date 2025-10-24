@@ -2316,8 +2316,8 @@ class ButtonSplit extends div {
 
     const doc_fn = (e: Event) => {
       e.stopPropagation();
-      if (super.HasClass("open"))
-      super.DeleteClass("open");
+      title.DeleteClass("show");
+      this.menu.DeleteClass("show");
     };
 
     document.addEventListener("click", doc_fn);
