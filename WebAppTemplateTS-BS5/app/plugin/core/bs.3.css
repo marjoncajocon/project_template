@@ -1,0 +1,248 @@
+.bs-3-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 2000;
+
+  display: flex;
+  align-items: center;   /* vertical center */
+  justify-content: center; /* horizontal center */
+  overflow-y: auto;
+}
+
+.bs-3-dialog-body {
+  width: 480px;
+  max-width: 95%;
+  max-height: 95%;
+  min-height: 10px;
+  background-color: white;
+  box-shadow: 0 1px 4px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  overflow-y: auto;
+  padding: 7px;
+  overflow-x: hidden;
+}
+
+.dialog-alert-icon {
+  font-weight: bolder;
+  font-size: 20pt;
+}
+
+
+.b-search-filter-item {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  cursor: pointer;
+}
+
+.b-search-active-item {
+  background-color: rgba(0, 110, 255, 1);
+  color: white;
+}
+
+.b-search-filter-item:hover {
+  background-color: rgba(0, 110, 255, 1);
+  color: white;
+}
+
+
+.b-filter-panel::-webkit-scrollbar {
+  width: 2px;
+}
+
+/* Track */
+.b-filter-panel::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+.b-filter-panel::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+.b-filter-panel::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+.tab2-item-close {
+  border: none;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  font-size: 10px;
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.tab2-item-close:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.tab2-plus {
+  background-color: rgba(0, 0, 0, 0);
+  color: black; 
+  font-weight: bolder;
+  border: none;
+  font-size: 15px;
+}
+
+.tab2-plus:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+}
+
+.tab2-item {
+  height: 35px;
+  padding: 5px;
+  padding-left: 15px;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  border-top-right-radius: 10px;
+  border-top-left-radius: 10px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.tab2-item:not(:first-child):not(:last-child) {
+  border-left-width: 0px;
+  border-right-width: 1px;
+}
+
+.tab2-item:last-child {
+  border-left-width: 0px;
+}
+.tab2-item:first-child {
+  border-left-width: 1px;
+}
+.tab2-item-active {
+  background-color: #348dbc;
+  color: white;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+    display: none;
+  }
+}
+
+.dialog-show {
+  animation: slideUp 0.3s ease;
+  -moz-animation: slideUp 0.3s ease;
+  -o-animation: slideUp 0.3s ease;
+  -webkit-animation: slideUp 0.3s ease;
+  -ms-animation: slideUp 0.3s ease;
+}
+
+.dialog-hide {
+  animation: slideDown 0.4s ease;
+  -moz-animation: slideDown 0.4s ease;
+  -o-animation: slideDown 0.4s ease;
+  -webkit-animation: slideDown 0.4s ease;
+  -ms-animation: slideDown 0.4s ease;
+}
+
+/*loaders*/
+
+.loader01 {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  border: 10px solid;
+  border-color: rgba(255, 255, 255, 0.15) rgba(255, 255, 255, 0.25) rgba(255, 255, 255, 0.35) rgba(255, 255, 255, 0.5);
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+} 
+
+
+.loader001 {
+  --d:22px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  color: #25b09b;
+  box-shadow: 
+    calc(1*var(--d))      calc(0*var(--d))     0 0,
+    calc(0.707*var(--d))  calc(0.707*var(--d)) 0 1px,
+    calc(0*var(--d))      calc(1*var(--d))     0 2px,
+    calc(-0.707*var(--d)) calc(0.707*var(--d)) 0 3px,
+    calc(-1*var(--d))     calc(0*var(--d))     0 4px,
+    calc(-0.707*var(--d)) calc(-0.707*var(--d))0 5px,
+    calc(0*var(--d))      calc(-1*var(--d))    0 6px;
+  animation: l27 1s infinite steps(8);
+}
+@keyframes l27 {
+  100% {transform: rotate(1turn)}
+}
+
+
+/* HTML: <div class="loader"></div> */
+.loader002 {
+  width: 50px;
+  aspect-ratio: 1;
+  display:grid;
+  -webkit-mask: conic-gradient(from 15deg,#0000,#000);
+  animation: l26 1s infinite steps(12);
+}
+.loader002,
+.loader002:before,
+.loader002:after{
+  background:
+    radial-gradient(closest-side at 50% 12.5%,
+     #f03355 96%,#0000) 50% 0/20% 80% repeat-y,
+    radial-gradient(closest-side at 12.5% 50%,
+     #f03355 96%,#0000) 0 50%/80% 20% repeat-x;
+}
+.loader002:before,
+.loader002:after {
+  content: "";
+  grid-area: 1/1;
+  transform: rotate(30deg);
+}
+.loader002:after {
+  transform: rotate(60deg);
+}
+
+@keyframes l26 {
+  100% {transform:rotate(1turn)}
+}
