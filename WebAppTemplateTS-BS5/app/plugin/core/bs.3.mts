@@ -2783,6 +2783,11 @@ class TextFieldAddon extends div{
     }
   }
 
+  public AddEventListener(evt: string, fn: EventListenerOrEventListenerObject): Widget {
+    this.tf.AddEventListener(evt, fn);
+    return this.tf;
+  }
+
   value(v: string|null = null) {
     if (v == null)
       return this.tf.GetValue();
@@ -2886,6 +2891,11 @@ class Radio extends div {
 
   }
 
+  public AddEventListener(evt: string, fn: EventListenerOrEventListenerObject): Widget {
+    this.tf.AddEventListener(evt, fn);
+    return this.tf;
+  }
+
   value(v: boolean|null = null) {
     if (v == null) {
       return this.tf.GetValue();
@@ -2956,6 +2966,11 @@ class CheckBox extends div {
 
   }
 
+  public AddEventListener(evt: string, fn: EventListenerOrEventListenerObject): Widget {
+    this.tf.AddEventListener(evt, fn);
+    return this.tf;
+  }
+
   value(v: boolean|null = null) {
     if (v == null) {
       if (this.tf.control instanceof HTMLInputElement)
@@ -3010,7 +3025,8 @@ class SelectBox extends div {
         lbl.Html(o.prefix);
         super.Add(lbl);
       } else {
-        super.Add(o.prefix);
+        const lbl = new span().AddClass("input-group-text");
+        super.Add(lbl.Add(o.prefix));
       }
     }
 
@@ -3023,7 +3039,8 @@ class SelectBox extends div {
         lbl.Html(o.suffix);
         super.Add(lbl);
       } else {
-        super.Add(o.suffix);
+        const lbl = new span().AddClass("input-group-text");
+        super.Add(lbl.Add(o.suffix));
       }
     }
 
@@ -3043,6 +3060,11 @@ class SelectBox extends div {
 
   clear() {
     this.tf.Clear();
+  }
+
+  public AddEventListener(evt: string, fn: EventListenerOrEventListenerObject): Widget {
+    this.tf.AddEventListener(evt, fn);
+    return this.tf;
   }
 
   add(key: string, value: string) {
@@ -3703,10 +3725,11 @@ class CardV2 extends div {
   }) {
     super()
     super.AddStyle({
-      "background-color": "var(--bs-white-bg)",
       "border-radius": "5px",
       "box-shadow": "0 0 2px rgba(0, 0, 0, 0.3)"
     })
+
+    super.AddClass("card");
 
     if (o.header != undefined) {
       
@@ -4133,6 +4156,13 @@ class SelectBoxAddon extends div{
     /// END local filter ///////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  }
+
+  public AddEventListener(evt: string, fn: EventListenerOrEventListenerObject): Widget {
+    
+    this.tf.tf.AddEventListener(evt, fn);
+
+    return this.tf.tf;
   }
 
   private documentEvent = (e: Event) => {

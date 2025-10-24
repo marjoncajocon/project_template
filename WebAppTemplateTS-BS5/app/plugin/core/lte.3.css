@@ -137,7 +137,6 @@
 .lte-top-bar {
   height: 57px;
   width: 100%;
-  background-color: var(--bs-white);
   position: relative;
   padding: 8px;
   border-bottom: 1px solid #dee2e6;
@@ -145,10 +144,11 @@
 .lte-bar-btn {
   height: 100%;
   width: 40px;
-  background-color: white;
+  /* background-color: white; */
   border: none;
-  color: #00000080;
+  /* color: #00000080; */
   /*display: none;*/
+  padding-top: 5px;
 }
 
 .lte-rotate-arrow {
