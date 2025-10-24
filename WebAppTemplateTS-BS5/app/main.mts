@@ -1,6 +1,6 @@
 import "./plugin/core/bootstrap3/css/bootstrap.css";
 
-import { BreadCrumb, Button, ButtonSplit, Card, Color, Column, Column2, FaIcon, FaIcons, Icon, Icons, Label, ListGroup, Pager, Pagination, ProgressBar, Row, Size, Tab, Tab2, Table } from "./plugin/core/bs.3.mts";
+import { AlertMessage, BreadCrumb, Button, ButtonSplit, Card, Color, Column, Text, Column2, FaIcon, FaIcons, Icon, Icons, Label, ListGroup, Pager, Pagination, ProgressBar, Row, Size, Tab, Tab2, Table, TextField, TextFieldAddon, Message, TextBox, Radio } from "./plugin/core/bs.3.mts";
 import {div, Theme, Window} from "./plugin/core/core.mjs";
 
 const MyApp = new Window();
@@ -62,7 +62,34 @@ drop.add("apple", () => {console.log("apple");});
 drop.add("orange", () => {console.log("orange");});
 drop.add("banana", () => {console.log("banana");});
 
+
+const alrt = new AlertMessage({color: Color.Success});
+alrt.Add(new Text({text: "sample"}));
+
+const tf1 = new TextField({size: Size.Sm});
+
+const tf2 = new TextFieldAddon({
+    hasfeedback: true
+});
+tf2.check("hello", Message.Success);
+
+const tf3 = new TextBox({placeholder: "sample"});
+
+const radio = new Radio({label: "sample", group: "t1"});
+
+let flag = false;
+const switch_them = new Button({text: "Switch Theme", color: Color.Dark});
+switch_them.AddEventListener("click", () => {
+    if (!flag) {
+        MyApp.setTheme(Theme.Dark);
+    } else {
+        MyApp.setTheme(Theme.Light);
+    }
+    flag = !flag;
+});
 MyApp.Navigate(new Column([
+    switch_them,
+    20,
     btn,
     5,
     label,
@@ -76,12 +103,16 @@ MyApp.Navigate(new Column([
     card,
     tab,
     tab2,
-    drop
+    drop,
+    alrt,
+    tf1,
+    tf2,
+    tf3,
+    radio,
 ]));
 
 MyApp.Run();
 
-//MyApp.setTheme(Theme.Dark)
 export default MyApp;
 
 

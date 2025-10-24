@@ -2365,6 +2365,7 @@ class ButtonSplit extends div {
   }
 }
 
+// this class is not avaible in bootstrap 5
 class Well extends div {
   constructor(o: {
     size?: Size
@@ -2412,15 +2413,19 @@ class TextField extends input {
   constructor(o: {
     size?: Size,
     type?: InputType,
-    placeholder?: string
+    placeholder?: string,
+    plain?: boolean
   }) {
 
     super();
 
-    super.AddClass("form-control");
+    if (o.plain != undefined && o.plain)
+      super.AddClass("form-control-plaintext");
+    else
+      super.AddClass("form-control");
 
     if (o.size != undefined) {
-      super.AddClass("input-" + o.size);
+      super.AddClass("form-control-" + o.size);
     }
 
     if (o.type != undefined) {
@@ -2488,11 +2493,12 @@ class TextFieldAddon extends div{
     this.tf = new TextField(o);
 
     const prefix = new span();
-    prefix.AddClass("input-group-addon");
     if (o.prefix != undefined) {
       if (typeof(o.prefix) == "string") {
+        prefix.AddClass("input-group-text");
         prefix.Html(o.prefix);
       } else {
+        prefix.AddClass("input-group-text");
         prefix.Add(o.prefix);
       }
       super.Add(prefix);
@@ -2502,23 +2508,25 @@ class TextFieldAddon extends div{
     
     
 
-    const suffix = new span();
-    suffix.AddClass("input-group-btn");
     if (o.suffix != undefined) {
+      //suffix.AddClass("input-group-btn");
+     
+      if (typeof(o.suffix) == "string") {
+        super.Add(new Text({text: o.suffix}).AddClass("input-group-text"));  
+      }
+      else {
+        super.Add(o.suffix);
       
-      const btn = new Button({text: o.suffix, color: Color.Default});
-      suffix.Add(btn);
-      super.Add(suffix);
-      
-      btn.AddEventListener("click", () => {
-        if (o.suffix_fn != undefined) o.suffix_fn();
-      });
+        o.suffix.AddEventListener("click", () => {
+          if (o.suffix_fn != undefined) o.suffix_fn();
+        });
+      }
     }
     
     this.err = new Panel().AddStyle({
-      position: "absolute",
-      bottom: "-20px",
-      right: "0px"
+      // position: "absolute",
+      // bottom: "-20px",
+      // right: "0px"
     });
     if (o.hasfeedback != undefined && o.hasfeedback) {
       super.AddClass(["has-feedback"]);
@@ -2541,7 +2549,7 @@ class TextFieldAddon extends div{
       const clearItem = () => {  items.length = 0; }
 
       const search = new TextFieldAddon({
-        prefix: new Icon(Icons.Search), 
+        prefix: new FaIcon(FaIcons.Search), 
         placeholder: o.placeholder,
         size: o.size,
         type: o.type
@@ -2574,7 +2582,7 @@ class TextFieldAddon extends div{
         "z-index": "12",
         "left": "0",
         "top": "0",
-        "background-color": "white",
+        "background-color": `var(--bs-white-bg)`,
         "border-radius": "3px",
         "box-shadow": "0 0 2px rgba(0, 0, 0, 0.3)"
       }).AddClass("b-filter-panel");
@@ -2745,16 +2753,23 @@ class TextFieldAddon extends div{
 
     super.DeleteClass(["has-success", "has-warning", "has-error"]);
     this.err.DeleteClass([`text-${Color.Success}`, `text-${Color.Warning}`, `text-${Color.Danger}`])
+    this.tf.DeleteClass(["is-invalid", "is-valid"]);
     
+    this.err.DeleteClass(["valid-feedback", "invalid-feedback"]);
+
     if (type == Message.Success) {
+      this.err.AddClass("valid-feedback");
       super.AddClass("has-success");
+      this.tf.AddClass("is-valid");
       this.err.AddClass(`text-${Color.Success}`);
     } else if (type == Message.Warning) {
-      super.AddClass("has-warning");
-      this.err.AddClass(`text-${Color.Warning}`);
+      // super.AddClass("has-warning");
+      // this.err.AddClass(`text-${Color.Warning}`);
     } else {
       super.AddClass("has-error");
+      this.err.AddClass("invalid-feedback");
       this.err.AddClass(`text-${Color.Danger}`);
+      this.tf.AddClass("is-invalid");
     }
 
     if (msg == "") {
@@ -2784,62 +2799,6 @@ class TextFieldAddon extends div{
     }
   }
 
-}
-
-class TextFieldFeedBack extends div {
-  tf: TextField
-  icon: Icon
-  constructor(o: {
-    size?: Size,
-    type?: InputType,
-    placeholder?: string,
-  }) {
-    super();
-    this.tf = new TextField(o);
-
-    super.AddClass("has-feedback");
-    super.Add(this.tf);
-
-    this.icon = new Icon(Icons.Ok);
-    this.icon.AddClass("form-control-feedback");
-    this.icon.Hide();
-    super.Add(this.icon);
-  }
-
-  check(msg: string, type: Message) {
-
-    super.DeleteClass(["has-success", "has-warning", "has-error"]);
-    this.icon.Show();
-
-    if (type == Message.Success) {
-      super.AddClass("has-success");
-      this.icon.change(Icons.Ok);
-    } else if (type == Message.Warning) {
-      this.icon.change(Icons.WarningSign);
-      super.AddClass("has-warning");
-    } else {
-      this.icon.change(Icons.Remove);
-      super.AddClass("has-error");
-    }
-  }
-
-  value(v: string|null = null) {
-    if (v == null)
-      return this.tf.GetValue();
-    else 
-      this.tf.AddValue(v);
-    return this;
-  }
-
-  enable(v: boolean = true) {
-    if (v) {
-      this.tf.DeleteAttr("disabled");
-    } else {
-      this.tf.AddAttr({
-        disabled: ""
-      });
-    }
-  }
 }
 
 class TextBox extends textarea {
@@ -2889,30 +2848,28 @@ class Radio extends div {
     change?: (v: boolean) => void
   }) {
     super();
-    super.AddClass("radio");
+    super.AddClass("form-check");
     
-    if (o.inline != undefined && o.inline) {
-      super.AddStyle({display: "inline"});
-    }
+    // if (o.inline != undefined && o.inline) {
+    //   super.AddStyle({display: "inline"});
+    // }
 
     this.tf = new input().AddAttr({
       type: InputType.Radio,
       name: o.group
     });
+    this.tf.AddClass("form-check-input");
 
-    const lbl = new label();
-    
-    lbl.Add(this.tf);
 
-    super.Add(lbl);
+    super.Add(this.tf);
     
     if (o.label != undefined) {
       if (typeof(o.label) == "string") {
-        const a = new span();
+        const a = new span().AddClass("form-check-label");
         a.Html(o.label);
-        lbl.Add(a);
+        super.Add(a);
       } else {
-        lbl.Add(o.label);
+        super.Add(o.label);
       }
     }
 
@@ -4872,7 +4829,6 @@ export {
   TextField,
   TextBox,
   TextFieldAddon,
-  TextFieldFeedBack,
   Radio,
   CheckBox,
   Row,
@@ -4913,5 +4869,7 @@ export {
 //   --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 //   --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
 // }
+
+// --bs-color-bg : for theme background
 
 // to use; var(--bs-blue) example: background-color: var(--bs-blue);
