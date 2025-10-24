@@ -1341,6 +1341,8 @@ class Button extends button {
 
     if (o.size != undefined) {
       super.AddClass(["btn-" + o.size]);
+    } else {
+      super.AddClass(["btn-" + Size.Md]);
     }
 
     if (typeof(o.text) == "string") {
@@ -1932,9 +1934,9 @@ class Card extends div {
     super();
     super.AddClass("card");
 
-    if (o.color != undefined) {
-      super.AddClass("bg-" + o.color);
-    }
+    // if (o.color != undefined) {
+    //   super.AddClass("bg-" + o.color);
+    // }
 
     const panel_heading = new div().AddClass("card-header");
     if (typeof(o.header) == "string") {

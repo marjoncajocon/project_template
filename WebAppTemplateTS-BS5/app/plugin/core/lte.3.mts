@@ -1,4 +1,4 @@
-import { Badge, BreadCrumb, Button, Card, Color, Column, Dialog, FlexDirection, Grid, GridSize, Html, Icon, Icons, Panel, ProgressBar, Row, Size, Text, TextField, TextFieldAddon } from "./bs.3.mts";
+import { Badge, BreadCrumb, Button, Card, Color, Column, Dialog, FaIcon, FaIcons, FlexDirection, Grid, GridSize, Html, Icon, Icons, Panel, ProgressBar, Row, Size, Text, TextField, TextFieldAddon } from "./bs.3.mts";
 import { a, button, div, h1, h2, h3, h5, hr, img, input, p, span, title, Widget } from "./core.mts";
 import "./lte.3.css";
 
@@ -74,7 +74,7 @@ class LTESmallBox extends div {
     value: string,
     label: string,
     color: Color,
-    icon: Icons,
+    icon: FaIcons,
     click?: () => void
   }) {
     super();
@@ -123,7 +123,7 @@ class LTESmallBox extends div {
       "padding": "5px"
     });
 
-    const icon = new Icon(p.icon);
+    const icon = new FaIcon(p.icon);
     icon.AddStyle({
       "position": "absolute",
       "right": "20px",
@@ -162,7 +162,7 @@ class LTESmallBox extends div {
 class LTEMenuButton extends div {
   submenu_g?: LTEMenuButton[]
   constructor(o: {
-    icon: Icons,
+    icon: FaIcons,
     title: string,
     submenu?: LTEMenuButton[],
     fn?: () => void,
@@ -177,8 +177,8 @@ class LTEMenuButton extends div {
       });
     }
 
-    const arrow_icon = new Icon(Icons.ChevronLeft);
-    const menu = new button().Add(new Row([new Icon(o.icon), 10, new Html(o.title).AddClass("lte-hidable")])).AddClass("lte-menu-btn").AddClass("cc-menu");
+    const arrow_icon = new FaIcon(FaIcons.ChevronLeft);
+    const menu = new button().Add(new Row([new FaIcon(o.icon), 10, new Html(o.title).AddClass("lte-hidable")])).AddClass("lte-menu-btn").AddClass("cc-menu");
     
     arrow_icon.AddClass("lte-hidable");
 
@@ -339,7 +339,7 @@ class LTEApp extends Panel {
     panel.Add(topBar);
 
     const bar = new button().AddClass("lte-bar-btn");
-    bar.Add(new Icon(Icons.MenuHamburger))
+    bar.Add(new FaIcon(FaIcons.Bars))
     topBar.Add(bar);
 
     
@@ -411,7 +411,7 @@ class LTEApp extends Panel {
     this.page_title = htitle;
 
     title_grid.add(
-      new Row([new Icon(Icons.InfoSign), 3, htitle]), [GridSize.Lg9]
+      new Row([new FaIcon(FaIcons.InfoCircle), 3, htitle]), [GridSize.Lg9]
     );
     // const bread = new BreadCrumb({});
     // bread.AddStyle({
@@ -540,7 +540,7 @@ class LTEApp extends Panel {
 
     const search = new TextFieldAddon({
       placeholder: "Search",
-      suffix: new Icon(Icons.Search)
+      suffix: new Button({text: new FaIcon(FaIcons.Search), color: Color.Default})
     }).AddClass("lte-hidable");
     sidebar_content.Add(new Panel().Add(search).AddClass("lte-search"));
     // end search
