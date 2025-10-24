@@ -1111,14 +1111,16 @@ enum Color {
   Dark = 'dark',
   Light = 'light',
   Muted = 'Muted',
-  White = 'white'
+  White = 'white',
+  Body = 'body'
 }
 
 enum Size {
   Lg = "lg",
   Sm = "sm",
-  Xs = "xs",
-  Md = "md"
+  Md = "md",
+  xl = "xl",
+  xxl = "xxl"
 }
 
 enum Message {
@@ -1139,19 +1141,19 @@ enum Flex {
 }
 
 enum GridSize {
-  // Extra small devices (xs)
-  Xs1 = "col-xs-1",
-  Xs2 = "col-xs-2",
-  Xs3 = "col-xs-3",
-  Xs4 = "col-xs-4",
-  Xs5 = "col-xs-5",
-  Xs6 = "col-xs-6",
-  Xs7 = "col-xs-7",
-  Xs8 = "col-xs-8",
-  Xs9 = "col-xs-9",
-  Xs10 = "col-xs-10",
-  Xs11 = "col-xs-11",
-  Xs12 = "col-xs-12",
+  // Extra small devices (xs) - no infix in Bootstrap 5
+  Xs1 = "col-1",
+  Xs2 = "col-2",
+  Xs3 = "col-3",
+  Xs4 = "col-4",
+  Xs5 = "col-5",
+  Xs6 = "col-6",
+  Xs7 = "col-7",
+  Xs8 = "col-8",
+  Xs9 = "col-9",
+  Xs10 = "col-10",
+  Xs11 = "col-11",
+  Xs12 = "col-12",
 
   // Small devices (sm)
   Sm1 = "col-sm-1",
@@ -1193,7 +1195,35 @@ enum GridSize {
   Lg9 = "col-lg-9",
   Lg10 = "col-lg-10",
   Lg11 = "col-lg-11",
-  Lg12 = "col-lg-12"
+  Lg12 = "col-lg-12",
+
+  // Extra large devices (xl)
+  Xl1 = "col-xl-1",
+  Xl2 = "col-xl-2",
+  Xl3 = "col-xl-3",
+  Xl4 = "col-xl-4",
+  Xl5 = "col-xl-5",
+  Xl6 = "col-xl-6",
+  Xl7 = "col-xl-7",
+  Xl8 = "col-xl-8",
+  Xl9 = "col-xl-9",
+  Xl10 = "col-xl-10",
+  Xl11 = "col-xl-11",
+  Xl12 = "col-xl-12",
+
+  // Extra extra large devices (xxl)
+  Xxl1 = "col-xxl-1",
+  Xxl2 = "col-xxl-2",
+  Xxl3 = "col-xxl-3",
+  Xxl4 = "col-xxl-4",
+  Xxl5 = "col-xxl-5",
+  Xxl6 = "col-xxl-6",
+  Xxl7 = "col-xxl-7",
+  Xxl8 = "col-xxl-8",
+  Xxl9 = "col-xxl-9",
+  Xxl10 = "col-xxl-10",
+  Xxl11 = "col-xxl-11",
+  Xxl12 = "col-xxl-12"
 }
 
 class Text extends div {
@@ -1272,7 +1302,7 @@ class Label extends span {
     color?: Color
   }) {
     super();
-    super.AddClass("label");
+    super.AddClass("badge");
     if (o.text != undefined) {
 
       if (typeof(o.text) == "string") {
@@ -1283,7 +1313,7 @@ class Label extends span {
     }
 
     if (o.color != undefined) {
-      super.AddClass("label-" + o.color);
+      super.AddClass("bg-" + o.color);
     }
   }
 }
@@ -1296,12 +1326,17 @@ class Button extends button {
     color?: Color,
     size?: Size,
     block?: boolean,
-    loader?: boolean
+    loader?: boolean,
+    outlined?: boolean
   }) {
     super();
 
     if (o.color != undefined) {
-      super.AddClass(["btn", "btn-" + o.color]);
+      if (o.outlined != undefined && o.outlined) {
+        super.AddClass(["btn", "btn-outline-" + o.color]);
+      }
+      else 
+        super.AddClass(["btn", "btn-" + o.color]);
     }
 
     if (o.size != undefined) {
@@ -1371,12 +1406,17 @@ class ButtonLink extends a {
     text: Widget | string,
     color?: Color,
     size?: Size,
-    block?: boolean
+    block?: boolean,
+    outlined?: boolean
   }) {
     super();
 
     if (o.color != undefined) {
-      super.AddClass(["btn", "btn-" + o.color]);
+      if (o.outlined != undefined && o.outlined) {
+        super.AddClass(["btn", "btn-outline-" + o.color]);
+      }
+      else 
+        super.AddClass(["btn", "btn-" + o.color]);
     }
 
     if (o.size != undefined) {
@@ -1392,7 +1432,7 @@ class ButtonLink extends a {
     if (o.block != undefined && o.block) {
       super.AddClass("btn-block");
     }
-
+    
   }
 
   enable(ok: boolean) {
@@ -1411,7 +1451,8 @@ class ProgressBar extends div {
   constructor(o: {
     color?: Color,
     striped?: boolean,
-    animation?: boolean
+    animation?: boolean,
+    height?: string
   }) {
     super();
 
@@ -1424,38 +1465,36 @@ class ProgressBar extends div {
 
     super.AddClass("progress");
 
+    if (o.height != undefined){
+      super.AddStyle({"height": o.height});
+    } else {
+      super.AddStyle({"height": "10px"});
+    }
+
     this.bar = new div().AddClass("progress-bar");
     
-    this.bar.AddAttr({
-      role: "progressbar",
-      "aria-valuenow": "0",
-      "aria-valuemin": "0",
-      "aria-valuemax": "100",
-    });
+  
 
     this.bar.AddStyle({
       width: "0%"
-    });;
+    });
 
     super.Add(this.bar);
 
     if (o.color != undefined) {
-      this.bar.AddClass(`progress-bar-${o.color}`);
+      this.bar.AddClass(`bg-${o.color}`);
     }
 
     if (o.striped != undefined && o.striped) {
       this.bar.AddClass([`progress-bar-striped`]);
     }
     if (o.animation != undefined && o.animation) {
-      this.bar.AddClass("active");
+      this.bar.AddClass("progress-bar-animated");
     }
   }
 
   update(percent: number, showText: boolean = false, text: string = "") {
-    this.bar.AddStyle(`${percent}%`);
-    this.bar.AddAttr({
-      "aria-valuenow": `${percent}`,
-    });
+    
     this.bar.AddStyle({
       width: `${percent}%`
     });
@@ -1705,6 +1744,7 @@ class Pagination extends div {
 
     const aa = new a();
     const ll = new li().Add(aa);
+    ll.AddClass("page-item");
 
     this.list.push({
       index: num,
@@ -1714,7 +1754,7 @@ class Pagination extends div {
     this.gul.Add(ll);
     aa.AddAttr({href: "#"});
     aa.Add(new Text(`${num}`));
-
+    aa.AddClass("page-link");
     
     aa.AddEventListener("click", (e) => {
       e.preventDefault();
@@ -1767,6 +1807,7 @@ class BreadCrumb extends ul {
 
     const aa = new a();
     const ll = new li().Add(aa);
+    ll.AddClass("breadcrumb-item");
 
     this.list.push(ll);
 
@@ -1799,6 +1840,7 @@ class BreadCrumb extends ul {
   
 }
 
+// no pager
 class Pager extends ul {
   constructor(o: {
     prevLabel?: string,
@@ -1852,10 +1894,12 @@ class Pager extends ul {
 }
 
 class ListGroup extends ul {
-  constructor(o: {}) {
+  constructor(o: {horizontal?: boolean}) {
     super();
     super.AddClass("list-group");
-
+    if (o.horizontal != undefined && o.horizontal) {
+      super.AddClass("list-group-horizontal");
+    }
   }
 
   add(a: Widget|string, color?: Color) {
@@ -1886,13 +1930,13 @@ class Card extends div {
     footer?: string | Widget,
   }) {
     super();
-    super.AddClass("panel");
+    super.AddClass("card");
 
     if (o.color != undefined) {
-      super.AddClass("panel-" + o.color);
+      super.AddClass("bg-" + o.color);
     }
 
-    const panel_heading = new div().AddClass("panel-heading");
+    const panel_heading = new div().AddClass("card-header");
     if (typeof(o.header) == "string") {
       panel_heading.Add(new Html(o.header));
     } else {
@@ -1901,7 +1945,7 @@ class Card extends div {
     super.Add(panel_heading);
 
     // body
-    const body_panel = new div().AddClass("panel-body");
+    const body_panel = new div().AddClass("card-body");
 
     if (typeof(o.body) == "string") {
       body_panel.Add(new Html(o.body));
@@ -1912,7 +1956,7 @@ class Card extends div {
     super.Add(body_panel);
 
     if (o.footer != undefined) {
-      const panel_footer = new div().AddClass("panel-footer");
+      const panel_footer = new div().AddClass("card-footer");
       if (typeof(o.footer) == "string") {
         panel_footer.Add(new Html(o.footer));
       } else {
@@ -1926,7 +1970,7 @@ class Card extends div {
 }
 
 class _Tab extends ul {
-  list: li[]
+  list: a[]
   content: div
   constructor(o: {}) {
     
@@ -1941,7 +1985,9 @@ class _Tab extends ul {
     const ll = new li().AddStyle({
       cursor: "pointer"
     });
+    ll.AddClass("nav-item");
     const aa = new a();
+    aa.AddClass("nav-link");
     ll.Add(aa);
     if (typeof(title) == "string") {
       aa.Add(new Html(title));
@@ -1955,19 +2001,19 @@ class _Tab extends ul {
           item.DeleteClass("active");
         }
 
-        ll.AddClass("active");
+        aa.AddClass("active");
         fn();
       });
     }
 
     if (active) {
-      ll.AddClass("active");
+      aa.AddClass("active");
       if (fn != undefined) {
         fn();
       }
     }
 
-    this.list.push(ll);
+    this.list.push(aa);
     
     super.Add(ll);
   }
@@ -1988,11 +2034,11 @@ class Tab extends div {
     this.content.AddStyle({
       "border-bottom-right-radius": "4px",
       "border-bottom-left-radius": "4px",
-      "border-left": "1px solid #e7e7e7",
-      "border-right": "1px solid #e7e7e7",
-      "border-bottom": "1px solid #e7e7e7"
-    })
-
+      "border-left": "1px solid var(--bs-secondary-bg)",
+      "border-right": "1px solid var(--bs-secondary-bg)",
+      "border-bottom": "1px solid var(--bs-secondary-bg)"
+    });
+    
     if (o.padding != undefined) {
       this.content.AddStyle({
         "padding": `${o.padding}px`
@@ -3198,7 +3244,7 @@ class ModalModern extends div {
   async show() {
 
 
-    const exit = new Button({text: "x", color: Color.Danger, size: Size.Xs}).AddStyle({
+    const exit = new Button({text: "x", color: Color.Danger, size: Size.Sm}).AddStyle({
           "width": "30px"
     });
 
@@ -3208,9 +3254,7 @@ class ModalModern extends div {
 
     let size = `798px`;
     if (this.size != undefined)
-      if (this.size == Size.Xs) {
-        size = `298px`
-      } else if (this.size == Size.Sm) {
+      if (this.size == Size.Sm) {
         size = `480px`
       } else if (this.size == Size.Md) {
         size = `798px`
@@ -4834,3 +4878,32 @@ export {
   DataTable,
   ModalModern
 };
+
+// :root {
+//   --bs-blue: #0d6efd;
+//   --bs-indigo: #6610f2;
+//   --bs-purple: #6f42c1;
+//   --bs-pink: #d63384;
+//   --bs-red: #dc3545;
+//   --bs-orange: #fd7e14;
+//   --bs-yellow: #ffc107;
+//   --bs-green: #198754;
+//   --bs-teal: #20c997;
+//   --bs-cyan: #0dcaf0;
+//   --bs-white: #fff;
+//   --bs-gray: #6c757d;
+//   --bs-gray-dark: #343a40;
+//   --bs-primary: #0d6efd;
+//   --bs-secondary: #6c757d;
+//   --bs-success: #198754;
+//   --bs-info: #0dcaf0;
+//   --bs-warning: #ffc107;
+//   --bs-danger: #dc3545;
+//   --bs-light: #f8f9fa;
+//   --bs-dark: #212529;
+//   --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+//   --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+//   --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+// }
+
+// to use; var(--bs-blue) example: background-color: var(--bs-blue);

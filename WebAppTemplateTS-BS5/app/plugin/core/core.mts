@@ -339,6 +339,12 @@ class center extends Widget { constructor() { super("center"); } }
 
 
 
+enum Theme {
+  Light = "light",
+  Dark = "dark",
+  System = "system"
+}
+
 class Window extends Widget {
   static obj: Window
   constructor(param: {
@@ -370,6 +376,16 @@ class Window extends Widget {
   public Run() {
     Window.obj.Show();
     return this;
+  }
+
+  public setTheme(t: Theme) {
+    if (t == Theme.Dark) {
+      document.getElementsByTagName("html")[0].setAttribute("data-bs-theme", "dark");
+    } else if (t == Theme.Light) {
+      document.getElementsByTagName("html")[0].setAttribute("data-bs-theme", "light");
+    } else {
+      document.getElementsByTagName("html")[0].removeAttribute("data-bs-theme");
+    }
   }
 }
 
@@ -728,7 +744,7 @@ class DateCore {
 // }
 
 
-export { DateCore }
+export { DateCore, Theme }
 export { Widget };
 export {
   html, head, body, title, base, link, meta, style, script, noscript, template,
