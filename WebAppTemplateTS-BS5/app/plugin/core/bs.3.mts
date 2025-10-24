@@ -2094,7 +2094,7 @@ class Tab2 extends div {
     this.widget = p.widgetClass;
 
     const tabContainer = new Panel().AddStyle({
-      "border-bottom": "1px solid #ccc"
+      "border-bottom": "1px solid var(--bs-secondary-bg)"
     });
     
     const plus = new Button({text: "+"}).AddStyle({
@@ -2252,6 +2252,7 @@ class Divider extends div {
 
 class ButtonSplit extends div {
   menu: ul
+  title: Button
   constructor(o: {
     text: string|Widget,
     color: Color,
@@ -2261,12 +2262,14 @@ class ButtonSplit extends div {
     super();
     super.AddClass("btn-group");
 
-    const title = new ButtonLink({text: o.text, color: o.color});
+    const title = new Button({text: o.text, color: o.color});
     if (o.enable != undefined) {
       title.enable(o.enable);
     }
 
-    const caret = new ButtonLink({
+    this.title = title;
+
+    const caret = new Button({
       text: new span().AddClass("caret"),
       color: o.color
     });
@@ -2295,10 +2298,12 @@ class ButtonSplit extends div {
 
     caret.AddEventListener("click", (e) => {
       e.preventDefault();
-      if (!super.HasClass("open")) {
-        super.AddClass("open");
+      if (!title.HasClass("show")) {
+        title.AddClass("show");
+        this.menu.AddClass("show");
       } else {
-        super.DeleteClass("open");
+        title.DeleteClass("show");
+        this.menu.DeleteClass("show");
       }
     });
 
@@ -2330,10 +2335,11 @@ class ButtonSplit extends div {
   add(title: string|Divider, fn?:() => void) {
 
     const aa = new a().AddAttr({ href: "#" });
-    
-    
+
+    aa.AddClass("dropdown-item");
+
     if (typeof(title) == "string") {
-      this.menu.Add(new li().Add(aa));
+      this.menu.Add(aa);
       aa.Html(title);
     } else {
       this.menu.Add(new li().AddClass("divider"));
@@ -2345,10 +2351,12 @@ class ButtonSplit extends div {
         e.preventDefault();
         e.stopPropagation();
         fn();
-        if (!super.HasClass("open")) {
-          super.AddClass("open");
+        if (!this.title.HasClass("show")) {
+          this.title.AddClass("show");
+          this.menu.AddClass("show");
         } else {
-          super.DeleteClass("open");
+          this.title.DeleteClass("show");
+          this.menu.DeleteClass("show");
         }
       });
     }

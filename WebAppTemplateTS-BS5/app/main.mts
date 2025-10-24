@@ -1,7 +1,7 @@
 import "./plugin/core/bootstrap3/css/bootstrap.css";
 
-import { BreadCrumb, Button, Card, Color, Column, Column2, FaIcon, FaIcons, Icon, Icons, Label, ListGroup, Pager, Pagination, ProgressBar, Row, Size, Tab, Table } from "./plugin/core/bs.3.mts";
-import {Theme, Window} from "./plugin/core/core.mjs";
+import { BreadCrumb, Button, ButtonSplit, Card, Color, Column, Column2, FaIcon, FaIcons, Icon, Icons, Label, ListGroup, Pager, Pagination, ProgressBar, Row, Size, Tab, Tab2, Table } from "./plugin/core/bs.3.mts";
+import {div, Theme, Window} from "./plugin/core/core.mjs";
 
 const MyApp = new Window();
 
@@ -51,6 +51,17 @@ tab.add("About", () => {
 
 });
 
+
+const tab2 = new Tab2({widgetClass: class test extends div {constructor() {super();}}});
+tab2.add();
+tab2.add();
+tab2.add();
+
+const drop = new ButtonSplit({text: "Menu", color: Color.Primary});
+drop.add("apple", () => {console.log("apple");});
+drop.add("orange", () => {console.log("orange");});
+drop.add("banana", () => {console.log("banana");});
+
 MyApp.Navigate(new Column([
     btn,
     5,
@@ -63,7 +74,9 @@ MyApp.Navigate(new Column([
     pager,
     lgroup,
     card,
-    tab
+    tab,
+    tab2,
+    drop
 ]));
 
 MyApp.Run();
