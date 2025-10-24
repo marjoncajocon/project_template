@@ -1,6 +1,6 @@
 import "./plugin/core/bootstrap3/css/bootstrap.css";
 
-import { AlertMessage, BreadCrumb, Button, ButtonSplit, Card, Color, Column, Text, Column2, FaIcon, FaIcons, Icon, Icons, Label, ListGroup, Pager, Pagination, ProgressBar, Row, Size, Tab, Tab2, Table, TextField, TextFieldAddon, Message, TextBox, Radio } from "./plugin/core/bs.3.mts";
+import { AlertMessage, BreadCrumb, Button, ButtonSplit, Card, Color, Column, Text, Column2, FaIcon, FaIcons, Icon, Icons, Label, ListGroup, Pager, Pagination, ProgressBar, Row, Size, Tab, Tab2, Table, TextField, TextFieldAddon, Message, TextBox, Radio, CheckBox, SelectBox, ModalModern, Alert, Confirm, Modal, ContainerFluid, Container, Grid, GridSize, CardV2, SelectBoxAddon } from "./plugin/core/bs.3.mts";
 import {div, Theme, Window} from "./plugin/core/core.mjs";
 
 const MyApp = new Window();
@@ -77,6 +77,19 @@ const tf3 = new TextBox({placeholder: "sample"});
 
 const radio = new Radio({label: "sample", group: "t1"});
 
+const check = new CheckBox({label: "Sample", switch: true});
+
+const select = new SelectBox({
+    prefix: new Button({text: new FaIcon(FaIcons.Adn), color: Color.Primary}),
+    suffix: new Button({text: "$", color: Color.Info})
+});
+select.add("m", "Male");
+select.add("f", "Female");
+
+select.tf.AddEventListener("change", () => {
+    console.log(select.value());
+});
+
 let flag = false;
 const switch_them = new Button({text: "Switch Theme", color: Color.Dark});
 switch_them.AddEventListener("click", () => {
@@ -87,29 +100,99 @@ switch_them.AddEventListener("click", () => {
     }
     flag = !flag;
 });
-MyApp.Navigate(new Column([
-    switch_them,
-    20,
-    btn,
-    5,
-    label,
-    btn2,
-    btn_link,
-    prog,
-    page,
-    bread,
-    pager,
-    lgroup,
-    card,
-    tab,
-    tab2,
-    drop,
-    alrt,
-    tf1,
-    tf2,
-    tf3,
-    radio,
-]));
+
+const open = new Button({text: "open modal", color: Color.Secondary});
+open.AddEventListener("click", async () => {
+
+    const modal = new Modal({label: "sample label", footer: [new Button({text: "sample", color: Color.Info})]});
+    await modal.show();
+    // if (await Confirm("Are you sure to open the modal?")) {
+    //     //const modal = new ModalModern({label: "sample"});
+    //     //await modal.show();
+    //     //await Alert("Succesfully Viewed")
+    // }
+
+});
+
+// sample table
+
+const table = new Table({
+    header: ["id", "name", "status", "action"],
+    striped: true,
+    border: true,
+    hover: true,
+    condensed: true,
+    size: Size.Sm
+});
+
+table.add({item: ["1", "john doe", "active", new Button({text: "edit", color: Color.Primary})]});
+table.add({item: ["1", "john doe", "active", new Button({text: "edit", color: Color.Primary})]});
+table.add({item: ["1", "john doe", "active", new Button({text: "edit", color: Color.Primary})]});
+table.add({item: ["1", "john doe", "active", new Button({text: "edit", color: Color.Primary})]});
+table.add({item: ["1", "john doe", "active", new Button({text: "edit", color: Color.Primary})]});
+table.add({item: ["1", "john doe", "active", new Button({text: "edit", color: Color.Primary})]});
+
+
+const grid = new Grid({});
+
+grid.add(new Button({text: "sample1"}), [GridSize.Lg6]);
+grid.add(new Button({text: "sample2"}), [GridSize.Lg6]);
+
+
+const selectaddon = new SelectBoxAddon({
+    filter: {},
+    prefix: new Button({text: new FaIcon(FaIcons.Search), color: Color.Success, size: Size.Sm}),
+    hasfeedback: true
+});
+
+selectaddon.add("a", "marjon cajocon");
+selectaddon.add("ar", "smarjon cajocon");
+selectaddon.add("aer", "sfmarjon cajocon");
+selectaddon.add("ha", "fdmarjon cajocon");
+selectaddon.add("afd", "smarjon cajocon");
+selectaddon.add("aa", "fdsmarjon cajocon");
+
+selectaddon.check("VAlidated", Message.Success);
+
+selectaddon.tf.tf.AddEventListener("change", () => {
+    console.log(selectaddon.value());
+});
+
+MyApp.Navigate(new Container({
+    body: new Column([
+        switch_them,
+        20,
+        btn,
+        5,
+        label,
+        btn2,
+        btn_link,
+        prog,
+        page,
+        bread,
+        pager,
+        lgroup,
+        card,
+        tab,
+        tab2,
+        drop,
+        alrt,
+        tf1,
+        tf2,
+        tf3,
+        radio,
+        check,
+        select,
+        open,
+        20,
+        new CardV2({body: table, bodyPadding: true, header: "sample header"}),
+        20,
+        grid,
+        10,
+        selectaddon,
+        20
+    ])
+}));
 
 MyApp.Run();
 

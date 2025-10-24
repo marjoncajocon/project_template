@@ -2910,10 +2910,15 @@ class CheckBox extends div {
   constructor(o: {
     label?: string | Widget,
     inline?: boolean,
-    change?: (v: boolean) => void
+    change?: (v: boolean) => void,
+    switch?: boolean
   }) {
     super();
-    super.AddClass("checkbox");
+    
+    if (o.switch != undefined && o.switch)
+      super.AddClass("form-switch");
+    else
+      super.AddClass("form-check");
     
     if (o.inline != undefined && o.inline) {
       super.AddStyle({display: "inline"});
@@ -2923,19 +2928,18 @@ class CheckBox extends div {
       type: InputType.Checkbox
     });
 
-    const lbl = new label();
-    
-    lbl.Add(this.tf);
+    this.tf.AddClass("form-check-input");
 
-    super.Add(lbl);
+
+    super.Add(this.tf);
     
     if (o.label != undefined) {
       if (typeof(o.label) == "string") {
-        const a = new span();
+        const a = new span().AddClass("form-check-label");
         a.Html(o.label);
-        lbl.Add(a);
+        super.Add(a);
       } else {
-        lbl.Add(o.label);
+        super.Add(new Row([o.label]).AddClass("form-check-label"));
       }
     }
 
@@ -2972,45 +2976,133 @@ class CheckBox extends div {
   }
 }
 
-class SelectBox extends select {
+class SelectBox extends div {
+  tf: select
+  err: Panel
   constructor(o: {
-    multiple?: boolean
+    prefix?: string|Widget,
+    suffix?: string|Widget,
+    multiple?: boolean,
+    hasfeedback?: boolean
   }) {
     super();
-    super.AddClass("form-control");
+    super.AddStyle({"width": "100%"});
+
+    if (o.prefix != undefined || o.suffix != undefined) {
+      super.AddClass("input-group");
+    }
+
+    this.tf = new select();
+
+    this.tf.AddClass("form-control");
+
     if (o.multiple != undefined && o.multiple) {
-      super.AddAttr({
+      this.tf.AddAttr({
         multiple: ""
       });
     }
+
+    if (o.prefix != undefined) {
+      if (typeof(o.prefix) == "string") {
+        const lbl = new span().AddClass("input-group-text");
+        lbl.Html(o.prefix);
+        super.Add(lbl);
+      } else {
+        super.Add(o.prefix);
+      }
+    }
+
+    super.Add(this.tf);
+   
+    
+    if (o.suffix != undefined) {
+      if (typeof(o.suffix) == "string") {
+        const lbl = new span().AddClass("input-group-text");
+        lbl.Html(o.suffix);
+        super.Add(lbl);
+      } else {
+        super.Add(o.suffix);
+      }
+    }
+
+
+    this.err = new Panel().AddStyle({
+      // position: "absolute",
+      // bottom: "-20px",
+      // right: "0px"
+    });
+    
+    if (o.hasfeedback != undefined && o.hasfeedback) {
+      super.AddClass(["has-feedback"]);
+      super.Add(this.err);
+    }
+
   }
 
   clear() {
-
+    this.tf.Clear();
   }
 
   add(key: string, value: string) {
     const o = new option();
     o.AddAttr({value: key});
     o.Text(value);
-    super.Add(o);
+    this.tf.Add(o);
   }
 
   value(v: string|null = null) {
     if (v == null) {
-      return this.GetValue();
+      return this.tf.GetValue();
     } else {
-      this.AddValue(v);
+      this.tf.AddValue(v);
     }
   }
 
   enable(v: boolean = true) {
     if (v) {
-      this.DeleteAttr("disabled");
+      this.tf.DeleteAttr("disabled");
     } else {
-      this.AddAttr({
+      this.tf.AddAttr({
         disabled: ""
       });
+    }
+  }
+
+  check(msg: string, type: Message, hide: boolean = false) {
+    
+    if (hide) {
+      super.DeleteClass(["has-success", "has-warning", "has-error"]);
+      this.err.Hide();  
+      return;
+    }
+
+    super.DeleteClass(["has-success", "has-warning", "has-error"]);
+    this.err.DeleteClass([`text-${Color.Success}`, `text-${Color.Warning}`, `text-${Color.Danger}`])
+    this.tf.DeleteClass(["is-invalid", "is-valid"]);
+    
+    this.err.DeleteClass(["valid-feedback", "invalid-feedback"]);
+
+    if (type == Message.Success) {
+      this.err.AddClass("valid-feedback");
+      super.AddClass("has-success");
+      this.tf.AddClass("is-valid");
+      this.err.AddClass(`text-${Color.Success}`);
+    } else if (type == Message.Warning) {
+      // super.AddClass("has-warning");
+      // this.err.AddClass(`text-${Color.Warning}`);
+    } else {
+      super.AddClass("has-error");
+      this.err.AddClass("invalid-feedback");
+      this.err.AddClass(`text-${Color.Danger}`);
+      this.tf.AddClass("is-invalid");
+    }
+
+    if (msg == "") {
+      this.err.Hide();
+    } else {
+      this.err.Show();
+      this.err.Clear();
+      this.err.Html(msg);
     }
   }
 }
@@ -3259,7 +3351,7 @@ class Modal extends div {
     footer?: (Widget)[]
   }) {
     super();
-    super.AddClass(["modal", "fade"]);
+    super.AddClass(["modal"]);
     super.AddStyle({
       display: "none"
     });
@@ -3283,18 +3375,17 @@ class Modal extends div {
     const header = new div().AddClass("modal-header");
 
     const close = new button();
+
     close.AddAttr({
       type: "button",
-      class: "close",
+      class: "btn-close",
       "data-dismiss": "modal"
     });
-    close.Html("×");
 
     close.AddEventListener("click", () => {
       this.hide(null);
     });
 
-    header.Add(close);
 
     if (o.label != undefined) {
       if (typeof(o.label) == "string") {
@@ -3306,6 +3397,8 @@ class Modal extends div {
         header.Add(o.label);
       }
     }
+
+    header.Add(close);
     /// end header
 
     const body = new div().AddClass("modal-body");
@@ -3326,7 +3419,7 @@ class Modal extends div {
     }
 
     this.backdrop = new div();
-    this.backdrop.AddClass(["modal-backdrop", "fade", "in"]);
+    this.backdrop.AddClass(["modal-backdrop", "show"]);
 
     this.content = body;
 
@@ -3350,11 +3443,10 @@ class Modal extends div {
     super.AddStyle({
       display: "block"
     });
-    super.AddClass("in");
 
     this.body.appendChild(this.backdrop.control);
   
-    this.backdrop.AddClass(["modal-backdrop", "fade", "in"]);
+    this.backdrop.AddClass(["modal-backdrop", "show"]);
 
     this.backdrop.AddEventListener("click", () => {
       this.hide(null);
@@ -3369,7 +3461,6 @@ class Modal extends div {
     super.AddStyle({
       display: "none"
     });
-    super.DeleteClass("in");
     
     this.body.classList.remove("modal-open");
 
@@ -3610,7 +3701,7 @@ class CardV2 extends div {
   }) {
     super()
     super.AddStyle({
-      "background-color": "white",
+      "background-color": "var(--bs-white-bg)",
       "border-radius": "5px",
       "box-shadow": "0 0 2px rgba(0, 0, 0, 0.3)"
     })
@@ -3619,7 +3710,7 @@ class CardV2 extends div {
       
       const header = new Panel().AddStyle({
         height: "46.41px",
-        "border-bottom": "1px solid #dee2e6",
+        "border-bottom": "1px solid var(--bs-secondary-bg)",
         "padding": "12px 20px"
       });
 
@@ -3755,7 +3846,6 @@ class ChartV1 extends canvas {
 
 class SelectBoxAddon extends div{
   tf: SelectBox
-  err: Panel
   filterPanel: Panel = new Panel()
   items: {key: string, value: string}[]
   constructor(o: { 
@@ -3798,44 +3888,16 @@ class SelectBoxAddon extends div{
     super.AddStyle({
       "position": "relative"
     });
-    this.tf = new SelectBox({});
-
-    const prefix = new span();
-    prefix.AddClass("input-group-addon");
-    if (o.prefix != undefined) {
-      if (typeof(o.prefix) == "string") {
-        prefix.Html(o.prefix);
-      } else {
-        prefix.Add(o.prefix);
-      }
-      super.Add(prefix);
-    }
+    
+    this.tf = new SelectBox({
+      prefix: o.prefix,
+      suffix: o.suffix,
+      hasfeedback: o.hasfeedback
+    });
 
     super.Add(this.tf);
 
-    const suffix = new span();
-    suffix.AddClass("input-group-btn");
-    if (o.suffix != undefined) {
-      
-      const btn = new Button({text: o.suffix, color: Color.Default});
-      suffix.Add(btn);
-      super.Add(suffix);
-      
-      btn.AddEventListener("click", () => {
-        if (o.suffix_fn != undefined) o.suffix_fn();
-      });
-    }
-
-    this.err = new Panel().AddStyle({
-      position: "absolute",
-      bottom: "-20px",
-      right: "0px"
-    });
-    if (o.hasfeedback != undefined && o.hasfeedback) {
-      super.AddClass(["has-feedback"]);
-      super.Add(this.err);
-    }
-
+  
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// START local filter ///////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3843,7 +3905,7 @@ class SelectBoxAddon extends div{
     if (o.filter != undefined) {
 
       const search = new TextFieldAddon({
-        prefix: o.prefix != undefined ? new Icon(Icons.Search) : undefined,
+        prefix: o.prefix != undefined ? new FaIcon(FaIcons.Search) : undefined,
         hasfeedback: o.hasfeedback,
         size: o.size,
         placeholder: o.placeholder
@@ -3860,7 +3922,7 @@ class SelectBoxAddon extends div{
         "top": "0px",
         "left": "0px",
         "width": `100%`,
-        "background-color": "white",
+        "background-color": "var(--bs-secondary-bg)",
         "border-radius": "3px 3px 3px 3px",
         "box-shadow": "0 0 2px rgba(0, 0, 0, 0.3)",
         "z-index": "100",
@@ -3938,11 +4000,11 @@ class SelectBoxAddon extends div{
           const txt = new Panel().Add(new Text({text: item.value})).AddClass("b-search-filter-item").AddEventListener("click", () => {
             this.tf.value(item.key);
             /// back to normal
-            this.tf.DeleteAttr("disabled");
+            this.tf.tf.DeleteAttr("disabled");
             this.filterPanel.Hide();
             selected_index = 0;
 
-            this.tf.control.dispatchEvent(new Event('change'));
+            this.tf.tf.control.dispatchEvent(new Event('change'));
           });
 
           if (item.value.toLocaleLowerCase().indexOf(`${search.value()}`.toLowerCase()) > -1) {
@@ -4059,7 +4121,7 @@ class SelectBoxAddon extends div{
           this.tf.DeleteAttr("disabled");
           this.filterPanel.Hide();
           selected_index = 0;
-          this.tf.control.dispatchEvent(new Event('change'));
+          this.tf.tf.control.dispatchEvent(new Event('change'));
         }
         //}, 500);
       });
@@ -4087,39 +4149,14 @@ class SelectBoxAddon extends div{
 
   check(msg: string, type: Message, hide: boolean = false) {
     
-    if (hide) {
-      super.DeleteClass(["has-success", "has-warning", "has-error"]);
-      this.err.Hide();  
-      return;
-    }
+    this.tf.check(msg, type, hide);
 
-    super.DeleteClass(["has-success", "has-warning", "has-error"]);
-    this.err.DeleteClass([`text-${Color.Success}`, `text-${Color.Warning}`, `text-${Color.Danger}`])
-    
-    if (type == Message.Success) {
-      super.AddClass("has-success");
-      this.err.AddClass(`text-${Color.Success}`);
-    } else if (type == Message.Warning) {
-      super.AddClass("has-warning");
-      this.err.AddClass(`text-${Color.Warning}`);
-    } else {
-      super.AddClass("has-error");
-      this.err.AddClass(`text-${Color.Danger}`);
-    }
-
-    if (msg == "") {
-      this.err.Hide();
-    } else {
-      this.err.Show();
-      this.err.Clear();
-      this.err.Html(msg);
-    }
   }
 
   clear() {
     // clear the time contentts
     this.items.length = 0;
-    this.tf.Clear();
+    this.tf.tf.Clear();
   }
 
   add(key: string, value: string) {
@@ -4131,22 +4168,22 @@ class SelectBoxAddon extends div{
     const o = new option();
     o.AddAttr({value: key});
     o.Text(value);
-    this.tf.Add(o);
+    this.tf.tf.Add(o);
   }
 
   value(v: string|null = null) {
     if (v == null) {
-      return this.tf.GetValue();
+      return this.tf.tf.GetValue();
     } else {
-      this.tf.AddValue(v);
+      this.tf.tf.AddValue(v);
     }
   }
 
   enable(v: boolean = true) {
     if (v) {
-      this.tf.DeleteAttr("disabled");
+      this.tf.tf.DeleteAttr("disabled");
     } else {
-      this.tf.AddAttr({
+      this.tf.tf.AddAttr({
         disabled: ""
       });
     }
@@ -4198,7 +4235,7 @@ class Dialog extends Panel {
 
     // add the componts here 
     const body = new Panel().AddStyle({
-      "background-color": "white",
+      "background-color": "var(--bs-secondary-bg)",
       "border-radius": "5px",
       "max-width": "98%",
       "position": "relative"
@@ -4296,11 +4333,8 @@ class Dialog extends Panel {
 const Alert = async (msg: string, color?: Color) => {
 
   const dialog = new Dialog();
-  const logo = new Icon(Icons.Alert).AddClass("dialog-alert-icon");
-  if (color != undefined) {
-    logo.AddClass(["text-" + color]);
-  }
-  const okay = new Button({text: new Row([new Icon(Icons.Check), 5, "OK"]), color: Color.Default});
+  const logo = new FaIcon(FaIcons.InfoCircle)
+  const okay = new Button({text: new Row([new FaIcon(FaIcons.Check), 5, "OK"]), color: Color.Success, size: Size.Sm});
 
 
   const keydown_event = (e: KeyboardEvent) => {
@@ -4328,32 +4362,31 @@ const Alert = async (msg: string, color?: Color) => {
     padding: 7,
     width: "480px",
     widget: new Column([
+      20,
       new center().Add(logo),
       20,
       new center().Add(new Text(msg)).AddStyle({ "font-size": "15px", "font-weight": "bold", "letter-spacing": "2px", "padding-left": "40px", "padding-right": "40px" }),
-      new hr(),
+      30,
       new center().Add([
         okay
-      ])
+      ]),
+      10
     ])
   });
 }
 
 const Confirm = async (msg: string, color?: Color) => {
   const dialog = new Dialog();
-  const logo = new Icon(Icons.QuestionSign).AddClass("dialog-alert-icon");
-  if (color != undefined) {
-    logo.AddClass(["text-" + color]);
-  }
-  const okay = new Button({text: new Row([new Icon(Icons.Check), 5, "OK"]), color: Color.Default});
+  const logo = new FaIcon(FaIcons.QuestionCircle)
+  const okay = new Button({text: new Row([new FaIcon(FaIcons.CheckCircle), 5, "OK"]), color: Color.Success, size: Size.Sm});
   okay.AddStyle({
-    "width": "90px"
+    "width": "100px"
   });
 
-  const cancel = new Button({text: new Row([new Icon(Icons.Trash), 5, "CANCEL"]), color: Color.Default});
+  const cancel = new Button({text: new Row([new FaIcon(FaIcons.WindowClose), 5, "CANCEL"]), color: Color.Danger, size: Size.Sm});
   cancel.AddStyle({
     "margin-left": "10px",
-    "width": "90px"
+    "width": "100px"
   });
 
   
@@ -4379,13 +4412,15 @@ const Confirm = async (msg: string, color?: Color) => {
     padding: 7,
     width: "480px",
     widget: new Column([
+      20,
       new center().Add(logo),
       20,
       new center().Add(new Text(msg)).AddStyle({ "font-size": "15px", "font-weight": "bold", "letter-spacing": "2px", "padding-left": "40px", "padding-right": "40px" }),
-      new hr(),
+      30,
       new center().Add([
         okay, cancel
-      ])
+      ]),
+      10
     ])
   });
 };
