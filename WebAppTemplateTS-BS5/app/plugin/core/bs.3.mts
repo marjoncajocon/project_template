@@ -1280,7 +1280,8 @@ class Html extends span {
 
 class Badge extends span {
   constructor(o: {
-    text: string | Widget
+    text: string | Widget,
+    color?: Color
   }) {
     super();
     super.AddClass("badge");
@@ -1291,6 +1292,10 @@ class Badge extends span {
       } else {
         super.Add(o.text);
       }
+    }
+
+    if (o.color != undefined) {
+      super.AddClass(`bg-${o.color}`);
     }
 
   }
@@ -1536,6 +1541,8 @@ class Pagination extends div {
   
     if (o.size != undefined) {
       this.gul.AddClass(`pagination-${o.size}`);
+    } else {
+      this.gul.AddClass(`pagination-${Size.Sm}`);
     }
 
     this.list = [];
@@ -1599,11 +1606,12 @@ class Pagination extends div {
     this.gul.Clear();
 
     // Group previous
-    const prev_all = new li();
+    const prev_all = new li().AddClass("page-item");
     const prev_all_a = new a().AddAttr({
       href: "#"
     });
-    prev_all_a.Add(new Icon(Icons.StepBackward));
+    prev_all_a.AddClass("page-link");
+    prev_all_a.Add(new FaIcon(FaIcons.AngleDoubleLeft));
     prev_all.Add(prev_all_a);
     this.gul.Add(prev_all);
 
@@ -1630,11 +1638,12 @@ class Pagination extends div {
       }
     });
 
-    const prev = new li();
+    const prev = new li().AddClass("page-item");
     const prev_a = new a().AddAttr({
       href: "#"
     });
-    prev_a.Add(new Icon(Icons.TriangleLeft));
+    prev_a.Add(new FaIcon(FaIcons.AngleLeft));
+    prev_a.AddClass("page-link");
     prev.Add(prev_a);
     this.gul.Add(prev);
     
@@ -1669,11 +1678,12 @@ class Pagination extends div {
       this.add(i);
     }
 
-    const next = new li();
+    const next = new li().AddClass("page-item");
     const next_a = new a().AddAttr({
       href: "#"
     });
-    next_a.Add(new Icon(Icons.TriangleRight));
+    next_a.AddClass("page-link");
+    next_a.Add(new FaIcon(FaIcons.AngleRight));
     next.Add(next_a);
     this.gul.Add(next);
 
@@ -1702,12 +1712,13 @@ class Pagination extends div {
 
 
     //// Group previous
-    const next_all = new li();
+    const next_all = new li().AddClass("page-item");
     const next_all_a = new a().AddAttr({
       href: "#"
     });
+    next_all_a.AddClass("page-link");
     //next_all_a.Html("»»»");
-    next_all_a.Add(new Icon(Icons.StepForward));
+    next_all_a.Add(new FaIcon(FaIcons.AngleDoubleRight));
     next_all.Add(next_all_a);
     this.gul.Add(next_all);
 
@@ -1939,6 +1950,7 @@ class Card extends div {
     // }
 
     const panel_heading = new div().AddClass("card-header");
+    
     if (typeof(o.header) == "string") {
       panel_heading.Add(new Html(o.header));
     } else {
@@ -3604,6 +3616,7 @@ class Table extends div {
 
     if (o.condensed != undefined && o.condensed) {
       this.table.AddClass("table-condensed");
+      this.table.AddClass("table-sm");
     }
 
     this.tbody = new tbody();
@@ -4267,11 +4280,11 @@ class Dialog extends Panel {
 
     // add the componts here 
     const body = new Panel().AddStyle({
-      "background-color": "var(--bs-secondary-bg)",
       "border-radius": "5px",
       "max-width": "98%",
       "position": "relative"
     });
+    body.AddClass("card");
 
     if (o.borderRadius != undefined) {
       body.AddStyle({
@@ -4724,6 +4737,41 @@ class NetworkQueue {
 */
 // utils
 
+class Spinner extends span {
+  constructor(o: {
+    size?: Size,
+    grow?: boolean,
+    text?: string,
+    color?: Color
+  }) {
+    super();
+
+    const type = o.grow != undefined && o.grow ? "grow" : "border";
+
+    const spin = new span().AddClass(["spinner-" + type]);
+
+    if (o.size != undefined) {
+      spin.AddClass(`spinner-${type}-` + o.size);
+    } else {
+      spin.AddClass(`spinner-${type}-` + Size.Sm);
+    }
+
+    if (o.color != undefined) {
+      spin.AddClass("text-" + o.color);
+    }
+
+    super.Add([
+      spin
+    ]);
+
+    if (o.text != undefined) {
+      const t = new span();
+      t.Html(" " + o.text);
+      super.Add(t);
+    }
+  }
+}
+
 class Loader extends div {
   dialog: Dialog
   constructor() {
@@ -4862,6 +4910,7 @@ export {
 };
 
 export {
+  Spinner,
   FaIcon,
   FaIcons,
   Center,
