@@ -2596,10 +2596,11 @@ class TextFieldAddon extends div{
         "z-index": "12",
         "left": "0",
         "top": "0",
-        "background-color": `var(--bs-white-bg)`,
         "border-radius": "3px",
         "box-shadow": "0 0 2px rgba(0, 0, 0, 0.3)"
       }).AddClass("b-filter-panel");
+      
+      search_panel.AddClass("card");
       
       let selected_index: number = 0;
       const search_found: {key: string, panel: Panel}[] = [];
