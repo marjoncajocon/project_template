@@ -2601,7 +2601,6 @@ class TextFieldAddon extends div{
       }).AddClass("b-filter-panel");
       
       search_panel.AddClass("card");
-      
       let selected_index: number = 0;
       const search_found: {key: string, panel: Panel}[] = [];
 
@@ -2678,6 +2677,10 @@ class TextFieldAddon extends div{
         search_panel.Show();
         search.tf.control.focus();
         search_fn();
+      });
+
+      search.AddEventListener("change", () => {
+        this.tf.control.dispatchEvent(new Event('change'));
       });
       
       search.AddEventListener("keyup", (e) => {
