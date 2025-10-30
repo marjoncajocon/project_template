@@ -143,7 +143,8 @@ class MarAdmin extends div {
             "height": "30px",
             "width": "30px",
             "border": "none",
-            "background-color": "white"
+            "background-color": "var(--bs-secondary-bg)",
+            "border-radius": "5px"
         });
 
         const top = new div().AddClass("mar-top-bar");
