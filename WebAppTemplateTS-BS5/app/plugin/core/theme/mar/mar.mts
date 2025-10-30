@@ -1,11 +1,11 @@
-import { Button, Center, Color, Column, Column2, Flex, Icon, Icons, InputType, Row, Text, TextField, TextFieldAddon } from "../../bs.3.mts";
+import { Button, Center, Color, Column, Column2, FaIcon, FaIcons, Flex, Icon, Icons, InputType, Row, Text, TextField, TextFieldAddon } from "../../bs.3.mts";
 import { button, div, img, Widget } from "../../core.mts";
 import "./mar.css"
 
 class MarMenu extends div {
     btn: div
     constructor(o: {
-        logo?: Icon,
+        logo?: FaIcon,
         title?: string,
         menu?: MarMenu[],
         click?: () => void,
@@ -138,7 +138,7 @@ class MarAdmin extends div {
         sider: div,
     }) {
 
-        const bar = new button().Add(new Icon(Icons.MenuHamburger)).AddStyle({
+        const bar = new button().Add(new FaIcon(FaIcons.Bars)).AddStyle({
             "margin-right": "5px",
             "height": "30px",
             "width": "30px",

@@ -2048,9 +2048,10 @@ class Tab extends div {
     this.content.AddStyle({
       "border-bottom-right-radius": "4px",
       "border-bottom-left-radius": "4px",
-      "border-left": "1px solid var(--bs-secondary-bg)",
-      "border-right": "1px solid var(--bs-secondary-bg)",
-      "border-bottom": "1px solid var(--bs-secondary-bg)"
+      "border-left": "1px solid",
+      "border-right": "1px solid",
+      "border-bottom": "1px solid",
+      "border-color": "var(--bs-border-color)"
     });
     
     if (o.padding != undefined) {
