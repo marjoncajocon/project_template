@@ -4080,9 +4080,9 @@ class SelectBoxAddon extends div{
         e.stopPropagation();
         this.tf.AddAttr({"disabled": ""});
         this.filterPanel.Show();
-        searchfn();
         search.tf.control.focus();
         search.tf.value(`${this.tf.value()}`);
+        searchfn();
         const len = `${search.value()}`.length;
         //@ts-ignore
         search.tf.control.setSelectionRange(len, len);
