@@ -3376,6 +3376,12 @@ class ModalModern extends div {
 
   }
 
+  public SetDispose(dispose: () => void): void {
+    this.dialog.SetDispose(() => {
+      dispose();
+    });
+  }
+
   hide(msg: string|null = null) {
     this.dialog.close(msg);
   }
