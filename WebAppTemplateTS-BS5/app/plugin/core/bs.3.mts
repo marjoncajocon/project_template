@@ -4391,8 +4391,11 @@ class Dialog extends Panel {
 const Alert = async (msg: string, color?: Color) => {
 
   const dialog = new Dialog();
-  const logo = new FaIcon(FaIcons.InfoCircle)
-  const okay = new Button({text: new Row([new FaIcon(FaIcons.Check), 5, "OK"]), color: Color.Success, size: Size.Sm});
+  const logo = new FaIcon(FaIcons.InfoCircle);
+  if (color == Color.Danger) 
+    logo.AddClass("text-danger");
+  
+  const okay = new Button({text: new Row([new FaIcon(FaIcons.Check), 5, "OK"]), color: color != undefined ? color: Color.Success, size: Size.Sm});
 
 
   const keydown_event = (e: KeyboardEvent) => {
@@ -4423,7 +4426,7 @@ const Alert = async (msg: string, color?: Color) => {
       20,
       new center().Add(logo),
       20,
-      new center().Add(new Text(msg)).AddStyle({ "font-size": "15px", "font-weight": "bold", "letter-spacing": "2px", "padding-left": "40px", "padding-right": "40px" }),
+      new center().Add(new Text(msg)).AddClass(color == Color.Danger ? "text-danger": "a..a").AddStyle({ "font-size": "15px", "font-weight": "bold", "letter-spacing": "2px", "padding-left": "40px", "padding-right": "40px" }),
       30,
       new center().Add([
         okay
