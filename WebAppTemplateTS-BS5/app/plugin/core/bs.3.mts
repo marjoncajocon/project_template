@@ -4978,18 +4978,25 @@ class Accordion extends div {
         }
       } else {
         
-        for (const item of this.items) {
-          item.btn.DeleteClass("collapsed");
-          item.collapse.DeleteClass("show");
-        }
-
         if (collapse.HasClass("show")) {
+          
+          for (const item of this.items) {
+            item.btn.DeleteClass("collapsed");
+            item.collapse.DeleteClass("show");
+          }
+
           collapse.DeleteClass("show");
-          btn.AddClass("collapsed");
+          btn.DeleteClass("collapsed");
           collapse.AddClass("collapsing");
         } else {
+          
+          for (const item of this.items) {
+            item.btn.DeleteClass("collapsed");
+            item.collapse.DeleteClass("show");
+          }
+          
           collapse.AddClass("show");
-          btn.DeleteClass("collapsed");
+          btn.AddClass("collapsed");
         }
       }
     });
