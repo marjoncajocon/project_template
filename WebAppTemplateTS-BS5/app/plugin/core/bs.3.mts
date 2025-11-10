@@ -3359,6 +3359,8 @@ class ModalModern extends div {
         size = `798px`
       } else if (this.size == Size.Lg) {
         size = `994px`
+      } else if (this.size == Size.xxl) {
+        size = `98%`
       }
 
     return await this.dialog.show({
