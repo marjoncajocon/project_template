@@ -1,0 +1,83 @@
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"log"
+	"net/http"
+	"web/db"
+)
+
+
+
+func main() {
+
+	fs := http.FileServer(http.Dir("./app/build"))
+
+	mux := http.NewServeMux()
+
+	server := &http.Server{
+		Addr:        ":8000",
+		Handler:     mux,
+    MaxHeaderBytes: 1024, // Set the maximum header size to 1024 bytes
+	}
+
+
+	mux.Handle("/", fs)
+
+	mux.HandleFunc("/hellow", func(rw http.ResponseWriter, r *http.Request) {
+
+		func() {
+
+			con := db.GetConnection()
+
+			rows, err := con.Query("select fund_json from check_lists limit 1")
+
+			if err == nil {
+				defer rows.Close()
+				for rows.Next() {
+					var fund string
+					rows.Scan(&fund)
+					fmt.Println(fund)
+				}
+			}
+
+		}()
+
+		// fmt.Println(r.Method)
+		// fmt.Println(r.Body)
+
+		rw.Write([]byte("Hello World"))
+	})
+
+	mux.HandleFunc("/api/test", func(rw http.ResponseWriter, r *http.Request) {
+		rw.Header().Add("Content-Type", "application/json")
+		rw.Header().Add("Access-Control-Allow-Origin", "*")
+
+		if r.Method == "POST" {
+
+			/*set max body of the bytes*/
+			r.Body = http.MaxBytesReader(rw, r.Body, 1024 * 10)
+			/* end set max body size */
+
+	
+			/* for parsing json*/
+			payload := struct {
+				Username string `json:"username"`
+				Password string `json:"password"`
+			}{}
+			err := json.NewDecoder(r.Body).Decode(&payload)
+			/* end parsing json */
+
+			auth := r.Header.Get("X-Auth")
+			fmt.Println(auth)
+			fmt.Println(err)
+			fmt.Println(payload)
+
+			rw.Write([]byte("hellow world"))
+		}
+
+	})
+
+	log.Fatal(server.ListenAndServe())
+}

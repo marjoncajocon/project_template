@@ -1,0 +1,11 @@
+.dropdown-menu.show[aria-labelledby="themes"] {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap
+}
+
+.dropdown-menu.show[aria-labelledby="themes"] .dropdown-item {
+    width: 33.333%
+}
+
