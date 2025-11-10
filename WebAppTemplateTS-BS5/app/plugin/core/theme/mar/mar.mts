@@ -41,7 +41,7 @@ class MarMenu extends div {
 
         super.Add(btn);
         const drop = new div().AddStyle({
-            "background-color": "rgba(0, 0, 0, 0.2)"
+            "background-color": "rgba(0, 0, 0, 0.1)"
         });
 
         if (o.menu != undefined) {
@@ -102,13 +102,15 @@ class MarAdmin extends div {
         title?: string,
         menu?: Row,
         sideBarColor?: string,
-        sideMenu?: MarMenu[]
+        sideMenu?: MarMenu[],
+        sideBgColor?: Color
     }) {
         super();
 
         const sider = this.initSider({
             sidebar: o.sideMenu,
-            sideBarColor: o.sideBarColor
+            sideBarColor: o.sideBarColor,
+            sideBgColor: o.sideBgColor
         });
 
         this.bbody = this.initBody();
@@ -135,7 +137,7 @@ class MarAdmin extends div {
         title?: string,
         menu?: Row,
         body: div,
-        sider: div,
+        sider: div 
     }) {
 
         const bar = new button().Add(new FaIcon(FaIcons.Bars)).AddStyle({
@@ -212,7 +214,8 @@ class MarAdmin extends div {
 
     initSider(o: {
         sidebar?: MarMenu[],
-        sideBarColor?: string
+        sideBarColor?: string,
+        sideBgColor?: Color
     }) {
         const sider = new div().AddClass("mar-sider");
 
@@ -220,6 +223,10 @@ class MarAdmin extends div {
             sider.AddStyle({
                 "background-color": o.sideBarColor
             });
+        }
+
+        if (o.sideBgColor != undefined) {
+            sider.AddClass("bg-" + o.sideBgColor);
         }
 
         if (o.sidebar != undefined) {
