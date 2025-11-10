@@ -2480,6 +2480,7 @@ class TextField extends input {
 class TextFieldAddon extends div{
   tf: TextField
   err: Panel
+  gsearch: TextFieldAddon|null
   document_fn: (() => void) =  () => {};
   constructor(o: { 
     size?: Size,
@@ -2521,7 +2522,7 @@ class TextFieldAddon extends div{
 
     super.Add(this.tf);
     
-    
+    this.gsearch = null;
 
     if (o.suffix != undefined) {
       //suffix.AddClass("input-group-btn");
@@ -2567,7 +2568,8 @@ class TextFieldAddon extends div{
         prefix: new FaIcon(FaIcons.Search), 
         placeholder: o.placeholder,
         size: o.size,
-        type: o.type
+        type: o.type,
+        hasfeedback: o.hasfeedback
       });
 
       const blocker = new Panel().AddStyle({
@@ -2678,11 +2680,16 @@ class TextFieldAddon extends div{
         search_panel.Show();
         search.tf.control.focus();
         search.tf.value(`${this.tf.value()}`);
+        this.tf.control.dispatchEvent(new Event("change"));
         search_fn();
       });
 
       search.AddEventListener("change", () => {
         this.tf.control.dispatchEvent(new Event('change'));
+      });
+
+      search.AddEventListener("input", () => {
+        this.tf.control.dispatchEvent(new Event("change"));
       });
       
       search.AddEventListener("keyup", (e) => {
@@ -2750,6 +2757,8 @@ class TextFieldAddon extends div{
 
       search_panel.Add(search_result);
 
+      this.gsearch = search;
+
     }
     /*********** End Filter ***************/
 
@@ -2764,6 +2773,10 @@ class TextFieldAddon extends div{
   }
 
   check(msg: string, type: Message, hide: boolean = false) {
+
+    if (this.gsearch != null) {
+      this.gsearch.check("", type, hide);
+    }
     
     if (hide) {
       super.DeleteClass(["has-success", "has-warning", "has-error"]);
