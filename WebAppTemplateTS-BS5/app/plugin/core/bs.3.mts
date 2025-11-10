@@ -6,7 +6,7 @@ import "./icon/css/all.css";
 //import "./bootstrap3/css/theme-spacelab.css";
 
 import { Chart } from "./chartjs";
-import { a, button, canvas, center, col, div, fieldset, h4, hr, Http, i, input, label, legend, li, option, select, span, table, tbody, td, textarea, th, thead, tr, u, ul, Widget } from "./core.mts";
+import { a, button, canvas, center, col, div, fieldset, h2, h4, hr, Http, i, input, label, legend, li, option, select, span, table, tbody, td, textarea, th, thead, tr, u, ul, Widget } from "./core.mts";
 
 
 enum ChartType {
@@ -4906,6 +4906,100 @@ class FaIcon extends i {
   }
 }
 
+class Accordion extends div {
+  flush: boolean
+  items: {collapse: div, btn: div}[]
+  constructor(o: {flush?: boolean}) {
+    super();
+    super.AddClass("accordion");
+    //super.AddClass("accordion-flush");
+
+    this.flush = o.flush == undefined ? false : o.flush;
+
+    this.items = [];
+
+  }
+
+  add(title: string|Widget, body: string|Widget, show: boolean = false) {
+    const item = new div();
+    item.AddClass("accordion-item");
+
+    const header = new h2();
+    header.AddClass("accordion-header");
+
+    const btn = new button();
+    btn.AddClass("accordion-button");
+    btn.AddAttr({
+      type: "button"
+    });
+
+    if (typeof(title) == "string")
+      btn.Html(`${title}`);
+    else
+      btn.Add(title);
+
+    header.Add(btn);
+    
+    // body
+
+    const collapse = new div();
+    collapse.AddClass(["accordion-collapse", "collapse"]);
+
+    if (show) {
+      collapse.AddClass("show");
+    }
+
+    const content = new div();
+    content.AddClass("accordion-body");
+
+    collapse.Add(content);
+
+    item.Add([
+      header,
+      collapse
+    ]);
+
+    if (typeof(body) == "string")
+      content.Html(body);
+    else
+      content.Add(body);
+
+    this.items.push({collapse: collapse, btn: btn});
+
+    btn.AddEventListener("click", () => {
+
+      if (!this.flush) { 
+        if (collapse.HasClass("show")) {
+          collapse.DeleteClass("show");
+          btn.AddClass("collapsed");
+        } else {
+          collapse.AddClass("show");
+          btn.DeleteClass("collapsed");
+        }
+      } else {
+        
+        for (const item of this.items) {
+          item.btn.DeleteClass("collapsed");
+          item.collapse.DeleteClass("show");
+        }
+
+        if (collapse.HasClass("show")) {
+          collapse.DeleteClass("show");
+          btn.AddClass("collapsed");
+          collapse.AddClass("collapsing");
+        } else {
+          collapse.AddClass("show");
+          btn.DeleteClass("collapsed");
+        }
+      }
+    });
+
+    super.Add(item);
+
+  }
+
+}
+
 export {NetworkQueue};
 
 // plugin
@@ -4928,6 +5022,7 @@ export {
 };
 
 export {
+  Accordion,
   Spinner,
   FaIcon,
   FaIcons,
