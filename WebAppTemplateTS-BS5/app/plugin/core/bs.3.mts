@@ -4967,6 +4967,8 @@ class Accordion extends div {
     this.items.push({collapse: collapse, btn: btn});
 
     btn.AddEventListener("click", () => {
+      
+      collapse.DeleteClass("collapsing");
 
       if (!this.flush) { 
         if (collapse.HasClass("show")) {
