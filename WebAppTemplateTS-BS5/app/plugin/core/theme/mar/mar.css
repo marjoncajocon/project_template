@@ -1,13 +1,35 @@
 .mar-sider {
     width: 230px;
-    height: 100%;
+    height: calc(100% - 50px);
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 101;
-    padding-top: 50px;
+    z-index: 90;
+    padding: 10px 10px 10px 10px;
+    margin-top: 50px;
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
 }
+
+.mar-sider::-webkit-scrollbar {
+  width: 2px;
+}
+
+/* Track */
+.mar-sider::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+.mar-sider::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+.mar-sider::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
 
 .mar-top-bar {
     width: 100%;
@@ -18,6 +40,11 @@
     left: 0;
     padding-left: 230px;
     z-index: 99;
+    color: white!important;
+}
+
+.mar-top-bar i {
+    color: white;
 }
 
 .mar-body {
@@ -38,27 +65,28 @@
     margin: 0;
     cursor: pointer;
     /* border-bottom: 1px solid rgba(0, 0, 0, 0.1); */
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    /* border: 1px solid rgba(0, 0, 0, 0.1); */
     position: relative;
     user-select: none;
     font-weight: bold;
     /* box-shadow: 0 0 2px rgba(255, 255, 255, 0.3); */
+    border-radius: 5px;
 }
 
 .mar-menu-main {
     box-shadow: rgba(0, 0, 0, 0.25) 0 1px 0, inset rgba(255, 255, 255, 0.16) 0 1px 0;
 }
 
-.mar-menu:first-child {
+/* .mar-menu:first-child {
     border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
-}
+} */
 
-.mar-menu:last-child{
+/* .mar-menu:last-child{
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
+} */
 
 .mar-menu:hover {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(9, 141, 69, 0.2);
 }
 
 .mar-active {
@@ -66,5 +94,6 @@
 }
 
 .mar-link-active {
-    background-color: #15ba6e !important;
+    /* background-color: #15ba6e !important; */
+    color: white !important;
 }

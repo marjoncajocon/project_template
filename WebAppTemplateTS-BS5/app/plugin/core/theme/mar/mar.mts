@@ -31,8 +31,22 @@ class MarMenu extends div {
             arr.push(new Text({text: o.title}).AddStyle({"font-size": "12px"}));
         }
 
+        let chev_ron = new FaIcon(FaIcons.ChevronCircleDown);
+        chev_ron.AddStyle({
+            position: "absolute",
+            right: "5px",
+            top: "10px",
+            opacity: "0.5"
+        });
+
         if (o.title != undefined) {
-            btn.Add(new Row(arr, undefined, Flex.Center).AddStyle({"height": "100%"}));
+            btn.Add([
+                new Row(arr, undefined, Flex.Center).AddStyle({"height": "100%"})
+            ]);
+
+            if (o.menu != undefined  && o.menu.length > 0) {
+                btn.Add(chev_ron);
+            }
         }
 
         this.btn.AddStyle({
@@ -41,7 +55,9 @@ class MarMenu extends div {
 
         super.Add(btn);
         const drop = new div().AddStyle({
-            "background-color": "rgba(0, 0, 0, 0.1)"
+            "border-top": "1px solid #ddd",
+            "border-bottom": "1px solid #ddd",
+            "border-radius": "5px"
         });
 
         if (o.menu != undefined) {
@@ -68,12 +84,24 @@ class MarMenu extends div {
                     if (o.isMainMenu != undefined && o.isMainMenu) {
                         this.btn.AddClass("mar-menu-main");
                     }
+
+                    chev_ron.DeleteClass(FaIcons.ChevronCircleDown);
+                    chev_ron.DeleteClass(FaIcons.ChevronCircleUp);
+
+                    chev_ron.AddClass(FaIcons.ChevronCircleUp);
+
                 } else {
                     drop.AddClass("mar-active");
 
                     if (o.isMainMenu != undefined && o.isMainMenu) {
                         this.btn.DeleteClass("mar-menu-main");
                     }
+
+                    chev_ron.DeleteClass(FaIcons.ChevronCircleDown);
+                    chev_ron.DeleteClass(FaIcons.ChevronCircleUp);
+
+                    chev_ron.AddClass(FaIcons.ChevronCircleDown);
+
                 }
 
             });
@@ -81,12 +109,19 @@ class MarMenu extends div {
         } else {
             this.btn.AddEventListener("click", () => {
                 if (o.click != undefined) {
+
+                    const com = getComputedStyle(document.getElementsByClassName("mar-top-bar")[0]);
+
                     const d = document.getElementsByClassName("mar-menu");
                     for (const i of d) {
                         i.classList.remove("mar-link-active");
+                        //@ts-ignore
+                        i.style.backgroundColor = "";
                     }
 
                     this.btn.AddClass("mar-link-active");
+                    //@ts-ignore
+                    this.btn.control.style.backgroundColor = com.backgroundColor;
                     o.click();
                 }
             });
@@ -103,7 +138,8 @@ class MarAdmin extends div {
         menu?: Row,
         sideBarColor?: string,
         sideMenu?: MarMenu[],
-        sideBgColor?: Color
+        sideBgColor?: Color,
+        topBarColor?: string
     }) {
         super();
 
@@ -121,6 +157,7 @@ class MarAdmin extends div {
             menu: o.menu,
             body: this.bbody,
             sider: sider,
+            topBarColor: o.topBarColor
         });
         
     }
@@ -137,7 +174,8 @@ class MarAdmin extends div {
         title?: string,
         menu?: Row,
         body: div,
-        sider: div 
+        sider: div,
+        topBarColor?: string
     }) {
 
         const bar = new button().Add(new FaIcon(FaIcons.Bars)).AddStyle({
@@ -145,11 +183,16 @@ class MarAdmin extends div {
             "height": "30px",
             "width": "30px",
             "border": "none",
-            "background-color": "var(--bs-secondary-bg)",
+            "background-color": "rgba(0, 0, 0, 0)",
             "border-radius": "5px"
         });
 
         const top = new div().AddClass("mar-top-bar");
+
+        if (o.topBarColor != undefined)
+            top.AddStyle({  
+                "background-color": o.topBarColor
+            });
         
         const logo = new div().AddStyle({
             "width": "30px",
