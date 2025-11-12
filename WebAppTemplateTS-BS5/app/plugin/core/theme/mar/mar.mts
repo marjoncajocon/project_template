@@ -200,13 +200,15 @@ class MarAdmin extends div {
             "border-radius": "50%",
             "border": "1px solid grey"
         });
+        
+        const title = new Text({text: o.title != undefined ? o.title : ""}).AddStyle({"margin-left": "5px", "fong-weight": "bold"});
 
         top.Add(
             new Row([
                 new Row([
                     bar,
                     o.logo != undefined ? logo : "",
-                    o.title != undefined ? new Text({text: o.title}).AddStyle({"margin-left": "5px", "fong-weight": "bold"}) : ""
+                    o.title != undefined ?  title: ""
                 ], undefined, Flex.Center).AddStyle({"height": "100%", "margin-left": "5px"}),
                 o.menu != undefined ? o.menu : ""
             ], Flex.SpaceBetween, Flex.Center).AddStyle({"height": "100%"})
@@ -216,8 +218,9 @@ class MarAdmin extends div {
 
         let flag = true;
 
-        bar.AddEventListener("click", () => {
-            if (flag) {
+        const winEvent = () => {
+            if (window.screen.width < 1000) {
+                flag = false;
                 o.sider.AddStyle({
                     "left": "-230px"
                 });
@@ -227,7 +230,8 @@ class MarAdmin extends div {
                 top.AddStyle({
                     "padding-left": "0px"
                 });
-            }  else {
+            } else {
+                flag = true;
                 o.sider.AddStyle({
                     "left": "0px"
                 });
@@ -238,8 +242,70 @@ class MarAdmin extends div {
                     "padding-left": "230px"
                 });
             }
+        };
 
-            flag = !flag;
+        winEvent();
+
+        window.addEventListener("resize", winEvent);
+
+        this.SetDispose(() => {
+            window.removeEventListener("resize", winEvent);
+        });
+
+        bar.AddEventListener("click", () => {
+            if (window.screen.width < 1000)  {
+
+                if (flag) {
+                    o.sider.AddStyle({
+                        "left": "-230px"
+                    });
+                    o.body.AddStyle({
+                        "padding-left": "0px"
+                    });
+                    top.AddStyle({
+                        "padding-left": "0px"
+                    });
+                    title.Show();
+                }  else {
+                    o.sider.AddStyle({
+                        "left": "0px"
+                    });
+                    o.body.AddStyle({
+                        "padding-left": "230px"
+                    });
+                    top.AddStyle({
+                        "padding-left": "230px"
+                    });
+                    title.Hide();
+                }
+
+                flag = !flag;
+
+            } else {
+                if (flag) {
+                    o.sider.AddStyle({
+                        "left": "-230px"
+                    });
+                    o.body.AddStyle({
+                        "padding-left": "0px"
+                    });
+                    top.AddStyle({
+                        "padding-left": "0px"
+                    });
+                }  else {
+                    o.sider.AddStyle({
+                        "left": "0px"
+                    });
+                    o.body.AddStyle({
+                        "padding-left": "230px"
+                    });
+                    top.AddStyle({
+                        "padding-left": "230px"
+                    });
+                }
+
+                flag = !flag;
+            }
 
         });
 

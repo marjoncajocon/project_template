@@ -97,3 +97,15 @@
     /* background-color: #15ba6e !important; */
     color: white !important;
 }
+
+/* @media (max-width: 1000px) {
+    .mar-top-bar {
+        padding-left: 0;
+    }
+    .mar-sider {
+        left: -230px;
+    }
+    .mar-body {
+        padding-left: 0px;
+    }
+} */
