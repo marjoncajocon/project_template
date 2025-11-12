@@ -3347,6 +3347,20 @@ class ModalModern extends div {
 
     //@ts-ignore
     document.activeElement.blur();
+
+    const document_esc = (e: KeyboardEvent) => {
+      if (e.keyCode == 27) {
+        // esc button
+        this.hide();
+      }
+    };
+
+    document.addEventListener("keyup", document_esc);
+
+    this.SetDispose(() => {
+      document.removeEventListener("keyup", document_esc);
+    });
+
   }
 
   add(obj: Widget) {
