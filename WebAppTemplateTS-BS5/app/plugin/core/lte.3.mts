@@ -177,10 +177,12 @@ class LTEMenuButton extends div {
       });
     }
 
-    const arrow_icon = new FaIcon(FaIcons.ChevronLeft);
+    const arrow_icon = new FaIcon(FaIcons.ChevronRight);
     const menu = new button().Add(new Row([new FaIcon(o.icon), 10, new Html(o.title).AddClass("lte-hidable")])).AddClass("lte-menu-btn").AddClass("cc-menu");
     
     arrow_icon.AddClass("lte-hidable");
+
+    arrow_icon.AddStyle({"font-size": "10px"});
 
     const arrow = new Panel().Add(arrow_icon);    
     
