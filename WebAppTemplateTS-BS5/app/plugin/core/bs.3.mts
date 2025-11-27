@@ -4568,6 +4568,10 @@ class DataTable extends div {
 
     this.label = new span();
 
+    this.label.AddStyle({
+      "font-size": "12px"
+    });
+
     this.entry = new SelectBoxAddon({
       filter: {}
     });
@@ -4619,12 +4623,16 @@ class DataTable extends div {
     super.Add(new Column([
       new Row([
         new Panel().AddStyle({width: "100%"}).Add(new Row([ this.entry, 3, this.search ], Flex.FlexStart)),
-        new Panel().AddStyle({width: "100%"}).Add(new Row([ this.label ], Flex.FlexEnd, Flex.BaseLine))
       ]),
       2,
       this.table,
       2,
-      new Row([this.page], undefined, undefined, FlexDirection.ROW_REVERSE)
+      new Row([
+        new Panel().AddStyle({}).Add(new Row([ this.label ], Flex.FlexEnd, Flex.BaseLine)),
+        this.page
+      ], Flex.SpaceBetween, undefined).AddStyle({
+        width: "100%"
+      })
     ]));
 
   }
