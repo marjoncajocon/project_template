@@ -1956,7 +1956,10 @@ class Card extends div {
     } else {
       panel_heading.Add(o.header);
     }
-    super.Add(panel_heading);
+    super.Add(new Column([
+      panel_heading,
+      10
+    ]));
 
     // body
     const body_panel = new div().AddClass("card-body");
