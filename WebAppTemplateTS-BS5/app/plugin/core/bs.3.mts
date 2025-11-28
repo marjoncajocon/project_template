@@ -1943,8 +1943,8 @@ class Card extends div {
     footer?: string | Widget,
   }) {
     super();
-    super.AddClass("card");
-
+    //super.AddClass("card");
+    super.AddStyle({"background-color": "var(--bs-body-bg)", "padding": "10px", "border-radius": "5px"});
     // if (o.color != undefined) {
     //   super.AddClass("bg-" + o.color);
     // }
@@ -2599,11 +2599,15 @@ class TextFieldAddon extends div{
         "z-index": "12",
         "left": "0",
         "top": "0",
-        "border-radius": "3px",
-        "box-shadow": "0 0 2px rgba(0, 0, 0, 0.3)"
+        "border-radius": "5px"
       }).AddClass("b-filter-panel");
       
-      search_panel.AddClass("card");
+      //search_panel.AddClass("card");
+      search_panel.AddStyle({
+        "background-color": "var(--bs-body-bg)",
+        "border": "1px solid var(--bs-border-color)"
+      });
+      
       let selected_index: number = 0;
       const search_found: {key: string, panel: Panel}[] = [];
 
@@ -3997,7 +4001,7 @@ class SelectBoxAddon extends div{
         "top": "0px",
         "left": "0px",
         "width": `100%`,
-        "background-color": "var(--bs-secondary-bg)",
+        "background-color": "var(--bs-body-bg)",
         "border-radius": "3px 3px 3px 3px",
         "box-shadow": "0 0 2px rgba(0, 0, 0, 0.3)",
         "z-index": "100",
@@ -4322,7 +4326,12 @@ class Dialog extends Panel {
       "max-width": "98%",
       "position": "relative"
     });
-    body.AddClass("card");
+    
+    //body.AddClass("card");
+
+    body.AddStyle({
+      "background-color": "var(--bs-body-bg)"
+    });
 
     if (o.borderRadius != undefined) {
       body.AddStyle({

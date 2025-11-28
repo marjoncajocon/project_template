@@ -337,10 +337,19 @@ class LTEApp extends Panel {
   }): Panel {
     const panel = new Panel().AddClass("lte-body");
 
-    const topBar = new Panel().AddClass(["lte-top-bar", "card"]);
+    const topBar = new Panel().AddClass(["lte-top-bar"]);
+    topBar.AddStyle({
+      "background-color": "var(--bs-body-bg)"
+    });
+
     panel.Add(topBar);
 
-    const bar = new button().AddClass(["card", "lte-bar-btn"]);
+    const bar = new button().AddClass(["lte-bar-btn"]);
+
+    bar.AddStyle({
+      "background-color": "var(--bs-body-bg)"
+    });
+
     bar.Add(new FaIcon(FaIcons.Bars))
     topBar.Add(bar);
 
