@@ -2678,12 +2678,24 @@ class TextFieldAddon extends div{
 
       }
 
+      search_panel.AddClass("search_panel_tf");
+
       search_panel.Hide();
 
       super.Add(search_panel);
 
       blocker.AddEventListener("click", (e) => {
         e.stopPropagation();
+        
+        const el = document.getElementsByClassName("search_panel_tf");
+        
+        for (let i = 0; i < el.length; i++) {
+          const elem = el[i] as HTMLElement;
+
+          elem.style.display = "none";
+
+        }
+
         search_panel.Show();
         search.tf.control.focus();
         search.tf.value(`${this.tf.value()}`);
@@ -4112,10 +4124,23 @@ class SelectBoxAddon extends div{
         //@ts-ignore
         search.tf.control.setSelectionRange(len, len);
       });
+
+      this.filterPanel.AddClass("search_panel_tf");
+
       // for blocker event to avoid showing the option list
       blocker.AddEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
+
+        const el = document.getElementsByClassName("search_panel_tf");
+        
+        for (let i = 0; i < el.length; i++) {
+          const elem = el[i] as HTMLElement;
+
+          elem.style.display = "none";
+
+        }
+
         this.tf.AddAttr({"disabled": ""});
         this.filterPanel.Show();
         search.tf.control.focus();
