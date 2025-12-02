@@ -4665,6 +4665,8 @@ class DataTable extends div {
         this.page
       ], Flex.SpaceBetween, undefined).AddStyle({
         width: "100%"
+      }).AddStyle({
+        height: "30px"
       })
     ]));
 
