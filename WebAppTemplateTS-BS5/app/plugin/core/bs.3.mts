@@ -2684,8 +2684,11 @@ class TextFieldAddon extends div{
 
       super.Add(search_panel);
 
+      let is_del_flag = false;
+
       blocker.AddEventListener("click", (e) => {
         e.stopPropagation();
+        is_del_flag = true;
         
         const el = document.getElementsByClassName("search_panel_tf");
         
@@ -2720,6 +2723,15 @@ class TextFieldAddon extends div{
 
         //@ts-ignore
         const code = e.keyCode as number;
+
+        if (code == 8) {
+          // backspace code
+          if (is_del_flag) {
+            search.value("");
+            is_del_flag = false; // in the next delete operation back to normal delete
+          }
+        }
+
         if (![40, 38, 13].includes(code)) {
           // reset to zero
           selected_index = 0;
@@ -4126,11 +4138,13 @@ class SelectBoxAddon extends div{
       });
 
       this.filterPanel.AddClass("search_panel_tf");
-
+      let is_del_flag = false;
       // for blocker event to avoid showing the option list
       blocker.AddEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
+
+        is_del_flag = true;
 
         const el = document.getElementsByClassName("search_panel_tf");
         
@@ -4175,6 +4189,14 @@ class SelectBoxAddon extends div{
         // 38 -> up
         //@ts-ignore
         const code = e.keyCode as number;
+
+        if (code == 8) {
+          if (is_del_flag) {
+            search.value("");
+            is_del_flag = false;
+          }
+        }
+
         if (![40, 38, 13].includes(code)) {
           // reset to zero
           selected_index = 0;
