@@ -3361,7 +3361,7 @@ class ModalModern extends div {
     this.isMaxHeight = o.isMaxHeight;
     this.dialog = new Dialog();
     this.content = new div().AddStyle({
-      "max-height": "calc(100vh - 100px)",
+      "max-height": "calc(100vh - 110px)",
       "overflow-y": "auto",
       "overflow-x": "hidden"
     });
@@ -3401,8 +3401,14 @@ class ModalModern extends div {
   async show() {
 
 
-    const exit = new Button({text: "x", color: Color.Danger, size: Size.Sm}).AddStyle({
-          "width": "30px"
+    const exit = new Button({text: "x"});
+    exit.AddStyle({
+      "width": "30px",
+      "height": "30px",
+      "background-color": "var(--bs-body-bg)",
+      "font-size": "10px",
+      "border": "none",
+      "font-weight": "bold"
     });
 
     exit.AddEventListener("click", () => {
@@ -3422,16 +3428,18 @@ class ModalModern extends div {
       }
 
     return await this.dialog.show({
-      padding: 7,
+      padding: 0,
       width: `${size}`,
       wholeScreen: this.isFullScreen != undefined && this.isFullScreen,
       widget: new Column([
-        new Row([this.lbl != undefined ? this.lbl : "", exit], Flex.SpaceBetween).AddStyle({"height": "30px", "margin-bottom": "5px"}),
-        this.content,
-        this.footer != undefined ? this.footer.AddStyle({"height": "40px", "margin-top": "5px"}) : new Row([]).AddStyle({"height": "40px", "margin-top": "5px"}),
+        new Row([this.lbl != undefined ? this.lbl : "", exit], Flex.SpaceBetween).AddStyle({"height": "50px", "padding": "10px 10px 0px 10px", "font-weight": "bold", "opacity": "0.7"}),
+        this.content.AddStyle({padding: "0px 10px 10px 10px"}),
+        this.footer != undefined ? this.footer.AddStyle({"height": "50px", "padding": "5px 10px 5px 10px"}) : "",
       ]),
-      backdropOpacity: 0.3,
-      maxHeight: this.isMaxHeight
+      backdropOpacity: .3,
+      maxHeight: this.isMaxHeight,
+      borderRadius: "10px",
+      shadow: true,
     });
 
   }
@@ -4367,7 +4375,8 @@ class Dialog extends Panel {
     opacity?: number,
     backdropOpacity?: number,
     borderRadius?: string,
-    maxHeight?: boolean
+    maxHeight?: boolean,
+    shadow?: boolean
   }) {
 
     // add the componts here 
@@ -4445,6 +4454,12 @@ class Dialog extends Panel {
       });
 
       body.AddEventListener("click", o => o.stopPropagation());
+    }
+
+    if (o.shadow != undefined && o.shadow) {
+      body.AddStyle({
+        "box-shadow": "0 10px 20px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(0, 0, 0, 0.05)"
+      });
     }
 
     body.Add(o.widget);
