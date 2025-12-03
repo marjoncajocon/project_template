@@ -3401,7 +3401,15 @@ class ModalModern extends div {
   async show() {
 
 
-    const exit = new Button({text: "x", color: Color.Default, size: Size.Sm});
+    const exit = new Button({text: "x"});
+    exit.AddStyle({
+      "width": "30px",
+      "height": "30px",
+      "background-color": "var(--bs-body-bg)",
+      "font-size": "10px",
+      "border": "none",
+      "font-weight": "bold"
+    });
 
     exit.AddEventListener("click", () => {
       this.hide();
@@ -3424,7 +3432,7 @@ class ModalModern extends div {
       width: `${size}`,
       wholeScreen: this.isFullScreen != undefined && this.isFullScreen,
       widget: new Column([
-        new Row([this.lbl != undefined ? this.lbl : "", exit], Flex.SpaceBetween).AddStyle({"height": "50px", "padding": "10px 10px 0px 10px", "font-weight": "bold"}),
+        new Row([this.lbl != undefined ? this.lbl : "", exit], Flex.SpaceBetween).AddStyle({"height": "50px", "padding": "10px 10px 0px 10px", "font-weight": "bold", "color": "var(--bs-dark)"}),
         this.content.AddStyle({padding: "0px 10px 10px 10px"}),
         this.footer != undefined ? this.footer.AddStyle({"height": "50px", "padding": "5px 10px 5px 10px"}) : "",
       ]),
