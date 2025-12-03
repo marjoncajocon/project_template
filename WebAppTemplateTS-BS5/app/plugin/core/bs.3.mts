@@ -1943,8 +1943,8 @@ class Card extends div {
     footer?: string | Widget,
   }) {
     super();
-    super.AddClass("card");
-
+    //super.AddClass("card");
+    super.AddStyle({"background-color": "var(--bs-body-bg)", "padding": "10px", "border-radius": "5px"});
     // if (o.color != undefined) {
     //   super.AddClass("bg-" + o.color);
     // }
@@ -1956,7 +1956,10 @@ class Card extends div {
     } else {
       panel_heading.Add(o.header);
     }
-    super.Add(panel_heading);
+    super.Add(new Column([
+      panel_heading,
+      10
+    ]));
 
     // body
     const body_panel = new div().AddClass("card-body");
@@ -2599,11 +2602,15 @@ class TextFieldAddon extends div{
         "z-index": "12",
         "left": "0",
         "top": "0",
-        "border-radius": "3px",
-        "box-shadow": "0 0 2px rgba(0, 0, 0, 0.3)"
+        "border-radius": "5px"
       }).AddClass("b-filter-panel");
       
-      search_panel.AddClass("card");
+      //search_panel.AddClass("card");
+      search_panel.AddStyle({
+        "background-color": "var(--bs-body-bg)",
+        "border": "1px solid var(--bs-border-color)"
+      });
+      
       let selected_index: number = 0;
       const search_found: {key: string, panel: Panel}[] = [];
 
@@ -2671,12 +2678,27 @@ class TextFieldAddon extends div{
 
       }
 
+      search_panel.AddClass("search_panel_tf");
+
       search_panel.Hide();
 
       super.Add(search_panel);
 
+      let is_del_flag = false;
+
       blocker.AddEventListener("click", (e) => {
         e.stopPropagation();
+        is_del_flag = true;
+        
+        const el = document.getElementsByClassName("search_panel_tf");
+        
+        for (let i = 0; i < el.length; i++) {
+          const elem = el[i] as HTMLElement;
+
+          elem.style.display = "none";
+
+        }
+
         search_panel.Show();
         search.tf.control.focus();
         search.tf.value(`${this.tf.value()}`);
@@ -2701,6 +2723,15 @@ class TextFieldAddon extends div{
 
         //@ts-ignore
         const code = e.keyCode as number;
+
+        if (code == 8) {
+          // backspace code
+          if (is_del_flag) {
+            search.value("");
+            is_del_flag = false; // in the next delete operation back to normal delete
+          }
+        }
+
         if (![40, 38, 13].includes(code)) {
           // reset to zero
           selected_index = 0;
@@ -3778,11 +3809,7 @@ class CardV2 extends div {
     bodyPadding?: boolean
   }) {
     super()
-    super.AddStyle({
-      "border-radius": "5px",
-      "box-shadow": "0 0 2px rgba(0, 0, 0, 0.3)"
-    })
-
+    
     super.AddClass("card");
 
     if (o.header != undefined) {
@@ -4001,7 +4028,7 @@ class SelectBoxAddon extends div{
         "top": "0px",
         "left": "0px",
         "width": `100%`,
-        "background-color": "var(--bs-secondary-bg)",
+        "background-color": "var(--bs-body-bg)",
         "border-radius": "3px 3px 3px 3px",
         "box-shadow": "0 0 2px rgba(0, 0, 0, 0.3)",
         "z-index": "100",
@@ -4109,10 +4136,25 @@ class SelectBoxAddon extends div{
         //@ts-ignore
         search.tf.control.setSelectionRange(len, len);
       });
+
+      this.filterPanel.AddClass("search_panel_tf");
+      let is_del_flag = false;
       // for blocker event to avoid showing the option list
       blocker.AddEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
+
+        is_del_flag = true;
+
+        const el = document.getElementsByClassName("search_panel_tf");
+        
+        for (let i = 0; i < el.length; i++) {
+          const elem = el[i] as HTMLElement;
+
+          elem.style.display = "none";
+
+        }
+
         this.tf.AddAttr({"disabled": ""});
         this.filterPanel.Show();
         search.tf.control.focus();
@@ -4147,6 +4189,14 @@ class SelectBoxAddon extends div{
         // 38 -> up
         //@ts-ignore
         const code = e.keyCode as number;
+
+        if (code == 8) {
+          if (is_del_flag) {
+            search.value("");
+            is_del_flag = false;
+          }
+        }
+
         if (![40, 38, 13].includes(code)) {
           // reset to zero
           selected_index = 0;
@@ -4326,7 +4376,12 @@ class Dialog extends Panel {
       "max-width": "98%",
       "position": "relative"
     });
-    body.AddClass("card");
+    
+    //body.AddClass("card");
+
+    body.AddStyle({
+      "background-color": "var(--bs-body-bg)"
+    });
 
     if (o.borderRadius != undefined) {
       body.AddStyle({
@@ -4568,6 +4623,10 @@ class DataTable extends div {
 
     this.label = new span();
 
+    this.label.AddStyle({
+      "font-size": "12px"
+    });
+
     this.entry = new SelectBoxAddon({
       filter: {}
     });
@@ -4619,12 +4678,18 @@ class DataTable extends div {
     super.Add(new Column([
       new Row([
         new Panel().AddStyle({width: "100%"}).Add(new Row([ this.entry, 3, this.search ], Flex.FlexStart)),
-        new Panel().AddStyle({width: "100%"}).Add(new Row([ this.label ], Flex.FlexEnd, Flex.BaseLine))
       ]),
       2,
       this.table,
       2,
-      new Row([this.page], undefined, undefined, FlexDirection.ROW_REVERSE)
+      new Row([
+        new Panel().AddStyle({}).Add(new Row([ this.label ], Flex.FlexEnd, Flex.BaseLine)),
+        this.page
+      ], Flex.SpaceBetween, undefined).AddStyle({
+        width: "100%"
+      }).AddStyle({
+        height: "30px"
+      })
     ]));
 
   }
