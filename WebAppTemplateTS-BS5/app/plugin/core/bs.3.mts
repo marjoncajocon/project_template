@@ -3432,7 +3432,7 @@ class ModalModern extends div {
       width: `${size}`,
       wholeScreen: this.isFullScreen != undefined && this.isFullScreen,
       widget: new Column([
-        new Row([this.lbl != undefined ? this.lbl : "", exit], Flex.SpaceBetween).AddStyle({"height": "50px", "padding": "10px 10px 0px 10px", "font-weight": "bold", "color": "var(--bs-dark)"}),
+        new Row([this.lbl != undefined ? this.lbl : "", exit], Flex.SpaceBetween).AddStyle({"height": "50px", "padding": "10px 10px 0px 10px", "font-weight": "bold", "opacity": "0.7"}),
         this.content.AddStyle({padding: "0px 10px 10px 10px"}),
         this.footer != undefined ? this.footer.AddStyle({"height": "50px", "padding": "5px 10px 5px 10px"}) : "",
       ]),
