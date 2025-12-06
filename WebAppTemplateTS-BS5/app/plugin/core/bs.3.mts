@@ -6,7 +6,7 @@ import "./icon/css/all.css";
 //import "./bootstrap3/css/theme-spacelab.css";
 
 import { Chart } from "./chartjs";
-import { a, button, canvas, center, col, div, fieldset, h2, h4, hr, Http, i, input, label, legend, li, option, select, span, table, tbody, td, textarea, th, thead, tr, u, ul, Widget } from "./core.mts";
+import { a, button, canvas, center, col, div, fieldset, h2, h4, hr, Http, i, input, label, legend, li, option, select, span, table, tbody, td, textarea, tfoot, th, thead, tr, u, ul, Widget } from "./core.mts";
 
 
 enum ChartType {
@@ -3610,7 +3610,13 @@ class Form extends fieldset {
 class Table extends div {
   table: table
   tbody: tbody
+  tfoot: tfoot
   list: tr[]
+  
+  isSticky?: {
+      height: string
+  }
+
   constructor(o: {
     header?: (string|Widget)[],
     hover?: boolean,
@@ -3626,6 +3632,8 @@ class Table extends div {
   }) {
     super();
     super.AddClass("table-responsive");
+
+    this.isSticky = o.sticky;
 
     this.table = new table().AddClass("table");
     
@@ -3671,7 +3679,8 @@ class Table extends div {
         thd.AddStyle({
           "position": "sticky",
           "top": "-1px",
-          "z-index": "3"
+          "z-index": "3",
+          "box-shadow": "inset 0 -1px #ddd"
         });
 
         this.AddStyle({
@@ -3703,13 +3712,18 @@ class Table extends div {
 
     this.table.Add(this.tbody);
 
+    this.tfoot = new tfoot();
+
+    this.table.Add(this.tfoot);
+
     this.list = [];
 
   }
   
   add(o: {
     item: (string|Widget)[],
-    header_style?: {[key: string]: string}[]
+    header_style?: {[key: string]: string}[],
+    footer?: boolean
   }): tr {
     
     const tr1 = new tr();
@@ -3731,9 +3745,24 @@ class Table extends div {
       i++;
     }
 
-    this.tbody.Add(tr1);
-
     this.list.push(tr1);
+    
+    if (o.footer != undefined && o.footer) {
+      this.tfoot.Add(tr1);
+
+      if (this.isSticky != undefined) {
+       this.tfoot.AddStyle({
+          "position": "sticky",
+          "bottom": "0px",
+          "z-index": "3",
+          "box-shadow": "inset 0 -1px #ddd"
+        });
+      } 
+
+    } else {
+      this.tbody.Add(tr1);
+    }
+
     return tr1;
   }
 
@@ -4719,7 +4748,8 @@ class DataTable extends div {
 
   add(o: {
     item: (string|Widget)[],
-    header_style?: {[key: string]: string}[]
+    header_style?: {[key: string]: string}[],
+    footer?: boolean
   }): tr {
     return this.table.add(o);
   }
