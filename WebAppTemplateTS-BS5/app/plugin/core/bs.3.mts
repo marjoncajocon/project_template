@@ -3331,9 +3331,50 @@ class Column extends div {
   }
 }
 
+//////////////  modal stack // 
+
+const MODAL_STACK: {
+  id: string
+}[] = [];
+
+
+const getID = () => {
+  
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+
+  let txt: string = "";
+  
+  for (let i = 0; i < 50; i++) {
+    const randomIndex = Math.floor(Math.random() * alphabet.length);
+    txt += alphabet[randomIndex];
+  }
+  
+  return txt;
+
+}
+
+const deleteModalStack = (id: string) => {
+  for (let i = 0; i < MODAL_STACK.length; i++) {
+    if (id == MODAL_STACK[i].id) {
+      MODAL_STACK.splice(i, 1);
+    }
+  }
+}
+
+const getTopStackID = ():string => {
+
+  if (MODAL_STACK.length == 0) return "";
+
+  return MODAL_STACK[MODAL_STACK.length - 1].id;
+
+}
+
+// end modal stack 
+
 class ModalModern extends div {
   // promise: Promise<unknown>
   // resolvefn: (value: unknown) => void = () => {}
+  id: string
   size?: Size 
   content: div
   dialog: Dialog
@@ -3341,19 +3382,26 @@ class ModalModern extends div {
   footer?: Row
   isFullScreen?: boolean
   isMaxHeight?: boolean
+  enter_event?: () => void
   constructor(o: {
     label?: string | Widget,
     size?: Size,
     footer?: Row,
     isFullScreen?: boolean,
     isMaxHeight?: boolean,
+    enterEvent?: () => void
   }) {
     super();
     
     // this.promise = new Promise((resolve) => {
     //   this.resolvefn = resolve;
     // });
+    
+    // generate the unique key
+    this.id = getID();
 
+    MODAL_STACK.push({id: this.id});
+    
     this.lbl = o.label;
     this.footer = o.footer;
     this.size = o.size;
@@ -3380,9 +3428,23 @@ class ModalModern extends div {
     document.activeElement.blur();
 
     const document_esc = (e: KeyboardEvent) => {
+      
+      if (getTopStackID() != this.id) return;
+
       if (e.keyCode == 27) {
         // esc button
         this.hide();
+      } else if (e.keyCode == 13) {
+        
+        if (o.enterEvent != undefined) {
+          o.enterEvent();
+        }
+
+        if (this.enter_event != undefined) {
+            // when the enter event is trigger
+            this.enter_event();
+        }
+
       }
     };
 
@@ -3392,6 +3454,10 @@ class ModalModern extends div {
       document.removeEventListener("keyup", document_esc);
     });
 
+  }
+
+  setEnterEvent(func: () => void) {
+    this.enter_event = func;
   }
 
   add(obj: Widget) {
@@ -3452,11 +3518,14 @@ class ModalModern extends div {
 
   hide(msg: string|null = null) {
     this.dialog.close(msg);
+
+    deleteModalStack(this.id);
   }
 }
 
 
 class Modal extends div {
+  id: string
   backdrop: div
   promise: Promise<unknown>
   resolvefn: (value: unknown) => void = () => {}
@@ -3475,6 +3544,10 @@ class Modal extends div {
     this.promise = new Promise((resolve) => {
       this.resolvefn = resolve;
     });
+
+    this.id = getID();
+
+    MODAL_STACK.push({id: this.id});
 
     const modal_dialog = new div();
     if (o.size != undefined) {
@@ -3582,6 +3655,9 @@ class Modal extends div {
 
     super.Delete();
     this.backdrop.Delete();
+
+    deleteModalStack(this.id);
+    
   }
 }
 
@@ -4525,8 +4601,14 @@ const Alert = async (msg: string, color?: Color) => {
   
   const okay = new Button({text: new Row([new FaIcon(FaIcons.Check), 5, "OK"]), color: color != undefined ? color: Color.Success, size: Size.Sm});
 
+  const id: string = getID();
+
+  MODAL_STACK.push({id: id});
 
   const keydown_event = (e: KeyboardEvent) => {
+
+    if (getTopStackID() != id) return;
+
     if (e.keyCode == 13) {
       dialog.close(true);
     }
@@ -4535,7 +4617,11 @@ const Alert = async (msg: string, color?: Color) => {
   document.addEventListener("keydown", keydown_event);
   
   dialog.SetDispose(() => {
+    
     document.removeEventListener("keydown", keydown_event);
+    
+    deleteModalStack(id);
+
   });
 
   okay.AddStyle({
@@ -4578,15 +4664,25 @@ const Confirm = async (msg: string, color?: Color) => {
     "width": "100px"
   });
 
+  const id: string = getID();
+
+  MODAL_STACK.push({id: id});
+
   
   const keydown_event = (e: KeyboardEvent) => {
+    
+    if (getTopStackID() != id) return;
+
     if (e.keyCode == 13) {
       dialog.close(true);
     }
+
   };
   document.addEventListener("keydown", keydown_event);
+  
   dialog.SetDispose(() => {
     document.removeEventListener("keydown", keydown_event);
+    deleteModalStack(id);
   });
 
   okay.AddEventListener("click", () => {
