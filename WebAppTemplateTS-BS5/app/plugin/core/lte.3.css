@@ -130,7 +130,6 @@
   height: 100%;
   background-color: var(--bs-secondary-bg);
   padding-left: 250px;
-  padding-bottom: 50px;
   overflow-y: auto;
   overflow-x: none;
 }
