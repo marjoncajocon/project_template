@@ -422,7 +422,7 @@ class LTEApp extends Panel {
     this.page_title = htitle;
 
     title_grid.add(
-      new Row([new FaIcon(FaIcons.InfoCircle), 3, htitle]), [GridSize.Lg9]
+      new Row([new FaIcon(FaIcons.InfoCircle), 3, htitle]), [GridSize.Lg6]
     );
     // const bread = new BreadCrumb({});
     // bread.AddStyle({
@@ -433,7 +433,7 @@ class LTEApp extends Panel {
 
     this.page_bread = new Panel();
 
-    title_grid.add(this.page_bread, [GridSize.Lg3]);
+    title_grid.add(this.page_bread, [GridSize.Lg6]);
 
     this.page_body = new Panel().AddStyle({
       padding: "16px",
