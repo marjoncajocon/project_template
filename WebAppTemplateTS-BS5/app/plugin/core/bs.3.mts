@@ -3448,10 +3448,10 @@ class ModalModern extends div {
       }
     };
 
-    document.addEventListener("keyup", document_esc);
+    document.addEventListener("keydown", document_esc);
 
     this.SetDispose(() => {
-      document.removeEventListener("keyup", document_esc);
+      document.removeEventListener("keydown", document_esc);
     });
 
   }
