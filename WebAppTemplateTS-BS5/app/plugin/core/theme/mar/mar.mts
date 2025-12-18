@@ -191,7 +191,7 @@ class MarAdmin extends div {
 
         if (o.topBarColor != undefined)
             top.AddStyle({  
-                "background-color": o.topBarColor
+                "background-color": "var(--my-martop-bg)"
             });
         
         const logo = new div().AddStyle({
