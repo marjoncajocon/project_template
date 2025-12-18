@@ -3467,12 +3467,11 @@ class ModalModern extends div {
   async show() {
 
 
-    const exit = new Button({text: "x"});
+    const exit = new Button({text: new FaIcon(FaIcons.Close)});
     exit.AddStyle({
       "width": "30px",
       "height": "30px",
       "background-color": "var(--bs-body-bg)",
-      "font-size": "10px",
       "border": "none",
       "font-weight": "bold"
     });
