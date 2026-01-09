@@ -3062,7 +3062,8 @@ class SelectBox extends div {
     prefix?: string|Widget,
     suffix?: string|Widget,
     multiple?: boolean,
-    hasfeedback?: boolean
+    hasfeedback?: boolean,
+    size?: Size
   }) {
     super();
     super.AddStyle({"width": "100%"});
@@ -3074,6 +3075,10 @@ class SelectBox extends div {
     this.tf = new select();
 
     this.tf.AddClass("form-control");
+
+    if (o.size != undefined) {
+      this.tf.AddClass(`form-select-${o.size}`);
+    }
 
     if (o.multiple != undefined && o.multiple) {
       this.tf.AddAttr({
@@ -4112,7 +4117,8 @@ class SelectBoxAddon extends div{
     this.tf = new SelectBox({
       prefix: o.prefix,
       suffix: o.suffix,
-      hasfeedback: o.hasfeedback
+      hasfeedback: o.hasfeedback,
+      size: o.size
     });
 
     super.Add(this.tf);

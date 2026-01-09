@@ -86,6 +86,8 @@ class LTESmallBox extends div {
 
     super.AddClass("bg-" + p.color);
 
+    super.AddClass("lte-box-color");
+
     const content = new Panel().AddStyle({
       width: "100%",
       height: "113px",
@@ -95,6 +97,8 @@ class LTESmallBox extends div {
     });
 
     content.AddClass("bg-" + p.color);
+
+    content.AddClass("lte-box-color");
 
     super.Add(content);
 
@@ -178,7 +182,7 @@ class LTEMenuButton extends div {
     }
 
     const arrow_icon = new FaIcon(FaIcons.ChevronRight);
-    const menu = new button().Add(new Row([new FaIcon(o.icon), 10, new Html(o.title).AddClass("lte-hidable")])).AddClass("lte-menu-btn").AddClass("cc-menu");
+    const menu = new button().Add(new Row([new FaIcon(o.icon), 5, new Html(o.title).AddClass("lte-hidable")])).AddClass("lte-menu-btn").AddClass("cc-menu");
     
     arrow_icon.AddClass("lte-hidable");
 
@@ -210,7 +214,7 @@ class LTEMenuButton extends div {
       /// here is the logic for the drop  
       const panel = new Panel().AddStyle({
         display: "none",
-        "padding-left": "5px",
+        "padding-left": "20px",
         "padding-right": "5px"
       });
       super.Add(panel);
