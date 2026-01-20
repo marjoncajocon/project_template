@@ -278,7 +278,9 @@ class LTEApp extends Panel {
     userPhoto?: string, // must be a link or blob link
     userName?: string,
     sideMenu: LTEMenuButton[],
-    topLeftMenu?: Row
+    topLeftMenu?: Row,
+    showSearch?: boolean,
+    showProfileName?: boolean
   }) {
     super();
 
@@ -287,7 +289,9 @@ class LTEApp extends Panel {
       title: o.title,
       logo: o.logo,
       userName: o.userName,
-      userPhoto: o.userPhoto
+      userPhoto: o.userPhoto,
+      showSearch: o.showSearch,
+      showProfileName: o.showProfileName
     });
     
     const body = this.createBody({
@@ -494,7 +498,9 @@ class LTEApp extends Panel {
     logo?: string,
     userName?: string,
     userPhoto?: string,
-    sideMenu: LTEMenuButton[]
+    sideMenu: LTEMenuButton[],
+    showSearch?: boolean,
+    showProfileName?: boolean
   }): Widget {
     const panel = new Panel().AddClass("lte-sidebar");
     const brand = new Panel().AddClass("lte-brand");
@@ -529,7 +535,12 @@ class LTEApp extends Panel {
     const sidebar_content = new Panel().AddClass("lte-sidebar-content");
     /// working with sidebar_content
     const user_panel = new Panel().AddClass("lte-user-panel");
-    sidebar_content.Add(user_panel);
+    
+    if (o.showProfileName != undefined && o.showProfileName)
+      sidebar_content.Add(user_panel);
+    else
+      sidebar_content.Add(new Column([10]));
+
     const user_photo = new Panel().AddClass("lte-user-pic");
     user_panel.Add(user_photo);
     const user_name = new Panel().AddClass(["lte-user-name", "lte-hidable"]);
@@ -557,7 +568,7 @@ class LTEApp extends Panel {
       placeholder: "Search",
       suffix: new Button({text: new FaIcon(FaIcons.Search), color: Color.Default})
     }).AddClass("lte-hidable");
-    sidebar_content.Add(new Panel().Add(search).AddClass("lte-search"));
+    sidebar_content.Add(o.showSearch != undefined && o.showSearch ? new Panel().Add(search).AddClass("lte-search") : []);
     // end search
 
     // generation of the menu
