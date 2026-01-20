@@ -2077,7 +2077,7 @@ class Tab extends div {
     super.Add(this.content);
   }
 
-  add(title: string, fn: (o: Panel) => void, active: boolean = false) {
+  add(title: string|Widget, fn: (o: Panel) => void, active: boolean = false) {
     this.tab.add(title, () => {
       this.content.Clear();
       fn(this.content);
