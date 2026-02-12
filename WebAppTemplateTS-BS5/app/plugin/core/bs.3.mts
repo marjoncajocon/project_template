@@ -2702,7 +2702,7 @@ class TextFieldAddon extends div{
         search_panel.Show();
         search.tf.control.focus();
         search.tf.value(`${this.tf.value()}`);
-        this.tf.control.dispatchEvent(new Event("change"));
+        this.tf.control.dispatchEvent(new Event("input"));
         search_fn();
       });
 
@@ -2711,10 +2711,12 @@ class TextFieldAddon extends div{
       });
 
       search.AddEventListener("input", () => {
-        this.tf.control.dispatchEvent(new Event("change"));
+        this.tf.control.dispatchEvent(new Event("input"));
       });
       
-      search.AddEventListener("keyup", (e) => {
+      let time: number;
+
+      search.AddEventListener("keyup", async (e) => {
         this.tf.value(`${search.value()}`);
         
         for (const f of search_found) {
@@ -2733,13 +2735,20 @@ class TextFieldAddon extends div{
         }
 
         if (![40, 38, 13].includes(code)) {
-          // reset to zero
-          selected_index = 0;
 
-          search_fn();          
+          clearTimeout(time);
 
-          if (search_found.length == 0) return;
-          search_found[selected_index].panel.AddClass("b-search-active-item");
+          time = setTimeout(() => {
+            // reset to zero
+            selected_index = 0;
+
+            search_fn();          
+
+            if (search_found.length == 0) return;
+            
+            search_found[selected_index].panel.AddClass("b-search-active-item");
+
+          }, o.filter?.delay == undefined ? 200 : o.filter.delay);
 
         } else if (code == 40) {
           if (search_found.length == 0) return;
