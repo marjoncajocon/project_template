@@ -2664,7 +2664,7 @@ class TextFieldAddon extends div{
             panel_item.Add(new Text({text: item.value}));
             search_result.Add(panel_item);
             panel_item.AddEventListener("click", () => {
-              search.value(item.key);
+              //search.value(item.key);
               this.tf.value(item.key);
               search_panel.Hide();
               this.tf.control.dispatchEvent(new Event('change'));
@@ -2704,6 +2704,7 @@ class TextFieldAddon extends div{
         search.tf.value(`${this.tf.value()}`);
         this.tf.control.dispatchEvent(new Event("input"));
         search_fn();
+        console.log('clicked');
       });
 
       search.AddEventListener("change", () => {
