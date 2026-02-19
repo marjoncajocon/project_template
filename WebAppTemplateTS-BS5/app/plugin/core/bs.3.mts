@@ -3390,7 +3390,7 @@ class ModalModern extends div {
   // promise: Promise<unknown>
   // resolvefn: (value: unknown) => void = () => {}
   id: string
-  size?: Size 
+  size?: Size|number 
   content: div
   dialog: Dialog
   lbl?: string |Widget
@@ -3400,7 +3400,7 @@ class ModalModern extends div {
   enter_event?: () => void
   constructor(o: {
     label?: string | Widget,
-    size?: Size,
+    size?: Size|number,
     footer?: Row,
     isFullScreen?: boolean,
     isMaxHeight?: boolean,
@@ -3496,18 +3496,25 @@ class ModalModern extends div {
     });
 
     let size = `798px`;
-    if (this.size != undefined)
-      if (this.size == Size.Sm) {
-        size = `480px`
-      } else if (this.size == Size.Md) {
-        size = `798px`
-      } else if (this.size == Size.Lg) {
-        size = `994px`
-      } else if (this.size == Size.xxl) {
-        size = `98%`
-      } else if (this.size == Size.xl) {
-        size = `1280px`
+    if (this.size != undefined) {
+      if (typeof(this.size) == 'string') {
+        if (this.size == Size.Sm) {
+          size = `480px`
+        } else if (this.size == Size.Md) {
+          size = `798px`
+        } else if (this.size == Size.Lg) {
+          size = `994px`
+        } else if (this.size == Size.xxl) {
+          size = `98%`
+        } else if (this.size == Size.xl) {
+          size = `1280px`
+        }
+      } else {
+
+        size = `${this.size}px`;
+
       }
+    }
 
     return await this.dialog.show({
       padding: 0,
