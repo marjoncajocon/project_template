@@ -25,6 +25,23 @@ enum FlexDirection {
   ROW_REVERSE = "row-reverse"
 }
 
+enum FlexRowDirection {
+  ROW = "row",
+  ROW_REVERSE = "row-reverse"
+}
+
+enum FlexColumnDirection {
+  ROW = "column",
+  ROW_REVERSE = "column-reverse"
+}
+
+enum JustifyContent {
+  Start   = 'start',
+  End     = 'end',
+  Center  = 'center',
+  Between = 'between',
+  Around  = 'around'
+}
 
 enum Icons {
   Asterisk = 'asterisk',
@@ -1138,6 +1155,14 @@ enum Flex {
   SpaceBetween = 'space-between',
   SpaceEvenly = 'space-evenly',
   BaseLine = 'baseline'
+}
+
+enum FlexAlignItem {
+  Start    = 'start',
+  End      = 'end',
+  Center   = 'center',
+  BaseLine = 'baseline',
+  stretch  = 'stretch'
 }
 
 enum GridSize {
@@ -3346,6 +3371,161 @@ class Column extends div {
   }
 }
 
+
+class RowV2 extends div {
+  constructor(obj: (Widget|string|number)[], option?: {
+    inlineFlex?:boolean,
+    direction?: FlexRowDirection,
+    alignItem?: FlexAlignItem,
+    gap?: number,
+    justifyContent?: JustifyContent,
+    equalSize?: boolean,
+    wrap?: boolean
+  }) {
+
+    super();
+
+
+    if (option != undefined && option.inlineFlex)
+      super.AddClass('d-inline-flex');
+    else
+      super.AddClass(['d-flex', 'flex-row']);
+
+    if (option != undefined)
+      if (option.direction != undefined) {
+        
+        super.AddClass(`flex-${option.direction}`);
+      }
+    
+    if (option != undefined && option.alignItem != undefined) {
+      
+      super.AddClass(`align-items-${option.alignItem}`);
+    } else {
+      super.AddClass(`align-items-${FlexAlignItem.BaseLine}`);
+    }
+    
+
+    if (option != undefined && option.gap != undefined) {
+      super.AddClass(`gap-${option.gap}`);
+    }
+
+    if (option != undefined && option.justifyContent != undefined) {
+
+      super.AddClass(`justify-content-${option.justifyContent}`);
+    }
+
+    if (option != undefined && option.wrap != undefined) {
+      super.AddClass('flex-wrap');
+    }
+
+
+    for (const item of obj) {
+      
+      if (item instanceof Widget) {
+        super.Add(item);
+
+        if (option != undefined && option.equalSize) {
+          item.AddClass('flex-fill');
+        }
+
+      } else if (typeof(item) == "number") {
+        const i = new div().AddStyle({width: `${item}px`});
+        super.Add(i);
+        
+        if (option != undefined && option.equalSize) {
+          i.AddClass('flex-fill');
+        }
+
+      } else if (typeof(item) == "string") {
+        const i = new Text({text: item});
+        super.Add(i);
+        
+        if (option != undefined && option.equalSize) {
+          i.AddClass('flex-fill');
+        }
+
+      }
+
+    }
+  }
+}
+
+class ColumnV2 extends div {
+  constructor(obj: (Widget|string|number)[], option?: {
+    inlineFlex?:boolean,
+    direction?: FlexColumnDirection,
+    alignItem?: FlexAlignItem,
+    gap?: number,
+    justifyContent?: JustifyContent,
+    equalSize?: boolean,
+    wrap?: boolean
+  }) {
+
+    super();
+
+
+    if (option != undefined && option.inlineFlex)
+      super.AddClass('d-inline-flex');
+    else
+      super.AddClass(['d-flex', 'flex-column']);
+
+    if (option != undefined)
+      if (option.direction != undefined) {
+        
+        super.AddClass(`flex-${option.direction}`);
+      }
+    
+    if (option != undefined && option.alignItem != undefined) {
+      
+      super.AddClass(`align-items-${option.alignItem}`);
+    } else {
+      super.AddClass(`align-items-${FlexAlignItem.BaseLine}`);
+    }
+    
+
+    if (option != undefined && option.gap != undefined) {
+      super.AddClass(`gap-${option.gap}`);
+    }
+
+    if (option != undefined && option.justifyContent != undefined) {
+
+      super.AddClass(`justify-content-${option.justifyContent}`);
+    }
+
+
+    if (option != undefined && option.wrap != undefined) {
+      super.AddClass('flex-wrap');
+    }
+
+    for (const item of obj) {
+      if (item instanceof Widget) {
+        super.Add(item);
+
+        if (option != undefined && option.equalSize) {
+          item.AddClass('flex-fill');
+        }
+
+      } else if (typeof(item) == "number") {
+        const i = new div().AddStyle({width: `${item}px`});
+        super.Add(i);
+        
+        if (option != undefined && option.equalSize) {
+          i.AddClass('flex-fill');
+        }
+
+      } else if (typeof(item) == "string") {
+        const i = new Text({text: item});
+        super.Add(i);
+        
+        if (option != undefined && option.equalSize) {
+          i.AddClass('flex-fill');
+        }
+
+      }
+    }
+  }
+}
+
 //////////////  modal stack // 
 
 const MODAL_STACK: {
@@ -5284,7 +5464,11 @@ export {
   Flex,
   GridSize,
   ChartType,
-  FlexDirection
+  FlexDirection,
+  FlexAlignItem,
+  FlexColumnDirection,
+  FlexRowDirection,
+  JustifyContent
 };
 
 export {
@@ -5335,7 +5519,9 @@ export {
   Dialog,
   Tab2,
   DataTable,
-  ModalModern
+  ModalModern,
+  RowV2,
+  ColumnV2,
 };
 
 // :root {
