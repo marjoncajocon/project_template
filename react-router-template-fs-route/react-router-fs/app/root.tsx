@@ -9,6 +9,7 @@ import {
 
 import type { Route } from "./+types/root";
 import _Index from "./routes/_index";
+import { Toaster } from "react-hot-toast";
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
       </head>
       <body>
         {/* All your routes (home, dashboard, etc.) render here */}
+        <Toaster position="top-right" />
         <Outlet />
         <ScrollRestoration />
         <Scripts />
