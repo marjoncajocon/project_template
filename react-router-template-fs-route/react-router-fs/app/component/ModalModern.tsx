@@ -95,7 +95,6 @@ export default function ModalModern({
   return createPortal(
     <div
       className="modal-modern-overlay"
-      onClick={() => handleClose(false)}
     >
       <div
         className={`modal-modern-container ${
