@@ -61,6 +61,7 @@ export function confirm(options: ConfirmOptions | string): Promise<boolean> {
 type DialogOptions<T = any> = {
   title?: string|ReactNode;
   width?: number,
+  position?: 'start' | 'center',
   render: (helpers: {
     close: (value: T) => void;
   }) => ReactNode;
@@ -84,6 +85,7 @@ export function dialog<T = any>(options: DialogOptions<T>): Promise<T> {
 
     root.render(
       <ModalModern
+        position={options.position}
         width={options.width}
         isOpen={true}
         title={options.title ?? "Dialog"}
