@@ -34,6 +34,7 @@
   flex-direction: column;
   box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
   animation: slideUp 0.25s ease-out;
+  max-width: 98%;
 }
 
 /* Header */
