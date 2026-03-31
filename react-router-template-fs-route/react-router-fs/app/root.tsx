@@ -9,7 +9,7 @@ import {
 
 import type { Route } from "./+types/root";
 import _Index from "./routes/_index";
-import { Toaster } from "react-hot-toast";
+import { Toaster } from "sonner";
 
 export default function App() {
   return (
