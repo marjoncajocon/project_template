@@ -1,21 +1,84 @@
-import { dialog } from "~/component/dialog";
+import { dialog, DialogBody, DialogFooter, DialogHeader } from "~/component/dialog";
 
 const subForm = async () => {
 
   return await dialog({
     title: "sub form",
+    height: 200,
     render: ({close}) => {
 
       const D = () => {
 
-        return <><span>this is a sub form</span>
-        
-        <button className="btn btn-info btn-sm" onClick={async () => {
-            close(true);
+        return <>
+          <DialogHeader><button className="btn btn-info btn-danger">fdsa</button>this is aheader</DialogHeader>
+          <DialogBody>
+          <div className="flex flex-col items-center gap-2">
+            <div className="w-16 h-16 bg-primary rounded-2xl grid place-items-center shadow-lg shadow-primary/30 mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="white" className="w-10 h-10">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+              </svg>
+            </div>
+            <h2 className="text-3xl font-black tracking-tight">Welcome Back</h2>
+            <p className="text-base-content/60 text-sm">Please enter your details to sign in</p>
+          </div>
 
-        }}>
+          <form className="space-y-4">
+            <div className="form-control">
+              <label className="label px-1">
+                <span className="label-text font-semibold">Email Address</span>
+              </label>
+              <input 
+                type="email" 
+                placeholder="marjon@example.com" 
+                className="input input-bordered bg-base-200/50 focus:input-primary transition-all duration-300" 
+                required 
+              />
+            </div>
+
+            <div className="form-control">
+              <label className="label px-1">
+                <span className="label-text font-semibold">Password</span>
+              </label>
+              <input 
+                type="password" 
+                placeholder="••••••••" 
+                className="input input-bordered bg-base-200/50 focus:input-primary transition-all duration-300" 
+                required 
+              />
+              <div className="flex justify-end mt-2">
+                <a href="#" className="text-xs link link-hover text-primary font-medium">Forgot password?</a>
+              </div>
+            </div>
+
+            <button className="btn btn-primary btn-block shadow-lg shadow-primary/20 mt-4">
+              Sign In
+            </button>
+          </form>
+
+          <div className="divider text-xs text-base-content/40">OR CONTINUE WITH</div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <button className="btn btn-outline border-base-300 hover:bg-base-200 gap-2">
+              Google
+            </button>
+            <button className="btn btn-outline border-base-300 hover:bg-base-200 gap-2">
+              GitHub
+            </button>
+          </div>
+
+          <p className="text-center text-sm text-base-content/60 mt-4">
+            New here? <a href="#" className="text-primary font-bold hover:underline">Create an account</a>
+          </p>
+
+        </DialogBody>
+
+        <DialogFooter>
+          <button className="btn btn-info btn-sm">
             Save
-        </button></>
+          </button>
+        </DialogFooter>
+
+        </>
       }
 
       return <D />

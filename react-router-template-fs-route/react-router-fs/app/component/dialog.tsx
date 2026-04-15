@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 type DialogOptions<T = any> = {
   title?: string | ReactNode;
   width?: string | number;
+  height?: number,
   position?: 'start' | 'center';
   render: (helpers: {
     close: (value: T) => void;
@@ -72,7 +73,7 @@ const ModalWrapper = ({
       className={`modal ${isOpen ? 'modal-open' : ''} ${options.position === 'start' ? 'modal-top' : 'modal-middle'}`}
     >
       <div 
-        className="modal-box relative px-3 py-0" 
+        className="modal-box relative p-0" 
         style={{ maxWidth: options.width ?? '32rem' }}
       >
         <button 
@@ -81,12 +82,8 @@ const ModalWrapper = ({
         >
           ✕
         </button>
-
-        {options.title && (
-          <h5 className="font-bold text-lg mb-4">{options.title}</h5>
-        )}
         
-        <div className="py-2 flex flex-col gap-1">
+        <div className={`flex flex-col justify-between sm:h-[calc(100vh-100px)] h-[calc(100vh-200px)] w-full`}>
           {options.render({ close: handleClose })}
         </div>
       </div>
@@ -97,6 +94,28 @@ const ModalWrapper = ({
       </div>
     </dialog>
   );
+};
+
+const DialogHeader = ({children}: {children: ReactNode}) => {
+
+  return <div className="h-14 shadow flex flex-row items-center px-2 gap-2">
+      {children}
+  </div>
+};
+
+const DialogBody = ({children}: {children: ReactNode}) => {
+
+  return <div className="flex-1 overflow-y-auto w-full p-2">
+      {children}
+  </div>
+};
+
+
+const DialogFooter = ({children}: {children: ReactNode}) => {
+
+  return <div className="h-14 shadow flex flex-row items-center px-2 gap-2">
+      {children}
+  </div>
 };
 
 export function dialog<T = any>(options: DialogOptions<T>): Promise<T> {
@@ -115,4 +134,10 @@ export function dialog<T = any>(options: DialogOptions<T>): Promise<T> {
       <ModalWrapper options={options} onExited={finalize} />
     );
   });
+}
+
+export {
+  DialogHeader,
+  DialogBody,
+  DialogFooter
 }
