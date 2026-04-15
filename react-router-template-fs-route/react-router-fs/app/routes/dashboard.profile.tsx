@@ -1,3 +1,51 @@
+import { dialog } from "~/component/dialog";
+
+const subForm = async () => {
+
+  return await dialog({
+    title: "sub form",
+    render: ({close}) => {
+
+      const D = () => {
+
+        return <><span>this is a sub form</span>
+        
+        <button className="btn btn-info btn-sm" onClick={async () => {
+            close(true);
+
+        }}>
+            Save
+        </button></>
+      }
+
+      return <D />
+
+    }
+  });
+}
+
+
+const openForm = async () => {
+  return await dialog({
+    title: "open Form",
+    width: 1060,
+    render: ({close}) => {
+
+      const D = () => {
+
+        return <>
+          <button className="btn btn-primary" onClick={async () => {
+            const res = await subForm();
+            console.log(res);
+          }}>this is a sample</button>
+        </>
+      }
+
+      return <D />
+    }
+  });
+}
+
 export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-base-200 px-4">
@@ -45,7 +93,12 @@ export default function ProfilePage() {
 
             {/* Action Buttons */}
             <div className="flex justify-center gap-3 mt-8">
-              <button className="btn btn-primary rounded-xl px-8 shadow-lg shadow-primary/30">
+              <button className="btn btn-primary rounded-xl px-8 shadow-lg shadow-primary/30" onClick={async () => {
+
+                const res = await openForm();
+                console.log(res);
+
+              }}>
                 <i className="fas fa-user-edit mr-2"></i> Edit Profile
               </button>
               <button className="btn btn-outline rounded-xl border-2">

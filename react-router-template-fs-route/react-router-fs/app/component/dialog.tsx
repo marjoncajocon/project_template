@@ -1,166 +1,118 @@
-import { createRoot } from "react-dom/client";
-import React, { type ReactNode } from "react";
-import ModalModern from "~/component/ModalModern";
-
-type ConfirmOptions = {
-  title?: string;
-  message: string;
-};
-
-export function confirm(options: ConfirmOptions | string): Promise<boolean> {
-  const opts =
-    typeof options === "string"
-      ? { title: "Confirm", message: options }
-      : options;
-
-  return new Promise((resolve) => {
-    const container = document.createElement("div");
-    document.body.appendChild(container);
-
-    const root = createRoot(container);
-
-    const handleClose = (result: boolean) => {
-      resolve(result);
-      setTimeout(() => {
-        root.unmount();
-        container.remove();
-      }, 0);
-    };
-
-    root.render(
-      <ModalModern
-        isOpen={true}
-        title={opts.title ?? "Confirm"}
-        handleClose={() => handleClose(false)}
-        footer={
-          <>
-            <button
-              className="btn btn-secondary"
-              onClick={() => handleClose(false)}
-            >
-              Cancel
-            </button>
-            <button
-              className="btn btn-danger"
-              onClick={() => handleClose(true)}
-            >
-              Confirm
-            </button>
-          </>
-        }
-      >
-        <p>{opts.message}</p>
-      </ModalModern>
-    );
-  });
-
-
-}
-
+import React, { type ReactNode, useEffect, useId, useState } from 'react';
+import { createRoot } from 'react-dom/client';
 
 type DialogOptions<T = any> = {
-  title?: string|ReactNode;
-  width?: number,
-  position?: 'start' | 'center',
+  title?: string | ReactNode;
+  width?: string | number;
+  position?: 'start' | 'center';
   render: (helpers: {
     close: (value: T) => void;
   }) => ReactNode;
 };
 
+let modalStack: string[] = [];
+
+function pushModal(id: string) {
+  modalStack.push(id);
+}
+
+function popModal(id: string) {
+  modalStack = modalStack.filter((m) => m !== id);
+}
+
+function isTopModal(id: string) {
+  return modalStack[modalStack.length - 1] === id;
+}
+
+// Internal wrapper to manage the 'open' attribute state
+const ModalWrapper = ({ 
+  options, 
+  onExited 
+}: { 
+  options: DialogOptions, 
+  onExited: (value: any) => void 
+}) => {
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const id: string = useId();
+
+  // Trigger the 'open' attribute on mount to start entry animation
+  useEffect(() => {
+    setIsOpen(true);
+    pushModal(id);
+
+    // ESC key listener
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (isTopModal(id)) {
+          handleClose(undefined);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleEsc);
+    
+    // Cleanup listener on unmount
+    return () => { 
+      window.removeEventListener('keydown', handleEsc);
+      popModal(id);
+    };
+  }, []);
+
+  const handleClose = (value: any) => {
+    setIsOpen(false); // Removes the 'open' attribute
+    // Wait for daisyUI transition (usually 200-300ms) before unmounting
+    setTimeout(() => onExited(value), 200);
+  };
+
+  return (
+    <dialog 
+      open={isOpen} 
+      className={`modal ${isOpen ? 'modal-open' : ''} ${options.position === 'start' ? 'modal-top' : 'modal-middle'}`}
+    >
+      <div 
+        className="modal-box relative px-3 py-0" 
+        style={{ maxWidth: options.width ?? '32rem' }}
+      >
+        <button 
+          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+          onClick={() => handleClose(undefined)}
+        >
+          ✕
+        </button>
+
+        {options.title && (
+          <h5 className="font-bold text-lg mb-4">{options.title}</h5>
+        )}
+        
+        <div className="py-2 flex flex-col gap-1">
+          {options.render({ close: handleClose })}
+        </div>
+      </div>
+
+      {/* Backdrop click */}
+      <div className="modal-backdrop" onClick={() => handleClose(undefined)}>
+        <button className="cursor-default">close</button>
+      </div>
+    </dialog>
+  );
+};
 
 export function dialog<T = any>(options: DialogOptions<T>): Promise<T> {
   return new Promise<T>((resolve) => {
     const container = document.createElement("div");
     document.body.appendChild(container);
-
     const root = createRoot(container);
 
-    const close = (value: T) => {
+    const finalize = (value: T) => {
       resolve(value);
-      setTimeout(() => {
-        root.unmount();
-        container.remove();
-      }, 0);
+      root.unmount();
+      container.remove();
     };
 
     root.render(
-      <ModalModern
-        position={options.position}
-        width={options.width}
-        isOpen={true}
-        title={options.title ?? "Dialog"}
-        handleClose={() => close(undefined as T)}
-        footer={null} // optional, let render handle buttons
-      >
-        {options.render({ close })}
-      </ModalModern>
+      <ModalWrapper options={options} onExited={finalize} />
     );
   });
 }
-
-/*
-
-implementation
-
-const result = await dialog<string>({
-    title: "Enter Something",
-    render: ({ close }) => {
-    let value = "";
-
-    return (
-        <div className="d-flex flex-column gap-2">
-        <input
-            className="form-control"
-            placeholder="Type here..."
-            onChange={(e) => (value = e.target.value)}
-        />
-        <div className="d-flex justify-content-end gap-2 mt-2">
-            <button
-            className="btn btn-secondary"
-            onClick={() => close("")}
-            >
-            Cancel
-            </button>
-            <button
-            className="btn btn-primary"
-            onClick={() => close(value)}
-            >
-            Submit
-            </button>
-        </div>
-        </div>
-    );
-    },
-});
-
-console.log("Dialog result:", result);
-
-*/
-
-/*
-
-to work with useEffect and useState just return the Enner or other components
-
-const result = await dialog<string>({
-    title: "Enter Something",
-    render: ({ close }) => {
-        const Inner = () => {
-            const [value, setValue] = useState("");
-
-            useEffect(() => {
-                console.log("Mounted!");
-            }, []);
-
-            return (
-                <div>
-                    my sample
-                </div>
-            );
-        }
-
-        return <Inner />
-    },
-});
-
-console.log("Dialog result:", result);
-*/
