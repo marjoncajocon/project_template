@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { dialog, DialogBody, DialogFooter, DialogHeader } from "~/component/dialog";
 
 const subForm = async () => {
@@ -9,74 +10,105 @@ const subForm = async () => {
 
       const D = () => {
 
+        const [formData, setFormData] = useState({
+          email: '',
+          password: '',
+        });
+
+        const handleChange = (e:any) => {
+          const { name, value } = e.target;
+          setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+          }));
+        };
+
+        const handleSubmit = (e: any) => {
+          e.preventDefault();
+          console.log('Login Attempt:', formData);
+          // Handle authentication logic here
+        };
+
         return <>
           <DialogHeader><button className="btn btn-info btn-danger">fdsa</button>this is aheader</DialogHeader>
           <DialogBody>
-          <div className="flex flex-col items-center gap-2">
-            <div className="w-16 h-16 bg-primary rounded-2xl grid place-items-center shadow-lg shadow-primary/30 mb-2">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="white" className="w-10 h-10">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-              </svg>
-            </div>
-            <h2 className="text-3xl font-black tracking-tight">Welcome Back</h2>
-            <p className="text-base-content/60 text-sm">Please enter your details to sign in</p>
-          </div>
 
-          <form className="space-y-4">
-            <div className="form-control">
-              <label className="label px-1">
-                <span className="label-text font-semibold">Email Address</span>
-              </label>
-              <input 
-                type="email" 
-                placeholder="marjon@example.com" 
-                className="input input-bordered bg-base-200/50 focus:input-primary transition-all duration-300" 
-                required 
-              />
-            </div>
+            <div className="p-2 w-full">
+              <div className="text-center mb-6">
+                <h2 className="text-2xl font-bold">Welcome Back</h2>
+                <p className="text-sm opacity-70">Please enter your details to login</p>
+              </div>
 
-            <div className="form-control">
-              <label className="label px-1">
-                <span className="label-text font-semibold">Password</span>
-              </label>
-              <input 
-                type="password" 
-                placeholder="••••••••" 
-                className="input input-bordered bg-base-200/50 focus:input-primary transition-all duration-300" 
-                required 
-              />
-              <div className="flex justify-end mt-2">
-                <a href="#" className="text-xs link link-hover text-primary font-medium">Forgot password?</a>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="form-control w-full">
+                  <label className="label">
+                    <span className="label-text font-semibold text-base-content">Email Address</span>
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="email@example.com"
+                    className="input input-bordered w-full focus:input-primary transition-all"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div className="form-control w-full">
+                  <label className="label">
+                    <span className="label-text font-semibold text-base-content">Password</span>
+                  </label>
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="••••••••"
+                    className="input input-bordered w-full focus:input-primary transition-all"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                  />
+                  <label className="label">
+                    <button type="button" className="label-text-alt link link-hover text-primary">
+                      Forgot password?
+                    </button>
+                  </label>
+                </div>
+
+                <div className="form-control mt-6">
+                  <button type="submit" className="btn btn-primary w-full">
+                    Login
+                  </button>
+                </div>
+
+                <div className="divider text-xs opacity-50 uppercase">OR</div>
+
+                <button type="button" className="btn btn-outline w-full gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 48 48">
+                    <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12s5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+                    <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+                    <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+                    <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+                  </svg>
+                  Sign in with Google
+                </button>
+              </form>
+
+              <div className="mt-6 text-center text-sm">
+                <span className="opacity-70">Don't have an account?</span>
+                <button type="button" className="link link-primary font-semibold ml-1">
+                  Create Account
+                </button>
               </div>
             </div>
 
-            <button className="btn btn-primary btn-block shadow-lg shadow-primary/20 mt-4">
-              Sign In
+          </DialogBody>
+
+          <DialogFooter>
+            <button className="btn btn-info btn-sm">
+              Save
             </button>
-          </form>
-
-          <div className="divider text-xs text-base-content/40">OR CONTINUE WITH</div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <button className="btn btn-outline border-base-300 hover:bg-base-200 gap-2">
-              Google
-            </button>
-            <button className="btn btn-outline border-base-300 hover:bg-base-200 gap-2">
-              GitHub
-            </button>
-          </div>
-
-          <p className="text-center text-sm text-base-content/60 mt-4">
-            New here? <a href="#" className="text-primary font-bold hover:underline">Create an account</a>
-          </p>
-
-        </DialogBody>
-
-        <DialogFooter>
-          <button className="btn btn-info btn-sm">
-            Save
-          </button>
-        </DialogFooter>
+          </DialogFooter>
 
         </>
       }
