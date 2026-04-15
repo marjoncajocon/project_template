@@ -6,6 +6,6 @@ export default function _Index() {
     return (<>
         this is our homepage    
 
-        <Link to={`/home/profile/about/${Math.random() * 100}`}>Go to About</Link>
+        <Link to={`/dashboard`}>Go to Dashboard test</Link>
     </>)
 }
