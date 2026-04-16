@@ -63,14 +63,14 @@ export function confirm(options: ConfirmOptions | string): Promise<boolean> {
 
 const DialogHeader = ({children}: {children: ReactNode}) => {
 
-  return <div className="h-14 shadow flex flex-row items-center px-2 gap-2">
-      {children}
-  </div>
+  return <div className="modal-modern-header">
+           {children}
+    </div>
 };
 
 const DialogBody = ({children}: {children: ReactNode}) => {
 
-  return <div className="flex-1 overflow-y-auto w-full p-2">
+  return <div className="modal-modern-body">
       {children}
   </div>
 };
@@ -78,16 +78,16 @@ const DialogBody = ({children}: {children: ReactNode}) => {
 
 const DialogFooter = ({children}: {children: ReactNode}) => {
 
-  return <div className="h-14 shadow flex flex-row items-center px-2 gap-2">
-      {children}
+  return <div className="modal-modern-footer">
+    {children}
   </div>
 };
 
 
 type DialogOptions<T = any> = {
-  title?: string|ReactNode;
   width?: number,
   position?: 'start' | 'center',
+  backDropClick?: boolean,
   render: (helpers: {
     close: (value: T) => void;
   }) => ReactNode;
@@ -111,10 +111,11 @@ export function dialog<T = any>(options: DialogOptions<T>): Promise<T> {
 
     root.render(
       <ModalModern
+        backdropClick={options.backDropClick}
         position={options.position}
         width={options.width}
         isOpen={true}
-        title={options.title ?? "Dialog"}
+        title={""}
         handleClose={() => close(undefined as T)}
         footer={null} // optional, let render handle buttons
       >

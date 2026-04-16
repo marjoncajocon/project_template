@@ -3,6 +3,7 @@ import { type ReactNode, useEffect, useId } from "react";
 import "./style.css";
 
 type Props = {
+  backdropClick?: boolean;
   children?: ReactNode;
   footer?: ReactNode;
   isOpen: boolean;
@@ -28,6 +29,7 @@ function isTopModal(id: string) {
 }
 
 export default function ModalModern({
+  backdropClick,
   icon,
   title,
   isOpen,
@@ -95,6 +97,13 @@ export default function ModalModern({
   return createPortal(
     <div
       className="modal-modern-overlay"
+      onClick={() => {
+        if (backdropClick != undefined && backdropClick) {
+          if (isTopModal(id)) {
+            handleClose(false);
+          }
+        }
+      }}
     >
       <div
         className={`modal-modern-container ${
@@ -102,39 +111,11 @@ export default function ModalModern({
         }`}
       >
         <div
-          className="modal-modern-content"
+          className="modal-modern-content bg-base-100 shadow-xl"
           style={{ width }}
           onClick={(e) => e.stopPropagation()}
         >
-          {/* HEADER */}
-          <div className="modal-modern-header">
-            <div className="modal-modern-title">
-              { typeof(title) == 'string' ? <>
-              {
-                icon && <i className={`fa fa-${icon}`}></i>}
-                  <span>{title}</span>
-                </>: title
-              }
-            </div>
-            <button
-              className="modal-modern-close"
-              onClick={() => handleClose(false)}
-            >
-              <i className="fa fa-close"></i>
-            </button>
-          </div>
-
-          {/* BODY (scrollable) */}
-          <div className="modal-modern-body">
-            {children}
-          </div>
-
-          {/* FOOTER */}
-          {footer && (
-            <div className="modal-modern-footer">
-              {footer}
-            </div>
-          )}
+          {children}
         </div>
       </div>
     </div>,

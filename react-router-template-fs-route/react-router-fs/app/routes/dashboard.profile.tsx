@@ -4,7 +4,6 @@ import { dialog, DialogBody, DialogFooter, DialogHeader } from "~/component/dial
 const subForm = async () => {
 
   return await dialog({
-    title: "sub form",
     render: ({close}) => {
 
       const D = () => {
@@ -104,7 +103,9 @@ const subForm = async () => {
           </DialogBody>
 
           <DialogFooter>
-            <button className="btn btn-info btn-sm">
+            <button className="btn btn-info btn-sm" onClick={() => {
+              close(false);
+            }}>
               Save
             </button>
           </DialogFooter>
@@ -121,8 +122,8 @@ const subForm = async () => {
 
 const openForm = async () => {
   return await dialog({
-    title: "open Form",
     width: 1060,
+    backDropClick: true,
     render: ({close}) => {
 
       const D = () => {
