@@ -5,7 +5,6 @@ const subForm = async () => {
 
   return await dialog({
     title: "sub form",
-    height: 200,
     render: ({close}) => {
 
       const D = () => {
