@@ -1,100 +1,65 @@
-import React, { type ReactNode, useEffect, useId, useState } from 'react';
-import { createRoot } from 'react-dom/client';
+//////////
+import { createRoot } from "react-dom/client";
+import React, { type ReactNode } from "react";
+import ModalModern from "~/component/ModalModern";
+import { createPortal } from "react-dom";
 
-type DialogOptions<T = any> = {
-  title?: string | ReactNode;
-  width?: string | number;
-  height?: number,
-  position?: 'start' | 'center';
-  render: (helpers: {
-    close: (value: T) => void;
-  }) => ReactNode;
+type ConfirmOptions = {
+  title?: string;
+  message: string;
 };
 
-let modalStack: string[] = [];
+export function confirm(options: ConfirmOptions | string): Promise<boolean> {
+  const opts =
+    typeof options === "string"
+      ? { title: "Confirm", message: options }
+      : options;
 
-function pushModal(id: string) {
-  modalStack.push(id);
-}
+  return new Promise((resolve) => {
+    const container = document.createElement("div");
+    document.body.appendChild(container);
 
-function popModal(id: string) {
-  modalStack = modalStack.filter((m) => m !== id);
-}
+    const root = createRoot(container);
 
-function isTopModal(id: string) {
-  return modalStack[modalStack.length - 1] === id;
-}
+    const handleClose = (result: boolean) => {
+      resolve(result);
+      setTimeout(() => {
+        root.unmount();
+        container.remove();
+      }, 0);
+    };
 
-// Internal wrapper to manage the 'open' attribute state
-const ModalWrapper = ({ 
-  options, 
-  onExited 
-}: { 
-  options: DialogOptions, 
-  onExited: (value: any) => void 
-}) => {
-
-  const [isOpen, setIsOpen] = useState(false);
-
-  const id: string = useId();
-
-  // Trigger the 'open' attribute on mount to start entry animation
-  useEffect(() => {
-    setIsOpen(true);
-    pushModal(id);
-
-    // ESC key listener
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        if (isTopModal(id)) {
-          handleClose(undefined);
+    root.render(
+      <ModalModern
+        isOpen={true}
+        title={opts.title ?? "Confirm"}
+        handleClose={() => handleClose(false)}
+        footer={
+          <>
+            <button
+              className="btn btn-secondary"
+              onClick={() => handleClose(false)}
+            >
+              Cancel
+            </button>
+            <button
+              className="btn btn-danger"
+              onClick={() => handleClose(true)}
+            >
+              Confirm
+            </button>
+          </>
         }
-      }
-    };
-
-    window.addEventListener('keydown', handleEsc);
-    
-    // Cleanup listener on unmount
-    return () => { 
-      window.removeEventListener('keydown', handleEsc);
-      popModal(id);
-    };
-  }, []);
-
-  const handleClose = (value: any) => {
-    setIsOpen(false); // Removes the 'open' attribute
-    // Wait for daisyUI transition (usually 200-300ms) before unmounting
-    setTimeout(() => onExited(value), 200);
-  };
-
-  return (
-    <dialog 
-      open={isOpen} 
-      className={`modal ${isOpen ? 'modal-open' : ''} ${options.position === 'start' ? 'modal-top' : 'modal-middle'}`}
-    >
-      <div 
-        className="modal-box relative p-0" 
-        style={{ maxWidth: options.width ?? '32rem' }}
       >
-        <button 
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-          onClick={() => handleClose(undefined)}
-        >
-          ✕
-        </button>
-        
-        <div className={`flex flex-col justify-between sm:h-[calc(100vh-100px)] h-[calc(100vh-200px)] w-full`}>
-          {options.render({ close: handleClose })}
-        </div>
-      </div>
+        <p>{opts.message}</p>
+      </ModalModern>
+    );
+  });
 
-      {/* Backdrop click */}
-      <div className="modal-backdrop" onClick={() => handleClose(undefined)}>
-        <button className="cursor-default">close</button>
-      </div>
-    </dialog>
-  );
-};
+
+}
+
+
 
 const DialogHeader = ({children}: {children: ReactNode}) => {
 
@@ -118,23 +83,85 @@ const DialogFooter = ({children}: {children: ReactNode}) => {
   </div>
 };
 
+
+type DialogOptions<T = any> = {
+  title?: string|ReactNode;
+  width?: number,
+  position?: 'start' | 'center',
+  render: (helpers: {
+    close: (value: T) => void;
+  }) => ReactNode;
+};
+
+
 export function dialog<T = any>(options: DialogOptions<T>): Promise<T> {
   return new Promise<T>((resolve) => {
     const container = document.createElement("div");
     document.body.appendChild(container);
+
     const root = createRoot(container);
 
-    const finalize = (value: T) => {
+    const close = (value: T) => {
       resolve(value);
-      root.unmount();
-      container.remove();
+      setTimeout(() => {
+        root.unmount();
+        container.remove();
+      }, 0);
     };
 
     root.render(
-      <ModalWrapper options={options} onExited={finalize} />
+      <ModalModern
+        position={options.position}
+        width={options.width}
+        isOpen={true}
+        title={options.title ?? "Dialog"}
+        handleClose={() => close(undefined as T)}
+        footer={null} // optional, let render handle buttons
+      >
+        {options.render({ close })}
+      </ModalModern>
     );
   });
 }
+
+
+
+
+
+type DialogOptions2<T = any> = {
+  title?: string|ReactNode;
+  width?: number,
+  position?: 'start' | 'center',
+  render: (helpers: {
+    close: (value: T) => void;
+  }) => ReactNode;
+};
+
+
+export function dialog2<T = any>(options: DialogOptions2<T>): Promise<T> {
+  return new Promise<T>((resolve) => {
+    const container = document.createElement("div");
+    document.body.appendChild(container);
+
+    const root = createRoot(container);
+
+    const close = (value: T) => {
+      resolve(value);
+      setTimeout(() => {
+        root.unmount();
+        container.remove();
+      }, 0);
+    };
+
+    root.render(
+      createPortal(<div className="backdrop">
+        {options.render({ close })}
+      </div>, document.body)
+    );
+  });
+}
+
+
 
 export {
   DialogHeader,
