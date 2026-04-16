@@ -27,7 +27,7 @@
 
 /* Modal Box */
 .modal-modern-content {
-  background: #fff;
+  /* background: #fff; */
   border-radius: 8px;
   max-height: 90vh;
   display: flex;
